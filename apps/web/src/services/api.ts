@@ -15,6 +15,18 @@ async function getAuthHeaders(): Promise<Record<string, string>> {
   };
 }
 
+export async function requestMagicLink(email: string) {
+  const response = await fetch(`${API_URL}/auth/magic-link`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email }),
+  });
+  if (!response.ok) {
+    throw new Error('Failed to request magic link');
+  }
+  return response.json();
+}
+
 export async function getProfile() {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/profiles/me`, { headers });
