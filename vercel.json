@@ -2,6 +2,7 @@
   "installCommand": "pnpm install",
   "buildCommand": "pnpm build --filter @gotogether/web",
   "outputDirectory": "apps/web/.next",
+  "framework": "nextjs",
   "env": {
     "PRISMA_SKIP_POSTINSTALL_GENERATE": "true"
   }
