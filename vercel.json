@@ -1,6 +1,6 @@
 {
   "installCommand": "pnpm install",
-  "buildCommand": "pnpm build --filter @gotogether/web",
+  "buildCommand": "pnpm --filter @gotogether/web build",
   "outputDirectory": "apps/web/.next",
   "framework": "nextjs",
   "env": {
