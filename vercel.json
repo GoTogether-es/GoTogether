@@ -1,0 +1,7 @@
+{
+  "installCommand": "pnpm install --frozen-lockfile",
+  "buildCommand": "pnpm --filter @gotogether/web run build",
+  "framework": "nextjs",
+  "rootDirectory": "apps/web",
+  "outputDirectory": ".next"
+}
