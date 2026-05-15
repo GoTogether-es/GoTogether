@@ -3,6 +3,8 @@
   "compilerOptions": {
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
+    "target": "ES2021",
+    "useDefineForClassFields": false,
     "outDir": "dist",
     "baseUrl": ".",
     "emitDecoratorMetadata": true,
