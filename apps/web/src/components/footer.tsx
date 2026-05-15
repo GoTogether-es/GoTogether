@@ -21,9 +21,9 @@ export function Footer() {
           <div>
             <h4 className="font-bold mb-4">Producto</h4>
             <ul className="space-y-2 text-gray-500">
-              <li><Link href="/matching" className="hover:text-blue-600 transition-colors">Encontrar acompañante</Link></li>
-              <li><Link href="/profiling" className="hover:text-blue-600 transition-colors">Ser acompañante</Link></li>
-              <li><Link href="/briefing" className="hover:text-blue-600 transition-colors">Cómo funciona</Link></li>
+              <li><Link href="/explorar" className="hover:text-blue-600 transition-colors">Encontrar acompañante</Link></li>
+              <li><Link href="/perfil" className="hover:text-blue-600 transition-colors">Ser acompañante</Link></li>
+              <li><Link href="/solicitud" className="hover:text-blue-600 transition-colors">Cómo funciona</Link></li>
             </ul>
           </div>
           <div>

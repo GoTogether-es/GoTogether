@@ -1,8 +1,9 @@
 export const routes = {
-  briefing: '/briefing',
-  profiling: '/profiling',
-  matching: '/matching',
-  booking: '/booking',
-  coordination: '/coordination',
-  happinessReport: '/happiness-report',
+  solicitud: '/solicitud',
+  perfil: '/perfil',
+  explorar: '/explorar',
+  reservas: '/reservas',
+  coordinacion: '/coordinacion',
+  valoracion: '/valoracion',
+  login: '/auth/login',
 } as const;

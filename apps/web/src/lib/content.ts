@@ -2,33 +2,33 @@ import type { HomeStep, CompanionSummary } from '@/types';
 
 export const homeSteps: HomeStep[] = [
   {
-    title: 'Briefing inicial',
-    copy: 'Recogemos necesidades, horario y tipo de acompanamiento en un formulario visual.',
+    title: 'Cuéntanos qué necesitas',
+    copy: 'Recogemos tus necesidades, horarios y tipo de acompañamiento en un formulario sencillo.',
   },
   {
-    title: 'Perfilado',
-    copy: 'Completas tu perfil con foto, biografia y preferencias de acompanante.',
+    title: 'Completa tu perfil',
+    copy: 'Añade tu foto, biografía y preferencias para que podamos conocerte mejor.',
   },
   {
-    title: 'Match inteligente',
-    copy: 'Te mostramos perfiles recomendados con valoraciones y especialidad.',
+    title: 'Explora acompañantes',
+    copy: 'Te mostramos perfiles verificados con valoraciones y especialidades compatibles.',
   },
   {
-    title: 'Reserva y pago',
-    copy: 'El pago se congela hasta que el acompanante acepta la solicitud.',
+    title: 'Reserva con garantía',
+    copy: 'El pago es seguro y solo se libera una vez que el acompañante acepta la solicitud.',
   },
   {
-    title: 'Coordinacion y reporte',
-    copy: 'Chat en tiempo real, llamadas seguras y feedback post-servicio.',
+    title: 'Seguimiento y valoración',
+    copy: 'Chat en tiempo real durante el servicio y feedback posterior para mejorar la comunidad.',
   },
 ];
 
 export const sampleCompanion: CompanionSummary = {
-  name: 'Lucia Martinez',
-  bio: 'Especialista en acompanamiento cultural y medico',
+  name: 'Lucía Martínez',
+  bio: 'Especialista en acompañamiento cultural y médico',
   rating: '4.9 estrellas',
-  years: '2 anos en GoTogether',
+  years: '2 años en GoTogether',
   image:
     'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80',
-  alt: 'Acompanante sonriendo',
+  alt: 'Acompañante sonriendo',
 };

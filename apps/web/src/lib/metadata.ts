@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const baseMetadata: Metadata = {
-  title: 'GoTogether | Acompanamiento humano',
+  title: 'GoTogether | Acompañamiento humano',
   description:
-    'Plataforma de acompanamiento profesionalizado para personas mayores y con discapacidad en Espana.',
+    'Plataforma de acompañamiento profesionalizado para personas mayores y con discapacidad en España.',
 };

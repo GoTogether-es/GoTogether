@@ -1,23 +1,33 @@
 'use client';
 
-import type { ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Container, Button } from '@gotogether/ui';
 import { routes } from '@/lib/routes';
 import { Footer } from './footer';
-import { User, LogIn, Menu } from 'lucide-react';
+import { User, LogIn, Menu, Search, CalendarDays } from 'lucide-react';
+import { createClient } from '@/lib/supabase/client';
 import clsx from 'clsx';
-
-const navItems = [
-  { label: 'Briefing', href: routes.briefing },
-  { label: 'Perfilado', href: routes.profiling },
-  { label: 'Match', href: routes.matching },
-  { label: 'Reserva', href: routes.booking },
-];
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const [session, setSession] = useState<any>(null);
+  const supabase = createClient();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [supabase.auth]);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -28,39 +38,49 @@ export function AppShell({ children }: { children: ReactNode }) {
               <Link href="/" className="text-2xl font-bold text-blue-600 tracking-tight">
                 GoTogether
               </Link>
+              
               <nav className="hidden md:flex items-center gap-8">
-                {navItems.map((item) => {
-                  const isActive = pathname === item.href;
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={clsx(
-                        'text-sm font-medium transition-colors hover:text-blue-600',
-                        isActive ? 'text-blue-600' : 'text-gray-500'
-                      )}
-                    >
-                      {item.label}
-                      {isActive && (
-                        <span className="block h-0.5 w-full bg-blue-600 rounded-full mt-0.5" />
-                      )}
-                    </Link>
-                  );
-                })}
+                <Link
+                  href={routes.explorar}
+                  className={clsx(
+                    'flex items-center gap-2 text-sm font-medium transition-colors hover:text-blue-600',
+                    pathname.startsWith(routes.explorar) ? 'text-blue-600' : 'text-gray-500'
+                  )}
+                >
+                  <Search className="w-4 h-4" />
+                  Explorar
+                </Link>
+                {session && (
+                  <Link
+                    href={routes.reservas}
+                    className={clsx(
+                      'flex items-center gap-2 text-sm font-medium transition-colors hover:text-blue-600',
+                      pathname.startsWith(routes.reservas) ? 'text-blue-600' : 'text-gray-500'
+                    )}
+                  >
+                    <CalendarDays className="w-4 h-4" />
+                    Mis Reservas
+                  </Link>
+                )}
               </nav>
             </div>
 
             <div className="flex items-center gap-4">
-              <Link href="/auth/login">
-                <Button variant="ghost" className="hidden sm:flex items-center gap-2">
-                  <LogIn className="w-4 h-4" />
-                  Iniciar Sesión
-                </Button>
-              </Link>
-              <Button variant="primary" className="hidden sm:flex items-center gap-2">
-                <User className="w-4 h-4" />
-                Mi Perfil
-              </Button>
+              {!session ? (
+                <Link href={routes.login}>
+                  <Button variant="primary" className="flex items-center gap-2">
+                    <LogIn className="w-4 h-4" />
+                    Entrar
+                  </Button>
+                </Link>
+              ) : (
+                <Link href={routes.perfil}>
+                  <Button variant="secondary" className="flex items-center gap-2 border-gray-200">
+                    <User className="w-4 h-4" />
+                    Mi Perfil
+                  </Button>
+                </Link>
+              )}
               <button className="md:hidden p-2 text-gray-500 hover:bg-gray-50 rounded-lg">
                 <Menu className="w-6 h-6" />
               </button>
