@@ -20,7 +20,7 @@ export default function ValoracionPage() {
               <div className="space-y-6">
                 <div className="p-4 bg-green-50 rounded-xl border border-green-100">
                   <p className="text-sm text-green-800 font-medium italic">
-                    "Lucía llegó puntual al punto de encuentro y el servicio finalizó correctamente."
+                    &quot;Lucía llegó puntual al punto de encuentro y el servicio finalizó correctamente.&quot;
                   </p>
                 </div>
                 <div className="space-y-4">

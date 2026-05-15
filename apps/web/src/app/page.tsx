@@ -3,6 +3,7 @@ import { LinkButton } from '@/components/link-button';
 import { homeSteps, sampleCompanion } from '@/lib/content';
 import { routes } from '@/lib/routes';
 import { CheckCircle2, ArrowRight, Star, ShieldCheck, Users } from 'lucide-react';
+import Image from 'next/image';
 
 export default function HomePage() {
   return (
@@ -35,11 +36,14 @@ export default function HomePage() {
             <div className="relative">
               <div className="absolute -inset-4 bg-blue-400/20 blur-3xl rounded-full" />
               <Card className="relative p-6 border-0 shadow-2xl bg-white/5 backdrop-blur-sm ring-1 ring-white/10">
-                <img
-                  src={sampleCompanion.image}
-                  alt={sampleCompanion.alt}
-                  className="w-full h-[400px] object-cover rounded-2xl shadow-inner"
-                />
+                <div className="relative w-full h-[400px]">
+                  <Image
+                    src={sampleCompanion.image}
+                    alt={sampleCompanion.alt || 'Acompañante'}
+                    fill
+                    className="object-cover rounded-2xl shadow-inner"
+                  />
+                </div>
                 <div className="mt-6 p-4 bg-white rounded-xl shadow-lg">
                   <div className="flex justify-between items-start">
                     <div>
