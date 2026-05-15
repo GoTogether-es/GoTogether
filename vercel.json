@@ -1,6 +1,6 @@
 {
-  "buildCommand": "pnpm build --filter @gotogether/web",
   "installCommand": "pnpm install",
+  "buildCommand": "pnpm build --filter @gotogether/web",
   "outputDirectory": "apps/web/.next",
   "env": {
     "PRISMA_SKIP_POSTINSTALL_GENERATE": "true"
