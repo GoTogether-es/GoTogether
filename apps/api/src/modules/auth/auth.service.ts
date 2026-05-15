@@ -7,28 +7,40 @@ import { getMagicLinkTemplate } from './mail.templates';
 
 @Injectable()
 export class AuthService {
-  private supabaseAdmin: SupabaseClient;
-  private resend: Resend;
+  private supabaseAdmin: SupabaseClient | null = null;
+  private resend: Resend | null = null;
 
   constructor(
     private readonly prisma: PrismaService,
     private readonly configService: ConfigService,
   ) {
-    this.supabaseAdmin = createClient(
-      this.configService.get<string>('NEXT_PUBLIC_SUPABASE_URL')!,
-      this.configService.get<string>('SUPABASE_SERVICE_ROLE_KEY')!,
-      {
+    const supabaseUrl = this.configService.get<string>('NEXT_PUBLIC_SUPABASE_URL');
+    const serviceKey = this.configService.get<string>('SUPABASE_SERVICE_ROLE_KEY');
+    const resendApiKey = this.configService.get<string>('RESEND_API_KEY');
+
+    if (supabaseUrl && serviceKey) {
+      this.supabaseAdmin = createClient(supabaseUrl, serviceKey, {
         auth: {
           autoRefreshToken: false,
           persistSession: false,
         },
-      }
-    );
+      });
+    }
 
-    this.resend = new Resend(this.configService.get<string>('RESEND_API_KEY'));
+    if (resendApiKey) {
+      this.resend = new Resend(resendApiKey);
+    }
   }
 
   async sendMagicLink(email: string) {
+    if (!this.supabaseAdmin || !this.resend) {
+      const missing = [];
+      if (!this.configService.get('SUPABASE_SERVICE_ROLE_KEY')) missing.push('SUPABASE_SERVICE_ROLE_KEY');
+      if (!this.configService.get('RESEND_API_KEY')) missing.push('RESEND_API_KEY');
+      
+      console.error('Missing configuration:', missing.join(', '));
+      throw new InternalServerErrorException(`Error de configuración en el servidor: faltan variables (${missing.join(', ')})`);
+    }
     try {
       // 1. Generar el enlace de autenticación usando Supabase Admin
       const { data, error } = await this.supabaseAdmin.auth.admin.generateLink({
