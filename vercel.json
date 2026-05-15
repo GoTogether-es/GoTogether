@@ -1,8 +1,20 @@
 {
-  "installCommand": "pnpm install",
-  "buildCommand": "pnpm --filter @gotogether/web build",
-  "outputDirectory": "apps/web/.next",
-  "framework": "nextjs",
+  "version": 2,
+  "functions": {
+    "api/index.ts": {
+      "includeFiles": "apps/api/prisma/schema.prisma"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "api/index.ts"
+    },
+    {
+      "source": "/((?!api/).*)",
+      "destination": "apps/web/$1"
+    }
+  ],
   "env": {
     "PRISMA_SKIP_POSTINSTALL_GENERATE": "true"
   }
