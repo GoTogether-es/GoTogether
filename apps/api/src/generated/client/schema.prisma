@@ -1,0 +1,134 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  CLIENT
+  COMPANION
+  ADMIN
+}
+
+enum BookingStatus {
+  DRAFT
+  REQUESTED
+  ACCEPTED
+  DECLINED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  role      UserRole @default(CLIENT)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  profile  Profile?
+  bookings Booking[] @relation("ClientBookings")
+}
+
+model Profile {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  fullName       String
+  headline       String?
+  bio            String?
+  phone          String?
+  avatarUrl      String?
+  disabilityType String?
+  preferences    String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user      User              @relation(fields: [userId], references: [id])
+  companion CompanionProfile?
+}
+
+model CompanionProfile {
+  id              String   @id @default(uuid())
+  profileId       String   @unique
+  specialties     String?
+  verified        Boolean  @default(false)
+  backgroundCheck String?
+  sexualCheck     String?
+  rating          Float    @default(0)
+  yearsOnPlatform Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  profile  Profile   @relation(fields: [profileId], references: [id])
+  bookings Booking[] @relation("CompanionBookings")
+}
+
+model Booking {
+  id          String        @id @default(uuid())
+  clientId    String
+  companionId String?
+  status      BookingStatus @default(DRAFT)
+  serviceType String
+  summary     String?
+  address     String
+  scheduledAt DateTime
+  disability  String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  client    User              @relation("ClientBookings", fields: [clientId], references: [id])
+  companion CompanionProfile? @relation("CompanionBookings", fields: [companionId], references: [id])
+  payment   Payment?
+  report    Report?
+  chatRoom  ChatRoom?
+}
+
+model Payment {
+  id              String   @id @default(uuid())
+  bookingId       String   @unique
+  stripePaymentId String?
+  amount          Int
+  fee             Int
+  currency        String   @default("EUR")
+  status          String   @default("HOLD")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  booking Booking @relation(fields: [bookingId], references: [id])
+}
+
+model ChatRoom {
+  id        String   @id @default(uuid())
+  bookingId String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  booking  Booking       @relation(fields: [bookingId], references: [id])
+  messages ChatMessage[]
+}
+
+model ChatMessage {
+  id        String   @id @default(uuid())
+  roomId    String
+  senderId  String
+  content   String
+  createdAt DateTime @default(now())
+
+  room ChatRoom @relation(fields: [roomId], references: [id])
+}
+
+model Report {
+  id        String   @id @default(uuid())
+  bookingId String   @unique
+  summary   String?
+  rating    Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  booking Booking @relation(fields: [bookingId], references: [id])
+}

@@ -3,13 +3,13 @@
   "outputDirectory": "apps/web/.next",
   "functions": {
     "api/index.ts": {
-      "includeFiles": "apps/api/prisma/schema.prisma",
-      "maxDuration": 15
+      "includeFiles": "apps/api/src/generated/client/**",
+      "maxDuration": 20
     }
   },
   "rewrites": [
     {
-      "source": "/api/(.*)",
+      "source": "/server/(.*)",
       "destination": "api/index.ts"
     }
   ]
