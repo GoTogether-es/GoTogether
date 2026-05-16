@@ -61,7 +61,7 @@ export class AuthService {
         type: 'magiclink',
         email,
         options: {
-          redirectTo: `${this.configService.get<string>('NEXT_PUBLIC_APP_URL')}/auth/callback`,
+          redirectTo: `${this.configService.get<string>('NEXT_PUBLIC_APP_URL')}/auth/verify`,
         },
       });
 
