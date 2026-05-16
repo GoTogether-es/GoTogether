@@ -44,7 +44,7 @@ export default function NotFound() {
 
           <div className="mt-16 pt-8 border-t border-gray-100">
             <p className="text-sm text-gray-400 font-medium italic">
-              "El camino es más fácil cuando no lo recorres solo."
+              &quot;El camino es más fácil cuando no lo recorres solo.&quot;
             </p>
           </div>
         </div>
