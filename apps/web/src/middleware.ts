@@ -1,8 +1,19 @@
-import { type NextRequest } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { updateSession } from '@/lib/supabase/middleware'
 
 export async function middleware(request: NextRequest) {
-  return await updateSession(request)
+  // Diagnóstico simple para verificar si el middleware responde
+  if (request.nextUrl.pathname === '/middleware-health') {
+    return NextResponse.json({ status: 'middleware-active', time: new Date().toISOString() });
+  }
+
+  try {
+    return await updateSession(request)
+  } catch (err: any) {
+    console.error('MIDDLEWARE CRASH:', err);
+    // En caso de error crítico, dejamos pasar la petición para no romper el sitio entero
+    return NextResponse.next();
+  }
 }
 
 export const config = {
