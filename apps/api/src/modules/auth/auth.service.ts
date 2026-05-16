@@ -14,6 +14,10 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly configService: ConfigService,
   ) {
+    this.initializeClients();
+  }
+
+  private initializeClients() {
     const supabaseUrl = this.configService.get<string>('NEXT_PUBLIC_SUPABASE_URL');
     const serviceKey = this.configService.get<string>('SUPABASE_SERVICE_ROLE_KEY');
     const resendApiKey = this.configService.get<string>('RESEND_API_KEY');
@@ -33,14 +37,24 @@ export class AuthService {
   }
 
   async sendMagicLink(email: string) {
+    // Re-check clients in case env vars were loaded late or differently
+    if (!this.supabaseAdmin || !this.resend) {
+      this.initializeClients();
+    }
+
     if (!this.supabaseAdmin || !this.resend) {
       const missing = [];
+      if (!this.configService.get('NEXT_PUBLIC_SUPABASE_URL')) missing.push('NEXT_PUBLIC_SUPABASE_URL');
       if (!this.configService.get('SUPABASE_SERVICE_ROLE_KEY')) missing.push('SUPABASE_SERVICE_ROLE_KEY');
       if (!this.configService.get('RESEND_API_KEY')) missing.push('RESEND_API_KEY');
+      if (!this.configService.get('RESEND_FROM')) missing.push('RESEND_FROM');
+      if (!this.configService.get('NEXT_PUBLIC_APP_URL')) missing.push('NEXT_PUBLIC_APP_URL');
       
-      console.error('Missing configuration:', missing.join(', '));
-      throw new InternalServerErrorException(`Error de configuración en el servidor: faltan variables (${missing.join(', ')})`);
+      const errorMsg = `Configuración incompleta: faltan [${missing.join(', ')}]`;
+      console.error(errorMsg);
+      throw new InternalServerErrorException(errorMsg);
     }
+
     try {
       // 1. Generar el enlace de autenticación usando Supabase Admin
       const { data, error } = await this.supabaseAdmin.auth.admin.generateLink({
@@ -64,9 +78,9 @@ export class AuthService {
       if (mailError) throw mailError;
 
       return { success: true, message: 'Correo enviado con éxito' };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error in sendMagicLink:', error);
-      throw new InternalServerErrorException('No se pudo enviar el enlace de acceso');
+      throw new InternalServerErrorException(`No se pudo enviar el enlace: ${error.message || 'Error desconocido'}`);
     }
   }
 
