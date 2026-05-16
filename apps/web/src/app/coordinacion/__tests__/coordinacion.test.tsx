@@ -4,6 +4,6 @@ import CoordinationPage from '../page';
 describe('CoordinationPage', () => {
   it('renders chat heading', () => {
     render(<CoordinationPage />);
-    expect(screen.getByRole('heading', { name: /Coordinacion/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Coordinación/i })).toBeInTheDocument();
   });
 });
