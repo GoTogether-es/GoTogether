@@ -1,6 +1,6 @@
 {
   "name": "gotogether",
-  "version": "0.1.0-alpha.2",
+  "version": "0.1.0-alpha.3",
   "private": true,
   "packageManager": "pnpm@10.0.0",
   "scripts": {
