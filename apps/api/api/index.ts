@@ -5,6 +5,8 @@ import { AppModule } from '../src/modules/app/app.module';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import express from 'express';
 
+const VERSION = '0.1.0-alpha.7';
+
 let cachedExpressApp: any;
 
 async function bootstrap() {
@@ -13,7 +15,12 @@ async function bootstrap() {
     
     // Explicit health check route outside NestJS
     expressApp.get('/server/health-check', (req, res) => {
-      res.status(200).json({ status: 'ok', runtime: 'Vercel Node.js' });
+      res.status(200).json({ status: 'ok', runtime: 'Vercel Node.js', version: VERSION });
+    });
+
+    // Version endpoint
+    expressApp.get('/server/version', (req, res) => {
+      res.status(200).json({ version: VERSION });
     });
 
     const nestApp = await NestFactory.create(
@@ -37,8 +44,6 @@ async function bootstrap() {
 export default async (req: any, res: any) => {
   try {
     const app = await bootstrap();
-    // Vercel Node.js runtime provides standard req/res, 
-    // which Express can handle directly.
     return app(req, res);
   } catch (err: any) {
     console.error('NESTJS BOOTSTRAP ERROR:', err);
@@ -46,6 +51,7 @@ export default async (req: any, res: any) => {
       res.status(500).json({
         error: 'Internal Server Error',
         message: err.message,
+        version: VERSION
       });
     }
   }
