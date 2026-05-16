@@ -12,7 +12,14 @@ async function bootstrap() {
   if (!cachedServer) {
     try {
       const expressApp = express();
+
+      // Ruta de diagnóstico directo en Express
+      expressApp.get('/server/test-connection', (req, res) => {
+        res.json({ message: 'Express is running correctly on Vercel', time: new Date().toISOString() });
+      });
+
       const nestApp = await NestFactory.create(AppModule, new ExpressAdapter(expressApp), { 
+ 
         cors: true,
         logger: ['error', 'warn', 'log'] 
       });

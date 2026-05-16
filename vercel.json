@@ -2,15 +2,15 @@
   "version": 2,
   "outputDirectory": "apps/web/.next",
   "functions": {
-    "api/index.ts": {
-      "includeFiles": "apps/api/src/generated/client/**",
-      "maxDuration": 20
+    "api/*.ts": {
+      "includeFiles": "apps/api/prisma/schema.prisma",
+      "maxDuration": 15
     }
   },
   "rewrites": [
     {
       "source": "/server/(.*)",
-      "destination": "api/index.ts"
+      "destination": "/api/server"
     }
   ]
 }
