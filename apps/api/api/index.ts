@@ -5,7 +5,7 @@ import { AppModule } from '../src/modules/app/app.module';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import express from 'express';
 
-const VERSION = '0.1.0-alpha.9';
+const VERSION = '0.1.0-alpha.10';
 
 let cachedExpressApp: any;
 
