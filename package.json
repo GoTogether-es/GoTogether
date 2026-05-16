@@ -5,7 +5,6 @@
   "scripts": {
     "dev": "pnpm -r --parallel --if-present dev",
     "build": "pnpm -r --if-present build",
-    "postinstall": "pnpm --filter @gotogether/api prisma:generate",
     "lint": "pnpm -r --if-present lint",
     "format": "pnpm -r --if-present format",
     "test": "pnpm -r --if-present test"
