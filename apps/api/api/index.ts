@@ -3,18 +3,17 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from '../src/modules/app/app.module';
 import { ExpressAdapter } from '@nestjs/platform-express';
-import serverlessExpress from '@vendia/serverless-express';
 import express from 'express';
 
-let cachedServer: any;
+let cachedExpressApp: any;
 
 async function bootstrap() {
-  if (!cachedServer) {
+  if (!cachedExpressApp) {
     const expressApp = express();
     
-    // Test route for immediate diagnostics
-    expressApp.get('/health-check', (req, res) => {
-      res.status(200).json({ status: 'ok', serverless: true });
+    // Explicit health check route outside NestJS
+    expressApp.get('/server/health-check', (req, res) => {
+      res.status(200).json({ status: 'ok', runtime: 'Vercel Node.js' });
     });
 
     const nestApp = await NestFactory.create(
@@ -28,22 +27,26 @@ async function bootstrap() {
     
     nestApp.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
     
+    // Important: Initialize NestJS without starting the listener
     await nestApp.init();
-    cachedServer = serverlessExpress({ app: expressApp });
+    cachedExpressApp = expressApp;
   }
-  return cachedServer;
+  return cachedExpressApp;
 }
 
 export default async (req: any, res: any) => {
   try {
-    const server = await bootstrap();
-    return server(req, res);
+    const app = await bootstrap();
+    // Vercel Node.js runtime provides standard req/res, 
+    // which Express can handle directly.
+    return app(req, res);
   } catch (err: any) {
-    console.error('SERVERLESS BOOTSTRAP ERROR:', err);
-    res.status(500).json({
-      error: 'Failed to initialize NestJS',
-      message: err.message,
-      stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
-    });
+    console.error('NESTJS BOOTSTRAP ERROR:', err);
+    if (!res.headersSent) {
+      res.status(500).json({
+        error: 'Internal Server Error',
+        message: err.message,
+      });
+    }
   }
 };
