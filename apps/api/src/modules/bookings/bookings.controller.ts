@@ -10,14 +10,17 @@ import {
 } from '@nestjs/common';
 import { BookingsService } from './bookings.service';
 import { SupabaseAuthGuard } from '../auth/supabase-auth.guard';
+import { RolesGuard, Roles } from '../auth/roles.guard';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingStatusDto } from './dto/update-booking-status.dto';
+import { UserRole } from '../../generated/client';
 
 @Controller('bookings')
 export class BookingsController {
   constructor(private readonly bookingsService: BookingsService) {}
 
-  @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard, RolesGuard)
+  @Roles(UserRole.CLIENT)
   @Post()
   create(@Request() req: any, @Body() dto: CreateBookingDto) {
     return this.bookingsService.create(req.user.userId, dto);
@@ -45,7 +48,8 @@ export class BookingsController {
     return this.bookingsService.updateStatus(id, dto, req.user.userId);
   }
 
-  @UseGuards(SupabaseAuthGuard)
+  @UseGuards(SupabaseAuthGuard, RolesGuard)
+  @Roles(UserRole.CLIENT)
   @Put(':id/request')
   requestBooking(@Param('id') id: string) {
     return this.bookingsService.requestBooking(id);
