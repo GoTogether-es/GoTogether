@@ -2,9 +2,13 @@
 
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'sonner';
 import { Button, Card, Container, Section } from '@gotogether/ui';
 import { getProfile, upsertProfile } from '@/services/api';
 import { Loader2, CheckCircle, UserCircle, Briefcase, Heart } from 'lucide-react';
+import { perfilSchema, type PerfilFormData } from '@/lib/schemas';
 import clsx from 'clsx';
 
 function PerfilContent() {
@@ -12,25 +16,35 @@ function PerfilContent() {
   const router = useRouter();
   const isOnboarding = searchParams.get('onboarding') === 'true';
 
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [formData, setFormData] = useState({
-    fullName: '',
-    headline: '',
-    bio: '',
-    phone: '',
-    disabilityType: '',
-    preferences: '',
-    isCompanion: false,
-    specialties: '',
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<PerfilFormData>({
+    resolver: zodResolver(perfilSchema),
+    defaultValues: {
+      fullName: '',
+      headline: '',
+      bio: '',
+      phone: '',
+      disabilityType: '',
+      preferences: '',
+      isCompanion: false,
+      specialties: '',
+    },
   });
+
+  const isCompanion = watch('isCompanion');
+  const [profileLoaded, setProfileLoaded] = useState(false);
 
   useEffect(() => {
     getProfile()
       .then((data) => {
         if (data) {
-          setFormData({
+          reset({
             fullName: data.fullName || '',
             headline: data.headline || '',
             bio: data.bio || '',
@@ -42,34 +56,23 @@ function PerfilContent() {
           });
         }
       })
-      .catch((err) => {
-        console.error('Error al cargar perfil:', err);
-      })
-      .finally(() => setLoading(false));
-  }, []);
+      .catch(() => toast.error('Error al cargar el perfil'))
+      .finally(() => setProfileLoaded(true));
+  }, [reset]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSaving(true);
-    setSuccess(false);
+  const onSubmit = async (data: PerfilFormData) => {
     try {
-      await upsertProfile(formData);
-      setSuccess(true);
+      await upsertProfile(data);
+      toast.success(isOnboarding ? '¡Perfil creado! Redirigiendo...' : 'Cambios guardados con éxito');
       if (isOnboarding) {
-        // Redirect to explore after onboarding
         setTimeout(() => router.push('/explorar'), 1500);
-      } else {
-        setTimeout(() => setSuccess(false), 3000);
       }
-    } catch (err) {
-      console.error('Error al guardar:', err);
-      alert('Hubo un error al guardar tu perfil. Inténtalo de nuevo.');
-    } finally {
-      setSaving(false);
+    } catch {
+      toast.error('Hubo un error al guardar tu perfil. Inténtalo de nuevo.');
     }
   };
 
-  if (loading) {
+  if (!profileLoaded) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
@@ -84,19 +87,19 @@ function PerfilContent() {
           {isOnboarding ? '¡Te damos la bienvenida a GoTogether!' : 'Mi Cuenta'}
         </h1>
         <p className="text-gray-500 text-lg">
-          {isOnboarding 
-            ? 'Para empezar, necesitamos conocerte un poco mejor y saber cómo quieres participar.' 
+          {isOnboarding
+            ? 'Para empezar, necesitamos conocerte un poco mejor y saber cómo quieres participar.'
             : 'Mantén tus datos actualizados para una mejor experiencia.'}
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-8">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
         <Card className="p-8 border-0 shadow-xl shadow-blue-900/5">
           <div className="flex items-center gap-3 mb-8 border-b pb-4">
             <UserCircle className="w-6 h-6 text-blue-600" />
             <h3 className="text-xl font-bold">Información Personal</h3>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="md:col-span-2">
               <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="fullName">
@@ -106,10 +109,11 @@ function PerfilContent() {
                 id="fullName"
                 className="gt-input"
                 placeholder="Ej: Juan Pérez"
-                value={formData.fullName}
-                onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                required
+                {...register('fullName')}
               />
+              {errors.fullName && (
+                <p className="text-red-500 text-xs mt-1">{errors.fullName.message}</p>
+              )}
             </div>
             <div>
               <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="headline">
@@ -119,8 +123,7 @@ function PerfilContent() {
                 id="headline"
                 className="gt-input"
                 placeholder="Ej: Jubilado, estudiante, enfermero..."
-                value={formData.headline}
-                onChange={(e) => setFormData({ ...formData, headline: e.target.value })}
+                {...register('headline')}
               />
             </div>
             <div>
@@ -131,8 +134,7 @@ function PerfilContent() {
                 id="phone"
                 className="gt-input"
                 placeholder="+34 600 000 000"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                {...register('phone')}
               />
             </div>
             <div className="md:col-span-2">
@@ -144,8 +146,7 @@ function PerfilContent() {
                 className="gt-input"
                 rows={4}
                 placeholder="Cuéntanos tus gustos, hobbies o qué buscas en GoTogether..."
-                value={formData.bio}
-                onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                {...register('bio')}
               />
             </div>
           </div>
@@ -153,22 +154,22 @@ function PerfilContent() {
 
         <Card className={clsx(
           "p-8 border-0 shadow-xl transition-all duration-500",
-          formData.isCompanion ? "bg-blue-50/50 shadow-blue-500/10" : "bg-white shadow-gray-900/5"
+          isCompanion ? "bg-blue-50/50 shadow-blue-500/10" : "bg-white shadow-gray-900/5"
         )}>
           <div className="flex items-center gap-3 mb-8 border-b pb-4">
             <Heart className="w-6 h-6 text-blue-600" />
             <h3 className="text-xl font-bold">¿Cómo quieres usar GoTogether?</h3>
           </div>
-          
+
           <div className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <button
                 type="button"
-                onClick={() => setFormData({ ...formData, isCompanion: false })}
+                onClick={() => setValue('isCompanion', false)}
                 className={clsx(
                   "p-6 rounded-2xl border-2 text-left transition-all",
-                  !formData.isCompanion 
-                    ? "border-blue-600 bg-blue-50 ring-4 ring-blue-500/10" 
+                  !isCompanion
+                    ? "border-blue-600 bg-blue-50 ring-4 ring-blue-500/10"
                     : "border-gray-100 hover:border-gray-200"
                 )}
               >
@@ -177,11 +178,11 @@ function PerfilContent() {
               </button>
               <button
                 type="button"
-                onClick={() => setFormData({ ...formData, isCompanion: true })}
+                onClick={() => setValue('isCompanion', true)}
                 className={clsx(
                   "p-6 rounded-2xl border-2 text-left transition-all",
-                  formData.isCompanion 
-                    ? "border-blue-600 bg-blue-50 ring-4 ring-blue-500/10" 
+                  isCompanion
+                    ? "border-blue-600 bg-blue-50 ring-4 ring-blue-500/10"
                     : "border-gray-100 hover:border-gray-200"
                 )}
               >
@@ -190,7 +191,7 @@ function PerfilContent() {
               </button>
             </div>
 
-            {formData.isCompanion && (
+            {isCompanion && (
               <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
                 <div className="flex items-center gap-2 text-blue-700 font-bold mb-2">
                   <Briefcase className="w-5 h-5" />
@@ -204,8 +205,7 @@ function PerfilContent() {
                     id="specialties"
                     className="gt-input bg-white border-blue-100"
                     placeholder="Ej: Cocina, enfermería, coche propio..."
-                    value={formData.specialties}
-                    onChange={(e) => setFormData({ ...formData, specialties: e.target.value })}
+                    {...register('specialties')}
                   />
                 </div>
                 <div className="p-4 bg-white rounded-xl border border-blue-100 text-xs text-blue-600 leading-relaxed">
@@ -217,18 +217,13 @@ function PerfilContent() {
         </Card>
 
         <div className="flex flex-col md:flex-row items-center justify-end gap-6 pt-4">
-          {success && (
-            <div className="flex items-center gap-2 text-green-600 font-bold animate-bounce">
-              <CheckCircle className="w-6 h-6" />
-              {isOnboarding ? '¡Perfil creado! Redirigiendo...' : 'Cambios guardados con éxito'}
-            </div>
-          )}
-          <Button 
-            variant="primary" 
-            className="w-full md:w-auto h-14 px-12 text-lg shadow-blue-600/20" 
-            disabled={saving || (isOnboarding && success)}
+          <Button
+            variant="primary"
+            className="w-full md:w-auto h-14 px-12 text-lg shadow-blue-600/20"
+            disabled={isSubmitting}
+            type="submit"
           >
-            {saving ? (
+            {isSubmitting ? (
               <>
                 <Loader2 className="w-5 h-5 animate-spin mr-2" />
                 Guardando...

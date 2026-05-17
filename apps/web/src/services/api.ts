@@ -212,3 +212,48 @@ export async function getHealth() {
   }
   return response.json() as Promise<{ status: string }>;
 }
+
+export async function createSupervision(clientId: string) {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/supervision`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ clientId }),
+  });
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.message || 'Failed to create supervision');
+  }
+  return response.json();
+}
+
+export async function getMyClients() {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/supervision/clients`, { headers });
+  if (!response.ok) throw new Error('Failed to fetch clients');
+  return response.json();
+}
+
+export async function getMySupervisor() {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/supervision/supervisor`, { headers });
+  if (!response.ok) {
+    if (response.status === 404) return null;
+    throw new Error('Failed to fetch supervisor');
+  }
+  return response.json();
+}
+
+export async function removeSupervision(id: string) {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/supervision/${id}`, {
+    method: 'DELETE',
+    headers,
+  });
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.message || 'Failed to remove supervision');
+  }
+  return response.json();
+}
+
