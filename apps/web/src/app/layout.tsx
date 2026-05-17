@@ -5,6 +5,9 @@ import { Toaster } from 'sonner';
 
 export const metadata = baseMetadata;
 
+const fontUrl =
+  'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap';
+
 export default function RootLayout({
   children,
 }: {
@@ -12,6 +15,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="stylesheet" href={fontUrl} />
+      </head>
       <body>
         <AppShell>{children}</AppShell>
         <Toaster position="top-right" richColors closeButton />

@@ -30,3 +30,11 @@ export const valoracionSchema = z.object({
 });
 
 export type ValoracionFormData = z.infer<typeof valoracionSchema>;
+
+export function validateFutureDate(dateStr: string, timeStr: string): string | null {
+  if (!dateStr || !timeStr) return null;
+  const scheduledAt = new Date(`${dateStr}T${timeStr}:00`);
+  if (isNaN(scheduledAt.getTime())) return null;
+  if (scheduledAt <= new Date()) return 'La fecha debe ser futura';
+  return null;
+}

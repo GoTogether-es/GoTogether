@@ -4,7 +4,9 @@ import { useEffect, useState } from 'react';
 import { Button, Card, Container, Section } from '@gotogether/ui';
 import { ShieldCheck, Calendar, MapPin, Briefcase, Clock, MessageSquare, Star } from 'lucide-react';
 import { getMyBookings } from '@/services/api';
+import { LinkButton } from '@/components/link-button';
 import Link from 'next/link';
+import { SkeletonBookingCard } from '@/components/skeleton';
 
 const STATUS_LABELS: Record<string, string> = {
   DRAFT: 'Borrador',
@@ -29,11 +31,12 @@ const STATUS_COLORS: Record<string, string> = {
 export default function ReservasPage() {
   const [bookings, setBookings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     getMyBookings()
       .then(setBookings)
-      .catch(console.error)
+      .catch(() => setError(true))
       .finally(() => setLoading(false));
   }, []);
 
@@ -41,8 +44,31 @@ export default function ReservasPage() {
     return (
       <Section>
         <Container>
+          <div className="max-w-5xl mx-auto">
+            <div className="mb-10">
+              <div className="h-8 w-48 bg-gray-200 rounded-lg animate-pulse" />
+              <div className="h-5 w-64 bg-gray-200 rounded-lg animate-pulse mt-2" />
+            </div>
+            <div className="space-y-6">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <SkeletonBookingCard key={i} />
+              ))}
+            </div>
+          </div>
+        </Container>
+      </Section>
+    );
+  }
+
+  if (error) {
+    return (
+      <Section>
+        <Container>
           <div className="max-w-5xl mx-auto text-center py-20">
-            <p className="text-gray-500">Cargando reservas...</p>
+            <p className="text-red-500 text-lg mb-4">Error al cargar las reservas</p>
+            <Button variant="primary" onClick={() => window.location.reload()}>
+              Reintentar
+            </Button>
           </div>
         </Container>
       </Section>
@@ -61,9 +87,9 @@ export default function ReservasPage() {
           {bookings.length === 0 ? (
             <Card className="p-12 border-0 shadow-xl shadow-gray-900/5 text-center">
               <p className="text-gray-500 text-lg mb-4">No tienes ninguna reserva aún.</p>
-              <Button variant="primary" className="h-12 px-8" onClick={() => window.location.href = '/solicitud'}>
+              <LinkButton href="/solicitud" variant="primary">
                 Crear mi primera solicitud
-              </Button>
+              </LinkButton>
             </Card>
           ) : (
             <div className="space-y-6">
@@ -72,7 +98,7 @@ export default function ReservasPage() {
                   <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
                     <div className="space-y-4 flex-1">
                       <div className="flex items-center gap-3">
-                        <span className={`px-3 py-1 rounded-full text-xs font-bold ${STATUS_COLORS[booking.status] || 'bg-gray-100'}`}>
+                        <span className={`px-3 py-1 rounded-full text-xs font-bold ${STATUS_COLORS[booking.status] || 'bg-gray-100'}`} aria-label={`Estado del servicio: ${STATUS_LABELS[booking.status] || booking.status}`}>
                           {STATUS_LABELS[booking.status] || booking.status}
                         </span>
                         {booking.companion && (
@@ -84,14 +110,14 @@ export default function ReservasPage() {
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="flex gap-3">
-                          <Briefcase className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                          <Briefcase className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" aria-hidden="true" />
                           <div>
                             <span className="text-xs font-bold uppercase tracking-wider text-gray-400">Servicio</span>
                             <p className="font-semibold text-gray-800">{booking.serviceType}</p>
                           </div>
                         </div>
                         <div className="flex gap-3">
-                          <Calendar className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                          <Calendar className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" aria-hidden="true" />
                           <div>
                             <span className="text-xs font-bold uppercase tracking-wider text-gray-400">Fecha</span>
                             <p className="font-semibold text-gray-800">
@@ -105,7 +131,7 @@ export default function ReservasPage() {
                           </div>
                         </div>
                         <div className="flex gap-3">
-                          <Clock className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                          <Clock className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" aria-hidden="true" />
                           <div>
                             <span className="text-xs font-bold uppercase tracking-wider text-gray-400">Hora</span>
                             <p className="font-semibold text-gray-800">
@@ -117,7 +143,7 @@ export default function ReservasPage() {
                           </div>
                         </div>
                         <div className="flex gap-3">
-                          <MapPin className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                          <MapPin className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" aria-hidden="true" />
                           <div>
                             <span className="text-xs font-bold uppercase tracking-wider text-gray-400">Dirección</span>
                             <p className="font-semibold text-gray-800">{booking.address}</p>
@@ -141,26 +167,23 @@ export default function ReservasPage() {
 
                   {(booking.status === 'ACCEPTED' || booking.status === 'IN_PROGRESS') && booking.chatRoom && (
                     <div className="flex gap-2 mt-3">
-                      <Link href={`/coordinacion/${booking.id}`}>
-                        <Button variant="secondary" className="h-10 text-sm flex items-center gap-2">
-                          <MessageSquare className="w-4 h-4" />
-                          Chat
-                        </Button>
-                      </Link>
+                      <LinkButton href={`/coordinacion/${booking.id}`} variant="secondary" className="h-10 text-sm inline-flex items-center gap-2">
+                        <MessageSquare className="w-4 h-4" />
+                        Chat
+                      </LinkButton>
                     </div>
                   )}
 
                   {booking.status === 'COMPLETED' && (
                     <div className="flex gap-2 mt-3">
-                      <Link href={`/valoracion/${booking.id}`}>
-                        <Button
-                          variant={booking.report ? 'ghost' : 'primary'}
-                          className="h-10 text-sm flex items-center gap-2"
-                        >
-                          <Star className="w-4 h-4" />
-                          {booking.report ? 'Ver valoración' : 'Valorar'}
-                        </Button>
-                      </Link>
+                      <LinkButton
+                        href={`/valoracion/${booking.id}`}
+                        variant={booking.report ? 'ghost' : 'primary'}
+                        className="h-10 text-sm inline-flex items-center gap-2"
+                      >
+                        <Star className="w-4 h-4" />
+                        {booking.report ? 'Ver valoración' : 'Valorar'}
+                      </LinkButton>
                     </div>
                   )}
 
@@ -175,7 +198,7 @@ export default function ReservasPage() {
           )}
 
           <div className="mt-8 flex items-center justify-center gap-2 text-xs text-gray-400">
-            <ShieldCheck className="w-4 h-4" />
+            <ShieldCheck className="w-4 h-4" aria-hidden="true" />
             Pago seguro con encriptación SSL
           </div>
         </div>

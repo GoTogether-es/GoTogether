@@ -161,11 +161,12 @@ export default function ValoracionPage() {
                     <span className="text-green-800 font-medium">Valoración enviada correctamente</span>
                   </div>
 
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1" role="img" aria-label={`${existingReport.rating} de 5 estrellas`}>
                     {[1, 2, 3, 4, 5].map((star) => (
                       <Star
                         key={star}
                         className={`w-8 h-8 ${star <= existingReport.rating ? 'fill-amber-400 stroke-amber-400' : 'stroke-gray-300'}`}
+                        aria-hidden="true"
                       />
                     ))}
                   </div>
@@ -195,7 +196,7 @@ export default function ValoracionPage() {
                     <label className="block text-sm font-bold text-gray-700 mb-3">
                       ¿Qué puntuación le das al servicio?
                     </label>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1" role="radiogroup" aria-label="Puntuación del servicio">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <button
                           key={star}
@@ -204,6 +205,9 @@ export default function ValoracionPage() {
                           onMouseEnter={() => setHoverRating(star)}
                           onMouseLeave={() => setHoverRating(0)}
                           className="p-0.5 transition-transform hover:scale-110"
+                          aria-label={`${star} estrella${star !== 1 ? 's' : ''}`}
+                          role="radio"
+                          aria-checked={rating === star}
                         >
                           <Star
                             className={`w-10 h-10 ${
@@ -211,12 +215,13 @@ export default function ValoracionPage() {
                                 ? 'fill-amber-400 stroke-amber-400'
                                 : 'stroke-gray-300'
                             }`}
+                            aria-hidden="true"
                           />
                         </button>
                       ))}
                     </div>
                     {rating > 0 && (
-                      <p className="text-sm text-gray-500 mt-1 ml-1">
+                      <p className="text-sm text-gray-500 mt-1 ml-1" aria-live="polite">
                         {rating === 5 && 'Excelente'}
                         {rating === 4 && 'Muy bien'}
                         {rating === 3 && 'Bien'}

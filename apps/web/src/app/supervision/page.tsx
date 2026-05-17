@@ -1,34 +1,25 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { toast } from 'sonner';
-import { z } from 'zod';
 import { Button, Card, Container, Section } from '@gotogether/ui';
-import { Users, UserPlus, Trash2, Loader2 } from 'lucide-react';
-import { getMyClients, getMySupervisor, createSupervision, removeSupervision, getProfile } from '@/services/api';
-
-const supervisionSchema = z.object({
-  clientId: z.string().min(1, 'Introduce el ID del usuario'),
-});
+import { Users, UserPlus, Trash2, Loader2, Search } from 'lucide-react';
+import { getMyClients, getMySupervisor, createSupervision, removeSupervision, searchUsers } from '@/services/api';
 
 export default function SupervisionPage() {
   const [clients, setClients] = useState<any[]>([]);
   const [supervisor, setSupervisor] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [userRole, setUserRole] = useState<string>('');
 
-  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({
-    resolver: zodResolver(supervisionSchema),
-  });
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [linking, setLinking] = useState(false);
+  const searchTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
   const load = async () => {
     try {
-      const profile = await getProfile();
-      if (profile?.companion) setUserRole('COMPANION');
-      else setUserRole('CLIENT');
-
       const [clientsData, supervisorData] = await Promise.all([
         getMyClients().catch(() => []),
         getMySupervisor(),
@@ -44,14 +35,50 @@ export default function SupervisionPage() {
 
   useEffect(() => { load(); }, []);
 
-  const onAdd = async (data: { clientId: string }) => {
+  const handleSearch = useCallback((query: string) => {
+    setSearchQuery(query);
+    setSelectedUser(null);
+
+    if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+
+    if (!query.trim()) {
+      setSearchResults([]);
+      return;
+    }
+
+    searchTimeoutRef.current = setTimeout(async () => {
+      setSearching(true);
+      try {
+        const results = await searchUsers(query);
+        setSearchResults(results.slice(0, 5));
+      } catch {
+        setSearchResults([]);
+      } finally {
+        setSearching(false);
+      }
+    }, 300);
+  }, []);
+
+  const handleSelectUser = (user: any) => {
+    setSelectedUser(user);
+    setSearchQuery(user.profile?.fullName || user.email);
+    setSearchResults([]);
+  };
+
+  const onAdd = async () => {
+    if (!selectedUser) return;
+    setLinking(true);
     try {
-      await createSupervision(data.clientId);
+      await createSupervision(selectedUser.id);
       toast.success('Cliente vinculado correctamente');
-      reset();
+      setSearchQuery('');
+      setSelectedUser(null);
+      setSearchResults([]);
       load();
     } catch (err: any) {
       toast.error(err.message || 'Error al vincular cliente');
+    } finally {
+      setLinking(false);
     }
   };
 
@@ -89,30 +116,58 @@ export default function SupervisionPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <Card className="p-8 border-0 shadow-xl shadow-blue-900/5">
               <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
-                <Users className="w-5 h-5 text-blue-600" />
+                <Users className="w-5 h-5 text-blue-600" aria-hidden="true" />
                 Mis supervisados
               </h3>
 
-              <form onSubmit={handleSubmit(onAdd)} className="flex gap-3 mb-6">
-                <input
-                  className="gt-input flex-1"
-                  placeholder="ID del usuario a supervisar"
-                  {...register('clientId')}
-                />
-                <Button variant="primary" className="shrink-0" disabled={isSubmitting}>
-                  <UserPlus className="w-4 h-4" />
-                </Button>
-              </form>
-              {errors.clientId && (
-                <p className="text-red-500 text-xs mb-4 -mt-4">{errors.clientId.message}</p>
-              )}
+              <div className="mb-6">
+                <div className="flex gap-2 mb-2">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" aria-hidden="true" />
+                    <label htmlFor="user-search" className="sr-only">Buscar usuario por nombre o email</label>
+                    <input
+                      id="user-search"
+                      className="gt-input pl-9"
+                      placeholder="Buscar por nombre o email..."
+                      value={searchQuery}
+                      onChange={(e) => handleSearch(e.target.value)}
+                    />
+                  </div>
+                  <Button variant="primary" className="shrink-0" onClick={onAdd} disabled={linking || !selectedUser} aria-label="Agregar a supervisados">
+                    <UserPlus className="w-4 h-4" aria-hidden="true" />
+                  </Button>
+                </div>
+                {searching && (
+                  <p className="text-sm text-gray-400 flex items-center gap-1">
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                    Buscando...
+                  </p>
+                )}
+                {!searching && searchResults.length > 0 && !selectedUser && (
+                  <div className="border border-gray-200 rounded-xl overflow-hidden mt-1">
+                    {searchResults.map((user) => (
+                      <button
+                        key={user.id}
+                        type="button"
+                        className="w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors border-b last:border-b-0"
+                        onClick={() => handleSelectUser(user)}
+                      >
+                        <p className="font-medium text-gray-800">
+                          {user.profile?.fullName || 'Sin nombre'}
+                        </p>
+                        <p className="text-xs text-gray-400">{user.email}</p>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
 
               {clients.length === 0 ? (
                 <p className="text-gray-400 text-sm">No supervisas a nadie aún.</p>
               ) : (
-                <div className="space-y-3">
+                <div className="space-y-3" role="list">
                   {clients.map((s: any) => (
-                    <div key={s.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                    <div key={s.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl" role="listitem">
                       <div>
                         <p className="font-medium text-gray-800">
                           {s.client?.profile?.fullName || s.client?.email || s.clientId}
@@ -122,8 +177,9 @@ export default function SupervisionPage() {
                       <button
                         onClick={() => onRemove(s.id)}
                         className="p-2 text-gray-400 hover:text-red-500 transition-colors"
+                        aria-label={`Eliminar supervisión de ${s.client?.profile?.fullName || s.client?.email}`}
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-4 h-4" aria-hidden="true" />
                       </button>
                     </div>
                   ))}
@@ -133,7 +189,7 @@ export default function SupervisionPage() {
 
             <Card className="p-8 border-0 shadow-xl shadow-gray-900/5">
               <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
-                <UserPlus className="w-5 h-5 text-blue-600" />
+                <UserPlus className="w-5 h-5 text-blue-600" aria-hidden="true" />
                 Mi supervisor
               </h3>
 

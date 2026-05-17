@@ -257,3 +257,12 @@ export async function removeSupervision(id: string) {
   return response.json();
 }
 
+export async function searchUsers(query: string) {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/users?search=${encodeURIComponent(query)}`, { headers });
+  if (!response.ok) {
+    throw new Error('Failed to search users');
+  }
+  return response.json() as Promise<{ id: string; email: string; profile?: { fullName: string } }[]>;
+}
+

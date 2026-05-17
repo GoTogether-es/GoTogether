@@ -201,7 +201,7 @@ export default function CoordinacionPage() {
                 </Button>
               </div>
 
-              <div className="bg-gray-50 p-6 min-h-[400px] max-h-[500px] overflow-y-auto flex flex-col gap-4">
+              <div className="bg-gray-50 p-6 min-h-[400px] max-h-[500px] overflow-y-auto flex flex-col gap-4" role="log" aria-live="polite" aria-label="Mensajes del chat">
                 {messages.length === 0 && (
                   <div className="flex-1 flex items-center justify-center">
                     <p className="text-gray-400 text-sm">No hay mensajes aún. Escribe el primero.</p>

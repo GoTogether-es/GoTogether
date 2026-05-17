@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { Container, Section } from '@gotogether/ui';
 import { Search, SlidersHorizontal } from 'lucide-react';
 import { CompanionCard, CompanionSummary } from '@/components/companion-card';
 import { getRecommendations } from '@/services/api';
+import { SkeletonCard } from '@/components/skeleton';
 
 const DISABILITY_OPTIONS = [
   'Movilidad reducida',
@@ -17,30 +18,45 @@ export default function ExplorarPage() {
   const [companions, setCompanions] = useState<CompanionSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [disabilityType, setDisabilityType] = useState('');
   const [verifiedOnly, setVerifiedOnly] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
+  const [error, setError] = useState(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+
+  useEffect(() => {
+    debounceRef.current = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 300);
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [search]);
 
   const fetchCompanions = useCallback(async () => {
     setLoading(true);
+    setError(false);
     try {
       const result = await getRecommendations({
-        search: search || undefined,
+        search: debouncedSearch || undefined,
         disabilityType: disabilityType || undefined,
         verified: verifiedOnly || undefined,
         page,
         limit: 9,
       });
-      setCompanions(result.data);
-      setTotalPages(result.meta.totalPages);
+      setCompanions(result.data || []);
+      setTotalPages(result.meta?.totalPages || 1);
     } catch (err) {
       console.error(err);
+      setError(true);
+      setCompanions([]);
     } finally {
       setLoading(false);
     }
-  }, [search, disabilityType, verifiedOnly, page]);
+  }, [debouncedSearch, disabilityType, verifiedOnly, page]);
 
   useEffect(() => {
     fetchCompanions();
@@ -58,8 +74,10 @@ export default function ExplorarPage() {
 
           <div className="flex flex-col sm:flex-row gap-3 mb-6">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" aria-hidden="true" />
+              <label htmlFor="search-input" className="sr-only">Buscar acompañantes</label>
               <input
+                id="search-input"
                 type="text"
                 value={search}
                 onChange={(e) => { setSearch(e.target.value); setPage(1); }}
@@ -70,8 +88,9 @@ export default function ExplorarPage() {
             <button
               onClick={() => setShowFilters(!showFilters)}
               className={`gt-button gt-button--${showFilters ? 'primary' : 'secondary'} h-12 px-4 flex items-center gap-2 shrink-0`}
+              aria-expanded={showFilters}
             >
-              <SlidersHorizontal className="w-4 h-4" />
+              <SlidersHorizontal className="w-4 h-4" aria-hidden="true" />
               Filtros
             </button>
           </div>
@@ -79,10 +98,11 @@ export default function ExplorarPage() {
           {showFilters && (
             <div className="flex flex-wrap gap-4 mb-6 p-4 bg-gray-50 rounded-2xl">
               <div>
-                <label className="block text-xs font-bold uppercase text-gray-400 mb-1">
+                <label className="block text-xs font-bold uppercase text-gray-400 mb-1" htmlFor="disability-filter">
                   Tipo de discapacidad
                 </label>
                 <select
+                  id="disability-filter"
                   value={disabilityType}
                   onChange={(e) => { setDisabilityType(e.target.value); setPage(1); }}
                   className="gt-input"
@@ -108,8 +128,21 @@ export default function ExplorarPage() {
           )}
 
           {loading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <SkeletonCard key={i} />
+              ))}
+            </div>
+          ) : error ? (
             <div className="text-center py-20">
-              <p className="text-gray-500">Buscando acompañantes...</p>
+              <p className="text-gray-500 text-lg mb-2">Error al cargar acompañantes</p>
+              <p className="text-gray-400 mb-4">No se pudo conectar con el servidor.</p>
+              <button
+                onClick={fetchCompanions}
+                className="gt-button gt-button--primary"
+              >
+                Reintentar
+              </button>
             </div>
           ) : companions.length === 0 ? (
             <div className="text-center py-20">
@@ -130,6 +163,7 @@ export default function ExplorarPage() {
                     onClick={() => setPage((p) => Math.max(1, p - 1))}
                     disabled={page === 1}
                     className="gt-button gt-button--ghost h-10 px-4 disabled:opacity-30"
+                    aria-label="Página anterior"
                   >
                     Anterior
                   </button>
@@ -140,6 +174,7 @@ export default function ExplorarPage() {
                     onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                     disabled={page === totalPages}
                     className="gt-button gt-button--ghost h-10 px-4 disabled:opacity-30"
+                    aria-label="Página siguiente"
                   >
                     Siguiente
                   </button>

@@ -9,7 +9,12 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'images.unsplash.com',
       },
+      {
+        protocol: 'https',
+        hostname: '**.r2.cloudflarestorage.com',
+      },
     ],
+    unoptimized: process.env.NODE_ENV === 'development',
   },
   async headers() {
     return [
