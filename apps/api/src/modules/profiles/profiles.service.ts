@@ -8,6 +8,8 @@ export class ProfilesService {
   constructor(private readonly prisma: PrismaService) {}
 
   async upsertProfile(userId: string, dto: UpsertProfileDto) {
+    await this.ensureUser(userId);
+
     const { isCompanion, specialties, backgroundCheck, sexualCheck, ...profileData } = dto;
 
     // 1. Upsert base profile
@@ -94,5 +96,13 @@ export class ProfilesService {
       averageRating,
       recentRatings: ratings.slice(-5),
     };
+  }
+
+  private async ensureUser(userId: string) {
+    await this.prisma.user.upsert({
+      where: { id: userId },
+      update: {},
+      create: { id: userId, email: `${userId}@unknown` },
+    });
   }
 }
