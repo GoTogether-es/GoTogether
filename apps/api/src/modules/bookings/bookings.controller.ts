@@ -26,7 +26,7 @@ export class BookingsController {
   @UseGuards(SupabaseAuthGuard)
   @Get('me')
   findMyBookings(@Request() req: any) {
-    return this.bookingsService.findByUser(req.user.userId, req.user.role);
+    return this.bookingsService.findByUser(req.user.userId);
   }
 
   @UseGuards(SupabaseAuthGuard)

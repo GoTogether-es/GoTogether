@@ -56,8 +56,14 @@ export class BookingsService {
     });
   }
 
-  async findByUser(userId: string, role: UserRole) {
-    if (role === UserRole.COMPANION) {
+  async findByUser(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { role: true },
+    });
+    if (!user) throw new NotFoundException('Usuario no encontrado');
+
+    if (user.role === UserRole.COMPANION) {
       const companion = await this.prisma.companionProfile.findFirst({
         where: { profile: { userId } },
         select: { id: true },
