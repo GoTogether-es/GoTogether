@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import { Controller, Put, Param, UseGuards } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { SupabaseAuthGuard } from '../auth/supabase-auth.guard';
