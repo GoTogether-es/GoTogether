@@ -130,6 +130,13 @@ exports.Prisma.UserScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.SupervisionScalarFieldEnum = {
+  id: 'id',
+  supervisorId: 'supervisorId',
+  clientId: 'clientId',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.ProfileScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -161,6 +168,7 @@ exports.Prisma.BookingScalarFieldEnum = {
   id: 'id',
   clientId: 'clientId',
   companionId: 'companionId',
+  bookedById: 'bookedById',
   status: 'status',
   serviceType: 'serviceType',
   summary: 'summary',
@@ -224,6 +232,7 @@ exports.Prisma.NullsOrder = {
 exports.UserRole = exports.$Enums.UserRole = {
   CLIENT: 'CLIENT',
   COMPANION: 'COMPANION',
+  SUPERVISOR: 'SUPERVISOR',
   ADMIN: 'ADMIN'
 };
 
@@ -239,6 +248,7 @@ exports.BookingStatus = exports.$Enums.BookingStatus = {
 
 exports.Prisma.ModelName = {
   User: 'User',
+  Supervision: 'Supervision',
   Profile: 'Profile',
   CompanionProfile: 'CompanionProfile',
   Booking: 'Booking',

@@ -1,4 +1,4 @@
-import { Controller, Get, Put, Body, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Put, Body, UseGuards, Request, Param } from '@nestjs/common';
 import { ProfilesService } from './profiles.service';
 import { SupabaseAuthGuard } from '../auth/supabase-auth.guard';
 import { UpsertProfileDto } from './dto/upsert-profile.dto';
@@ -22,5 +22,10 @@ export class ProfilesController {
   @Get('companions')
   listCompanions() {
     return this.profilesService.listCompanions();
+  }
+
+  @Get('companions/:id')
+  getCompanion(@Param('id') id: string) {
+    return this.profilesService.getCompanionById(id);
   }
 }

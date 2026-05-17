@@ -2,17 +2,19 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Container, Button } from '@gotogether/ui';
 import { routes } from '@/lib/routes';
 import { Footer } from './footer';
-import { User, LogIn, Menu, Search, CalendarDays } from 'lucide-react';
+import { User, LogIn, Menu, Search, CalendarDays, LogOut } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import type { Session } from '@supabase/supabase-js';
+import { logout } from '@/services/api';
 import clsx from 'clsx';
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [session, setSession] = useState<Session | null>(null);
   const supabase = createClient();
 
@@ -29,6 +31,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
     return () => subscription.unsubscribe();
   }, [supabase.auth]);
+
+  const handleLogout = async () => {
+    await logout();
+    router.push('/');
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -75,12 +82,21 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   </Button>
                 </Link>
               ) : (
-                <Link href={routes.perfil}>
-                  <Button variant="secondary" className="flex items-center gap-2 border-gray-200">
-                    <User className="w-4 h-4" />
-                    Mi Perfil
+                <>
+                  <Link href={routes.perfil}>
+                    <Button variant="secondary" className="flex items-center gap-2 border-gray-200">
+                      <User className="w-4 h-4" />
+                      Mi Perfil
+                    </Button>
+                  </Link>
+                  <Button
+                    variant="ghost"
+                    className="flex items-center gap-2 text-gray-500 hover:text-red-600"
+                    onClick={handleLogout}
+                  >
+                    <LogOut className="w-4 h-4" />
                   </Button>
-                </Link>
+                </>
               )}
               <button
                 type="button"

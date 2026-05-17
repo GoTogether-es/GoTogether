@@ -1,46 +1,152 @@
-import { Container, Section } from '@gotogether/ui';
-import { CompanionCard } from '@/components/companion-card';
-import type { CompanionSummary } from '@/types';
+'use client';
 
-const companions: Omit<CompanionSummary, 'image'>[] = [
-  {
-    name: 'Lucía Martínez',
-    bio: 'Acompaño a personas mayores en paseos culturales y gestiones médicas.',
-    specialty: 'Cultura y salud',
-    rating: '4.9',
-    years: '2 años en GoTogether',
-  },
-  {
-    name: 'Alberto Gil',
-    bio: 'Soy paciente y atento, con experiencia en movilidad reducida.',
-    specialty: 'Movilidad y hogar',
-    rating: '4.8',
-    years: '1 año en GoTogether',
-  },
-  {
-    name: 'Rocío Vega',
-    bio: 'Disfruto acompañando en actividades sociales y compras.',
-    specialty: 'Ocio y compras',
-    rating: '5.0',
-    years: '3 años en GoTogether',
-  },
+import { useEffect, useState, useCallback } from 'react';
+import { Container, Section } from '@gotogether/ui';
+import { Search, SlidersHorizontal } from 'lucide-react';
+import { CompanionCard, CompanionSummary } from '@/components/companion-card';
+import { getRecommendations } from '@/services/api';
+
+const DISABILITY_OPTIONS = [
+  'Movilidad reducida',
+  'Discapacidad visual',
+  'Discapacidad auditiva',
+  'Discapacidad cognitiva',
 ];
 
-const companionImage =
-  'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=600&q=80';
-
 export default function ExplorarPage() {
+  const [companions, setCompanions] = useState<CompanionSummary[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [disabilityType, setDisabilityType] = useState('');
+  const [verifiedOnly, setVerifiedOnly] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [showFilters, setShowFilters] = useState(false);
+
+  const fetchCompanions = useCallback(async () => {
+    setLoading(true);
+    try {
+      const result = await getRecommendations({
+        search: search || undefined,
+        disabilityType: disabilityType || undefined,
+        verified: verifiedOnly || undefined,
+        page,
+        limit: 9,
+      });
+      setCompanions(result.data);
+      setTotalPages(result.meta.totalPages);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }, [search, disabilityType, verifiedOnly, page]);
+
+  useEffect(() => {
+    fetchCompanions();
+  }, [fetchCompanions]);
+
   return (
     <Section>
       <Container>
-        <h1 className="text-3xl font-bold mb-2">Encuentra a tu acompañante ideal</h1>
-        <p className="text-gray-500 mb-8 max-w-2xl">
-          Selecciona el perfil que mejor encaje con tus necesidades. Todos nuestros acompañantes han pasado un proceso de validación.
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {companions.map((companion) => (
-            <CompanionCard key={companion.name} {...companion} image={companionImage} />
-          ))}
+        <div className="max-w-6xl mx-auto">
+          <h1 className="text-3xl font-bold mb-2">Encuentra a tu acompañante ideal</h1>
+          <p className="text-gray-500 mb-8">
+            Selecciona el perfil que mejor encaje con tus necesidades.
+            Todos nuestros acompañantes han pasado un proceso de validación.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-3 mb-6">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+                placeholder="Buscar por nombre, especialidad..."
+                className="gt-input pl-10 w-full"
+              />
+            </div>
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className={`gt-button gt-button--${showFilters ? 'primary' : 'secondary'} h-12 px-4 flex items-center gap-2 shrink-0`}
+            >
+              <SlidersHorizontal className="w-4 h-4" />
+              Filtros
+            </button>
+          </div>
+
+          {showFilters && (
+            <div className="flex flex-wrap gap-4 mb-6 p-4 bg-gray-50 rounded-2xl">
+              <div>
+                <label className="block text-xs font-bold uppercase text-gray-400 mb-1">
+                  Tipo de discapacidad
+                </label>
+                <select
+                  value={disabilityType}
+                  onChange={(e) => { setDisabilityType(e.target.value); setPage(1); }}
+                  className="gt-input"
+                >
+                  <option value="">Todas</option>
+                  {DISABILITY_OPTIONS.map((d) => (
+                    <option key={d} value={d}>{d}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex items-end pb-1">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={verifiedOnly}
+                    onChange={(e) => { setVerifiedOnly(e.target.checked); setPage(1); }}
+                    className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  />
+                  <span className="text-sm font-bold text-gray-700">Solo verificados</span>
+                </label>
+              </div>
+            </div>
+          )}
+
+          {loading ? (
+            <div className="text-center py-20">
+              <p className="text-gray-500">Buscando acompañantes...</p>
+            </div>
+          ) : companions.length === 0 ? (
+            <div className="text-center py-20">
+              <p className="text-gray-500 text-lg mb-2">No se encontraron acompañantes</p>
+              <p className="text-gray-400">Prueba a ajustar los filtros de búsqueda.</p>
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {companions.map((companion) => (
+                  <CompanionCard key={companion.id} {...companion} />
+                ))}
+              </div>
+
+              {totalPages > 1 && (
+                <div className="flex justify-center items-center gap-3 mt-10">
+                  <button
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    disabled={page === 1}
+                    className="gt-button gt-button--ghost h-10 px-4 disabled:opacity-30"
+                  >
+                    Anterior
+                  </button>
+                  <span className="text-sm text-gray-500">
+                    Página {page} de {totalPages}
+                  </span>
+                  <button
+                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                    disabled={page === totalPages}
+                    className="gt-button gt-button--ghost h-10 px-4 disabled:opacity-30"
+                  >
+                    Siguiente
+                  </button>
+                </div>
+              )}
+            </>
+          )}
         </div>
       </Container>
     </Section>

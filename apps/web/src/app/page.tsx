@@ -38,7 +38,7 @@ export default function HomePage() {
               <Card className="relative p-6 border-0 shadow-2xl bg-white/5 backdrop-blur-sm ring-1 ring-white/10">
                 <div className="relative w-full h-[400px]">
                   <Image
-                    src={sampleCompanion.image}
+                    src={sampleCompanion.image || ''}
                     alt={sampleCompanion.alt || 'Acompañante'}
                     fill
                     className="object-cover rounded-2xl shadow-inner"

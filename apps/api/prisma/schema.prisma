@@ -12,6 +12,7 @@ datasource db {
 enum UserRole {
   CLIENT
   COMPANION
+  SUPERVISOR
   ADMIN
 }
 
@@ -32,8 +33,21 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  profile   Profile?
-  bookings  Booking[] @relation("ClientBookings")
+  profile            Profile?
+  bookings           Booking[]     @relation("ClientBookings")
+  supervisedClients  Supervision[] @relation("SupervisorOf")
+  supervisorRef      Supervision?  @relation("SupervisedBy")
+  bookedBookings     Booking[]     @relation("BookedBookings")
+}
+
+model Supervision {
+  id           String   @id @default(uuid())
+  supervisorId String
+  clientId     String   @unique
+  createdAt    DateTime @default(now())
+
+  supervisor   User @relation("SupervisorOf", fields: [supervisorId], references: [id])
+  client       User @relation("SupervisedBy", fields: [clientId], references: [id])
 }
 
 model Profile {
@@ -73,6 +87,7 @@ model Booking {
   id            String        @id @default(uuid())
   clientId      String
   companionId   String?
+  bookedById    String?
   status        BookingStatus @default(DRAFT)
   serviceType   String
   summary       String?
@@ -84,6 +99,7 @@ model Booking {
 
   client        User          @relation("ClientBookings", fields: [clientId], references: [id])
   companion     CompanionProfile? @relation("CompanionBookings", fields: [companionId], references: [id])
+  bookedBy      User?         @relation("BookedBookings", fields: [bookedById], references: [id])
   payment       Payment?
   report        Report?
   chatRoom      ChatRoom?

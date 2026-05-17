@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards, Request, Headers } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SupabaseAuthGuard } from './supabase-auth.guard';
 import { IsEmail } from 'class-validator';
@@ -22,5 +22,11 @@ export class AuthController {
   async getMe(@Request() req: any) {
     const user = await this.authService.validateAndSyncUser(req.user);
     return user;
+  }
+
+  @UseGuards(SupabaseAuthGuard)
+  @Post('logout')
+  logout(@Headers('authorization') authHeader: string) {
+    return this.authService.logout(authHeader || '');
   }
 }

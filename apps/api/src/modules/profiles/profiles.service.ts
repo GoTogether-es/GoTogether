@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpsertProfileDto } from './dto/upsert-profile.dto';
 import { UserRole } from '../../generated/client';
@@ -8,7 +8,7 @@ export class ProfilesService {
   constructor(private readonly prisma: PrismaService) {}
 
   async upsertProfile(userId: string, dto: UpsertProfileDto) {
-    const { isCompanion, specialties, ...profileData } = dto;
+    const { isCompanion, specialties, backgroundCheck, sexualCheck, ...profileData } = dto;
 
     // 1. Upsert base profile
     const profile = await this.prisma.profile.upsert({
@@ -21,8 +21,8 @@ export class ProfilesService {
     if (isCompanion) {
       await this.prisma.companionProfile.upsert({
         where: { profileId: profile.id },
-        update: { specialties },
-        create: { profileId: profile.id, specialties },
+        update: { specialties, backgroundCheck, sexualCheck },
+        create: { profileId: profile.id, specialties, backgroundCheck, sexualCheck },
       });
 
       // Update user role to COMPANION
@@ -31,11 +31,13 @@ export class ProfilesService {
         data: { role: UserRole.COMPANION },
       });
     } else {
-      // If was companion but now isn't? (Optional: could delete companionProfile, but safer to just keep CLIENT role)
-      await this.prisma.user.update({
-        where: { id: userId },
-        data: { role: UserRole.CLIENT },
-      });
+      const user = await this.prisma.user.findUnique({ where: { id: userId } });
+      if (user && user.role !== UserRole.SUPERVISOR && user.role !== UserRole.ADMIN) {
+        await this.prisma.user.update({
+          where: { id: userId },
+          data: { role: UserRole.CLIENT },
+        });
+      }
     }
 
     return this.getProfileByUserId(userId);
@@ -58,5 +60,39 @@ export class ProfilesService {
         }
       },
     });
+  }
+
+  async getCompanionById(companionId: string) {
+    const companion = await this.prisma.companionProfile.findUnique({
+      where: { id: companionId },
+      include: {
+        profile: {
+          include: { user: { select: { id: true, email: true } } },
+        },
+        bookings: {
+          where: { status: 'COMPLETED' },
+          select: { report: { select: { rating: true } } },
+        },
+      },
+    });
+
+    if (!companion) throw new NotFoundException('Acompañante no encontrado');
+
+    const ratings = companion.bookings
+      .map((b) => b.report?.rating)
+      .filter((r): r is number => r !== null && r !== undefined);
+
+    const completedServices = companion.bookings.length;
+    const averageRating =
+      ratings.length > 0
+        ? ratings.reduce((a, b) => a + b, 0) / ratings.length
+        : null;
+
+    return {
+      ...companion,
+      completedServices,
+      averageRating,
+      recentRatings: ratings.slice(-5),
+    };
   }
 }

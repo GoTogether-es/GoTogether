@@ -94,4 +94,27 @@ export class AuthService {
       },
     });
   }
+
+  async logout(token: string) {
+    if (!this.supabaseAdmin) {
+      this.initializeClients();
+    }
+
+    if (!this.supabaseAdmin) {
+      throw new InternalServerErrorException('Supabase no configurado');
+    }
+
+    try {
+      const { error } = await this.supabaseAdmin.auth.admin.signOut(
+        token.replace('Bearer ', ''),
+      );
+      if (error) throw error;
+      return { success: true };
+    } catch (error: any) {
+      console.error('Error in logout:', error);
+      throw new InternalServerErrorException(
+        `No se pudo cerrar sesión: ${error.message || 'Error desconocido'}`,
+      );
+    }
+  }
 }

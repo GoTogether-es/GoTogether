@@ -19,6 +19,11 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 /**
+ * Model Supervision
+ * 
+ */
+export type Supervision = $Result.DefaultSelection<Prisma.$SupervisionPayload>
+/**
  * Model Profile
  * 
  */
@@ -61,6 +66,7 @@ export namespace $Enums {
   export const UserRole: {
   CLIENT: 'CLIENT',
   COMPANION: 'COMPANION',
+  SUPERVISOR: 'SUPERVISOR',
   ADMIN: 'ADMIN'
 };
 
@@ -221,6 +227,16 @@ export class PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<ExtArgs>;
+
+  /**
+   * `prisma.supervision`: Exposes CRUD operations for the **Supervision** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Supervisions
+    * const supervisions = await prisma.supervision.findMany()
+    * ```
+    */
+  get supervision(): Prisma.SupervisionDelegate<ExtArgs>;
 
   /**
    * `prisma.profile`: Exposes CRUD operations for the **Profile** model.
@@ -733,6 +749,7 @@ export namespace Prisma {
 
   export const ModelName: {
     User: 'User',
+    Supervision: 'Supervision',
     Profile: 'Profile',
     CompanionProfile: 'CompanionProfile',
     Booking: 'Booking',
@@ -755,7 +772,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "profile" | "companionProfile" | "booking" | "payment" | "chatRoom" | "chatMessage" | "report"
+      modelProps: "user" | "supervision" | "profile" | "companionProfile" | "booking" | "payment" | "chatRoom" | "chatMessage" | "report"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -826,6 +843,76 @@ export namespace Prisma {
           count: {
             args: Prisma.UserCountArgs<ExtArgs>
             result: $Utils.Optional<UserCountAggregateOutputType> | number
+          }
+        }
+      }
+      Supervision: {
+        payload: Prisma.$SupervisionPayload<ExtArgs>
+        fields: Prisma.SupervisionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SupervisionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupervisionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SupervisionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupervisionPayload>
+          }
+          findFirst: {
+            args: Prisma.SupervisionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupervisionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SupervisionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupervisionPayload>
+          }
+          findMany: {
+            args: Prisma.SupervisionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupervisionPayload>[]
+          }
+          create: {
+            args: Prisma.SupervisionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupervisionPayload>
+          }
+          createMany: {
+            args: Prisma.SupervisionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SupervisionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupervisionPayload>[]
+          }
+          delete: {
+            args: Prisma.SupervisionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupervisionPayload>
+          }
+          update: {
+            args: Prisma.SupervisionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupervisionPayload>
+          }
+          deleteMany: {
+            args: Prisma.SupervisionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SupervisionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.SupervisionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupervisionPayload>
+          }
+          aggregate: {
+            args: Prisma.SupervisionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSupervision>
+          }
+          groupBy: {
+            args: Prisma.SupervisionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SupervisionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SupervisionCountArgs<ExtArgs>
+            result: $Utils.Optional<SupervisionCountAggregateOutputType> | number
           }
         }
       }
@@ -1481,10 +1568,14 @@ export namespace Prisma {
 
   export type UserCountOutputType = {
     bookings: number
+    supervisedClients: number
+    bookedBookings: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     bookings?: boolean | UserCountOutputTypeCountBookingsArgs
+    supervisedClients?: boolean | UserCountOutputTypeCountSupervisedClientsArgs
+    bookedBookings?: boolean | UserCountOutputTypeCountBookedBookingsArgs
   }
 
   // Custom InputTypes
@@ -1502,6 +1593,20 @@ export namespace Prisma {
    * UserCountOutputType without action
    */
   export type UserCountOutputTypeCountBookingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BookingWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSupervisedClientsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SupervisionWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountBookedBookingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: BookingWhereInput
   }
 
@@ -1738,6 +1843,9 @@ export namespace Prisma {
     updatedAt?: boolean
     profile?: boolean | User$profileArgs<ExtArgs>
     bookings?: boolean | User$bookingsArgs<ExtArgs>
+    supervisedClients?: boolean | User$supervisedClientsArgs<ExtArgs>
+    supervisorRef?: boolean | User$supervisorRefArgs<ExtArgs>
+    bookedBookings?: boolean | User$bookedBookingsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1760,6 +1868,9 @@ export namespace Prisma {
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     profile?: boolean | User$profileArgs<ExtArgs>
     bookings?: boolean | User$bookingsArgs<ExtArgs>
+    supervisedClients?: boolean | User$supervisedClientsArgs<ExtArgs>
+    supervisorRef?: boolean | User$supervisorRefArgs<ExtArgs>
+    bookedBookings?: boolean | User$bookedBookingsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1769,6 +1880,9 @@ export namespace Prisma {
     objects: {
       profile: Prisma.$ProfilePayload<ExtArgs> | null
       bookings: Prisma.$BookingPayload<ExtArgs>[]
+      supervisedClients: Prisma.$SupervisionPayload<ExtArgs>[]
+      supervisorRef: Prisma.$SupervisionPayload<ExtArgs> | null
+      bookedBookings: Prisma.$BookingPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2142,6 +2256,9 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     profile<T extends User$profileArgs<ExtArgs> = {}>(args?: Subset<T, User$profileArgs<ExtArgs>>): Prisma__ProfileClient<$Result.GetResult<Prisma.$ProfilePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     bookings<T extends User$bookingsArgs<ExtArgs> = {}>(args?: Subset<T, User$bookingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findMany"> | Null>
+    supervisedClients<T extends User$supervisedClientsArgs<ExtArgs> = {}>(args?: Subset<T, User$supervisedClientsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SupervisionPayload<ExtArgs>, T, "findMany"> | Null>
+    supervisorRef<T extends User$supervisorRefArgs<ExtArgs> = {}>(args?: Subset<T, User$supervisorRefArgs<ExtArgs>>): Prisma__SupervisionClient<$Result.GetResult<Prisma.$SupervisionPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    bookedBookings<T extends User$bookedBookingsArgs<ExtArgs> = {}>(args?: Subset<T, User$bookedBookingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2525,6 +2642,61 @@ export namespace Prisma {
   }
 
   /**
+   * User.supervisedClients
+   */
+  export type User$supervisedClientsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Supervision
+     */
+    select?: SupervisionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupervisionInclude<ExtArgs> | null
+    where?: SupervisionWhereInput
+    orderBy?: SupervisionOrderByWithRelationInput | SupervisionOrderByWithRelationInput[]
+    cursor?: SupervisionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SupervisionScalarFieldEnum | SupervisionScalarFieldEnum[]
+  }
+
+  /**
+   * User.supervisorRef
+   */
+  export type User$supervisorRefArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Supervision
+     */
+    select?: SupervisionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupervisionInclude<ExtArgs> | null
+    where?: SupervisionWhereInput
+  }
+
+  /**
+   * User.bookedBookings
+   */
+  export type User$bookedBookingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Booking
+     */
+    select?: BookingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingInclude<ExtArgs> | null
+    where?: BookingWhereInput
+    orderBy?: BookingOrderByWithRelationInput | BookingOrderByWithRelationInput[]
+    cursor?: BookingWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: BookingScalarFieldEnum | BookingScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2536,6 +2708,933 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Supervision
+   */
+
+  export type AggregateSupervision = {
+    _count: SupervisionCountAggregateOutputType | null
+    _min: SupervisionMinAggregateOutputType | null
+    _max: SupervisionMaxAggregateOutputType | null
+  }
+
+  export type SupervisionMinAggregateOutputType = {
+    id: string | null
+    supervisorId: string | null
+    clientId: string | null
+    createdAt: Date | null
+  }
+
+  export type SupervisionMaxAggregateOutputType = {
+    id: string | null
+    supervisorId: string | null
+    clientId: string | null
+    createdAt: Date | null
+  }
+
+  export type SupervisionCountAggregateOutputType = {
+    id: number
+    supervisorId: number
+    clientId: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type SupervisionMinAggregateInputType = {
+    id?: true
+    supervisorId?: true
+    clientId?: true
+    createdAt?: true
+  }
+
+  export type SupervisionMaxAggregateInputType = {
+    id?: true
+    supervisorId?: true
+    clientId?: true
+    createdAt?: true
+  }
+
+  export type SupervisionCountAggregateInputType = {
+    id?: true
+    supervisorId?: true
+    clientId?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type SupervisionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Supervision to aggregate.
+     */
+    where?: SupervisionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Supervisions to fetch.
+     */
+    orderBy?: SupervisionOrderByWithRelationInput | SupervisionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SupervisionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Supervisions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Supervisions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Supervisions
+    **/
+    _count?: true | SupervisionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SupervisionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SupervisionMaxAggregateInputType
+  }
+
+  export type GetSupervisionAggregateType<T extends SupervisionAggregateArgs> = {
+        [P in keyof T & keyof AggregateSupervision]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSupervision[P]>
+      : GetScalarType<T[P], AggregateSupervision[P]>
+  }
+
+
+
+
+  export type SupervisionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SupervisionWhereInput
+    orderBy?: SupervisionOrderByWithAggregationInput | SupervisionOrderByWithAggregationInput[]
+    by: SupervisionScalarFieldEnum[] | SupervisionScalarFieldEnum
+    having?: SupervisionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SupervisionCountAggregateInputType | true
+    _min?: SupervisionMinAggregateInputType
+    _max?: SupervisionMaxAggregateInputType
+  }
+
+  export type SupervisionGroupByOutputType = {
+    id: string
+    supervisorId: string
+    clientId: string
+    createdAt: Date
+    _count: SupervisionCountAggregateOutputType | null
+    _min: SupervisionMinAggregateOutputType | null
+    _max: SupervisionMaxAggregateOutputType | null
+  }
+
+  type GetSupervisionGroupByPayload<T extends SupervisionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SupervisionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SupervisionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SupervisionGroupByOutputType[P]>
+            : GetScalarType<T[P], SupervisionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SupervisionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    supervisorId?: boolean
+    clientId?: boolean
+    createdAt?: boolean
+    supervisor?: boolean | UserDefaultArgs<ExtArgs>
+    client?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["supervision"]>
+
+  export type SupervisionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    supervisorId?: boolean
+    clientId?: boolean
+    createdAt?: boolean
+    supervisor?: boolean | UserDefaultArgs<ExtArgs>
+    client?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["supervision"]>
+
+  export type SupervisionSelectScalar = {
+    id?: boolean
+    supervisorId?: boolean
+    clientId?: boolean
+    createdAt?: boolean
+  }
+
+  export type SupervisionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    supervisor?: boolean | UserDefaultArgs<ExtArgs>
+    client?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type SupervisionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    supervisor?: boolean | UserDefaultArgs<ExtArgs>
+    client?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $SupervisionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Supervision"
+    objects: {
+      supervisor: Prisma.$UserPayload<ExtArgs>
+      client: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      supervisorId: string
+      clientId: string
+      createdAt: Date
+    }, ExtArgs["result"]["supervision"]>
+    composites: {}
+  }
+
+  type SupervisionGetPayload<S extends boolean | null | undefined | SupervisionDefaultArgs> = $Result.GetResult<Prisma.$SupervisionPayload, S>
+
+  type SupervisionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<SupervisionFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: SupervisionCountAggregateInputType | true
+    }
+
+  export interface SupervisionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Supervision'], meta: { name: 'Supervision' } }
+    /**
+     * Find zero or one Supervision that matches the filter.
+     * @param {SupervisionFindUniqueArgs} args - Arguments to find a Supervision
+     * @example
+     * // Get one Supervision
+     * const supervision = await prisma.supervision.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SupervisionFindUniqueArgs>(args: SelectSubset<T, SupervisionFindUniqueArgs<ExtArgs>>): Prisma__SupervisionClient<$Result.GetResult<Prisma.$SupervisionPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one Supervision that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {SupervisionFindUniqueOrThrowArgs} args - Arguments to find a Supervision
+     * @example
+     * // Get one Supervision
+     * const supervision = await prisma.supervision.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SupervisionFindUniqueOrThrowArgs>(args: SelectSubset<T, SupervisionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SupervisionClient<$Result.GetResult<Prisma.$SupervisionPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first Supervision that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupervisionFindFirstArgs} args - Arguments to find a Supervision
+     * @example
+     * // Get one Supervision
+     * const supervision = await prisma.supervision.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SupervisionFindFirstArgs>(args?: SelectSubset<T, SupervisionFindFirstArgs<ExtArgs>>): Prisma__SupervisionClient<$Result.GetResult<Prisma.$SupervisionPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first Supervision that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupervisionFindFirstOrThrowArgs} args - Arguments to find a Supervision
+     * @example
+     * // Get one Supervision
+     * const supervision = await prisma.supervision.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SupervisionFindFirstOrThrowArgs>(args?: SelectSubset<T, SupervisionFindFirstOrThrowArgs<ExtArgs>>): Prisma__SupervisionClient<$Result.GetResult<Prisma.$SupervisionPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more Supervisions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupervisionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Supervisions
+     * const supervisions = await prisma.supervision.findMany()
+     * 
+     * // Get first 10 Supervisions
+     * const supervisions = await prisma.supervision.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const supervisionWithIdOnly = await prisma.supervision.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SupervisionFindManyArgs>(args?: SelectSubset<T, SupervisionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SupervisionPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a Supervision.
+     * @param {SupervisionCreateArgs} args - Arguments to create a Supervision.
+     * @example
+     * // Create one Supervision
+     * const Supervision = await prisma.supervision.create({
+     *   data: {
+     *     // ... data to create a Supervision
+     *   }
+     * })
+     * 
+     */
+    create<T extends SupervisionCreateArgs>(args: SelectSubset<T, SupervisionCreateArgs<ExtArgs>>): Prisma__SupervisionClient<$Result.GetResult<Prisma.$SupervisionPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many Supervisions.
+     * @param {SupervisionCreateManyArgs} args - Arguments to create many Supervisions.
+     * @example
+     * // Create many Supervisions
+     * const supervision = await prisma.supervision.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SupervisionCreateManyArgs>(args?: SelectSubset<T, SupervisionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Supervisions and returns the data saved in the database.
+     * @param {SupervisionCreateManyAndReturnArgs} args - Arguments to create many Supervisions.
+     * @example
+     * // Create many Supervisions
+     * const supervision = await prisma.supervision.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Supervisions and only return the `id`
+     * const supervisionWithIdOnly = await prisma.supervision.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SupervisionCreateManyAndReturnArgs>(args?: SelectSubset<T, SupervisionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SupervisionPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a Supervision.
+     * @param {SupervisionDeleteArgs} args - Arguments to delete one Supervision.
+     * @example
+     * // Delete one Supervision
+     * const Supervision = await prisma.supervision.delete({
+     *   where: {
+     *     // ... filter to delete one Supervision
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SupervisionDeleteArgs>(args: SelectSubset<T, SupervisionDeleteArgs<ExtArgs>>): Prisma__SupervisionClient<$Result.GetResult<Prisma.$SupervisionPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one Supervision.
+     * @param {SupervisionUpdateArgs} args - Arguments to update one Supervision.
+     * @example
+     * // Update one Supervision
+     * const supervision = await prisma.supervision.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SupervisionUpdateArgs>(args: SelectSubset<T, SupervisionUpdateArgs<ExtArgs>>): Prisma__SupervisionClient<$Result.GetResult<Prisma.$SupervisionPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more Supervisions.
+     * @param {SupervisionDeleteManyArgs} args - Arguments to filter Supervisions to delete.
+     * @example
+     * // Delete a few Supervisions
+     * const { count } = await prisma.supervision.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SupervisionDeleteManyArgs>(args?: SelectSubset<T, SupervisionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Supervisions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupervisionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Supervisions
+     * const supervision = await prisma.supervision.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SupervisionUpdateManyArgs>(args: SelectSubset<T, SupervisionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Supervision.
+     * @param {SupervisionUpsertArgs} args - Arguments to update or create a Supervision.
+     * @example
+     * // Update or create a Supervision
+     * const supervision = await prisma.supervision.upsert({
+     *   create: {
+     *     // ... data to create a Supervision
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Supervision we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SupervisionUpsertArgs>(args: SelectSubset<T, SupervisionUpsertArgs<ExtArgs>>): Prisma__SupervisionClient<$Result.GetResult<Prisma.$SupervisionPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of Supervisions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupervisionCountArgs} args - Arguments to filter Supervisions to count.
+     * @example
+     * // Count the number of Supervisions
+     * const count = await prisma.supervision.count({
+     *   where: {
+     *     // ... the filter for the Supervisions we want to count
+     *   }
+     * })
+    **/
+    count<T extends SupervisionCountArgs>(
+      args?: Subset<T, SupervisionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SupervisionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Supervision.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupervisionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SupervisionAggregateArgs>(args: Subset<T, SupervisionAggregateArgs>): Prisma.PrismaPromise<GetSupervisionAggregateType<T>>
+
+    /**
+     * Group by Supervision.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupervisionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SupervisionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SupervisionGroupByArgs['orderBy'] }
+        : { orderBy?: SupervisionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SupervisionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSupervisionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Supervision model
+   */
+  readonly fields: SupervisionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Supervision.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SupervisionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    supervisor<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    client<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Supervision model
+   */ 
+  interface SupervisionFieldRefs {
+    readonly id: FieldRef<"Supervision", 'String'>
+    readonly supervisorId: FieldRef<"Supervision", 'String'>
+    readonly clientId: FieldRef<"Supervision", 'String'>
+    readonly createdAt: FieldRef<"Supervision", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Supervision findUnique
+   */
+  export type SupervisionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Supervision
+     */
+    select?: SupervisionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupervisionInclude<ExtArgs> | null
+    /**
+     * Filter, which Supervision to fetch.
+     */
+    where: SupervisionWhereUniqueInput
+  }
+
+  /**
+   * Supervision findUniqueOrThrow
+   */
+  export type SupervisionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Supervision
+     */
+    select?: SupervisionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupervisionInclude<ExtArgs> | null
+    /**
+     * Filter, which Supervision to fetch.
+     */
+    where: SupervisionWhereUniqueInput
+  }
+
+  /**
+   * Supervision findFirst
+   */
+  export type SupervisionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Supervision
+     */
+    select?: SupervisionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupervisionInclude<ExtArgs> | null
+    /**
+     * Filter, which Supervision to fetch.
+     */
+    where?: SupervisionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Supervisions to fetch.
+     */
+    orderBy?: SupervisionOrderByWithRelationInput | SupervisionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Supervisions.
+     */
+    cursor?: SupervisionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Supervisions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Supervisions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Supervisions.
+     */
+    distinct?: SupervisionScalarFieldEnum | SupervisionScalarFieldEnum[]
+  }
+
+  /**
+   * Supervision findFirstOrThrow
+   */
+  export type SupervisionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Supervision
+     */
+    select?: SupervisionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupervisionInclude<ExtArgs> | null
+    /**
+     * Filter, which Supervision to fetch.
+     */
+    where?: SupervisionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Supervisions to fetch.
+     */
+    orderBy?: SupervisionOrderByWithRelationInput | SupervisionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Supervisions.
+     */
+    cursor?: SupervisionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Supervisions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Supervisions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Supervisions.
+     */
+    distinct?: SupervisionScalarFieldEnum | SupervisionScalarFieldEnum[]
+  }
+
+  /**
+   * Supervision findMany
+   */
+  export type SupervisionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Supervision
+     */
+    select?: SupervisionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupervisionInclude<ExtArgs> | null
+    /**
+     * Filter, which Supervisions to fetch.
+     */
+    where?: SupervisionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Supervisions to fetch.
+     */
+    orderBy?: SupervisionOrderByWithRelationInput | SupervisionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Supervisions.
+     */
+    cursor?: SupervisionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Supervisions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Supervisions.
+     */
+    skip?: number
+    distinct?: SupervisionScalarFieldEnum | SupervisionScalarFieldEnum[]
+  }
+
+  /**
+   * Supervision create
+   */
+  export type SupervisionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Supervision
+     */
+    select?: SupervisionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupervisionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Supervision.
+     */
+    data: XOR<SupervisionCreateInput, SupervisionUncheckedCreateInput>
+  }
+
+  /**
+   * Supervision createMany
+   */
+  export type SupervisionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Supervisions.
+     */
+    data: SupervisionCreateManyInput | SupervisionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Supervision createManyAndReturn
+   */
+  export type SupervisionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Supervision
+     */
+    select?: SupervisionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Supervisions.
+     */
+    data: SupervisionCreateManyInput | SupervisionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupervisionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Supervision update
+   */
+  export type SupervisionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Supervision
+     */
+    select?: SupervisionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupervisionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Supervision.
+     */
+    data: XOR<SupervisionUpdateInput, SupervisionUncheckedUpdateInput>
+    /**
+     * Choose, which Supervision to update.
+     */
+    where: SupervisionWhereUniqueInput
+  }
+
+  /**
+   * Supervision updateMany
+   */
+  export type SupervisionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Supervisions.
+     */
+    data: XOR<SupervisionUpdateManyMutationInput, SupervisionUncheckedUpdateManyInput>
+    /**
+     * Filter which Supervisions to update
+     */
+    where?: SupervisionWhereInput
+  }
+
+  /**
+   * Supervision upsert
+   */
+  export type SupervisionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Supervision
+     */
+    select?: SupervisionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupervisionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Supervision to update in case it exists.
+     */
+    where: SupervisionWhereUniqueInput
+    /**
+     * In case the Supervision found by the `where` argument doesn't exist, create a new Supervision with this data.
+     */
+    create: XOR<SupervisionCreateInput, SupervisionUncheckedCreateInput>
+    /**
+     * In case the Supervision was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SupervisionUpdateInput, SupervisionUncheckedUpdateInput>
+  }
+
+  /**
+   * Supervision delete
+   */
+  export type SupervisionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Supervision
+     */
+    select?: SupervisionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupervisionInclude<ExtArgs> | null
+    /**
+     * Filter which Supervision to delete.
+     */
+    where: SupervisionWhereUniqueInput
+  }
+
+  /**
+   * Supervision deleteMany
+   */
+  export type SupervisionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Supervisions to delete
+     */
+    where?: SupervisionWhereInput
+  }
+
+  /**
+   * Supervision without action
+   */
+  export type SupervisionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Supervision
+     */
+    select?: SupervisionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupervisionInclude<ExtArgs> | null
   }
 
 
@@ -4634,6 +5733,7 @@ export namespace Prisma {
     id: string | null
     clientId: string | null
     companionId: string | null
+    bookedById: string | null
     status: $Enums.BookingStatus | null
     serviceType: string | null
     summary: string | null
@@ -4648,6 +5748,7 @@ export namespace Prisma {
     id: string | null
     clientId: string | null
     companionId: string | null
+    bookedById: string | null
     status: $Enums.BookingStatus | null
     serviceType: string | null
     summary: string | null
@@ -4662,6 +5763,7 @@ export namespace Prisma {
     id: number
     clientId: number
     companionId: number
+    bookedById: number
     status: number
     serviceType: number
     summary: number
@@ -4678,6 +5780,7 @@ export namespace Prisma {
     id?: true
     clientId?: true
     companionId?: true
+    bookedById?: true
     status?: true
     serviceType?: true
     summary?: true
@@ -4692,6 +5795,7 @@ export namespace Prisma {
     id?: true
     clientId?: true
     companionId?: true
+    bookedById?: true
     status?: true
     serviceType?: true
     summary?: true
@@ -4706,6 +5810,7 @@ export namespace Prisma {
     id?: true
     clientId?: true
     companionId?: true
+    bookedById?: true
     status?: true
     serviceType?: true
     summary?: true
@@ -4793,6 +5898,7 @@ export namespace Prisma {
     id: string
     clientId: string
     companionId: string | null
+    bookedById: string | null
     status: $Enums.BookingStatus
     serviceType: string
     summary: string | null
@@ -4824,6 +5930,7 @@ export namespace Prisma {
     id?: boolean
     clientId?: boolean
     companionId?: boolean
+    bookedById?: boolean
     status?: boolean
     serviceType?: boolean
     summary?: boolean
@@ -4834,6 +5941,7 @@ export namespace Prisma {
     updatedAt?: boolean
     client?: boolean | UserDefaultArgs<ExtArgs>
     companion?: boolean | Booking$companionArgs<ExtArgs>
+    bookedBy?: boolean | Booking$bookedByArgs<ExtArgs>
     payment?: boolean | Booking$paymentArgs<ExtArgs>
     report?: boolean | Booking$reportArgs<ExtArgs>
     chatRoom?: boolean | Booking$chatRoomArgs<ExtArgs>
@@ -4843,6 +5951,7 @@ export namespace Prisma {
     id?: boolean
     clientId?: boolean
     companionId?: boolean
+    bookedById?: boolean
     status?: boolean
     serviceType?: boolean
     summary?: boolean
@@ -4853,12 +5962,14 @@ export namespace Prisma {
     updatedAt?: boolean
     client?: boolean | UserDefaultArgs<ExtArgs>
     companion?: boolean | Booking$companionArgs<ExtArgs>
+    bookedBy?: boolean | Booking$bookedByArgs<ExtArgs>
   }, ExtArgs["result"]["booking"]>
 
   export type BookingSelectScalar = {
     id?: boolean
     clientId?: boolean
     companionId?: boolean
+    bookedById?: boolean
     status?: boolean
     serviceType?: boolean
     summary?: boolean
@@ -4872,6 +5983,7 @@ export namespace Prisma {
   export type BookingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     client?: boolean | UserDefaultArgs<ExtArgs>
     companion?: boolean | Booking$companionArgs<ExtArgs>
+    bookedBy?: boolean | Booking$bookedByArgs<ExtArgs>
     payment?: boolean | Booking$paymentArgs<ExtArgs>
     report?: boolean | Booking$reportArgs<ExtArgs>
     chatRoom?: boolean | Booking$chatRoomArgs<ExtArgs>
@@ -4879,6 +5991,7 @@ export namespace Prisma {
   export type BookingIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     client?: boolean | UserDefaultArgs<ExtArgs>
     companion?: boolean | Booking$companionArgs<ExtArgs>
+    bookedBy?: boolean | Booking$bookedByArgs<ExtArgs>
   }
 
   export type $BookingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4886,6 +5999,7 @@ export namespace Prisma {
     objects: {
       client: Prisma.$UserPayload<ExtArgs>
       companion: Prisma.$CompanionProfilePayload<ExtArgs> | null
+      bookedBy: Prisma.$UserPayload<ExtArgs> | null
       payment: Prisma.$PaymentPayload<ExtArgs> | null
       report: Prisma.$ReportPayload<ExtArgs> | null
       chatRoom: Prisma.$ChatRoomPayload<ExtArgs> | null
@@ -4894,6 +6008,7 @@ export namespace Prisma {
       id: string
       clientId: string
       companionId: string | null
+      bookedById: string | null
       status: $Enums.BookingStatus
       serviceType: string
       summary: string | null
@@ -5268,6 +6383,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     client<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     companion<T extends Booking$companionArgs<ExtArgs> = {}>(args?: Subset<T, Booking$companionArgs<ExtArgs>>): Prisma__CompanionProfileClient<$Result.GetResult<Prisma.$CompanionProfilePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    bookedBy<T extends Booking$bookedByArgs<ExtArgs> = {}>(args?: Subset<T, Booking$bookedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     payment<T extends Booking$paymentArgs<ExtArgs> = {}>(args?: Subset<T, Booking$paymentArgs<ExtArgs>>): Prisma__PaymentClient<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     report<T extends Booking$reportArgs<ExtArgs> = {}>(args?: Subset<T, Booking$reportArgs<ExtArgs>>): Prisma__ReportClient<$Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     chatRoom<T extends Booking$chatRoomArgs<ExtArgs> = {}>(args?: Subset<T, Booking$chatRoomArgs<ExtArgs>>): Prisma__ChatRoomClient<$Result.GetResult<Prisma.$ChatRoomPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
@@ -5303,6 +6419,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Booking", 'String'>
     readonly clientId: FieldRef<"Booking", 'String'>
     readonly companionId: FieldRef<"Booking", 'String'>
+    readonly bookedById: FieldRef<"Booking", 'String'>
     readonly status: FieldRef<"Booking", 'BookingStatus'>
     readonly serviceType: FieldRef<"Booking", 'String'>
     readonly summary: FieldRef<"Booking", 'String'>
@@ -5641,6 +6758,21 @@ export namespace Prisma {
      */
     include?: CompanionProfileInclude<ExtArgs> | null
     where?: CompanionProfileWhereInput
+  }
+
+  /**
+   * Booking.bookedBy
+   */
+  export type Booking$bookedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
   }
 
   /**
@@ -9606,6 +10738,16 @@ export namespace Prisma {
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+  export const SupervisionScalarFieldEnum: {
+    id: 'id',
+    supervisorId: 'supervisorId',
+    clientId: 'clientId',
+    createdAt: 'createdAt'
+  };
+
+  export type SupervisionScalarFieldEnum = (typeof SupervisionScalarFieldEnum)[keyof typeof SupervisionScalarFieldEnum]
+
+
   export const ProfileScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
@@ -9643,6 +10785,7 @@ export namespace Prisma {
     id: 'id',
     clientId: 'clientId',
     companionId: 'companionId',
+    bookedById: 'bookedById',
     status: 'status',
     serviceType: 'serviceType',
     summary: 'summary',
@@ -9838,6 +10981,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     profile?: XOR<ProfileNullableRelationFilter, ProfileWhereInput> | null
     bookings?: BookingListRelationFilter
+    supervisedClients?: SupervisionListRelationFilter
+    supervisorRef?: XOR<SupervisionNullableRelationFilter, SupervisionWhereInput> | null
+    bookedBookings?: BookingListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -9848,6 +10994,9 @@ export namespace Prisma {
     updatedAt?: SortOrder
     profile?: ProfileOrderByWithRelationInput
     bookings?: BookingOrderByRelationAggregateInput
+    supervisedClients?: SupervisionOrderByRelationAggregateInput
+    supervisorRef?: SupervisionOrderByWithRelationInput
+    bookedBookings?: BookingOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -9861,6 +11010,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     profile?: XOR<ProfileNullableRelationFilter, ProfileWhereInput> | null
     bookings?: BookingListRelationFilter
+    supervisedClients?: SupervisionListRelationFilter
+    supervisorRef?: XOR<SupervisionNullableRelationFilter, SupervisionWhereInput> | null
+    bookedBookings?: BookingListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -9883,6 +11035,59 @@ export namespace Prisma {
     role?: EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+  }
+
+  export type SupervisionWhereInput = {
+    AND?: SupervisionWhereInput | SupervisionWhereInput[]
+    OR?: SupervisionWhereInput[]
+    NOT?: SupervisionWhereInput | SupervisionWhereInput[]
+    id?: StringFilter<"Supervision"> | string
+    supervisorId?: StringFilter<"Supervision"> | string
+    clientId?: StringFilter<"Supervision"> | string
+    createdAt?: DateTimeFilter<"Supervision"> | Date | string
+    supervisor?: XOR<UserRelationFilter, UserWhereInput>
+    client?: XOR<UserRelationFilter, UserWhereInput>
+  }
+
+  export type SupervisionOrderByWithRelationInput = {
+    id?: SortOrder
+    supervisorId?: SortOrder
+    clientId?: SortOrder
+    createdAt?: SortOrder
+    supervisor?: UserOrderByWithRelationInput
+    client?: UserOrderByWithRelationInput
+  }
+
+  export type SupervisionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    clientId?: string
+    AND?: SupervisionWhereInput | SupervisionWhereInput[]
+    OR?: SupervisionWhereInput[]
+    NOT?: SupervisionWhereInput | SupervisionWhereInput[]
+    supervisorId?: StringFilter<"Supervision"> | string
+    createdAt?: DateTimeFilter<"Supervision"> | Date | string
+    supervisor?: XOR<UserRelationFilter, UserWhereInput>
+    client?: XOR<UserRelationFilter, UserWhereInput>
+  }, "id" | "clientId">
+
+  export type SupervisionOrderByWithAggregationInput = {
+    id?: SortOrder
+    supervisorId?: SortOrder
+    clientId?: SortOrder
+    createdAt?: SortOrder
+    _count?: SupervisionCountOrderByAggregateInput
+    _max?: SupervisionMaxOrderByAggregateInput
+    _min?: SupervisionMinOrderByAggregateInput
+  }
+
+  export type SupervisionScalarWhereWithAggregatesInput = {
+    AND?: SupervisionScalarWhereWithAggregatesInput | SupervisionScalarWhereWithAggregatesInput[]
+    OR?: SupervisionScalarWhereWithAggregatesInput[]
+    NOT?: SupervisionScalarWhereWithAggregatesInput | SupervisionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Supervision"> | string
+    supervisorId?: StringWithAggregatesFilter<"Supervision"> | string
+    clientId?: StringWithAggregatesFilter<"Supervision"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Supervision"> | Date | string
   }
 
   export type ProfileWhereInput = {
@@ -10065,6 +11270,7 @@ export namespace Prisma {
     id?: StringFilter<"Booking"> | string
     clientId?: StringFilter<"Booking"> | string
     companionId?: StringNullableFilter<"Booking"> | string | null
+    bookedById?: StringNullableFilter<"Booking"> | string | null
     status?: EnumBookingStatusFilter<"Booking"> | $Enums.BookingStatus
     serviceType?: StringFilter<"Booking"> | string
     summary?: StringNullableFilter<"Booking"> | string | null
@@ -10075,6 +11281,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Booking"> | Date | string
     client?: XOR<UserRelationFilter, UserWhereInput>
     companion?: XOR<CompanionProfileNullableRelationFilter, CompanionProfileWhereInput> | null
+    bookedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     payment?: XOR<PaymentNullableRelationFilter, PaymentWhereInput> | null
     report?: XOR<ReportNullableRelationFilter, ReportWhereInput> | null
     chatRoom?: XOR<ChatRoomNullableRelationFilter, ChatRoomWhereInput> | null
@@ -10084,6 +11291,7 @@ export namespace Prisma {
     id?: SortOrder
     clientId?: SortOrder
     companionId?: SortOrderInput | SortOrder
+    bookedById?: SortOrderInput | SortOrder
     status?: SortOrder
     serviceType?: SortOrder
     summary?: SortOrderInput | SortOrder
@@ -10094,6 +11302,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     client?: UserOrderByWithRelationInput
     companion?: CompanionProfileOrderByWithRelationInput
+    bookedBy?: UserOrderByWithRelationInput
     payment?: PaymentOrderByWithRelationInput
     report?: ReportOrderByWithRelationInput
     chatRoom?: ChatRoomOrderByWithRelationInput
@@ -10106,6 +11315,7 @@ export namespace Prisma {
     NOT?: BookingWhereInput | BookingWhereInput[]
     clientId?: StringFilter<"Booking"> | string
     companionId?: StringNullableFilter<"Booking"> | string | null
+    bookedById?: StringNullableFilter<"Booking"> | string | null
     status?: EnumBookingStatusFilter<"Booking"> | $Enums.BookingStatus
     serviceType?: StringFilter<"Booking"> | string
     summary?: StringNullableFilter<"Booking"> | string | null
@@ -10116,6 +11326,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Booking"> | Date | string
     client?: XOR<UserRelationFilter, UserWhereInput>
     companion?: XOR<CompanionProfileNullableRelationFilter, CompanionProfileWhereInput> | null
+    bookedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     payment?: XOR<PaymentNullableRelationFilter, PaymentWhereInput> | null
     report?: XOR<ReportNullableRelationFilter, ReportWhereInput> | null
     chatRoom?: XOR<ChatRoomNullableRelationFilter, ChatRoomWhereInput> | null
@@ -10125,6 +11336,7 @@ export namespace Prisma {
     id?: SortOrder
     clientId?: SortOrder
     companionId?: SortOrderInput | SortOrder
+    bookedById?: SortOrderInput | SortOrder
     status?: SortOrder
     serviceType?: SortOrder
     summary?: SortOrderInput | SortOrder
@@ -10145,6 +11357,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Booking"> | string
     clientId?: StringWithAggregatesFilter<"Booking"> | string
     companionId?: StringNullableWithAggregatesFilter<"Booking"> | string | null
+    bookedById?: StringNullableWithAggregatesFilter<"Booking"> | string | null
     status?: EnumBookingStatusWithAggregatesFilter<"Booking"> | $Enums.BookingStatus
     serviceType?: StringWithAggregatesFilter<"Booking"> | string
     summary?: StringNullableWithAggregatesFilter<"Booking"> | string | null
@@ -10410,6 +11623,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     profile?: ProfileCreateNestedOneWithoutUserInput
     bookings?: BookingCreateNestedManyWithoutClientInput
+    supervisedClients?: SupervisionCreateNestedManyWithoutSupervisorInput
+    supervisorRef?: SupervisionCreateNestedOneWithoutClientInput
+    bookedBookings?: BookingCreateNestedManyWithoutBookedByInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -10420,6 +11636,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
     bookings?: BookingUncheckedCreateNestedManyWithoutClientInput
+    supervisedClients?: SupervisionUncheckedCreateNestedManyWithoutSupervisorInput
+    supervisorRef?: SupervisionUncheckedCreateNestedOneWithoutClientInput
+    bookedBookings?: BookingUncheckedCreateNestedManyWithoutBookedByInput
   }
 
   export type UserUpdateInput = {
@@ -10430,6 +11649,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     profile?: ProfileUpdateOneWithoutUserNestedInput
     bookings?: BookingUpdateManyWithoutClientNestedInput
+    supervisedClients?: SupervisionUpdateManyWithoutSupervisorNestedInput
+    supervisorRef?: SupervisionUpdateOneWithoutClientNestedInput
+    bookedBookings?: BookingUpdateManyWithoutBookedByNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -10440,6 +11662,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
     bookings?: BookingUncheckedUpdateManyWithoutClientNestedInput
+    supervisedClients?: SupervisionUncheckedUpdateManyWithoutSupervisorNestedInput
+    supervisorRef?: SupervisionUncheckedUpdateOneWithoutClientNestedInput
+    bookedBookings?: BookingUncheckedUpdateManyWithoutBookedByNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -10464,6 +11689,53 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SupervisionCreateInput = {
+    id?: string
+    createdAt?: Date | string
+    supervisor: UserCreateNestedOneWithoutSupervisedClientsInput
+    client: UserCreateNestedOneWithoutSupervisorRefInput
+  }
+
+  export type SupervisionUncheckedCreateInput = {
+    id?: string
+    supervisorId: string
+    clientId: string
+    createdAt?: Date | string
+  }
+
+  export type SupervisionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    supervisor?: UserUpdateOneRequiredWithoutSupervisedClientsNestedInput
+    client?: UserUpdateOneRequiredWithoutSupervisorRefNestedInput
+  }
+
+  export type SupervisionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    supervisorId?: StringFieldUpdateOperationsInput | string
+    clientId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SupervisionCreateManyInput = {
+    id?: string
+    supervisorId: string
+    clientId: string
+    createdAt?: Date | string
+  }
+
+  export type SupervisionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SupervisionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    supervisorId?: StringFieldUpdateOperationsInput | string
+    clientId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProfileCreateInput = {
@@ -10673,6 +11945,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     client: UserCreateNestedOneWithoutBookingsInput
     companion?: CompanionProfileCreateNestedOneWithoutBookingsInput
+    bookedBy?: UserCreateNestedOneWithoutBookedBookingsInput
     payment?: PaymentCreateNestedOneWithoutBookingInput
     report?: ReportCreateNestedOneWithoutBookingInput
     chatRoom?: ChatRoomCreateNestedOneWithoutBookingInput
@@ -10682,6 +11955,7 @@ export namespace Prisma {
     id?: string
     clientId: string
     companionId?: string | null
+    bookedById?: string | null
     status?: $Enums.BookingStatus
     serviceType: string
     summary?: string | null
@@ -10707,6 +11981,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     client?: UserUpdateOneRequiredWithoutBookingsNestedInput
     companion?: CompanionProfileUpdateOneWithoutBookingsNestedInput
+    bookedBy?: UserUpdateOneWithoutBookedBookingsNestedInput
     payment?: PaymentUpdateOneWithoutBookingNestedInput
     report?: ReportUpdateOneWithoutBookingNestedInput
     chatRoom?: ChatRoomUpdateOneWithoutBookingNestedInput
@@ -10716,6 +11991,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     clientId?: StringFieldUpdateOperationsInput | string
     companionId?: NullableStringFieldUpdateOperationsInput | string | null
+    bookedById?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     serviceType?: StringFieldUpdateOperationsInput | string
     summary?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10733,6 +12009,7 @@ export namespace Prisma {
     id?: string
     clientId: string
     companionId?: string | null
+    bookedById?: string | null
     status?: $Enums.BookingStatus
     serviceType: string
     summary?: string | null
@@ -10759,6 +12036,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     clientId?: StringFieldUpdateOperationsInput | string
     companionId?: NullableStringFieldUpdateOperationsInput | string | null
+    bookedById?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     serviceType?: StringFieldUpdateOperationsInput | string
     summary?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11065,7 +12343,22 @@ export namespace Prisma {
     none?: BookingWhereInput
   }
 
+  export type SupervisionListRelationFilter = {
+    every?: SupervisionWhereInput
+    some?: SupervisionWhereInput
+    none?: SupervisionWhereInput
+  }
+
+  export type SupervisionNullableRelationFilter = {
+    is?: SupervisionWhereInput | null
+    isNot?: SupervisionWhereInput | null
+  }
+
   export type BookingOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SupervisionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -11135,6 +12428,32 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type UserRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
+  }
+
+  export type SupervisionCountOrderByAggregateInput = {
+    id?: SortOrder
+    supervisorId?: SortOrder
+    clientId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type SupervisionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    supervisorId?: SortOrder
+    clientId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type SupervisionMinOrderByAggregateInput = {
+    id?: SortOrder
+    supervisorId?: SortOrder
+    clientId?: SortOrder
+    createdAt?: SortOrder
+  }
+
   export type StringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -11148,11 +12467,6 @@ export namespace Prisma {
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     mode?: QueryMode
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type UserRelationFilter = {
-    is?: UserWhereInput
-    isNot?: UserWhereInput
   }
 
   export type CompanionProfileNullableRelationFilter = {
@@ -11353,6 +12667,11 @@ export namespace Prisma {
     not?: NestedEnumBookingStatusFilter<$PrismaModel> | $Enums.BookingStatus
   }
 
+  export type UserNullableRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
   export type PaymentNullableRelationFilter = {
     is?: PaymentWhereInput | null
     isNot?: PaymentWhereInput | null
@@ -11372,6 +12691,7 @@ export namespace Prisma {
     id?: SortOrder
     clientId?: SortOrder
     companionId?: SortOrder
+    bookedById?: SortOrder
     status?: SortOrder
     serviceType?: SortOrder
     summary?: SortOrder
@@ -11386,6 +12706,7 @@ export namespace Prisma {
     id?: SortOrder
     clientId?: SortOrder
     companionId?: SortOrder
+    bookedById?: SortOrder
     status?: SortOrder
     serviceType?: SortOrder
     summary?: SortOrder
@@ -11400,6 +12721,7 @@ export namespace Prisma {
     id?: SortOrder
     clientId?: SortOrder
     companionId?: SortOrder
+    bookedById?: SortOrder
     status?: SortOrder
     serviceType?: SortOrder
     summary?: SortOrder
@@ -11606,6 +12928,26 @@ export namespace Prisma {
     connect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
   }
 
+  export type SupervisionCreateNestedManyWithoutSupervisorInput = {
+    create?: XOR<SupervisionCreateWithoutSupervisorInput, SupervisionUncheckedCreateWithoutSupervisorInput> | SupervisionCreateWithoutSupervisorInput[] | SupervisionUncheckedCreateWithoutSupervisorInput[]
+    connectOrCreate?: SupervisionCreateOrConnectWithoutSupervisorInput | SupervisionCreateOrConnectWithoutSupervisorInput[]
+    createMany?: SupervisionCreateManySupervisorInputEnvelope
+    connect?: SupervisionWhereUniqueInput | SupervisionWhereUniqueInput[]
+  }
+
+  export type SupervisionCreateNestedOneWithoutClientInput = {
+    create?: XOR<SupervisionCreateWithoutClientInput, SupervisionUncheckedCreateWithoutClientInput>
+    connectOrCreate?: SupervisionCreateOrConnectWithoutClientInput
+    connect?: SupervisionWhereUniqueInput
+  }
+
+  export type BookingCreateNestedManyWithoutBookedByInput = {
+    create?: XOR<BookingCreateWithoutBookedByInput, BookingUncheckedCreateWithoutBookedByInput> | BookingCreateWithoutBookedByInput[] | BookingUncheckedCreateWithoutBookedByInput[]
+    connectOrCreate?: BookingCreateOrConnectWithoutBookedByInput | BookingCreateOrConnectWithoutBookedByInput[]
+    createMany?: BookingCreateManyBookedByInputEnvelope
+    connect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+  }
+
   export type ProfileUncheckedCreateNestedOneWithoutUserInput = {
     create?: XOR<ProfileCreateWithoutUserInput, ProfileUncheckedCreateWithoutUserInput>
     connectOrCreate?: ProfileCreateOrConnectWithoutUserInput
@@ -11616,6 +12958,26 @@ export namespace Prisma {
     create?: XOR<BookingCreateWithoutClientInput, BookingUncheckedCreateWithoutClientInput> | BookingCreateWithoutClientInput[] | BookingUncheckedCreateWithoutClientInput[]
     connectOrCreate?: BookingCreateOrConnectWithoutClientInput | BookingCreateOrConnectWithoutClientInput[]
     createMany?: BookingCreateManyClientInputEnvelope
+    connect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+  }
+
+  export type SupervisionUncheckedCreateNestedManyWithoutSupervisorInput = {
+    create?: XOR<SupervisionCreateWithoutSupervisorInput, SupervisionUncheckedCreateWithoutSupervisorInput> | SupervisionCreateWithoutSupervisorInput[] | SupervisionUncheckedCreateWithoutSupervisorInput[]
+    connectOrCreate?: SupervisionCreateOrConnectWithoutSupervisorInput | SupervisionCreateOrConnectWithoutSupervisorInput[]
+    createMany?: SupervisionCreateManySupervisorInputEnvelope
+    connect?: SupervisionWhereUniqueInput | SupervisionWhereUniqueInput[]
+  }
+
+  export type SupervisionUncheckedCreateNestedOneWithoutClientInput = {
+    create?: XOR<SupervisionCreateWithoutClientInput, SupervisionUncheckedCreateWithoutClientInput>
+    connectOrCreate?: SupervisionCreateOrConnectWithoutClientInput
+    connect?: SupervisionWhereUniqueInput
+  }
+
+  export type BookingUncheckedCreateNestedManyWithoutBookedByInput = {
+    create?: XOR<BookingCreateWithoutBookedByInput, BookingUncheckedCreateWithoutBookedByInput> | BookingCreateWithoutBookedByInput[] | BookingUncheckedCreateWithoutBookedByInput[]
+    connectOrCreate?: BookingCreateOrConnectWithoutBookedByInput | BookingCreateOrConnectWithoutBookedByInput[]
+    createMany?: BookingCreateManyBookedByInputEnvelope
     connect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
   }
 
@@ -11655,6 +13017,44 @@ export namespace Prisma {
     deleteMany?: BookingScalarWhereInput | BookingScalarWhereInput[]
   }
 
+  export type SupervisionUpdateManyWithoutSupervisorNestedInput = {
+    create?: XOR<SupervisionCreateWithoutSupervisorInput, SupervisionUncheckedCreateWithoutSupervisorInput> | SupervisionCreateWithoutSupervisorInput[] | SupervisionUncheckedCreateWithoutSupervisorInput[]
+    connectOrCreate?: SupervisionCreateOrConnectWithoutSupervisorInput | SupervisionCreateOrConnectWithoutSupervisorInput[]
+    upsert?: SupervisionUpsertWithWhereUniqueWithoutSupervisorInput | SupervisionUpsertWithWhereUniqueWithoutSupervisorInput[]
+    createMany?: SupervisionCreateManySupervisorInputEnvelope
+    set?: SupervisionWhereUniqueInput | SupervisionWhereUniqueInput[]
+    disconnect?: SupervisionWhereUniqueInput | SupervisionWhereUniqueInput[]
+    delete?: SupervisionWhereUniqueInput | SupervisionWhereUniqueInput[]
+    connect?: SupervisionWhereUniqueInput | SupervisionWhereUniqueInput[]
+    update?: SupervisionUpdateWithWhereUniqueWithoutSupervisorInput | SupervisionUpdateWithWhereUniqueWithoutSupervisorInput[]
+    updateMany?: SupervisionUpdateManyWithWhereWithoutSupervisorInput | SupervisionUpdateManyWithWhereWithoutSupervisorInput[]
+    deleteMany?: SupervisionScalarWhereInput | SupervisionScalarWhereInput[]
+  }
+
+  export type SupervisionUpdateOneWithoutClientNestedInput = {
+    create?: XOR<SupervisionCreateWithoutClientInput, SupervisionUncheckedCreateWithoutClientInput>
+    connectOrCreate?: SupervisionCreateOrConnectWithoutClientInput
+    upsert?: SupervisionUpsertWithoutClientInput
+    disconnect?: SupervisionWhereInput | boolean
+    delete?: SupervisionWhereInput | boolean
+    connect?: SupervisionWhereUniqueInput
+    update?: XOR<XOR<SupervisionUpdateToOneWithWhereWithoutClientInput, SupervisionUpdateWithoutClientInput>, SupervisionUncheckedUpdateWithoutClientInput>
+  }
+
+  export type BookingUpdateManyWithoutBookedByNestedInput = {
+    create?: XOR<BookingCreateWithoutBookedByInput, BookingUncheckedCreateWithoutBookedByInput> | BookingCreateWithoutBookedByInput[] | BookingUncheckedCreateWithoutBookedByInput[]
+    connectOrCreate?: BookingCreateOrConnectWithoutBookedByInput | BookingCreateOrConnectWithoutBookedByInput[]
+    upsert?: BookingUpsertWithWhereUniqueWithoutBookedByInput | BookingUpsertWithWhereUniqueWithoutBookedByInput[]
+    createMany?: BookingCreateManyBookedByInputEnvelope
+    set?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    disconnect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    delete?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    connect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    update?: BookingUpdateWithWhereUniqueWithoutBookedByInput | BookingUpdateWithWhereUniqueWithoutBookedByInput[]
+    updateMany?: BookingUpdateManyWithWhereWithoutBookedByInput | BookingUpdateManyWithWhereWithoutBookedByInput[]
+    deleteMany?: BookingScalarWhereInput | BookingScalarWhereInput[]
+  }
+
   export type ProfileUncheckedUpdateOneWithoutUserNestedInput = {
     create?: XOR<ProfileCreateWithoutUserInput, ProfileUncheckedCreateWithoutUserInput>
     connectOrCreate?: ProfileCreateOrConnectWithoutUserInput
@@ -11677,6 +13077,72 @@ export namespace Prisma {
     update?: BookingUpdateWithWhereUniqueWithoutClientInput | BookingUpdateWithWhereUniqueWithoutClientInput[]
     updateMany?: BookingUpdateManyWithWhereWithoutClientInput | BookingUpdateManyWithWhereWithoutClientInput[]
     deleteMany?: BookingScalarWhereInput | BookingScalarWhereInput[]
+  }
+
+  export type SupervisionUncheckedUpdateManyWithoutSupervisorNestedInput = {
+    create?: XOR<SupervisionCreateWithoutSupervisorInput, SupervisionUncheckedCreateWithoutSupervisorInput> | SupervisionCreateWithoutSupervisorInput[] | SupervisionUncheckedCreateWithoutSupervisorInput[]
+    connectOrCreate?: SupervisionCreateOrConnectWithoutSupervisorInput | SupervisionCreateOrConnectWithoutSupervisorInput[]
+    upsert?: SupervisionUpsertWithWhereUniqueWithoutSupervisorInput | SupervisionUpsertWithWhereUniqueWithoutSupervisorInput[]
+    createMany?: SupervisionCreateManySupervisorInputEnvelope
+    set?: SupervisionWhereUniqueInput | SupervisionWhereUniqueInput[]
+    disconnect?: SupervisionWhereUniqueInput | SupervisionWhereUniqueInput[]
+    delete?: SupervisionWhereUniqueInput | SupervisionWhereUniqueInput[]
+    connect?: SupervisionWhereUniqueInput | SupervisionWhereUniqueInput[]
+    update?: SupervisionUpdateWithWhereUniqueWithoutSupervisorInput | SupervisionUpdateWithWhereUniqueWithoutSupervisorInput[]
+    updateMany?: SupervisionUpdateManyWithWhereWithoutSupervisorInput | SupervisionUpdateManyWithWhereWithoutSupervisorInput[]
+    deleteMany?: SupervisionScalarWhereInput | SupervisionScalarWhereInput[]
+  }
+
+  export type SupervisionUncheckedUpdateOneWithoutClientNestedInput = {
+    create?: XOR<SupervisionCreateWithoutClientInput, SupervisionUncheckedCreateWithoutClientInput>
+    connectOrCreate?: SupervisionCreateOrConnectWithoutClientInput
+    upsert?: SupervisionUpsertWithoutClientInput
+    disconnect?: SupervisionWhereInput | boolean
+    delete?: SupervisionWhereInput | boolean
+    connect?: SupervisionWhereUniqueInput
+    update?: XOR<XOR<SupervisionUpdateToOneWithWhereWithoutClientInput, SupervisionUpdateWithoutClientInput>, SupervisionUncheckedUpdateWithoutClientInput>
+  }
+
+  export type BookingUncheckedUpdateManyWithoutBookedByNestedInput = {
+    create?: XOR<BookingCreateWithoutBookedByInput, BookingUncheckedCreateWithoutBookedByInput> | BookingCreateWithoutBookedByInput[] | BookingUncheckedCreateWithoutBookedByInput[]
+    connectOrCreate?: BookingCreateOrConnectWithoutBookedByInput | BookingCreateOrConnectWithoutBookedByInput[]
+    upsert?: BookingUpsertWithWhereUniqueWithoutBookedByInput | BookingUpsertWithWhereUniqueWithoutBookedByInput[]
+    createMany?: BookingCreateManyBookedByInputEnvelope
+    set?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    disconnect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    delete?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    connect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    update?: BookingUpdateWithWhereUniqueWithoutBookedByInput | BookingUpdateWithWhereUniqueWithoutBookedByInput[]
+    updateMany?: BookingUpdateManyWithWhereWithoutBookedByInput | BookingUpdateManyWithWhereWithoutBookedByInput[]
+    deleteMany?: BookingScalarWhereInput | BookingScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutSupervisedClientsInput = {
+    create?: XOR<UserCreateWithoutSupervisedClientsInput, UserUncheckedCreateWithoutSupervisedClientsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSupervisedClientsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutSupervisorRefInput = {
+    create?: XOR<UserCreateWithoutSupervisorRefInput, UserUncheckedCreateWithoutSupervisorRefInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSupervisorRefInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutSupervisedClientsNestedInput = {
+    create?: XOR<UserCreateWithoutSupervisedClientsInput, UserUncheckedCreateWithoutSupervisedClientsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSupervisedClientsInput
+    upsert?: UserUpsertWithoutSupervisedClientsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSupervisedClientsInput, UserUpdateWithoutSupervisedClientsInput>, UserUncheckedUpdateWithoutSupervisedClientsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutSupervisorRefNestedInput = {
+    create?: XOR<UserCreateWithoutSupervisorRefInput, UserUncheckedCreateWithoutSupervisorRefInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSupervisorRefInput
+    upsert?: UserUpsertWithoutSupervisorRefInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSupervisorRefInput, UserUpdateWithoutSupervisorRefInput>, UserUncheckedUpdateWithoutSupervisorRefInput>
   }
 
   export type UserCreateNestedOneWithoutProfileInput = {
@@ -11817,6 +13283,12 @@ export namespace Prisma {
     connect?: CompanionProfileWhereUniqueInput
   }
 
+  export type UserCreateNestedOneWithoutBookedBookingsInput = {
+    create?: XOR<UserCreateWithoutBookedBookingsInput, UserUncheckedCreateWithoutBookedBookingsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutBookedBookingsInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type PaymentCreateNestedOneWithoutBookingInput = {
     create?: XOR<PaymentCreateWithoutBookingInput, PaymentUncheckedCreateWithoutBookingInput>
     connectOrCreate?: PaymentCreateOrConnectWithoutBookingInput
@@ -11873,6 +13345,16 @@ export namespace Prisma {
     delete?: CompanionProfileWhereInput | boolean
     connect?: CompanionProfileWhereUniqueInput
     update?: XOR<XOR<CompanionProfileUpdateToOneWithWhereWithoutBookingsInput, CompanionProfileUpdateWithoutBookingsInput>, CompanionProfileUncheckedUpdateWithoutBookingsInput>
+  }
+
+  export type UserUpdateOneWithoutBookedBookingsNestedInput = {
+    create?: XOR<UserCreateWithoutBookedBookingsInput, UserUncheckedCreateWithoutBookedBookingsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutBookedBookingsInput
+    upsert?: UserUpsertWithoutBookedBookingsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutBookedBookingsInput, UserUpdateWithoutBookedBookingsInput>, UserUncheckedUpdateWithoutBookedBookingsInput>
   }
 
   export type PaymentUpdateOneWithoutBookingNestedInput = {
@@ -12311,6 +13793,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     companion?: CompanionProfileCreateNestedOneWithoutBookingsInput
+    bookedBy?: UserCreateNestedOneWithoutBookedBookingsInput
     payment?: PaymentCreateNestedOneWithoutBookingInput
     report?: ReportCreateNestedOneWithoutBookingInput
     chatRoom?: ChatRoomCreateNestedOneWithoutBookingInput
@@ -12319,6 +13802,7 @@ export namespace Prisma {
   export type BookingUncheckedCreateWithoutClientInput = {
     id?: string
     companionId?: string | null
+    bookedById?: string | null
     status?: $Enums.BookingStatus
     serviceType: string
     summary?: string | null
@@ -12339,6 +13823,89 @@ export namespace Prisma {
 
   export type BookingCreateManyClientInputEnvelope = {
     data: BookingCreateManyClientInput | BookingCreateManyClientInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SupervisionCreateWithoutSupervisorInput = {
+    id?: string
+    createdAt?: Date | string
+    client: UserCreateNestedOneWithoutSupervisorRefInput
+  }
+
+  export type SupervisionUncheckedCreateWithoutSupervisorInput = {
+    id?: string
+    clientId: string
+    createdAt?: Date | string
+  }
+
+  export type SupervisionCreateOrConnectWithoutSupervisorInput = {
+    where: SupervisionWhereUniqueInput
+    create: XOR<SupervisionCreateWithoutSupervisorInput, SupervisionUncheckedCreateWithoutSupervisorInput>
+  }
+
+  export type SupervisionCreateManySupervisorInputEnvelope = {
+    data: SupervisionCreateManySupervisorInput | SupervisionCreateManySupervisorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SupervisionCreateWithoutClientInput = {
+    id?: string
+    createdAt?: Date | string
+    supervisor: UserCreateNestedOneWithoutSupervisedClientsInput
+  }
+
+  export type SupervisionUncheckedCreateWithoutClientInput = {
+    id?: string
+    supervisorId: string
+    createdAt?: Date | string
+  }
+
+  export type SupervisionCreateOrConnectWithoutClientInput = {
+    where: SupervisionWhereUniqueInput
+    create: XOR<SupervisionCreateWithoutClientInput, SupervisionUncheckedCreateWithoutClientInput>
+  }
+
+  export type BookingCreateWithoutBookedByInput = {
+    id?: string
+    status?: $Enums.BookingStatus
+    serviceType: string
+    summary?: string | null
+    address: string
+    scheduledAt: Date | string
+    disability?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    client: UserCreateNestedOneWithoutBookingsInput
+    companion?: CompanionProfileCreateNestedOneWithoutBookingsInput
+    payment?: PaymentCreateNestedOneWithoutBookingInput
+    report?: ReportCreateNestedOneWithoutBookingInput
+    chatRoom?: ChatRoomCreateNestedOneWithoutBookingInput
+  }
+
+  export type BookingUncheckedCreateWithoutBookedByInput = {
+    id?: string
+    clientId: string
+    companionId?: string | null
+    status?: $Enums.BookingStatus
+    serviceType: string
+    summary?: string | null
+    address: string
+    scheduledAt: Date | string
+    disability?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    payment?: PaymentUncheckedCreateNestedOneWithoutBookingInput
+    report?: ReportUncheckedCreateNestedOneWithoutBookingInput
+    chatRoom?: ChatRoomUncheckedCreateNestedOneWithoutBookingInput
+  }
+
+  export type BookingCreateOrConnectWithoutBookedByInput = {
+    where: BookingWhereUniqueInput
+    create: XOR<BookingCreateWithoutBookedByInput, BookingUncheckedCreateWithoutBookedByInput>
+  }
+
+  export type BookingCreateManyBookedByInputEnvelope = {
+    data: BookingCreateManyBookedByInput | BookingCreateManyBookedByInput[]
     skipDuplicates?: boolean
   }
 
@@ -12404,6 +13971,7 @@ export namespace Prisma {
     id?: StringFilter<"Booking"> | string
     clientId?: StringFilter<"Booking"> | string
     companionId?: StringNullableFilter<"Booking"> | string | null
+    bookedById?: StringNullableFilter<"Booking"> | string | null
     status?: EnumBookingStatusFilter<"Booking"> | $Enums.BookingStatus
     serviceType?: StringFilter<"Booking"> | string
     summary?: StringNullableFilter<"Booking"> | string | null
@@ -12414,6 +13982,199 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Booking"> | Date | string
   }
 
+  export type SupervisionUpsertWithWhereUniqueWithoutSupervisorInput = {
+    where: SupervisionWhereUniqueInput
+    update: XOR<SupervisionUpdateWithoutSupervisorInput, SupervisionUncheckedUpdateWithoutSupervisorInput>
+    create: XOR<SupervisionCreateWithoutSupervisorInput, SupervisionUncheckedCreateWithoutSupervisorInput>
+  }
+
+  export type SupervisionUpdateWithWhereUniqueWithoutSupervisorInput = {
+    where: SupervisionWhereUniqueInput
+    data: XOR<SupervisionUpdateWithoutSupervisorInput, SupervisionUncheckedUpdateWithoutSupervisorInput>
+  }
+
+  export type SupervisionUpdateManyWithWhereWithoutSupervisorInput = {
+    where: SupervisionScalarWhereInput
+    data: XOR<SupervisionUpdateManyMutationInput, SupervisionUncheckedUpdateManyWithoutSupervisorInput>
+  }
+
+  export type SupervisionScalarWhereInput = {
+    AND?: SupervisionScalarWhereInput | SupervisionScalarWhereInput[]
+    OR?: SupervisionScalarWhereInput[]
+    NOT?: SupervisionScalarWhereInput | SupervisionScalarWhereInput[]
+    id?: StringFilter<"Supervision"> | string
+    supervisorId?: StringFilter<"Supervision"> | string
+    clientId?: StringFilter<"Supervision"> | string
+    createdAt?: DateTimeFilter<"Supervision"> | Date | string
+  }
+
+  export type SupervisionUpsertWithoutClientInput = {
+    update: XOR<SupervisionUpdateWithoutClientInput, SupervisionUncheckedUpdateWithoutClientInput>
+    create: XOR<SupervisionCreateWithoutClientInput, SupervisionUncheckedCreateWithoutClientInput>
+    where?: SupervisionWhereInput
+  }
+
+  export type SupervisionUpdateToOneWithWhereWithoutClientInput = {
+    where?: SupervisionWhereInput
+    data: XOR<SupervisionUpdateWithoutClientInput, SupervisionUncheckedUpdateWithoutClientInput>
+  }
+
+  export type SupervisionUpdateWithoutClientInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    supervisor?: UserUpdateOneRequiredWithoutSupervisedClientsNestedInput
+  }
+
+  export type SupervisionUncheckedUpdateWithoutClientInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    supervisorId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BookingUpsertWithWhereUniqueWithoutBookedByInput = {
+    where: BookingWhereUniqueInput
+    update: XOR<BookingUpdateWithoutBookedByInput, BookingUncheckedUpdateWithoutBookedByInput>
+    create: XOR<BookingCreateWithoutBookedByInput, BookingUncheckedCreateWithoutBookedByInput>
+  }
+
+  export type BookingUpdateWithWhereUniqueWithoutBookedByInput = {
+    where: BookingWhereUniqueInput
+    data: XOR<BookingUpdateWithoutBookedByInput, BookingUncheckedUpdateWithoutBookedByInput>
+  }
+
+  export type BookingUpdateManyWithWhereWithoutBookedByInput = {
+    where: BookingScalarWhereInput
+    data: XOR<BookingUpdateManyMutationInput, BookingUncheckedUpdateManyWithoutBookedByInput>
+  }
+
+  export type UserCreateWithoutSupervisedClientsInput = {
+    id?: string
+    email: string
+    role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    profile?: ProfileCreateNestedOneWithoutUserInput
+    bookings?: BookingCreateNestedManyWithoutClientInput
+    supervisorRef?: SupervisionCreateNestedOneWithoutClientInput
+    bookedBookings?: BookingCreateNestedManyWithoutBookedByInput
+  }
+
+  export type UserUncheckedCreateWithoutSupervisedClientsInput = {
+    id?: string
+    email: string
+    role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
+    bookings?: BookingUncheckedCreateNestedManyWithoutClientInput
+    supervisorRef?: SupervisionUncheckedCreateNestedOneWithoutClientInput
+    bookedBookings?: BookingUncheckedCreateNestedManyWithoutBookedByInput
+  }
+
+  export type UserCreateOrConnectWithoutSupervisedClientsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSupervisedClientsInput, UserUncheckedCreateWithoutSupervisedClientsInput>
+  }
+
+  export type UserCreateWithoutSupervisorRefInput = {
+    id?: string
+    email: string
+    role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    profile?: ProfileCreateNestedOneWithoutUserInput
+    bookings?: BookingCreateNestedManyWithoutClientInput
+    supervisedClients?: SupervisionCreateNestedManyWithoutSupervisorInput
+    bookedBookings?: BookingCreateNestedManyWithoutBookedByInput
+  }
+
+  export type UserUncheckedCreateWithoutSupervisorRefInput = {
+    id?: string
+    email: string
+    role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
+    bookings?: BookingUncheckedCreateNestedManyWithoutClientInput
+    supervisedClients?: SupervisionUncheckedCreateNestedManyWithoutSupervisorInput
+    bookedBookings?: BookingUncheckedCreateNestedManyWithoutBookedByInput
+  }
+
+  export type UserCreateOrConnectWithoutSupervisorRefInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSupervisorRefInput, UserUncheckedCreateWithoutSupervisorRefInput>
+  }
+
+  export type UserUpsertWithoutSupervisedClientsInput = {
+    update: XOR<UserUpdateWithoutSupervisedClientsInput, UserUncheckedUpdateWithoutSupervisedClientsInput>
+    create: XOR<UserCreateWithoutSupervisedClientsInput, UserUncheckedCreateWithoutSupervisedClientsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSupervisedClientsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSupervisedClientsInput, UserUncheckedUpdateWithoutSupervisedClientsInput>
+  }
+
+  export type UserUpdateWithoutSupervisedClientsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    profile?: ProfileUpdateOneWithoutUserNestedInput
+    bookings?: BookingUpdateManyWithoutClientNestedInput
+    supervisorRef?: SupervisionUpdateOneWithoutClientNestedInput
+    bookedBookings?: BookingUpdateManyWithoutBookedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSupervisedClientsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
+    bookings?: BookingUncheckedUpdateManyWithoutClientNestedInput
+    supervisorRef?: SupervisionUncheckedUpdateOneWithoutClientNestedInput
+    bookedBookings?: BookingUncheckedUpdateManyWithoutBookedByNestedInput
+  }
+
+  export type UserUpsertWithoutSupervisorRefInput = {
+    update: XOR<UserUpdateWithoutSupervisorRefInput, UserUncheckedUpdateWithoutSupervisorRefInput>
+    create: XOR<UserCreateWithoutSupervisorRefInput, UserUncheckedCreateWithoutSupervisorRefInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSupervisorRefInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSupervisorRefInput, UserUncheckedUpdateWithoutSupervisorRefInput>
+  }
+
+  export type UserUpdateWithoutSupervisorRefInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    profile?: ProfileUpdateOneWithoutUserNestedInput
+    bookings?: BookingUpdateManyWithoutClientNestedInput
+    supervisedClients?: SupervisionUpdateManyWithoutSupervisorNestedInput
+    bookedBookings?: BookingUpdateManyWithoutBookedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSupervisorRefInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
+    bookings?: BookingUncheckedUpdateManyWithoutClientNestedInput
+    supervisedClients?: SupervisionUncheckedUpdateManyWithoutSupervisorNestedInput
+    bookedBookings?: BookingUncheckedUpdateManyWithoutBookedByNestedInput
+  }
+
   export type UserCreateWithoutProfileInput = {
     id?: string
     email: string
@@ -12421,6 +14182,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     bookings?: BookingCreateNestedManyWithoutClientInput
+    supervisedClients?: SupervisionCreateNestedManyWithoutSupervisorInput
+    supervisorRef?: SupervisionCreateNestedOneWithoutClientInput
+    bookedBookings?: BookingCreateNestedManyWithoutBookedByInput
   }
 
   export type UserUncheckedCreateWithoutProfileInput = {
@@ -12430,6 +14194,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     bookings?: BookingUncheckedCreateNestedManyWithoutClientInput
+    supervisedClients?: SupervisionUncheckedCreateNestedManyWithoutSupervisorInput
+    supervisorRef?: SupervisionUncheckedCreateNestedOneWithoutClientInput
+    bookedBookings?: BookingUncheckedCreateNestedManyWithoutBookedByInput
   }
 
   export type UserCreateOrConnectWithoutProfileInput = {
@@ -12486,6 +14253,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     bookings?: BookingUpdateManyWithoutClientNestedInput
+    supervisedClients?: SupervisionUpdateManyWithoutSupervisorNestedInput
+    supervisorRef?: SupervisionUpdateOneWithoutClientNestedInput
+    bookedBookings?: BookingUpdateManyWithoutBookedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProfileInput = {
@@ -12495,6 +14265,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     bookings?: BookingUncheckedUpdateManyWithoutClientNestedInput
+    supervisedClients?: SupervisionUncheckedUpdateManyWithoutSupervisorNestedInput
+    supervisorRef?: SupervisionUncheckedUpdateOneWithoutClientNestedInput
+    bookedBookings?: BookingUncheckedUpdateManyWithoutBookedByNestedInput
   }
 
   export type CompanionProfileUpsertWithoutProfileInput = {
@@ -12578,6 +14351,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     client: UserCreateNestedOneWithoutBookingsInput
+    bookedBy?: UserCreateNestedOneWithoutBookedBookingsInput
     payment?: PaymentCreateNestedOneWithoutBookingInput
     report?: ReportCreateNestedOneWithoutBookingInput
     chatRoom?: ChatRoomCreateNestedOneWithoutBookingInput
@@ -12586,6 +14360,7 @@ export namespace Prisma {
   export type BookingUncheckedCreateWithoutCompanionInput = {
     id?: string
     clientId: string
+    bookedById?: string | null
     status?: $Enums.BookingStatus
     serviceType: string
     summary?: string | null
@@ -12671,6 +14446,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     profile?: ProfileCreateNestedOneWithoutUserInput
+    supervisedClients?: SupervisionCreateNestedManyWithoutSupervisorInput
+    supervisorRef?: SupervisionCreateNestedOneWithoutClientInput
+    bookedBookings?: BookingCreateNestedManyWithoutBookedByInput
   }
 
   export type UserUncheckedCreateWithoutBookingsInput = {
@@ -12680,6 +14458,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
+    supervisedClients?: SupervisionUncheckedCreateNestedManyWithoutSupervisorInput
+    supervisorRef?: SupervisionUncheckedCreateNestedOneWithoutClientInput
+    bookedBookings?: BookingUncheckedCreateNestedManyWithoutBookedByInput
   }
 
   export type UserCreateOrConnectWithoutBookingsInput = {
@@ -12716,6 +14497,35 @@ export namespace Prisma {
   export type CompanionProfileCreateOrConnectWithoutBookingsInput = {
     where: CompanionProfileWhereUniqueInput
     create: XOR<CompanionProfileCreateWithoutBookingsInput, CompanionProfileUncheckedCreateWithoutBookingsInput>
+  }
+
+  export type UserCreateWithoutBookedBookingsInput = {
+    id?: string
+    email: string
+    role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    profile?: ProfileCreateNestedOneWithoutUserInput
+    bookings?: BookingCreateNestedManyWithoutClientInput
+    supervisedClients?: SupervisionCreateNestedManyWithoutSupervisorInput
+    supervisorRef?: SupervisionCreateNestedOneWithoutClientInput
+  }
+
+  export type UserUncheckedCreateWithoutBookedBookingsInput = {
+    id?: string
+    email: string
+    role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
+    bookings?: BookingUncheckedCreateNestedManyWithoutClientInput
+    supervisedClients?: SupervisionUncheckedCreateNestedManyWithoutSupervisorInput
+    supervisorRef?: SupervisionUncheckedCreateNestedOneWithoutClientInput
+  }
+
+  export type UserCreateOrConnectWithoutBookedBookingsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutBookedBookingsInput, UserUncheckedCreateWithoutBookedBookingsInput>
   }
 
   export type PaymentCreateWithoutBookingInput = {
@@ -12803,6 +14613,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     profile?: ProfileUpdateOneWithoutUserNestedInput
+    supervisedClients?: SupervisionUpdateManyWithoutSupervisorNestedInput
+    supervisorRef?: SupervisionUpdateOneWithoutClientNestedInput
+    bookedBookings?: BookingUpdateManyWithoutBookedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBookingsInput = {
@@ -12812,6 +14625,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
+    supervisedClients?: SupervisionUncheckedUpdateManyWithoutSupervisorNestedInput
+    supervisorRef?: SupervisionUncheckedUpdateOneWithoutClientNestedInput
+    bookedBookings?: BookingUncheckedUpdateManyWithoutBookedByNestedInput
   }
 
   export type CompanionProfileUpsertWithoutBookingsInput = {
@@ -12849,6 +14665,41 @@ export namespace Prisma {
     yearsOnPlatform?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserUpsertWithoutBookedBookingsInput = {
+    update: XOR<UserUpdateWithoutBookedBookingsInput, UserUncheckedUpdateWithoutBookedBookingsInput>
+    create: XOR<UserCreateWithoutBookedBookingsInput, UserUncheckedCreateWithoutBookedBookingsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutBookedBookingsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutBookedBookingsInput, UserUncheckedUpdateWithoutBookedBookingsInput>
+  }
+
+  export type UserUpdateWithoutBookedBookingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    profile?: ProfileUpdateOneWithoutUserNestedInput
+    bookings?: BookingUpdateManyWithoutClientNestedInput
+    supervisedClients?: SupervisionUpdateManyWithoutSupervisorNestedInput
+    supervisorRef?: SupervisionUpdateOneWithoutClientNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutBookedBookingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
+    bookings?: BookingUncheckedUpdateManyWithoutClientNestedInput
+    supervisedClients?: SupervisionUncheckedUpdateManyWithoutSupervisorNestedInput
+    supervisorRef?: SupervisionUncheckedUpdateOneWithoutClientNestedInput
   }
 
   export type PaymentUpsertWithoutBookingInput = {
@@ -12948,6 +14799,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     client: UserCreateNestedOneWithoutBookingsInput
     companion?: CompanionProfileCreateNestedOneWithoutBookingsInput
+    bookedBy?: UserCreateNestedOneWithoutBookedBookingsInput
     report?: ReportCreateNestedOneWithoutBookingInput
     chatRoom?: ChatRoomCreateNestedOneWithoutBookingInput
   }
@@ -12956,6 +14808,7 @@ export namespace Prisma {
     id?: string
     clientId: string
     companionId?: string | null
+    bookedById?: string | null
     status?: $Enums.BookingStatus
     serviceType: string
     summary?: string | null
@@ -12996,6 +14849,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     client?: UserUpdateOneRequiredWithoutBookingsNestedInput
     companion?: CompanionProfileUpdateOneWithoutBookingsNestedInput
+    bookedBy?: UserUpdateOneWithoutBookedBookingsNestedInput
     report?: ReportUpdateOneWithoutBookingNestedInput
     chatRoom?: ChatRoomUpdateOneWithoutBookingNestedInput
   }
@@ -13004,6 +14858,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     clientId?: StringFieldUpdateOperationsInput | string
     companionId?: NullableStringFieldUpdateOperationsInput | string | null
+    bookedById?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     serviceType?: StringFieldUpdateOperationsInput | string
     summary?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13028,6 +14883,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     client: UserCreateNestedOneWithoutBookingsInput
     companion?: CompanionProfileCreateNestedOneWithoutBookingsInput
+    bookedBy?: UserCreateNestedOneWithoutBookedBookingsInput
     payment?: PaymentCreateNestedOneWithoutBookingInput
     report?: ReportCreateNestedOneWithoutBookingInput
   }
@@ -13036,6 +14892,7 @@ export namespace Prisma {
     id?: string
     clientId: string
     companionId?: string | null
+    bookedById?: string | null
     status?: $Enums.BookingStatus
     serviceType: string
     summary?: string | null
@@ -13100,6 +14957,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     client?: UserUpdateOneRequiredWithoutBookingsNestedInput
     companion?: CompanionProfileUpdateOneWithoutBookingsNestedInput
+    bookedBy?: UserUpdateOneWithoutBookedBookingsNestedInput
     payment?: PaymentUpdateOneWithoutBookingNestedInput
     report?: ReportUpdateOneWithoutBookingNestedInput
   }
@@ -13108,6 +14966,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     clientId?: StringFieldUpdateOperationsInput | string
     companionId?: NullableStringFieldUpdateOperationsInput | string | null
+    bookedById?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     serviceType?: StringFieldUpdateOperationsInput | string
     summary?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13203,6 +15062,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     client: UserCreateNestedOneWithoutBookingsInput
     companion?: CompanionProfileCreateNestedOneWithoutBookingsInput
+    bookedBy?: UserCreateNestedOneWithoutBookedBookingsInput
     payment?: PaymentCreateNestedOneWithoutBookingInput
     chatRoom?: ChatRoomCreateNestedOneWithoutBookingInput
   }
@@ -13211,6 +15071,7 @@ export namespace Prisma {
     id?: string
     clientId: string
     companionId?: string | null
+    bookedById?: string | null
     status?: $Enums.BookingStatus
     serviceType: string
     summary?: string | null
@@ -13251,6 +15112,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     client?: UserUpdateOneRequiredWithoutBookingsNestedInput
     companion?: CompanionProfileUpdateOneWithoutBookingsNestedInput
+    bookedBy?: UserUpdateOneWithoutBookedBookingsNestedInput
     payment?: PaymentUpdateOneWithoutBookingNestedInput
     chatRoom?: ChatRoomUpdateOneWithoutBookingNestedInput
   }
@@ -13259,6 +15121,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     clientId?: StringFieldUpdateOperationsInput | string
     companionId?: NullableStringFieldUpdateOperationsInput | string | null
+    bookedById?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     serviceType?: StringFieldUpdateOperationsInput | string
     summary?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13273,6 +15136,27 @@ export namespace Prisma {
 
   export type BookingCreateManyClientInput = {
     id?: string
+    companionId?: string | null
+    bookedById?: string | null
+    status?: $Enums.BookingStatus
+    serviceType: string
+    summary?: string | null
+    address: string
+    scheduledAt: Date | string
+    disability?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SupervisionCreateManySupervisorInput = {
+    id?: string
+    clientId: string
+    createdAt?: Date | string
+  }
+
+  export type BookingCreateManyBookedByInput = {
+    id?: string
+    clientId: string
     companionId?: string | null
     status?: $Enums.BookingStatus
     serviceType: string
@@ -13295,6 +15179,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companion?: CompanionProfileUpdateOneWithoutBookingsNestedInput
+    bookedBy?: UserUpdateOneWithoutBookedBookingsNestedInput
     payment?: PaymentUpdateOneWithoutBookingNestedInput
     report?: ReportUpdateOneWithoutBookingNestedInput
     chatRoom?: ChatRoomUpdateOneWithoutBookingNestedInput
@@ -13303,6 +15188,7 @@ export namespace Prisma {
   export type BookingUncheckedUpdateWithoutClientInput = {
     id?: StringFieldUpdateOperationsInput | string
     companionId?: NullableStringFieldUpdateOperationsInput | string | null
+    bookedById?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     serviceType?: StringFieldUpdateOperationsInput | string
     summary?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13319,6 +15205,73 @@ export namespace Prisma {
   export type BookingUncheckedUpdateManyWithoutClientInput = {
     id?: StringFieldUpdateOperationsInput | string
     companionId?: NullableStringFieldUpdateOperationsInput | string | null
+    bookedById?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
+    serviceType?: StringFieldUpdateOperationsInput | string
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    disability?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SupervisionUpdateWithoutSupervisorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    client?: UserUpdateOneRequiredWithoutSupervisorRefNestedInput
+  }
+
+  export type SupervisionUncheckedUpdateWithoutSupervisorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clientId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SupervisionUncheckedUpdateManyWithoutSupervisorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clientId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BookingUpdateWithoutBookedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
+    serviceType?: StringFieldUpdateOperationsInput | string
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    disability?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    client?: UserUpdateOneRequiredWithoutBookingsNestedInput
+    companion?: CompanionProfileUpdateOneWithoutBookingsNestedInput
+    payment?: PaymentUpdateOneWithoutBookingNestedInput
+    report?: ReportUpdateOneWithoutBookingNestedInput
+    chatRoom?: ChatRoomUpdateOneWithoutBookingNestedInput
+  }
+
+  export type BookingUncheckedUpdateWithoutBookedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clientId?: StringFieldUpdateOperationsInput | string
+    companionId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
+    serviceType?: StringFieldUpdateOperationsInput | string
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    disability?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    payment?: PaymentUncheckedUpdateOneWithoutBookingNestedInput
+    report?: ReportUncheckedUpdateOneWithoutBookingNestedInput
+    chatRoom?: ChatRoomUncheckedUpdateOneWithoutBookingNestedInput
+  }
+
+  export type BookingUncheckedUpdateManyWithoutBookedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clientId?: StringFieldUpdateOperationsInput | string
+    companionId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     serviceType?: StringFieldUpdateOperationsInput | string
     summary?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13332,6 +15285,7 @@ export namespace Prisma {
   export type BookingCreateManyCompanionInput = {
     id?: string
     clientId: string
+    bookedById?: string | null
     status?: $Enums.BookingStatus
     serviceType: string
     summary?: string | null
@@ -13353,6 +15307,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     client?: UserUpdateOneRequiredWithoutBookingsNestedInput
+    bookedBy?: UserUpdateOneWithoutBookedBookingsNestedInput
     payment?: PaymentUpdateOneWithoutBookingNestedInput
     report?: ReportUpdateOneWithoutBookingNestedInput
     chatRoom?: ChatRoomUpdateOneWithoutBookingNestedInput
@@ -13361,6 +15316,7 @@ export namespace Prisma {
   export type BookingUncheckedUpdateWithoutCompanionInput = {
     id?: StringFieldUpdateOperationsInput | string
     clientId?: StringFieldUpdateOperationsInput | string
+    bookedById?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     serviceType?: StringFieldUpdateOperationsInput | string
     summary?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13377,6 +15333,7 @@ export namespace Prisma {
   export type BookingUncheckedUpdateManyWithoutCompanionInput = {
     id?: StringFieldUpdateOperationsInput | string
     clientId?: StringFieldUpdateOperationsInput | string
+    bookedById?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     serviceType?: StringFieldUpdateOperationsInput | string
     summary?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13436,6 +15393,10 @@ export namespace Prisma {
      * @deprecated Use UserDefaultArgs instead
      */
     export type UserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = UserDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use SupervisionDefaultArgs instead
+     */
+    export type SupervisionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = SupervisionDefaultArgs<ExtArgs>
     /**
      * @deprecated Use ProfileDefaultArgs instead
      */

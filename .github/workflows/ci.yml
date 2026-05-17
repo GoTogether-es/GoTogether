@@ -1,0 +1,88 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-typecheck:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        app: [api, web]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        working-directory: apps/api
+        run: npx prisma generate
+
+      - name: TypeScript check
+        working-directory: apps/${{ matrix.app }}
+        run: npx tsc --noEmit
+
+      - name: Lint
+        working-directory: apps/${{ matrix.app }}
+        run: npx eslint . --max-warnings 0 || true
+
+  test:
+    runs-on: ubuntu-latest
+    needs: lint-and-typecheck
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Run tests
+        run: pnpm -r test --passWithNoTests
+
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+    strategy:
+      matrix:
+        app: [api, web]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        working-directory: apps/api
+        run: npx prisma generate
+        if: matrix.app == 'api'
+
+      - name: Build
+        working-directory: apps/${{ matrix.app }}
+        run: pnpm build

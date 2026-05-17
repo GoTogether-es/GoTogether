@@ -18,6 +18,10 @@ export class UpsertProfileDto {
 
   @IsString()
   @IsOptional()
+  avatarUrl?: string;
+
+  @IsString()
+  @IsOptional()
   disabilityType?: string;
 
   @IsString()
@@ -31,4 +35,12 @@ export class UpsertProfileDto {
   @IsString()
   @IsOptional()
   specialties?: string;
+
+  @IsString()
+  @IsOptional()
+  backgroundCheck?: string;
+
+  @IsString()
+  @IsOptional()
+  sexualCheck?: string;
 }

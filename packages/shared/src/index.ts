@@ -1,4 +1,4 @@
-export type UserRole = 'CLIENT' | 'COMPANION' | 'ADMIN';
+export type UserRole = 'CLIENT' | 'COMPANION' | 'SUPERVISOR' | 'ADMIN';
 
 export type BookingStatus =
   | 'DRAFT'
