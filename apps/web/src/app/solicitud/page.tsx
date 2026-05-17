@@ -63,10 +63,15 @@ export default function SolicitudPage() {
                   )}
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="headline">
-                    ¿Cómo definirías a la persona acompañada?
+                  <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="notes">
+                    Observaciones adicionales
                   </label>
-                  <input id="headline" className="gt-input" placeholder="Ej: Amable, habladora, tranquila..." />
+                  <input
+                    id="notes"
+                    className="gt-input"
+                    placeholder="Ej: Necesita apoyo para subir escaleras..."
+                    {...register('notes')}
+                  />
                 </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -115,18 +120,6 @@ export default function SolicitudPage() {
                   <option>Discapacidad cognitiva</option>
                   <option>Ninguna / Otra</option>
                 </select>
-              </div>
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="notes">
-                  Observaciones adicionales
-                </label>
-                <textarea
-                  id="notes"
-                  className="gt-input"
-                  rows={4}
-                  placeholder="Ej: Necesita apoyo para subir escaleras, le gusta hablar de historia..."
-                  {...register('notes')}
-                />
               </div>
 
               <div className="flex gap-4 pt-4">

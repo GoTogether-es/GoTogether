@@ -6,6 +6,7 @@ import { Button, Card, Container, Section } from '@gotogether/ui';
 import { MessageSquare, Phone, MapPin, Clock, Send } from 'lucide-react';
 import { io, Socket } from 'socket.io-client';
 import { getChatRoom, getAccessToken, getBooking } from '@/services/api';
+import { createClient } from '@/lib/supabase/client';
 import { env } from '@/lib/env';
 
 interface ChatMessage {
@@ -22,7 +23,7 @@ interface BookingData {
   address: string;
   scheduledAt: string;
   status: string;
-  client?: { profile?: { fullName: string } };
+  client?: { id?: string; profile?: { fullName: string } };
   companion?: { profile?: { fullName: string } };
 }
 
@@ -63,6 +64,10 @@ export default function CoordinacionPage() {
           return;
         }
 
+        const supabase = createClient();
+        const { data: { session } } = await supabase.auth.getSession();
+        const currentUserId = session?.user?.id || '';
+
         const [chatData, bookingData] = await Promise.all([
           getChatRoom(bookingId),
           getBooking(bookingId),
@@ -70,11 +75,12 @@ export default function CoordinacionPage() {
 
         setMessages(chatData.messages || []);
         setBooking(bookingData);
-        setUserId(bookingData.client?.id || '');
+        setUserId(currentUserId);
         setRoomId(chatData.room.id);
 
+        const clientName = bookingData.client?.profile?.fullName || '';
         const companion = bookingData.companion?.profile?.fullName || '';
-        setCompanionName(companion);
+        setCompanionName(companion || clientName);
 
         socket = io(`${env.apiUrl}/chat`, {
           auth: { token },
@@ -291,9 +297,13 @@ export default function CoordinacionPage() {
                 <p className="text-blue-100 text-sm mb-6">
                   Si necesitas ayuda urgente o quieres reportar una incidencia durante el servicio:
                 </p>
-                <Button variant="secondary" className="w-full bg-white text-blue-600 hover:bg-blue-50 border-0">
+                <a
+                  href="tel:112"
+                  className="w-full inline-flex items-center justify-center gap-2 h-12 px-6 rounded-xl text-base font-bold bg-white text-blue-600 hover:bg-blue-50 transition-colors"
+                >
+                  <Phone className="w-4 h-4" />
                   Llamada de Emergencia
-                </Button>
+                </a>
               </Card>
             </div>
           </div>

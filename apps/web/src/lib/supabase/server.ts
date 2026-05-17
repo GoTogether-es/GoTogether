@@ -4,9 +4,23 @@ import { cookies } from 'next/headers'
 export function createClient() {
   const cookieStore = cookies()
 
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+
+  if (!supabaseUrl || !supabaseKey) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error(
+        'Missing Supabase environment variables. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY.'
+      )
+    }
+    console.warn(
+      'Missing Supabase environment variables. Using placeholder — server auth will not work until configured.'
+    )
+  }
+
   return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL ?? 'https://placeholder.supabase.co',
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? 'sbp_placeholder',
+    supabaseUrl || 'https://placeholder.supabase.co',
+    supabaseKey || 'sbp_placeholder',
     {
       cookies: {
         getAll() {

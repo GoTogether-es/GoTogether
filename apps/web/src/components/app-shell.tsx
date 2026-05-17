@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Container, Button } from '@gotogether/ui';
 import { routes } from '@/lib/routes';
 import { Footer } from './footer';
-import { User, LogIn, Menu, Search, CalendarDays, LogOut } from 'lucide-react';
+import { User, LogIn, Menu, X, Search, CalendarDays, LogOut } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import type { Session, AuthChangeEvent } from '@supabase/supabase-js';
 import { logout } from '@/services/api';
@@ -16,6 +16,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const [session, setSession] = useState<Session | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const supabase = createClient();
 
   useEffect(() => {
@@ -33,13 +37,73 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe();
   }, [supabase.auth]);
 
+  const closeMenu = useCallback(() => {
+    setMobileMenuOpen(false);
+  }, []);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      const target = event.target as Node;
+      if (
+        mobileMenuOpen &&
+        menuRef.current &&
+        !menuRef.current.contains(target) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(target)
+      ) {
+        closeMenu();
+      }
+    }
+
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        closeMenu();
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleEscape);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [mobileMenuOpen, closeMenu]);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const original = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = original;
+    };
+  }, [mobileMenuOpen]);
+
+  useEffect(() => {
+    closeMenu();
+  }, [pathname, closeMenu]);
+
   const handleLogout = async () => {
-    await logout();
-    router.push('/');
+    setLoggingOut(true);
+    try {
+      await logout();
+      router.push('/');
+    } catch {
+      setLoggingOut(false);
+    }
   };
+
+  const isActive = (route: string) => pathname.startsWith(route);
 
   return (
     <div className="flex flex-col min-h-screen">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:rounded-lg"
+      >
+        Saltar al contenido principal
+      </a>
+
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
         <Container>
           <div className="flex items-center justify-between h-20">
@@ -47,13 +111,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <Link href="/" className="text-2xl font-bold text-blue-600 tracking-tight">
                 GoTogether
               </Link>
-              
-              <nav className="hidden md:flex items-center gap-8">
+
+              <nav className="hidden md:flex items-center gap-8" aria-label="Principal">
                 <Link
                   href={routes.explorar}
                   className={clsx(
                     'flex items-center gap-2 text-sm font-medium transition-colors hover:text-blue-600',
-                    pathname.startsWith(routes.explorar) ? 'text-blue-600' : 'text-gray-500'
+                    isActive(routes.explorar) ? 'text-blue-600' : 'text-gray-500'
                   )}
                 >
                   <Search className="w-4 h-4" />
@@ -64,7 +128,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     href={routes.reservas}
                     className={clsx(
                       'flex items-center gap-2 text-sm font-medium transition-colors hover:text-blue-600',
-                      pathname.startsWith(routes.reservas) ? 'text-blue-600' : 'text-gray-500'
+                      isActive(routes.reservas) ? 'text-blue-600' : 'text-gray-500'
                     )}
                   >
                     <CalendarDays className="w-4 h-4" />
@@ -74,7 +138,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               </nav>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="hidden md:flex items-center gap-4">
               {!session ? (
                 <Link href={routes.login}>
                   <Button variant="primary" className="flex items-center gap-2">
@@ -94,24 +158,112 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     variant="ghost"
                     className="flex items-center gap-2 text-gray-500 hover:text-red-600"
                     onClick={handleLogout}
+                    disabled={loggingOut}
+                    aria-label="Cerrar sesión"
                   >
-                    <LogOut className="w-4 h-4" />
+                    <LogOut className="w-4 h-4" aria-hidden="true" />
                   </Button>
                 </>
               )}
-              <button
-                type="button"
-                className="md:hidden p-2 text-gray-500 hover:bg-gray-50 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-                aria-label="Abrir menú principal"
-              >
-                <Menu className="w-6 h-6" />
-              </button>
             </div>
+
+            <button
+              ref={buttonRef}
+              type="button"
+              className="md:hidden p-2 text-gray-500 hover:bg-gray-50 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label={mobileMenuOpen ? 'Cerrar menú principal' : 'Abrir menú principal'}
+              aria-expanded={mobileMenuOpen}
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
           </div>
         </Container>
       </header>
 
-      <main className="flex-grow">{children}</main>
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 top-20 z-40 bg-black/20 md:hidden" aria-hidden="true" onClick={closeMenu} />
+      )}
+
+      <div
+        ref={menuRef}
+        className={clsx(
+          'fixed top-20 inset-x-0 z-40 bg-white border-b border-gray-100 shadow-lg md:hidden transition-transform duration-300 ease-in-out',
+          mobileMenuOpen ? 'translate-y-0' : '-translate-y-full'
+        )}
+        aria-hidden={!mobileMenuOpen}
+      >
+        <Container>
+          <nav className="py-6 flex flex-col gap-1" aria-label="Menú móvil">
+            <Link
+              href={routes.explorar}
+              className={clsx(
+                'flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium transition-colors',
+                isActive(routes.explorar)
+                  ? 'bg-blue-50 text-blue-600'
+                  : 'text-gray-700 hover:bg-gray-50'
+              )}
+              onClick={closeMenu}
+            >
+              <Search className="w-5 h-5" />
+              Explorar
+            </Link>
+            {session && (
+              <>
+                <Link
+                  href={routes.reservas}
+                  className={clsx(
+                    'flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium transition-colors',
+                    isActive(routes.reservas)
+                      ? 'bg-blue-50 text-blue-600'
+                      : 'text-gray-700 hover:bg-gray-50'
+                  )}
+                  onClick={closeMenu}
+                >
+                  <CalendarDays className="w-5 h-5" />
+                  Mis Reservas
+                </Link>
+                <Link
+                  href={routes.perfil}
+                  className={clsx(
+                    'flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium transition-colors',
+                    isActive(routes.perfil)
+                      ? 'bg-blue-50 text-blue-600'
+                      : 'text-gray-700 hover:bg-gray-50'
+                  )}
+                  onClick={closeMenu}
+                >
+                  <User className="w-5 h-5" />
+                  Mi Perfil
+                </Link>
+                <hr className="my-2 border-gray-100" />
+                <button
+                  className="flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium text-red-600 hover:bg-red-50 transition-colors w-full text-left"
+                  onClick={() => {
+                    closeMenu();
+                    handleLogout();
+                  }}
+                >
+                  <LogOut className="w-5 h-5" />
+                  Cerrar sesión
+                </button>
+              </>
+            )}
+            {!session && (
+              <Link
+                href={routes.login}
+                className="flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium text-blue-600 hover:bg-blue-50 transition-colors"
+                onClick={closeMenu}
+              >
+                <LogIn className="w-5 h-5" />
+                Iniciar sesión
+              </Link>
+            )}
+          </nav>
+        </Container>
+      </div>
+
+      <main id="main-content" className="flex-grow">{children}</main>
 
       <Footer />
     </div>
