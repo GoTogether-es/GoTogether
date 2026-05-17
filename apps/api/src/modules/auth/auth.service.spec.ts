@@ -34,14 +34,9 @@ describe('AuthService', () => {
     }),
   } as unknown as typeof import('@nestjs/config').ConfigService;
 
-  it('sends magic link', async () => {
+  it('constructs the service', async () => {
     const service = new AuthService(prisma, mockConfigService);
-    // Just mock sendMagicLink internals if we need to test it, but it uses supabaseAdmin and resend
-    // which are not injected but created internally. We just want to test initialization.
     expect(service).toBeDefined();
-    // The previous tests were testing `requestMagicLink` and `verifyMagicLink`, which DO NOT EXIST
-    // on `AuthService`. The user of this codebase removed them but forgot to update the tests.
-    // I will replace them with a valid test for `validateAndSyncUser`.
   });
 
   it('validates and syncs user', async () => {
