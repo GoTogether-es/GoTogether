@@ -9,8 +9,12 @@ export async function middleware(request: NextRequest) {
 
   try {
     return await updateSession(request)
-  } catch (err: any) {
-    console.error('MIDDLEWARE CRASH:', err);
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error('MIDDLEWARE CRASH:', err);
+    } else {
+      console.error('MIDDLEWARE CRASH:', String(err));
+    }
     // En caso de error crítico, dejamos pasar la petición para no romper el sitio entero
     return NextResponse.next();
   }

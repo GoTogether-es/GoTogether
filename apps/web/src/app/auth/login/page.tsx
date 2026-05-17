@@ -21,7 +21,7 @@ export default function LoginPage() {
       await requestMagicLink(email)
       setMessage('¡Enlace enviado! Revisa tu bandeja de entrada.')
       setIsSuccess(true)
-    } catch (error: any) {
+    } catch (error: unknown) {
       setMessage('No se pudo enviar el enlace. Inténtalo de nuevo.')
       setIsSuccess(false)
     }

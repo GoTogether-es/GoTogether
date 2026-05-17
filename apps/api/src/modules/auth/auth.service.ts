@@ -78,9 +78,9 @@ export class AuthService {
       if (mailError) throw mailError;
 
       return { success: true, message: 'Correo enviado con éxito' };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error in sendMagicLink:', error);
-      throw new InternalServerErrorException(`No se pudo enviar el enlace: ${error.message || 'Error desconocido'}`);
+      throw new InternalServerErrorException('No se pudo enviar el enlace');
     }
   }
 

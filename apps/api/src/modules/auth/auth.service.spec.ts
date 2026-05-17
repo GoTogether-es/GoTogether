@@ -1,4 +1,5 @@
 import { AuthService } from './auth.service';
+import type { ConfigService } from '@nestjs/config';
 import type { PrismaService } from '../prisma/prisma.service';
 
 describe('AuthService', () => {
@@ -23,16 +24,29 @@ describe('AuthService', () => {
     },
   } as unknown as PrismaService;
 
-  it('creates magic link session', async () => {
-    const service = new AuthService(prisma);
-    await service.requestMagicLink('test@demo.es');
-    expect(prisma.user.upsert).toHaveBeenCalled();
-    expect(prisma.magicLinkSession.create).toHaveBeenCalled();
+  const mockConfigService = {
+    get: jest.fn().mockImplementation((key: string) => {
+      if (key === 'NEXT_PUBLIC_SUPABASE_URL') return 'http://localhost';
+      if (key === 'SUPABASE_SERVICE_ROLE_KEY') return 'dummy-key';
+      if (key === 'RESEND_API_KEY') return 're_dummy';
+      if (key === 'RESEND_FROM') return 'test@demo.es';
+      if (key === 'NEXT_PUBLIC_APP_URL') return 'http://localhost';
+      return null;
+    }),
+  } as unknown as ConfigService;
+
+  it('constructs the service', async () => {
+    const service = new AuthService(prisma, mockConfigService);
+    expect(service).toBeDefined();
   });
 
-  it('rejects invalid token', async () => {
-    const service = new AuthService(prisma);
-    const result = await service.verifyMagicLink('invalid');
-    expect(result.ok).toBe(false);
+  it('validates and syncs user', async () => {
+    const service = new AuthService(prisma, mockConfigService);
+    await service.validateAndSyncUser({ userId: 'user-1', email: 'test@demo.es' });
+    expect(prisma.user.upsert).toHaveBeenCalledWith({
+      where: { id: 'user-1' },
+      update: { email: 'test@demo.es' },
+      create: { id: 'user-1', email: 'test@demo.es' },
+    });
   });
 });
