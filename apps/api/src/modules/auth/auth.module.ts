@@ -4,12 +4,11 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { SupabaseJwtStrategy } from './supabase.strategy';
-import { RolesGuard } from './roles.guard';
 
 @Module({
   imports: [PassportModule, ConfigModule],
-  providers: [AuthService, SupabaseJwtStrategy, RolesGuard],
+  providers: [AuthService, SupabaseJwtStrategy],
   controllers: [AuthController],
-  exports: [AuthService, RolesGuard],
+  exports: [AuthService],
 })
 export class AuthModule {}
