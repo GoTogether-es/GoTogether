@@ -1,13 +1,9 @@
-import 'reflect-metadata';
-
 import { Controller, Put, Param, UseGuards } from '@nestjs/common';
 import { AdminService } from './admin.service';
-import { RolesAuthGuard, Roles } from '../auth/roles-auth.guard';
-import { UserRole } from '../../generated/client';
+import { SupabaseAuthGuard } from '../auth/supabase-auth.guard';
 
 @Controller('admin')
-@UseGuards(RolesAuthGuard)
-@Roles(UserRole.ADMIN)
+@UseGuards(SupabaseAuthGuard)
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 

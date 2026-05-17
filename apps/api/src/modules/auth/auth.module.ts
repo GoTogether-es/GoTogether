@@ -10,6 +10,6 @@ import { RolesAuthGuard } from './roles-auth.guard';
   imports: [PassportModule, ConfigModule],
   providers: [AuthService, SupabaseJwtStrategy, RolesAuthGuard],
   controllers: [AuthController],
-  exports: [AuthService, RolesAuthGuard],
+  exports: [AuthService],
 })
 export class AuthModule {}
