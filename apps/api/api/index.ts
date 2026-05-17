@@ -45,12 +45,12 @@ export default async (req: any, res: any) => {
   try {
     const app = await bootstrap();
     return app(req, res);
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('NESTJS BOOTSTRAP ERROR:', err);
     if (!res.headersSent) {
       res.status(500).json({
         error: 'Internal Server Error',
-        message: err.message,
+        message: err instanceof Error ? err.message : 'Unknown error',
         version: VERSION
       });
     }
