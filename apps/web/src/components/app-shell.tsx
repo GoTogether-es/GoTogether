@@ -81,7 +81,11 @@ export function AppShell({ children }: { children: ReactNode }) {
                   </Button>
                 </Link>
               )}
-              <button className="md:hidden p-2 text-gray-500 hover:bg-gray-50 rounded-lg">
+              <button
+                type="button"
+                className="md:hidden p-2 text-gray-500 hover:bg-gray-50 rounded-lg"
+                aria-label="Abrir menú"
+              >
                 <Menu className="w-6 h-6" />
               </button>
             </div>

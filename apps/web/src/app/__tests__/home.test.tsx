@@ -6,7 +6,7 @@ describe('HomePage', () => {
     render(<HomePage />);
     expect(
       screen.getByRole('heading', {
-        name: /Acompanamiento humano para vivir con mas autonomia/i,
+        name: /Acompañamiento humano para vivir con más autonomía/i,
       }),
     ).toBeInTheDocument();
   });
