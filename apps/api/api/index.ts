@@ -27,10 +27,15 @@ async function bootstrap() {
       res.status(200).json({ version: VERSION });
     });
 
+    const corsOrigin = allowedOrigins.length > 0 ? allowedOrigins : true;
+
     const nestApp = await NestFactory.create(
       AppModule,
       new ExpressAdapter(expressApp),
-      { cors: true, logger: ['error', 'warn', 'log'] }
+      {
+        cors: { origin: corsOrigin, credentials: true },
+        logger: ['error', 'warn', 'log'],
+      },
     );
 
     nestApp.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
@@ -42,23 +47,6 @@ async function bootstrap() {
 }
 
 export default async (req: any, res: any) => {
-  const origin = req.headers.origin || '';
-
-  if (allowedOrigins.length > 0 && allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  } else if (allowedOrigins.length === 0) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-  }
-
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-
-  if (req.method === 'OPTIONS') {
-    res.status(204).end();
-    return;
-  }
-
   try {
     const app = await bootstrap();
     return app(req, res);
@@ -68,7 +56,7 @@ export default async (req: any, res: any) => {
       res.status(500).json({
         error: 'Internal Server Error',
         message: err instanceof Error ? err.message : 'Unknown error',
-        version: VERSION
+        version: VERSION,
       });
     }
   }
