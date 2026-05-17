@@ -4,37 +4,41 @@ import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from '../src/modules/app/app.module';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import express from 'express';
+import cors from 'cors';
 
 const VERSION = '0.1.0-alpha.13';
+
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  process.env.NEXT_PUBLIC_APP_URL,
+  'http://localhost:3000',
+].filter(Boolean) as string[];
 
 let cachedExpressApp: any;
 
 async function bootstrap() {
   if (!cachedExpressApp) {
     const expressApp = express();
-    
-    // Explicit health check route outside NestJS
-    expressApp.get('/server/health-check', (req, res) => {
+
+    expressApp.use(cors({ origin: allowedOrigins, credentials: true }));
+    expressApp.options('*', cors({ origin: allowedOrigins, credentials: true }));
+
+    expressApp.get('/server/health-check', (_req, res) => {
       res.status(200).json({ status: 'ok', runtime: 'Vercel Node.js', version: VERSION });
     });
 
-    // Version endpoint
-    expressApp.get('/server/version', (req, res) => {
+    expressApp.get('/server/version', (_req, res) => {
       res.status(200).json({ version: VERSION });
     });
 
     const nestApp = await NestFactory.create(
       AppModule,
       new ExpressAdapter(expressApp),
-      { 
-        cors: true,
-        logger: ['error', 'warn', 'log'] 
-      }
+      { logger: ['error', 'warn', 'log'] }
     );
-    
+
     nestApp.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
-    
-    // Important: Initialize NestJS without starting the listener
+
     await nestApp.init();
     cachedExpressApp = expressApp;
   }

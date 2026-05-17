@@ -6,14 +6,19 @@ import * as express from 'express';
 import { AppModule } from './modules/app/app.module';
 import { GlobalExceptionFilter } from './modules/app/global-exception.filter';
 
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  process.env.NEXT_PUBLIC_APP_URL,
+  'http://localhost:3000',
+].filter(Boolean) as string[];
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     rawBody: true,
     cors: {
-      origin:
-        process.env.NODE_ENV === 'production'
-          ? [process.env.NEXT_PUBLIC_APP_URL || ''].filter(Boolean)
-          : true,
+      origin: process.env.NODE_ENV === 'production'
+        ? allowedOrigins.length > 0 ? allowedOrigins : true
+        : true,
       credentials: true,
     },
   });
