@@ -4,7 +4,6 @@ import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from '../src/modules/app/app.module';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import express from 'express';
-import cors from 'cors';
 
 const VERSION = '0.1.0-alpha.13';
 
@@ -20,9 +19,6 @@ async function bootstrap() {
   if (!cachedExpressApp) {
     const expressApp = express();
 
-    expressApp.use(cors({ origin: allowedOrigins, credentials: true }));
-    expressApp.options('*', cors({ origin: allowedOrigins, credentials: true }));
-
     expressApp.get('/server/health-check', (_req, res) => {
       res.status(200).json({ status: 'ok', runtime: 'Vercel Node.js', version: VERSION });
     });
@@ -34,7 +30,7 @@ async function bootstrap() {
     const nestApp = await NestFactory.create(
       AppModule,
       new ExpressAdapter(expressApp),
-      { logger: ['error', 'warn', 'log'] }
+      { cors: true, logger: ['error', 'warn', 'log'] }
     );
 
     nestApp.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
@@ -46,6 +42,23 @@ async function bootstrap() {
 }
 
 export default async (req: any, res: any) => {
+  const origin = req.headers.origin || '';
+
+  if (allowedOrigins.length > 0 && allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  } else if (allowedOrigins.length === 0) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+  }
+
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+  if (req.method === 'OPTIONS') {
+    res.status(204).end();
+    return;
+  }
+
   try {
     const app = await bootstrap();
     return app(req, res);
