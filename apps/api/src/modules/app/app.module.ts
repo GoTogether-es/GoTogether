@@ -12,6 +12,7 @@ import { ReportsModule } from '../reports/reports.module';
 import { UploadsModule } from '../uploads/uploads.module';
 import { AuthModule } from '../auth/auth.module';
 import { SupervisionModule } from '../supervision/supervision.module';
+import { AdminModule } from '../admin/admin.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { SupervisionModule } from '../supervision/supervision.module';
     ReportsModule,
     UploadsModule,
     SupervisionModule,
+    AdminModule,
   ],
   controllers: [AppController],
 })
