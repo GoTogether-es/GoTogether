@@ -1,4 +1,5 @@
 import { AuthService } from './auth.service';
+import type { ConfigService } from '@nestjs/config';
 import type { PrismaService } from '../prisma/prisma.service';
 
 describe('AuthService', () => {
@@ -32,7 +33,7 @@ describe('AuthService', () => {
       if (key === 'NEXT_PUBLIC_APP_URL') return 'http://localhost';
       return null;
     }),
-  } as unknown as typeof import('@nestjs/config').ConfigService;
+  } as unknown as ConfigService;
 
   it('constructs the service', async () => {
     const service = new AuthService(prisma, mockConfigService);
