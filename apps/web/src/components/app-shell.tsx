@@ -8,11 +8,12 @@ import { routes } from '@/lib/routes';
 import { Footer } from './footer';
 import { User, LogIn, Menu, Search, CalendarDays } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import type { Session } from '@supabase/supabase-js';
 import clsx from 'clsx';
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const [session, setSession] = useState<any>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const supabase = createClient();
 
   useEffect(() => {
