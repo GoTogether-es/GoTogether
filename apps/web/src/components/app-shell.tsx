@@ -8,7 +8,7 @@ import { routes } from '@/lib/routes';
 import { Footer } from './footer';
 import { User, LogIn, Menu, Search, CalendarDays, LogOut } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
-import type { Session } from '@supabase/supabase-js';
+import type { Session, AuthChangeEvent } from '@supabase/supabase-js';
 import { logout } from '@/services/api';
 import clsx from 'clsx';
 
@@ -19,13 +19,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const supabase = createClient();
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    (async () => {
+      const { data: { session } } = await supabase.auth.getSession();
       setSession(session);
-    });
+    })();
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange((_event: AuthChangeEvent, session: Session | null) => {
       setSession(session);
     });
 
