@@ -111,6 +111,9 @@ export class AuthService {
       if (error) throw error;
       return { success: true };
     } catch (error: any) {
+      if (error?.__isAuthError) {
+        return { success: true };
+      }
       console.error('Error in logout:', error);
       throw new InternalServerErrorException(
         `No se pudo cerrar sesión: ${error.message || 'Error desconocido'}`,
