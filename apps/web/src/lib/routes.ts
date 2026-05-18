@@ -8,6 +8,8 @@ export const routes = {
   valoracion: '/valoracion',
   login: '/auth/login',
   onboarding: '/onboarding',
+  onboardingClient: '/onboarding/register/client',
+  onboardingCompanion: '/onboarding/register/companion',
   onboardingSupervisor: '/onboarding/supervisor',
   supervision: '/supervision',
   supervisionAccept: '/supervision/accept',

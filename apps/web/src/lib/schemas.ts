@@ -11,6 +11,28 @@ export const solicitudSchema = z.object({
 
 export type SolicitudFormData = z.infer<typeof solicitudSchema>;
 
+export const clientRegistrationSchema = z.object({
+  fullName: z.string().min(1, 'El nombre es obligatorio'),
+  phone: z.string().optional(),
+  bio: z.string().optional(),
+  disabilityType: z.string().min(1, 'Selecciona un tipo de discapacidad'),
+  disabilityDescription: z.string().optional(),
+  disabilityDocument: z.string().optional(),
+});
+
+export type ClientRegistrationFormData = z.infer<typeof clientRegistrationSchema>;
+
+export const companionRegistrationSchema = z.object({
+  fullName: z.string().min(1, 'El nombre es obligatorio'),
+  phone: z.string().optional(),
+  bio: z.string().optional(),
+  specialties: z.string().min(1, 'Indica al menos una especialidad'),
+  penalCertificate: z.string().min(1, 'Sube el certificado de antecedentes penales'),
+  sexualCertificate: z.string().min(1, 'Sube el certificado de delitos sexuales'),
+});
+
+export type CompanionRegistrationFormData = z.infer<typeof companionRegistrationSchema>;
+
 export const perfilSchema = z.object({
   fullName: z.string().min(1, 'El nombre es obligatorio'),
   headline: z.string().optional(),

@@ -4757,6 +4757,8 @@ export namespace Prisma {
     phone: string | null
     avatarUrl: string | null
     disabilityType: string | null
+    disabilityDescription: string | null
+    disabilityDocument: string | null
     preferences: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -4771,6 +4773,8 @@ export namespace Prisma {
     phone: string | null
     avatarUrl: string | null
     disabilityType: string | null
+    disabilityDescription: string | null
+    disabilityDocument: string | null
     preferences: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -4785,6 +4789,8 @@ export namespace Prisma {
     phone: number
     avatarUrl: number
     disabilityType: number
+    disabilityDescription: number
+    disabilityDocument: number
     preferences: number
     createdAt: number
     updatedAt: number
@@ -4801,6 +4807,8 @@ export namespace Prisma {
     phone?: true
     avatarUrl?: true
     disabilityType?: true
+    disabilityDescription?: true
+    disabilityDocument?: true
     preferences?: true
     createdAt?: true
     updatedAt?: true
@@ -4815,6 +4823,8 @@ export namespace Prisma {
     phone?: true
     avatarUrl?: true
     disabilityType?: true
+    disabilityDescription?: true
+    disabilityDocument?: true
     preferences?: true
     createdAt?: true
     updatedAt?: true
@@ -4829,6 +4839,8 @@ export namespace Prisma {
     phone?: true
     avatarUrl?: true
     disabilityType?: true
+    disabilityDescription?: true
+    disabilityDocument?: true
     preferences?: true
     createdAt?: true
     updatedAt?: true
@@ -4916,6 +4928,8 @@ export namespace Prisma {
     phone: string | null
     avatarUrl: string | null
     disabilityType: string | null
+    disabilityDescription: string | null
+    disabilityDocument: string | null
     preferences: string | null
     createdAt: Date
     updatedAt: Date
@@ -4947,6 +4961,8 @@ export namespace Prisma {
     phone?: boolean
     avatarUrl?: boolean
     disabilityType?: boolean
+    disabilityDescription?: boolean
+    disabilityDocument?: boolean
     preferences?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4963,6 +4979,8 @@ export namespace Prisma {
     phone?: boolean
     avatarUrl?: boolean
     disabilityType?: boolean
+    disabilityDescription?: boolean
+    disabilityDocument?: boolean
     preferences?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4978,6 +4996,8 @@ export namespace Prisma {
     phone?: boolean
     avatarUrl?: boolean
     disabilityType?: boolean
+    disabilityDescription?: boolean
+    disabilityDocument?: boolean
     preferences?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -5006,6 +5026,8 @@ export namespace Prisma {
       phone: string | null
       avatarUrl: string | null
       disabilityType: string | null
+      disabilityDescription: string | null
+      disabilityDocument: string | null
       preferences: string | null
       createdAt: Date
       updatedAt: Date
@@ -5412,6 +5434,8 @@ export namespace Prisma {
     readonly phone: FieldRef<"Profile", 'String'>
     readonly avatarUrl: FieldRef<"Profile", 'String'>
     readonly disabilityType: FieldRef<"Profile", 'String'>
+    readonly disabilityDescription: FieldRef<"Profile", 'String'>
+    readonly disabilityDocument: FieldRef<"Profile", 'String'>
     readonly preferences: FieldRef<"Profile", 'String'>
     readonly createdAt: FieldRef<"Profile", 'DateTime'>
     readonly updatedAt: FieldRef<"Profile", 'DateTime'>
@@ -5791,6 +5815,8 @@ export namespace Prisma {
     verified: boolean | null
     backgroundCheck: string | null
     sexualCheck: string | null
+    penalCertificate: string | null
+    sexualCertificate: string | null
     rating: number | null
     yearsOnPlatform: number | null
     createdAt: Date | null
@@ -5804,6 +5830,8 @@ export namespace Prisma {
     verified: boolean | null
     backgroundCheck: string | null
     sexualCheck: string | null
+    penalCertificate: string | null
+    sexualCertificate: string | null
     rating: number | null
     yearsOnPlatform: number | null
     createdAt: Date | null
@@ -5817,6 +5845,8 @@ export namespace Prisma {
     verified: number
     backgroundCheck: number
     sexualCheck: number
+    penalCertificate: number
+    sexualCertificate: number
     rating: number
     yearsOnPlatform: number
     createdAt: number
@@ -5842,6 +5872,8 @@ export namespace Prisma {
     verified?: true
     backgroundCheck?: true
     sexualCheck?: true
+    penalCertificate?: true
+    sexualCertificate?: true
     rating?: true
     yearsOnPlatform?: true
     createdAt?: true
@@ -5855,6 +5887,8 @@ export namespace Prisma {
     verified?: true
     backgroundCheck?: true
     sexualCheck?: true
+    penalCertificate?: true
+    sexualCertificate?: true
     rating?: true
     yearsOnPlatform?: true
     createdAt?: true
@@ -5868,6 +5902,8 @@ export namespace Prisma {
     verified?: true
     backgroundCheck?: true
     sexualCheck?: true
+    penalCertificate?: true
+    sexualCertificate?: true
     rating?: true
     yearsOnPlatform?: true
     createdAt?: true
@@ -5968,6 +6004,8 @@ export namespace Prisma {
     verified: boolean
     backgroundCheck: string | null
     sexualCheck: string | null
+    penalCertificate: string | null
+    sexualCertificate: string | null
     rating: number
     yearsOnPlatform: number
     createdAt: Date
@@ -6000,6 +6038,8 @@ export namespace Prisma {
     verified?: boolean
     backgroundCheck?: boolean
     sexualCheck?: boolean
+    penalCertificate?: boolean
+    sexualCertificate?: boolean
     rating?: boolean
     yearsOnPlatform?: boolean
     createdAt?: boolean
@@ -6016,6 +6056,8 @@ export namespace Prisma {
     verified?: boolean
     backgroundCheck?: boolean
     sexualCheck?: boolean
+    penalCertificate?: boolean
+    sexualCertificate?: boolean
     rating?: boolean
     yearsOnPlatform?: boolean
     createdAt?: boolean
@@ -6030,6 +6072,8 @@ export namespace Prisma {
     verified?: boolean
     backgroundCheck?: boolean
     sexualCheck?: boolean
+    penalCertificate?: boolean
+    sexualCertificate?: boolean
     rating?: boolean
     yearsOnPlatform?: boolean
     createdAt?: boolean
@@ -6058,6 +6102,8 @@ export namespace Prisma {
       verified: boolean
       backgroundCheck: string | null
       sexualCheck: string | null
+      penalCertificate: string | null
+      sexualCertificate: string | null
       rating: number
       yearsOnPlatform: number
       createdAt: Date
@@ -6463,6 +6509,8 @@ export namespace Prisma {
     readonly verified: FieldRef<"CompanionProfile", 'Boolean'>
     readonly backgroundCheck: FieldRef<"CompanionProfile", 'String'>
     readonly sexualCheck: FieldRef<"CompanionProfile", 'String'>
+    readonly penalCertificate: FieldRef<"CompanionProfile", 'String'>
+    readonly sexualCertificate: FieldRef<"CompanionProfile", 'String'>
     readonly rating: FieldRef<"CompanionProfile", 'Float'>
     readonly yearsOnPlatform: FieldRef<"CompanionProfile", 'Int'>
     readonly createdAt: FieldRef<"CompanionProfile", 'DateTime'>
@@ -11872,6 +11920,8 @@ export namespace Prisma {
     phone: 'phone',
     avatarUrl: 'avatarUrl',
     disabilityType: 'disabilityType',
+    disabilityDescription: 'disabilityDescription',
+    disabilityDocument: 'disabilityDocument',
     preferences: 'preferences',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -11887,6 +11937,8 @@ export namespace Prisma {
     verified: 'verified',
     backgroundCheck: 'backgroundCheck',
     sexualCheck: 'sexualCheck',
+    penalCertificate: 'penalCertificate',
+    sexualCertificate: 'sexualCertificate',
     rating: 'rating',
     yearsOnPlatform: 'yearsOnPlatform',
     createdAt: 'createdAt',
@@ -12295,6 +12347,8 @@ export namespace Prisma {
     phone?: StringNullableFilter<"Profile"> | string | null
     avatarUrl?: StringNullableFilter<"Profile"> | string | null
     disabilityType?: StringNullableFilter<"Profile"> | string | null
+    disabilityDescription?: StringNullableFilter<"Profile"> | string | null
+    disabilityDocument?: StringNullableFilter<"Profile"> | string | null
     preferences?: StringNullableFilter<"Profile"> | string | null
     createdAt?: DateTimeFilter<"Profile"> | Date | string
     updatedAt?: DateTimeFilter<"Profile"> | Date | string
@@ -12311,6 +12365,8 @@ export namespace Prisma {
     phone?: SortOrderInput | SortOrder
     avatarUrl?: SortOrderInput | SortOrder
     disabilityType?: SortOrderInput | SortOrder
+    disabilityDescription?: SortOrderInput | SortOrder
+    disabilityDocument?: SortOrderInput | SortOrder
     preferences?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -12330,6 +12386,8 @@ export namespace Prisma {
     phone?: StringNullableFilter<"Profile"> | string | null
     avatarUrl?: StringNullableFilter<"Profile"> | string | null
     disabilityType?: StringNullableFilter<"Profile"> | string | null
+    disabilityDescription?: StringNullableFilter<"Profile"> | string | null
+    disabilityDocument?: StringNullableFilter<"Profile"> | string | null
     preferences?: StringNullableFilter<"Profile"> | string | null
     createdAt?: DateTimeFilter<"Profile"> | Date | string
     updatedAt?: DateTimeFilter<"Profile"> | Date | string
@@ -12346,6 +12404,8 @@ export namespace Prisma {
     phone?: SortOrderInput | SortOrder
     avatarUrl?: SortOrderInput | SortOrder
     disabilityType?: SortOrderInput | SortOrder
+    disabilityDescription?: SortOrderInput | SortOrder
+    disabilityDocument?: SortOrderInput | SortOrder
     preferences?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -12366,6 +12426,8 @@ export namespace Prisma {
     phone?: StringNullableWithAggregatesFilter<"Profile"> | string | null
     avatarUrl?: StringNullableWithAggregatesFilter<"Profile"> | string | null
     disabilityType?: StringNullableWithAggregatesFilter<"Profile"> | string | null
+    disabilityDescription?: StringNullableWithAggregatesFilter<"Profile"> | string | null
+    disabilityDocument?: StringNullableWithAggregatesFilter<"Profile"> | string | null
     preferences?: StringNullableWithAggregatesFilter<"Profile"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Profile"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Profile"> | Date | string
@@ -12381,6 +12443,8 @@ export namespace Prisma {
     verified?: BoolFilter<"CompanionProfile"> | boolean
     backgroundCheck?: StringNullableFilter<"CompanionProfile"> | string | null
     sexualCheck?: StringNullableFilter<"CompanionProfile"> | string | null
+    penalCertificate?: StringNullableFilter<"CompanionProfile"> | string | null
+    sexualCertificate?: StringNullableFilter<"CompanionProfile"> | string | null
     rating?: FloatFilter<"CompanionProfile"> | number
     yearsOnPlatform?: IntFilter<"CompanionProfile"> | number
     createdAt?: DateTimeFilter<"CompanionProfile"> | Date | string
@@ -12396,6 +12460,8 @@ export namespace Prisma {
     verified?: SortOrder
     backgroundCheck?: SortOrderInput | SortOrder
     sexualCheck?: SortOrderInput | SortOrder
+    penalCertificate?: SortOrderInput | SortOrder
+    sexualCertificate?: SortOrderInput | SortOrder
     rating?: SortOrder
     yearsOnPlatform?: SortOrder
     createdAt?: SortOrder
@@ -12414,6 +12480,8 @@ export namespace Prisma {
     verified?: BoolFilter<"CompanionProfile"> | boolean
     backgroundCheck?: StringNullableFilter<"CompanionProfile"> | string | null
     sexualCheck?: StringNullableFilter<"CompanionProfile"> | string | null
+    penalCertificate?: StringNullableFilter<"CompanionProfile"> | string | null
+    sexualCertificate?: StringNullableFilter<"CompanionProfile"> | string | null
     rating?: FloatFilter<"CompanionProfile"> | number
     yearsOnPlatform?: IntFilter<"CompanionProfile"> | number
     createdAt?: DateTimeFilter<"CompanionProfile"> | Date | string
@@ -12429,6 +12497,8 @@ export namespace Prisma {
     verified?: SortOrder
     backgroundCheck?: SortOrderInput | SortOrder
     sexualCheck?: SortOrderInput | SortOrder
+    penalCertificate?: SortOrderInput | SortOrder
+    sexualCertificate?: SortOrderInput | SortOrder
     rating?: SortOrder
     yearsOnPlatform?: SortOrder
     createdAt?: SortOrder
@@ -12450,6 +12520,8 @@ export namespace Prisma {
     verified?: BoolWithAggregatesFilter<"CompanionProfile"> | boolean
     backgroundCheck?: StringNullableWithAggregatesFilter<"CompanionProfile"> | string | null
     sexualCheck?: StringNullableWithAggregatesFilter<"CompanionProfile"> | string | null
+    penalCertificate?: StringNullableWithAggregatesFilter<"CompanionProfile"> | string | null
+    sexualCertificate?: StringNullableWithAggregatesFilter<"CompanionProfile"> | string | null
     rating?: FloatWithAggregatesFilter<"CompanionProfile"> | number
     yearsOnPlatform?: IntWithAggregatesFilter<"CompanionProfile"> | number
     createdAt?: DateTimeWithAggregatesFilter<"CompanionProfile"> | Date | string
@@ -13026,6 +13098,8 @@ export namespace Prisma {
     phone?: string | null
     avatarUrl?: string | null
     disabilityType?: string | null
+    disabilityDescription?: string | null
+    disabilityDocument?: string | null
     preferences?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -13042,6 +13116,8 @@ export namespace Prisma {
     phone?: string | null
     avatarUrl?: string | null
     disabilityType?: string | null
+    disabilityDescription?: string | null
+    disabilityDocument?: string | null
     preferences?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -13056,6 +13132,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    disabilityDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    disabilityDocument?: NullableStringFieldUpdateOperationsInput | string | null
     preferences?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13072,6 +13150,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    disabilityDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    disabilityDocument?: NullableStringFieldUpdateOperationsInput | string | null
     preferences?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13087,6 +13167,8 @@ export namespace Prisma {
     phone?: string | null
     avatarUrl?: string | null
     disabilityType?: string | null
+    disabilityDescription?: string | null
+    disabilityDocument?: string | null
     preferences?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -13100,6 +13182,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    disabilityDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    disabilityDocument?: NullableStringFieldUpdateOperationsInput | string | null
     preferences?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13114,6 +13198,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    disabilityDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    disabilityDocument?: NullableStringFieldUpdateOperationsInput | string | null
     preferences?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13125,6 +13211,8 @@ export namespace Prisma {
     verified?: boolean
     backgroundCheck?: string | null
     sexualCheck?: string | null
+    penalCertificate?: string | null
+    sexualCertificate?: string | null
     rating?: number
     yearsOnPlatform?: number
     createdAt?: Date | string
@@ -13140,6 +13228,8 @@ export namespace Prisma {
     verified?: boolean
     backgroundCheck?: string | null
     sexualCheck?: string | null
+    penalCertificate?: string | null
+    sexualCertificate?: string | null
     rating?: number
     yearsOnPlatform?: number
     createdAt?: Date | string
@@ -13153,6 +13243,8 @@ export namespace Prisma {
     verified?: BoolFieldUpdateOperationsInput | boolean
     backgroundCheck?: NullableStringFieldUpdateOperationsInput | string | null
     sexualCheck?: NullableStringFieldUpdateOperationsInput | string | null
+    penalCertificate?: NullableStringFieldUpdateOperationsInput | string | null
+    sexualCertificate?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: FloatFieldUpdateOperationsInput | number
     yearsOnPlatform?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13168,6 +13260,8 @@ export namespace Prisma {
     verified?: BoolFieldUpdateOperationsInput | boolean
     backgroundCheck?: NullableStringFieldUpdateOperationsInput | string | null
     sexualCheck?: NullableStringFieldUpdateOperationsInput | string | null
+    penalCertificate?: NullableStringFieldUpdateOperationsInput | string | null
+    sexualCertificate?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: FloatFieldUpdateOperationsInput | number
     yearsOnPlatform?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13182,6 +13276,8 @@ export namespace Prisma {
     verified?: boolean
     backgroundCheck?: string | null
     sexualCheck?: string | null
+    penalCertificate?: string | null
+    sexualCertificate?: string | null
     rating?: number
     yearsOnPlatform?: number
     createdAt?: Date | string
@@ -13194,6 +13290,8 @@ export namespace Prisma {
     verified?: BoolFieldUpdateOperationsInput | boolean
     backgroundCheck?: NullableStringFieldUpdateOperationsInput | string | null
     sexualCheck?: NullableStringFieldUpdateOperationsInput | string | null
+    penalCertificate?: NullableStringFieldUpdateOperationsInput | string | null
+    sexualCertificate?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: FloatFieldUpdateOperationsInput | number
     yearsOnPlatform?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13207,6 +13305,8 @@ export namespace Prisma {
     verified?: BoolFieldUpdateOperationsInput | boolean
     backgroundCheck?: NullableStringFieldUpdateOperationsInput | string | null
     sexualCheck?: NullableStringFieldUpdateOperationsInput | string | null
+    penalCertificate?: NullableStringFieldUpdateOperationsInput | string | null
+    sexualCertificate?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: FloatFieldUpdateOperationsInput | number
     yearsOnPlatform?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13832,6 +13932,8 @@ export namespace Prisma {
     phone?: SortOrder
     avatarUrl?: SortOrder
     disabilityType?: SortOrder
+    disabilityDescription?: SortOrder
+    disabilityDocument?: SortOrder
     preferences?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -13846,6 +13948,8 @@ export namespace Prisma {
     phone?: SortOrder
     avatarUrl?: SortOrder
     disabilityType?: SortOrder
+    disabilityDescription?: SortOrder
+    disabilityDocument?: SortOrder
     preferences?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -13860,6 +13964,8 @@ export namespace Prisma {
     phone?: SortOrder
     avatarUrl?: SortOrder
     disabilityType?: SortOrder
+    disabilityDescription?: SortOrder
+    disabilityDocument?: SortOrder
     preferences?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -13904,6 +14010,8 @@ export namespace Prisma {
     verified?: SortOrder
     backgroundCheck?: SortOrder
     sexualCheck?: SortOrder
+    penalCertificate?: SortOrder
+    sexualCertificate?: SortOrder
     rating?: SortOrder
     yearsOnPlatform?: SortOrder
     createdAt?: SortOrder
@@ -13922,6 +14030,8 @@ export namespace Prisma {
     verified?: SortOrder
     backgroundCheck?: SortOrder
     sexualCheck?: SortOrder
+    penalCertificate?: SortOrder
+    sexualCertificate?: SortOrder
     rating?: SortOrder
     yearsOnPlatform?: SortOrder
     createdAt?: SortOrder
@@ -13935,6 +14045,8 @@ export namespace Prisma {
     verified?: SortOrder
     backgroundCheck?: SortOrder
     sexualCheck?: SortOrder
+    penalCertificate?: SortOrder
+    sexualCertificate?: SortOrder
     rating?: SortOrder
     yearsOnPlatform?: SortOrder
     createdAt?: SortOrder
@@ -15139,6 +15251,8 @@ export namespace Prisma {
     phone?: string | null
     avatarUrl?: string | null
     disabilityType?: string | null
+    disabilityDescription?: string | null
+    disabilityDocument?: string | null
     preferences?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15153,6 +15267,8 @@ export namespace Prisma {
     phone?: string | null
     avatarUrl?: string | null
     disabilityType?: string | null
+    disabilityDescription?: string | null
+    disabilityDocument?: string | null
     preferences?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15342,6 +15458,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    disabilityDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    disabilityDocument?: NullableStringFieldUpdateOperationsInput | string | null
     preferences?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15356,6 +15474,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    disabilityDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    disabilityDocument?: NullableStringFieldUpdateOperationsInput | string | null
     preferences?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15733,6 +15853,8 @@ export namespace Prisma {
     verified?: boolean
     backgroundCheck?: string | null
     sexualCheck?: string | null
+    penalCertificate?: string | null
+    sexualCertificate?: string | null
     rating?: number
     yearsOnPlatform?: number
     createdAt?: Date | string
@@ -15746,6 +15868,8 @@ export namespace Prisma {
     verified?: boolean
     backgroundCheck?: string | null
     sexualCheck?: string | null
+    penalCertificate?: string | null
+    sexualCertificate?: string | null
     rating?: number
     yearsOnPlatform?: number
     createdAt?: Date | string
@@ -15812,6 +15936,8 @@ export namespace Prisma {
     verified?: BoolFieldUpdateOperationsInput | boolean
     backgroundCheck?: NullableStringFieldUpdateOperationsInput | string | null
     sexualCheck?: NullableStringFieldUpdateOperationsInput | string | null
+    penalCertificate?: NullableStringFieldUpdateOperationsInput | string | null
+    sexualCertificate?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: FloatFieldUpdateOperationsInput | number
     yearsOnPlatform?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15825,6 +15951,8 @@ export namespace Prisma {
     verified?: BoolFieldUpdateOperationsInput | boolean
     backgroundCheck?: NullableStringFieldUpdateOperationsInput | string | null
     sexualCheck?: NullableStringFieldUpdateOperationsInput | string | null
+    penalCertificate?: NullableStringFieldUpdateOperationsInput | string | null
+    sexualCertificate?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: FloatFieldUpdateOperationsInput | number
     yearsOnPlatform?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15840,6 +15968,8 @@ export namespace Prisma {
     phone?: string | null
     avatarUrl?: string | null
     disabilityType?: string | null
+    disabilityDescription?: string | null
+    disabilityDocument?: string | null
     preferences?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15855,6 +15985,8 @@ export namespace Prisma {
     phone?: string | null
     avatarUrl?: string | null
     disabilityType?: string | null
+    disabilityDescription?: string | null
+    disabilityDocument?: string | null
     preferences?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15928,6 +16060,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    disabilityDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    disabilityDocument?: NullableStringFieldUpdateOperationsInput | string | null
     preferences?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15943,6 +16077,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    disabilityDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    disabilityDocument?: NullableStringFieldUpdateOperationsInput | string | null
     preferences?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16001,6 +16137,8 @@ export namespace Prisma {
     verified?: boolean
     backgroundCheck?: string | null
     sexualCheck?: string | null
+    penalCertificate?: string | null
+    sexualCertificate?: string | null
     rating?: number
     yearsOnPlatform?: number
     createdAt?: Date | string
@@ -16015,6 +16153,8 @@ export namespace Prisma {
     verified?: boolean
     backgroundCheck?: string | null
     sexualCheck?: string | null
+    penalCertificate?: string | null
+    sexualCertificate?: string | null
     rating?: number
     yearsOnPlatform?: number
     createdAt?: Date | string
@@ -16178,6 +16318,8 @@ export namespace Prisma {
     verified?: BoolFieldUpdateOperationsInput | boolean
     backgroundCheck?: NullableStringFieldUpdateOperationsInput | string | null
     sexualCheck?: NullableStringFieldUpdateOperationsInput | string | null
+    penalCertificate?: NullableStringFieldUpdateOperationsInput | string | null
+    sexualCertificate?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: FloatFieldUpdateOperationsInput | number
     yearsOnPlatform?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16192,6 +16334,8 @@ export namespace Prisma {
     verified?: BoolFieldUpdateOperationsInput | boolean
     backgroundCheck?: NullableStringFieldUpdateOperationsInput | string | null
     sexualCheck?: NullableStringFieldUpdateOperationsInput | string | null
+    penalCertificate?: NullableStringFieldUpdateOperationsInput | string | null
+    sexualCertificate?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: FloatFieldUpdateOperationsInput | number
     yearsOnPlatform?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

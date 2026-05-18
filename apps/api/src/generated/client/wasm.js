@@ -158,6 +158,8 @@ exports.Prisma.ProfileScalarFieldEnum = {
   phone: 'phone',
   avatarUrl: 'avatarUrl',
   disabilityType: 'disabilityType',
+  disabilityDescription: 'disabilityDescription',
+  disabilityDocument: 'disabilityDocument',
   preferences: 'preferences',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -170,6 +172,8 @@ exports.Prisma.CompanionProfileScalarFieldEnum = {
   verified: 'verified',
   backgroundCheck: 'backgroundCheck',
   sexualCheck: 'sexualCheck',
+  penalCertificate: 'penalCertificate',
+  sexualCertificate: 'sexualCertificate',
   rating: 'rating',
   yearsOnPlatform: 'yearsOnPlatform',
   createdAt: 'createdAt',

@@ -10,7 +10,15 @@ export class ProfilesService {
   async upsertProfile(userId: string, dto: UpsertProfileDto) {
     await this.ensureUser(userId);
 
-    const { isCompanion, specialties, backgroundCheck, sexualCheck, ...profileData } = dto;
+    const {
+      isCompanion,
+      specialties,
+      backgroundCheck,
+      sexualCheck,
+      penalCertificate,
+      sexualCertificate,
+      ...profileData
+    } = dto;
 
     // 1. Upsert base profile
     const profile = await this.prisma.profile.upsert({
@@ -23,8 +31,8 @@ export class ProfilesService {
     if (isCompanion) {
       await this.prisma.companionProfile.upsert({
         where: { profileId: profile.id },
-        update: { specialties, backgroundCheck, sexualCheck },
-        create: { profileId: profile.id, specialties, backgroundCheck, sexualCheck },
+        update: { specialties, backgroundCheck, sexualCheck, penalCertificate, sexualCertificate },
+        create: { profileId: profile.id, specialties, backgroundCheck, sexualCheck, penalCertificate, sexualCertificate },
       });
 
       // Update user role to COMPANION

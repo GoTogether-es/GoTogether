@@ -45,6 +45,8 @@ export type UserProfile = {
   bio: string | null;
   phone: string | null;
   disabilityType: string | null;
+  disabilityDescription: string | null;
+  disabilityDocument: string | null;
   preferences: string | null;
   companion?: CompanionProfileData | null;
 };
@@ -53,6 +55,8 @@ export type CompanionProfileData = {
   specialties: string | null;
   verified: boolean;
   backgroundCheck: string | null;
+  penalCertificate: string | null;
+  sexualCertificate: string | null;
   rating: number;
   yearsOnPlatform: number;
 };

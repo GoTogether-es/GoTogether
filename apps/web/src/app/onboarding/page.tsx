@@ -15,7 +15,7 @@ export default function OnboardingPage() {
       description: 'Necesito ayuda para tareas, paseos o gestiones cotidianas.',
       icon: User,
       gradient: 'from-blue-500 to-blue-600',
-      route: '/perfil?onboarding=true&role=client',
+      route: '/onboarding/register/client',
     },
     {
       key: 'companion',
@@ -23,7 +23,7 @@ export default function OnboardingPage() {
       description: 'Quiero ofrecer mi tiempo y habilidades a quienes lo necesitan.',
       icon: UserPlus,
       gradient: 'from-emerald-500 to-emerald-600',
-      route: '/perfil?onboarding=true&role=companion',
+      route: '/onboarding/register/companion',
     },
     {
       key: 'supervisor',

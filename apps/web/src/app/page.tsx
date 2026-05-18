@@ -24,12 +24,9 @@ export default function HomePage() {
                 ocio o gestiones esenciales. Porque nadie debería sentirse solo.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                <LinkButton href={routes.solicitud} className="h-14 px-8 text-lg">
+                <LinkButton href={routes.login} className="h-14 px-8 text-lg">
                   Empezar ahora
                   <ArrowRight className="ml-2 w-5 h-5" />
-                </LinkButton>
-                <LinkButton href={routes.perfil} variant="ghost" className="h-14 px-8 text-lg border-white/20 text-white hover:bg-white/10">
-                  Quiero ser acompañante
                 </LinkButton>
               </div>
             </div>
@@ -113,7 +110,7 @@ export default function HomePage() {
               <p className="text-gray-600 mb-8 leading-relaxed">
                 Aporta tu tiempo, gana ingresos extra y recibe formación especializada para ayudar a quienes más lo necesitan.
               </p>
-              <LinkButton href={routes.perfil} variant="secondary" className="w-full sm:w-auto">
+              <LinkButton href={routes.login} variant="secondary" className="w-full sm:w-auto">
                 Quiero ser acompañante
               </LinkButton>
             </Card>

@@ -68,36 +68,40 @@ model SupervisionInvite {
 }
 
 model Profile {
-  id             String   @id @default(uuid())
-  userId         String   @unique
-  fullName       String
-  headline       String?
-  bio            String?
-  phone          String?
-  avatarUrl      String?
-  disabilityType String?
-  preferences    String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id                   String   @id @default(uuid())
+  userId               String   @unique
+  fullName             String
+  headline             String?
+  bio                  String?
+  phone                String?
+  avatarUrl            String?
+  disabilityType       String?
+  disabilityDescription String?
+  disabilityDocument   String?
+  preferences          String?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
 
-  user           User     @relation(fields: [userId], references: [id])
-  companion      CompanionProfile?
+  user                 User     @relation(fields: [userId], references: [id])
+  companion            CompanionProfile?
 }
 
 model CompanionProfile {
-  id              String   @id @default(uuid())
-  profileId       String   @unique
-  specialties     String?
-  verified        Boolean  @default(false)
-  backgroundCheck String?
-  sexualCheck     String?
-  rating          Float    @default(0)
-  yearsOnPlatform Int      @default(0)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id                String   @id @default(uuid())
+  profileId         String   @unique
+  specialties       String?
+  verified          Boolean  @default(false)
+  backgroundCheck   String?
+  sexualCheck       String?
+  penalCertificate  String?
+  sexualCertificate String?
+  rating            Float    @default(0)
+  yearsOnPlatform   Int      @default(0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
-  profile         Profile  @relation(fields: [profileId], references: [id])
-  bookings        Booking[] @relation("CompanionBookings")
+  profile           Profile  @relation(fields: [profileId], references: [id])
+  bookings          Booking[] @relation("CompanionBookings")
 }
 
 model Booking {

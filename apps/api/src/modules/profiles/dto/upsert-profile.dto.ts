@@ -28,6 +28,14 @@ export class UpsertProfileDto {
   @IsOptional()
   preferences?: string;
 
+  @IsString()
+  @IsOptional()
+  disabilityDescription?: string;
+
+  @IsString()
+  @IsOptional()
+  disabilityDocument?: string;
+
   @IsBoolean()
   @IsOptional()
   isCompanion?: boolean;
@@ -43,4 +51,12 @@ export class UpsertProfileDto {
   @IsString()
   @IsOptional()
   sexualCheck?: string;
+
+  @IsString()
+  @IsOptional()
+  penalCertificate?: string;
+
+  @IsString()
+  @IsOptional()
+  sexualCertificate?: string;
 }
