@@ -57,12 +57,14 @@ export type CompanionProfileData = {
   yearsOnPlatform: number;
 };
 
+export type BookingStatus = 'DRAFT' | 'REQUESTED' | 'ACCEPTED' | 'DECLINED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
+
 export type BookingData = {
   id: string;
   clientId: string;
   companionId: string | null;
   bookedById: string | null;
-  status: BookingStatus;
+  status: string;
   serviceType: string;
   summary: string | null;
   address: string;
@@ -70,21 +72,12 @@ export type BookingData = {
   disability: string | null;
   createdAt: string;
   updatedAt: string;
-  client?: { id: string; profile?: { fullName: string } };
-  companion?: { profile?: { fullName: string } };
+  client?: { id: string; profile?: { fullName: string } | null } | null;
+  companion?: { profile?: { fullName: string } | null } | null;
   payment?: PaymentData | null;
   chatRoom?: { id: string } | null;
   report?: { id: string } | null;
 };
-
-export type BookingStatus =
-  | 'DRAFT'
-  | 'REQUESTED'
-  | 'ACCEPTED'
-  | 'DECLINED'
-  | 'IN_PROGRESS'
-  | 'COMPLETED'
-  | 'CANCELLED';
 
 export type PaymentData = {
   id: string;
@@ -97,8 +90,8 @@ export type PaymentData = {
 };
 
 export type ChatRoomData = {
-  id: string;
-  bookingId: string;
+  id?: string;
+  bookingId?: string;
   messages: ChatMessageData[];
   room: { id: string };
 };

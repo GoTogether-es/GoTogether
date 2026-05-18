@@ -4,7 +4,7 @@ import * as api from './api';
 export function useProfile() {
   return useQuery({
     queryKey: ['profile'],
-    queryFn: api.getProfile,
+    queryFn: ({ signal }) => api.getProfile({ signal }),
   });
 }
 
@@ -21,14 +21,14 @@ export function useUpsertProfile() {
 export function useCompanions() {
   return useQuery({
     queryKey: ['companions'],
-    queryFn: api.getCompanions,
+    queryFn: ({ signal }) => api.getCompanions({ signal }),
   });
 }
 
 export function useCompanion(id: string) {
   return useQuery({
     queryKey: ['companion', id],
-    queryFn: () => api.getCompanionById(id),
+    queryFn: ({ signal }) => api.getCompanionById(id, { signal }),
     enabled: !!id,
   });
 }
@@ -42,7 +42,7 @@ export function useRecommendations(params: {
 }) {
   return useQuery({
     queryKey: ['recommendations', params],
-    queryFn: () => api.getRecommendations(params),
+    queryFn: ({ signal }) => api.getRecommendations(params, { signal }),
     placeholderData: (prev) => prev,
   });
 }
@@ -50,14 +50,14 @@ export function useRecommendations(params: {
 export function useMyBookings() {
   return useQuery({
     queryKey: ['bookings'],
-    queryFn: api.getMyBookings,
+    queryFn: ({ signal }) => api.getMyBookings({ signal }),
   });
 }
 
 export function useBooking(id: string) {
   return useQuery({
     queryKey: ['booking', id],
-    queryFn: () => api.getBooking(id),
+    queryFn: ({ signal }) => api.getBooking(id, { signal }),
     enabled: !!id,
   });
 }
@@ -85,7 +85,7 @@ export function useRequestBooking() {
 export function useChatRoom(bookingId: string) {
   return useQuery({
     queryKey: ['chatRoom', bookingId],
-    queryFn: () => api.getChatRoom(bookingId),
+    queryFn: ({ signal }) => api.getChatRoom(bookingId, { signal }),
     enabled: !!bookingId,
   });
 }
@@ -93,7 +93,7 @@ export function useChatRoom(bookingId: string) {
 export function useReportByBooking(bookingId: string) {
   return useQuery({
     queryKey: ['report', bookingId],
-    queryFn: () => api.getReportByBooking(bookingId),
+    queryFn: ({ signal }) => api.getReportByBooking(bookingId, { signal }),
     enabled: !!bookingId,
   });
 }
@@ -113,14 +113,14 @@ export function useCreateReport() {
 export function useMyClients() {
   return useQuery({
     queryKey: ['supervision', 'clients'],
-    queryFn: api.getMyClients,
+    queryFn: ({ signal }) => api.getMyClients({ signal }),
   });
 }
 
 export function useMySupervisor() {
   return useQuery({
     queryKey: ['supervision', 'supervisor'],
-    queryFn: api.getMySupervisor,
+    queryFn: ({ signal }) => api.getMySupervisor({ signal }),
   });
 }
 
@@ -147,7 +147,7 @@ export function useRemoveSupervision() {
 export function useSearchUsers(query: string) {
   return useQuery({
     queryKey: ['users', 'search', query],
-    queryFn: () => api.searchUsers(query),
+    queryFn: ({ signal }) => api.searchUsers(query, { signal }),
     enabled: query.length >= 2,
     staleTime: 10 * 1000,
   });

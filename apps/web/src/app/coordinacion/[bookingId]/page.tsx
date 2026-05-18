@@ -23,8 +23,8 @@ interface BookingData {
   address: string;
   scheduledAt: string;
   status: string;
-  client?: { id?: string; profile?: { fullName: string } };
-  companion?: { profile?: { fullName: string } };
+  client?: { id?: string; profile?: { fullName: string } | null } | null;
+  companion?: { profile?: { fullName: string } | null } | null;
 }
 
 export default function CoordinacionPage() {
