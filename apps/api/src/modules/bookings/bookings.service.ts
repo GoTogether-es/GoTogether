@@ -8,7 +8,6 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingStatusDto } from './dto/update-booking-status.dto';
 import { BookingStatus, UserRole } from '../../generated/client';
-import { PaymentsService } from '../payments/payments.service';
 import { ChatService } from '../chat/chat.service';
 
 const VALID_TRANSITIONS: Record<BookingStatus, BookingStatus[]> = {
@@ -21,14 +20,10 @@ const VALID_TRANSITIONS: Record<BookingStatus, BookingStatus[]> = {
   CANCELLED: [],
 };
 
-const DEFAULT_AMOUNT_CENTS = 2500;
-const PLATFORM_FEE_PERCENT = 12;
-
 @Injectable()
 export class BookingsService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly payments: PaymentsService,
     private readonly chatService: ChatService,
   ) {}
 
@@ -97,25 +92,11 @@ export class BookingsService {
     return booking;
   }
 
-  async requestBooking(bookingId: string, amountCents = DEFAULT_AMOUNT_CENTS) {
+  async requestBooking(bookingId: string) {
     const booking = await this.findById(bookingId);
     if (booking.status !== BookingStatus.DRAFT) {
       throw new BadRequestException('Solo se pueden solicitar reservas en borrador');
     }
-
-    const paymentIntent = await this.payments.createHold(amountCents, 'eur');
-    const fee = Math.round(amountCents * (PLATFORM_FEE_PERCENT / 100));
-
-    await this.prisma.payment.create({
-      data: {
-        bookingId,
-        stripePaymentId: paymentIntent.id,
-        amount: amountCents,
-        fee,
-        currency: 'EUR',
-        status: 'HOLD',
-      },
-    });
 
     return this.prisma.booking.update({
       where: { id: bookingId },
@@ -161,26 +142,10 @@ export class BookingsService {
         break;
       case BookingStatus.COMPLETED:
         if (!isCompanion && !isClient) throw new ForbiddenException('Solo participantes pueden completar');
-
-        if (booking.payment?.stripePaymentId) {
-          await this.payments.capturePayment(booking.payment.stripePaymentId);
-          await this.prisma.payment.update({
-            where: { id: booking.payment.id },
-            data: { status: 'CAPTURED' },
-          });
-        }
         break;
       case BookingStatus.CANCELLED:
         if (!isClient && !isCompanion && !isSupervisedClient) {
           throw new ForbiddenException('No tienes permiso para cancelar');
-        }
-
-        if (booking.payment?.stripePaymentId && booking.payment.status === 'HOLD') {
-          await this.payments.releasePayment(booking.payment.stripePaymentId);
-          await this.prisma.payment.update({
-            where: { id: booking.payment.id },
-            data: { status: 'RELEASED' },
-          });
         }
         break;
     }
