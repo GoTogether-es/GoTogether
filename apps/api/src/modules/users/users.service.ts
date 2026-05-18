@@ -5,7 +5,16 @@ import { PrismaService } from '../prisma/prisma.service';
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  list() {
-    return this.prisma.user.findMany({ include: { profile: true } });
+  list(search?: string) {
+    const where = search
+      ? {
+          OR: [
+            { email: { contains: search, mode: 'insensitive' as const } },
+            { profile: { fullName: { contains: search, mode: 'insensitive' as const } } },
+          ],
+        }
+      : {};
+
+    return this.prisma.user.findMany({ where, include: { profile: true } });
   }
 }

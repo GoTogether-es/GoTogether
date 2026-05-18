@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Button, Card, Container, Section } from '@gotogether/ui';
-import { getMyBookings, getOpenBookings, updateBookingStatus } from '@/services/api';
-import { Loader2, CalendarDays, ClipboardList, CheckCircle, XCircle, Clock, MessageCircle } from 'lucide-react';
+import { getMyBookings, getOpenBookings, updateBookingStatus, getProfile } from '@/services/api';
+import { Loader2, CalendarDays, ClipboardList, CheckCircle, XCircle, Clock, MessageCircle, ShieldCheck, ShieldAlert } from 'lucide-react';
 import type { BookingData } from '@/types';
 import { toast } from 'sonner';
 
@@ -13,6 +13,7 @@ export default function PanelPage() {
   const [openBookings, setOpenBookings] = useState<BookingData[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [verified, setVerified] = useState<boolean | null>(null);
 
   useEffect(() => {
     loadData();
@@ -20,9 +21,14 @@ export default function PanelPage() {
 
   const loadData = async () => {
     try {
-      const [my, open] = await Promise.all([getMyBookings(), getOpenBookings()]);
+      const [my, open, profile] = await Promise.all([
+        getMyBookings(),
+        getOpenBookings(),
+        getProfile(),
+      ]);
       setMyBookings(my);
       setOpenBookings(open);
+      setVerified(profile?.companion?.verified ?? null);
     } catch {
       toast.error('Error al cargar los datos');
     } finally {
@@ -93,6 +99,25 @@ export default function PanelPage() {
             <h1 className="text-3xl font-extrabold mb-2">Panel de Acompanante</h1>
             <p className="text-gray-500 text-lg">Gestiona tus servicios y descubre nuevas solicitudes.</p>
           </div>
+
+          {verified === false && (
+            <Card className="p-5 border-amber-200 bg-amber-50 mb-6 flex items-center gap-3">
+              <ShieldAlert className="w-5 h-5 text-amber-600 shrink-0" />
+              <div>
+                <p className="font-semibold text-amber-800">Documentos en revisión</p>
+                <p className="text-sm text-amber-700">Tu documentación está siendo revisada. No serás visible para otros usuarios hasta que se complete la verificación.</p>
+              </div>
+            </Card>
+          )}
+          {verified === true && (
+            <Card className="p-5 border-emerald-200 bg-emerald-50 mb-6 flex items-center gap-3">
+              <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0" />
+              <div>
+                <p className="font-semibold text-emerald-800">Perfil verificado</p>
+                <p className="text-sm text-emerald-700">Tu documentación ha sido aprobada. Eres visible para los usuarios en la plataforma.</p>
+              </div>
+            </Card>
+          )}
 
           {/* Stats */}
           <div className="grid grid-cols-3 gap-4 mb-8">

@@ -171,3 +171,14 @@ model Report {
 
   booking Booking @relation(fields: [bookingId], references: [id])
 }
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  type      String
+  title     String
+  body      String
+  bookingId String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}

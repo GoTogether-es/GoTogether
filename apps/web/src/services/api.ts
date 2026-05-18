@@ -16,6 +16,7 @@ import type {
   AdminStats,
   AdminUser,
   AdminPending,
+  NotificationData,
 } from '@/types';
 
 const API_URL = env.apiUrl;
@@ -522,4 +523,31 @@ export async function cancelInvitation(id: string): Promise<any> {
     throw new Error(err.message || 'Failed to cancel invitation');
   }
   return response.json();
+}
+
+export async function getNotifications(): Promise<NotificationData[]> {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/notifications`, { headers });
+  if (!response.ok) throw new Error('Failed to fetch notifications');
+  return response.json();
+}
+
+export async function getUnreadCount(): Promise<number> {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/notifications/unread-count`, { headers });
+  if (!response.ok) throw new Error('Failed to fetch unread count');
+  const data = await response.json();
+  return data;
+}
+
+export async function markNotificationRead(id: string): Promise<void> {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/notifications/${id}/read`, { method: 'PUT', headers });
+  if (!response.ok) throw new Error('Failed to mark notification read');
+}
+
+export async function markAllNotificationsRead(): Promise<void> {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/notifications/read-all`, { method: 'PUT', headers });
+  if (!response.ok) throw new Error('Failed to mark all read');
 }

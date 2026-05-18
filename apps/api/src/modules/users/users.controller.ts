@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { SupabaseAuthGuard } from '../auth/supabase-auth.guard';
 
@@ -8,7 +8,7 @@ export class UsersController {
 
   @UseGuards(SupabaseAuthGuard)
   @Get()
-  list() {
-    return this.usersService.list();
+  list(@Query('search') search?: string) {
+    return this.usersService.list(search);
   }
 }

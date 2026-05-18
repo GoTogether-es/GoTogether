@@ -15,6 +15,7 @@ import { ReportsModule } from '../reports/reports.module';
 import { AuthModule } from '../auth/auth.module';
 import { SupervisionModule } from '../supervision/supervision.module';
 import { AdminModule } from '../admin/admin.module';
+import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { AdminModule } from '../admin/admin.module';
     
     SupervisionModule,
     AdminModule,
+    NotificationsModule,
   ],
   controllers: [AppController],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],

@@ -8,10 +8,14 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateReportDto } from './dto/create-report.dto';
 import { UpdateReportDto } from './dto/update-report.dto';
 import { BookingStatus } from '../../generated/client';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class ReportsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly notifications: NotificationsService,
+  ) {}
 
   async listByUser(userId: string) {
     return this.prisma.report.findMany({
@@ -81,6 +85,19 @@ export class ReportsService {
 
     if (booking.companionId) {
       await this.recalculateCompanionRating(booking.companionId);
+      const companion = await this.prisma.companionProfile.findUnique({
+        where: { id: booking.companionId },
+        include: { profile: true },
+      });
+      if (companion?.profile) {
+        this.notifications.create({
+          userId: companion.profile.userId,
+          type: 'rating_received',
+          title: 'Nueva valoracion',
+          body: `Has recibido una valoracion de ${dto.rating} estrellas`,
+          bookingId,
+        });
+      }
     }
 
     return report;

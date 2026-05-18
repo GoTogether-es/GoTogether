@@ -194,10 +194,15 @@ function PerfilContent() {
                   </div>
                 )}
                 <div className="flex items-center gap-3 text-sm text-gray-500">
-                  {profile.companion?.verified && (
+                  {profile.companion?.verified ? (
                     <span className="gt-tag flex items-center gap-1">
                       <UserCircle className="w-3.5 h-3.5 text-emerald-500" />
                       Verificado
+                    </span>
+                  ) : (
+                    <span className="gt-tag flex items-center gap-1 bg-amber-50 text-amber-700">
+                      <UserCircle className="w-3.5 h-3.5 text-amber-500" />
+                      Pendiente de verificacion
                     </span>
                   )}
                   <span className="gt-tag flex items-center gap-1">

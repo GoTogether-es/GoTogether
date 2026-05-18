@@ -14,4 +14,5 @@ export const routes = {
   onboardingSupervisor: '/onboarding/supervisor',
   supervision: '/supervision',
   supervisionAccept: '/supervision/accept',
+  admin: '/admin',
 } as const;

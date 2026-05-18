@@ -154,6 +154,17 @@ export type PaginatedResponse<T> = {
   };
 };
 
+export type NotificationData = {
+  id: string;
+  userId: string;
+  type: string;
+  title: string;
+  body: string;
+  bookingId: string | null;
+  read: boolean;
+  createdAt: string;
+};
+
 export type HealthStatus = {
   status: string;
 };

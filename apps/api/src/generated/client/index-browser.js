@@ -232,6 +232,17 @@ exports.Prisma.ReportScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.NotificationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  title: 'title',
+  body: 'body',
+  bookingId: 'bookingId',
+  read: 'read',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -273,7 +284,8 @@ exports.Prisma.ModelName = {
   Payment: 'Payment',
   ChatRoom: 'ChatRoom',
   ChatMessage: 'ChatMessage',
-  Report: 'Report'
+  Report: 'Report',
+  Notification: 'Notification'
 };
 
 /**

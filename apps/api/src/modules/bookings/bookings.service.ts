@@ -9,6 +9,7 @@ import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingStatusDto } from './dto/update-booking-status.dto';
 import { BookingStatus, UserRole } from '../../generated/client';
 import { ChatService } from '../chat/chat.service';
+import { NotificationsService } from '../notifications/notifications.service';
 
 const VALID_TRANSITIONS: Record<BookingStatus, BookingStatus[]> = {
   DRAFT: [BookingStatus.REQUESTED, BookingStatus.CANCELLED],
@@ -25,6 +26,7 @@ export class BookingsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly chatService: ChatService,
+    private readonly notifications: NotificationsService,
   ) {}
 
   async create(userId: string, dto: CreateBookingDto) {
@@ -113,6 +115,23 @@ export class BookingsService {
       where: { id: bookingId },
       data: { status: BookingStatus.REQUESTED },
       include: { payment: true },
+    }).then(async (result) => {
+      if (booking.companionId) {
+        const companion = await this.prisma.companionProfile.findUnique({
+          where: { id: booking.companionId },
+          include: { profile: true },
+        });
+        if (companion?.profile) {
+          await this.notifications.create({
+            userId: companion.profile.userId,
+            type: 'booking_requested',
+            title: 'Nueva solicitud',
+            body: `${booking.client?.profile?.fullName || 'Un cliente'} te ha solicitado un servicio`,
+            bookingId,
+          });
+        }
+      }
+      return result;
     });
   }
 
@@ -148,19 +167,51 @@ export class BookingsService {
         if (!isCompanion && !canClaim) throw new ForbiddenException('Solo el acompañante puede aceptar');
         if (canClaim) updateData.companionId = user.profile!.companion!.id;
         await this.chatService.createRoomForBooking(bookingId);
+        this.notifications.create({
+          userId: booking.clientId,
+          type: 'booking_accepted',
+          title: 'Solicitud aceptada',
+          body: `${user.profile?.fullName || 'Un acompañante'} ha aceptado tu solicitud`,
+          bookingId,
+        });
         break;
       case BookingStatus.DECLINED:
         if (!isCompanion && !canClaim) throw new ForbiddenException('Solo el acompañante puede rechazar');
+        this.notifications.create({
+          userId: booking.clientId,
+          type: 'booking_declined',
+          title: 'Solicitud rechazada',
+          body: `${user.profile?.fullName || 'Un acompañante'} ha rechazado tu solicitud`,
+          bookingId,
+        });
         break;
       case BookingStatus.IN_PROGRESS:
         if (!isCompanion) throw new ForbiddenException('Solo el acompañante puede iniciar el servicio');
         break;
       case BookingStatus.COMPLETED:
         if (!isCompanion && !isClient) throw new ForbiddenException('Solo participantes pueden completar');
+        if (booking.companionId && user.profile?.companion) {
+          this.notifications.create({
+            userId: booking.clientId,
+            type: 'booking_completed',
+            title: 'Servicio completado',
+            body: `${user.profile.fullName} ha marcado el servicio como completado. ¡Valóralo!`,
+            bookingId,
+          });
+        }
         break;
       case BookingStatus.CANCELLED:
         if (!isClient && !isCompanion && !isSupervisedClient) {
           throw new ForbiddenException('No tienes permiso para cancelar');
+        }
+        if (isCompanion && booking.clientId) {
+          this.notifications.create({
+            userId: booking.clientId,
+            type: 'booking_cancelled',
+            title: 'Reserva cancelada',
+            body: `${user.profile?.fullName || 'El acompañante'} ha cancelado la reserva`,
+            bookingId,
+          });
         }
         break;
     }

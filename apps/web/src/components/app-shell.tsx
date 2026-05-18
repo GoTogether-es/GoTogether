@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { Container, Button } from '@gotogether/ui';
 import { routes } from '@/lib/routes';
 import { Footer } from './footer';
+import { NotificationBell } from './notification-bell';
 import { User, LogIn, Menu, X, Search, CalendarDays, LogOut, LayoutDashboard } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { logout as apiLogout, getProfile } from '@/services/api';
@@ -171,6 +172,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 </Link>
               ) : (
                 <>
+                  <NotificationBell />
                   <Link href={routes.perfil}>
                     <Button variant="secondary" className="flex items-center gap-2 border-gray-200">
                       <User className="w-4 h-4" />
