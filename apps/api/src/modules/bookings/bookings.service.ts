@@ -135,18 +135,22 @@ export class BookingsService {
     const isClient = booking.clientId === userId;
     const isCompanion =
       user.profile?.companion && booking.companionId === user.profile.companion.id;
+    const canClaim = user.profile?.companion && !booking.companionId;
     const isSupervisedClient = await this.isSupervisorOf(userId, booking.clientId);
+
+    const updateData: any = { status: dto.status };
 
     switch (dto.status) {
       case BookingStatus.REQUESTED:
         if (!isClient && !isSupervisedClient) throw new ForbiddenException('Solo el cliente puede solicitar');
         break;
       case BookingStatus.ACCEPTED:
-        if (!isCompanion) throw new ForbiddenException('Solo el acompañante puede aceptar');
+        if (!isCompanion && !canClaim) throw new ForbiddenException('Solo el acompañante puede aceptar');
+        if (canClaim) updateData.companionId = user.profile!.companion!.id;
         await this.chatService.createRoomForBooking(bookingId);
         break;
       case BookingStatus.DECLINED:
-        if (!isCompanion) throw new ForbiddenException('Solo el acompañante puede rechazar');
+        if (!isCompanion && !canClaim) throw new ForbiddenException('Solo el acompañante puede rechazar');
         break;
       case BookingStatus.IN_PROGRESS:
         if (!isCompanion) throw new ForbiddenException('Solo el acompañante puede iniciar el servicio');
@@ -163,7 +167,7 @@ export class BookingsService {
 
     return this.prisma.booking.update({
       where: { id: bookingId },
-      data: { status: dto.status },
+      data: updateData,
       include: { payment: true },
     });
   }
