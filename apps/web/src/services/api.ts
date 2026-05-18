@@ -199,6 +199,7 @@ export async function createBooking(data: {
   scheduledAt: string;
   summary?: string;
   disability?: string;
+  companionId?: string;
 }): Promise<BookingData> {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/bookings`, {
@@ -223,6 +224,15 @@ export async function requestBooking(bookingId: string): Promise<BookingData> {
   if (!response.ok) throw new Error('Failed to request booking');
   const json = await response.json();
   return validateResponse(bookingSchema, json, 'requestBooking');
+}
+
+export async function getOpenBookings(): Promise<BookingData[]> {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/bookings/open`, { headers });
+  if (!response.ok) throw new Error('Failed to fetch open bookings');
+  const data = await response.json();
+  if (!Array.isArray(data)) return [];
+  return data.map((item: unknown) => validateResponse(bookingSchema, item, 'getOpenBookings'));
 }
 
 export async function getMyBookings(opts?: FetchOptions): Promise<BookingData[]> {

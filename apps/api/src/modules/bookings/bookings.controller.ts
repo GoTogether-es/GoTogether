@@ -30,6 +30,12 @@ export class BookingsController {
   }
 
   @UseGuards(SupabaseAuthGuard)
+  @Get('open')
+  findOpenBookings() {
+    return this.bookingsService.findOpenBookings();
+  }
+
+  @UseGuards(SupabaseAuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.bookingsService.findById(id);

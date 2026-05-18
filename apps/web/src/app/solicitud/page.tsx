@@ -39,6 +39,7 @@ function SolicitudForm() {
         scheduledAt,
         summary: data.notes || undefined,
         disability: data.disability !== 'Ninguna / Otra' && data.disability ? data.disability : undefined,
+        companionId: companionId || undefined,
       });
       await requestBooking(booking.id);
       toast.success('Solicitud publicada correctamente');

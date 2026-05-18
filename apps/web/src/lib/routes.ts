@@ -4,6 +4,7 @@ export const routes = {
   explorar: '/explorar',
   explorarCompanion: (id: string) => `/explorar/${id}`,
   reservas: '/reservas',
+  panel: '/panel',
   coordinacion: '/coordinacion',
   valoracion: '/valoracion',
   login: '/auth/login',

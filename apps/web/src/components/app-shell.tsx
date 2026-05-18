@@ -6,16 +6,17 @@ import { usePathname, useRouter } from 'next/navigation';
 import { Container, Button } from '@gotogether/ui';
 import { routes } from '@/lib/routes';
 import { Footer } from './footer';
-import { User, LogIn, Menu, X, Search, CalendarDays, LogOut } from 'lucide-react';
+import { User, LogIn, Menu, X, Search, CalendarDays, LogOut, LayoutDashboard } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { logout as apiLogout, getProfile } from '@/services/api';
 import type { Session, AuthChangeEvent } from '@supabase/supabase-js';
-import { logout } from '@/services/api';
 import clsx from 'clsx';
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const [session, setSession] = useState<Session | null>(null);
+  const [isCompanion, setIsCompanion] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -26,12 +27,21 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     (async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setSession(session);
+      if (session) {
+        const profile = await getProfile().catch(() => null);
+        setIsCompanion(!!profile?.companion);
+      }
     })();
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event: AuthChangeEvent, session: Session | null) => {
       setSession(session);
+      if (session) {
+        getProfile().then(profile => setIsCompanion(!!profile?.companion)).catch(() => {});
+      } else {
+        setIsCompanion(false);
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -86,7 +96,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const handleLogout = async () => {
     setLoggingOut(true);
     try {
-      await logout();
+      await apiLogout();
       router.push('/');
     } catch {
       setLoggingOut(false);
@@ -113,16 +123,29 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               </Link>
 
               <nav className="hidden md:flex items-center gap-8" aria-label="Principal">
-                <Link
-                  href={routes.explorar}
-                  className={clsx(
-                    'flex items-center gap-2 text-sm font-medium transition-colors hover:text-blue-600',
-                    isActive(routes.explorar) ? 'text-blue-600' : 'text-gray-500'
-                  )}
-                >
-                  <Search className="w-4 h-4" />
-                  Explorar
-                </Link>
+                {isCompanion ? (
+                  <Link
+                    href={routes.panel}
+                    className={clsx(
+                      'flex items-center gap-2 text-sm font-medium transition-colors hover:text-blue-600',
+                      isActive(routes.panel) ? 'text-blue-600' : 'text-gray-500'
+                    )}
+                  >
+                    <LayoutDashboard className="w-4 h-4" />
+                    Panel
+                  </Link>
+                ) : (
+                  <Link
+                    href={routes.explorar}
+                    className={clsx(
+                      'flex items-center gap-2 text-sm font-medium transition-colors hover:text-blue-600',
+                      isActive(routes.explorar) ? 'text-blue-600' : 'text-gray-500'
+                    )}
+                  >
+                    <Search className="w-4 h-4" />
+                    Explorar
+                  </Link>
+                )}
                 {session && (
                   <Link
                     href={routes.reservas}
@@ -195,19 +218,35 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       >
         <Container>
           <nav className="py-6 flex flex-col gap-1" aria-label="Menú móvil">
-            <Link
-              href={routes.explorar}
-              className={clsx(
-                'flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium transition-colors',
-                isActive(routes.explorar)
-                  ? 'bg-blue-50 text-blue-600'
-                  : 'text-gray-700 hover:bg-gray-50'
-              )}
-              onClick={closeMenu}
-            >
-              <Search className="w-5 h-5" />
-              Explorar
-            </Link>
+            {isCompanion ? (
+              <Link
+                href={routes.panel}
+                className={clsx(
+                  'flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium transition-colors',
+                  isActive(routes.panel)
+                    ? 'bg-blue-50 text-blue-600'
+                    : 'text-gray-700 hover:bg-gray-50'
+                )}
+                onClick={closeMenu}
+              >
+                <LayoutDashboard className="w-5 h-5" />
+                Panel
+              </Link>
+            ) : (
+              <Link
+                href={routes.explorar}
+                className={clsx(
+                  'flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium transition-colors',
+                  isActive(routes.explorar)
+                    ? 'bg-blue-50 text-blue-600'
+                    : 'text-gray-700 hover:bg-gray-50'
+                )}
+                onClick={closeMenu}
+              >
+                <Search className="w-5 h-5" />
+                Explorar
+              </Link>
+            )}
             {session && (
               <>
                 <Link

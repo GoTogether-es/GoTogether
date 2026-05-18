@@ -9,6 +9,7 @@ const PROTECTED_ROUTES = [
   '/coordinacion',
   '/valoracion',
   '/supervision',
+  '/panel',
 ]
 
 const PUBLIC_ROUTES = [

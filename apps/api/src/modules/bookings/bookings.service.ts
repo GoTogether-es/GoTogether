@@ -41,6 +41,7 @@ export class BookingsService {
       data: {
         clientId: userId,
         bookedById: userId,
+        companionId: dto.companionId || null,
         serviceType: dto.serviceType,
         address: dto.address,
         scheduledAt: new Date(dto.scheduledAt),
@@ -90,6 +91,16 @@ export class BookingsService {
     });
     if (!booking) throw new NotFoundException('Reserva no encontrada');
     return booking;
+  }
+
+  async findOpenBookings() {
+    return this.prisma.booking.findMany({
+      where: { status: BookingStatus.REQUESTED, companionId: null },
+      include: {
+        client: { include: { profile: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
   }
 
   async requestBooking(bookingId: string) {

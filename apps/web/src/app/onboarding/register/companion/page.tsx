@@ -38,7 +38,7 @@ export default function CompanionRegistrationPage() {
         sexualCertificate: sexualCertificate || undefined,
       });
       toast.success('¡Perfil creado! Nuestro equipo revisará tu documentación.');
-      setTimeout(() => router.push('/explorar'), 1500);
+      setTimeout(() => router.push('/panel'), 1500);
     } catch {
       toast.error('Error al guardar tu perfil. Inténtalo de nuevo.');
     }

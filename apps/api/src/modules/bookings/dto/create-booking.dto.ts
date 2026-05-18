@@ -17,4 +17,8 @@ export class CreateBookingDto {
   @IsString()
   @IsOptional()
   disability?: string;
+
+  @IsString()
+  @IsOptional()
+  companionId?: string;
 }
