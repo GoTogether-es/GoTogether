@@ -42,6 +42,7 @@ export default function CoordinacionPage() {
 
   const supabaseRef = useRef(createClient());
   const channelRef = useRef<any>(null);
+  const roomIdRef = useRef('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = useCallback(() => {
@@ -79,6 +80,7 @@ export default function CoordinacionPage() {
         setBooking(bookingData);
         setUserId(currentUserId);
         setRoomId(chatData.room.id);
+        roomIdRef.current = chatData.room.id;
 
         const clientName = bookingData.client?.profile?.fullName || '';
         const companion = bookingData.companion?.profile?.fullName || '';
@@ -121,7 +123,7 @@ export default function CoordinacionPage() {
   }, [bookingId]);
 
   const handleSend = useCallback(async () => {
-    if (!newMessage.trim() || !roomId || sending) return;
+    if (!newMessage.trim() || !roomIdRef.current || sending) return;
 
     const content = newMessage.trim();
     setNewMessage('');
@@ -131,7 +133,7 @@ export default function CoordinacionPage() {
       const supabase = supabaseRef.current;
       const { error: insertError } = await supabase
         .from('ChatMessage')
-        .insert({ roomId, senderId: userId, content });
+        .insert({ roomId: roomIdRef.current, senderId: userId, content });
 
       if (insertError) throw insertError;
     } catch {
@@ -139,7 +141,7 @@ export default function CoordinacionPage() {
     } finally {
       setSending(false);
     }
-  }, [newMessage, roomId, sending, userId]);
+  }, [newMessage, sending, userId]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
