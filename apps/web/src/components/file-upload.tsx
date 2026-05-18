@@ -51,6 +51,10 @@ export function FileUpload({ onUploaded, accept, label, helper, uploadedUrl }: F
 
       const { url: presignedUrl } = await presignRes.json();
 
+      if (typeof presignedUrl !== 'string' || !presignedUrl.startsWith('http')) {
+        throw new Error('URL de subida inválida. Contacta con soporte.');
+      }
+
       const uploadRes = await fetch(presignedUrl, {
         method: 'PUT',
         body: file,
