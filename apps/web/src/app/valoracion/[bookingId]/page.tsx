@@ -204,7 +204,7 @@ export default function ValoracionPage() {
                           onClick={() => setRating(star)}
                           onMouseEnter={() => setHoverRating(star)}
                           onMouseLeave={() => setHoverRating(0)}
-                          className="p-0.5 transition-transform hover:scale-110"
+                          className="p-0.5 transition-transform hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-sm"
                           aria-label={`${star} estrella${star !== 1 ? 's' : ''}`}
                           role="radio"
                           aria-checked={rating === star}
