@@ -43,15 +43,19 @@ export default function CoordinacionPage() {
   const supabaseRef = useRef(createClient());
   const channelRef = useRef<any>(null);
   const roomIdRef = useRef('');
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = useCallback(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  const isNearBottom = useCallback(() => {
+    const el = chatContainerRef.current;
+    if (!el) return true;
+    return el.scrollHeight - el.scrollTop - el.clientHeight < 80;
   }, []);
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages, scrollToBottom]);
+  const scrollToBottom = useCallback(() => {
+    const el = chatContainerRef.current;
+    if (!el) return;
+    el.scrollTop = el.scrollHeight;
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -102,11 +106,14 @@ export default function CoordinacionPage() {
                 if (prev.some((m) => m.id === msg.id)) return prev;
                 return [...prev, msg];
               });
+              if (isNearBottom()) scrollToBottom();
             },
           )
           .subscribe();
 
         channelRef.current = channel;
+
+        setTimeout(() => scrollToBottom(), 100);
       } catch (err: any) {
         if (!cancelled) setError(err.message || 'Error al cargar el chat');
       } finally {
@@ -136,6 +143,8 @@ export default function CoordinacionPage() {
         .insert({ roomId: roomIdRef.current, senderId: userId, content });
 
       if (insertError) throw insertError;
+
+      scrollToBottom();
     } catch {
       setNewMessage(content);
     } finally {
@@ -211,7 +220,7 @@ export default function CoordinacionPage() {
                 </Button>
               </div>
 
-              <div className="bg-gray-50 p-6 min-h-[400px] max-h-[500px] overflow-y-auto flex flex-col gap-4" role="log" aria-live="polite" aria-label="Mensajes del chat">
+              <div className="bg-gray-50 p-6 min-h-[400px] max-h-[500px] overflow-y-auto flex flex-col gap-4" role="log" aria-live="polite" aria-label="Mensajes del chat" ref={chatContainerRef}>
                 {messages.length === 0 && (
                   <div className="flex-1 flex items-center justify-center">
                     <p className="text-gray-400 text-sm">No hay mensajes aún. Escribe el primero.</p>
@@ -239,7 +248,6 @@ export default function CoordinacionPage() {
                     </div>
                   );
                 })}
-                <div ref={messagesEndRef} />
               </div>
 
               <div className="flex gap-3 p-4 border-t bg-white">
