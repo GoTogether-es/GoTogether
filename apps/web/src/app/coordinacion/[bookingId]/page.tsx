@@ -3,10 +3,9 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button, Card, Container, Section } from '@gotogether/ui';
-import { MessageSquare, Phone, MapPin, Clock, Send } from 'lucide-react';
+import { Phone, MapPin, Clock, Send } from 'lucide-react';
 import { getChatRoom, getBooking, sendChatMessage } from '@/services/api';
 import { createClient } from '@/lib/supabase/client';
-import { env } from '@/lib/env';
 
 interface ChatMessage {
   id: string;
@@ -35,12 +34,14 @@ export default function CoordinacionPage() {
   const [booking, setBooking] = useState<BookingData | null>(null);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
+  const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
   const [userId, setUserId] = useState<string>('');
   const [companionName, setCompanionName] = useState('');
   const [roomId, setRoomId] = useState('');
 
-  const eventSourceRef = useRef<EventSource | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const latestPollRef = useRef<string[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = useCallback(() => {
@@ -51,8 +52,27 @@ export default function CoordinacionPage() {
     scrollToBottom();
   }, [messages, scrollToBottom]);
 
+  const pollMessages = useCallback(async () => {
+    if (!bookingId) return;
+    try {
+      const data = await getChatRoom(bookingId);
+      const remote = data.messages || [];
+      const remoteIds = new Set(remote.map((m: ChatMessage) => m.id));
+      setMessages((prev) => {
+        const prevIds = new Set(prev.map((m) => m.id));
+        const merged = [...prev];
+        for (const msg of remote) {
+          if (!prevIds.has(msg.id)) merged.push(msg);
+        }
+        merged.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+        return merged;
+      });
+      latestPollRef.current = Array.from(remoteIds);
+    } catch {}
+  }, [bookingId]);
+
   useEffect(() => {
-    let es: EventSource | null = null;
+    let cancelled = false;
 
     async function init() {
       try {
@@ -65,68 +85,67 @@ export default function CoordinacionPage() {
         }
 
         const currentUserId = session.user?.id || '';
-        const token = session.access_token;
 
         const [chatData, bookingData] = await Promise.all([
           getChatRoom(bookingId),
           getBooking(bookingId),
         ]);
 
-        setMessages(chatData.messages || []);
+        if (cancelled) return;
+
+        const msgs = chatData.messages || [];
+        setMessages(msgs);
         setBooking(bookingData);
         setUserId(currentUserId);
         setRoomId(chatData.room.id);
+        latestPollRef.current = msgs.map((m: ChatMessage) => m.id);
 
         const clientName = bookingData.client?.profile?.fullName || '';
         const companion = bookingData.companion?.profile?.fullName || '';
         setCompanionName(companion || clientName);
-
-        es = new EventSource(
-          `${env.apiUrl}/chat/room/${bookingId}/live?token=${encodeURIComponent(token)}`
-        );
-
-        es.onmessage = (event) => {
-          try {
-            const msg = JSON.parse(event.data);
-            setMessages((prev) => {
-              if (prev.some((m) => m.id === msg.id)) return prev;
-              return [...prev, msg];
-            });
-          } catch {}
-        };
-
-        es.onerror = () => {
-          es?.close();
-        };
-
-        eventSourceRef.current = es;
       } catch (err: any) {
-        setError(err.message || 'Error al cargar el chat');
+        if (!cancelled) setError(err.message || 'Error al cargar el chat');
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
 
     init();
+    intervalRef.current = setInterval(pollMessages, 3000);
 
     return () => {
-      es?.close();
-      eventSourceRef.current = null;
+      cancelled = true;
+      if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [bookingId]);
+  }, [bookingId, pollMessages]);
 
   const handleSend = useCallback(async () => {
-    if (!newMessage.trim() || !bookingId) return;
+    if (!newMessage.trim() || !bookingId || sending) return;
 
-    const content = newMessage;
+    const content = newMessage.trim();
     setNewMessage('');
+    setSending(true);
+
+    const tempId = `temp-${Date.now()}`;
+    const optimistic: ChatMessage = {
+      id: tempId,
+      roomId: roomId,
+      senderId: userId,
+      content,
+      createdAt: new Date().toISOString(),
+    };
+    setMessages((prev) => [...prev, optimistic]);
 
     try {
-      await sendChatMessage(bookingId, content);
+      const saved = await sendChatMessage(bookingId, content);
+      setMessages((prev) => prev.map((m) => (m.id === tempId ? saved : m)));
     } catch {
+      setMessages((prev) => prev.filter((m) => m.id !== tempId));
       setNewMessage(content);
+    } finally {
+      setSending(false);
     }
-  }, [newMessage, bookingId]);
+  }, [newMessage, bookingId, sending, roomId, userId]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -175,7 +194,7 @@ export default function CoordinacionPage() {
 
           <h1 className="text-3xl font-bold mb-2">Coordinación del Servicio</h1>
           <p className="text-gray-500 mb-8">
-            Chat en tiempo real para coordinar los detalles del servicio.
+            Chat para coordinar los detalles del servicio.
           </p>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -204,12 +223,13 @@ export default function CoordinacionPage() {
                 )}
                 {messages.map((msg) => {
                   const isMine = msg.senderId === userId;
+                  const isPending = msg.id.startsWith('temp-');
                   return (
                     <div key={msg.id} className={`flex flex-col ${isMine ? 'items-end' : 'items-start'}`}>
                       <div
                         className={`max-w-[80%] p-4 rounded-2xl shadow-sm ${
                           isMine
-                            ? 'bg-blue-600 text-white rounded-tr-none'
+                            ? `bg-blue-600 text-white rounded-tr-none ${isPending ? 'opacity-60' : ''}`
                             : 'bg-white text-gray-800 rounded-tl-none'
                         }`}
                       >
@@ -234,8 +254,9 @@ export default function CoordinacionPage() {
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   onKeyDown={handleKeyDown}
+                  disabled={sending}
                 />
-                <Button variant="primary" className="px-6" onClick={handleSend}>
+                <Button variant="primary" className="px-6" onClick={handleSend} disabled={sending || !newMessage.trim()}>
                   <Send className="w-4 h-4" />
                 </Button>
               </div>
