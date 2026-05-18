@@ -2,6 +2,20 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
+function extractSignedUrl(data: unknown): string | null {
+  if (typeof data === 'string') return data;
+  if (!data || typeof data !== 'object') return null;
+  const d = data as Record<string, unknown>;
+
+  const candidate = d.signedUrl ?? d.url ?? d.signed_url;
+  if (typeof candidate === 'string') return candidate;
+  if (candidate && typeof candidate === 'object') {
+    const inner = (candidate as Record<string, unknown>).url;
+    if (typeof inner === 'string') return inner;
+  }
+  return null;
+}
+
 @Injectable()
 export class UploadsService {
   private supabaseAdmin: SupabaseClient;
@@ -26,22 +40,18 @@ export class UploadsService {
       );
     }
 
-    const raw = data as Record<string, unknown>;
-    const signedUrl: string | undefined =
-      (raw?.signedUrl as string) ??
-      (raw?.signed_url as string) ??
-      (raw?.url as string) ??
-      (typeof data === 'string' ? data : undefined);
+    const signedUrl = extractSignedUrl(data);
 
     if (!signedUrl) {
+      console.error('Supabase signed upload response:', JSON.stringify(data));
       throw new InternalServerErrorException(
-        'No se recibió URL de subida de Supabase',
+        'No se pudo obtener URL de subida de Supabase',
       );
     }
 
     const fullUrl = signedUrl.startsWith('http')
       ? signedUrl
-      : `${this.supabaseUrl}${signedUrl}`;
+      : `${this.supabaseUrl}${signedUrl.startsWith('/') ? '' : '/'}${signedUrl}`;
 
     return { url: fullUrl };
   }

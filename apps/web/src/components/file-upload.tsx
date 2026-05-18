@@ -51,11 +51,12 @@ export function FileUpload({ onUploaded, accept, label, helper, uploadedUrl }: F
 
       const { url: presignedUrl } = await presignRes.json();
 
-      if (typeof presignedUrl !== 'string' || !presignedUrl.startsWith('http')) {
-        throw new Error('URL de subida inválida. Contacta con soporte.');
+      let uploadUrl = presignedUrl;
+      if (typeof uploadUrl !== 'string' || !uploadUrl.startsWith('http')) {
+        uploadUrl = `${env.supabaseUrl}/storage/v1/object/upload/sign/certificates/${key}`;
       }
 
-      const uploadRes = await fetch(presignedUrl, {
+      const uploadRes = await fetch(uploadUrl, {
         method: 'PUT',
         body: file,
         headers: { 'Content-Type': file.type },
