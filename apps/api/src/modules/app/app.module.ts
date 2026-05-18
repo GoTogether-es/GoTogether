@@ -11,7 +11,7 @@ import { BookingsModule } from '../bookings/bookings.module';
 import { PaymentsModule } from '../payments/payments.module';
 import { ChatModule } from '../chat/chat.module';
 import { ReportsModule } from '../reports/reports.module';
-import { UploadsModule } from '../uploads/uploads.module';
+
 import { AuthModule } from '../auth/auth.module';
 import { SupervisionModule } from '../supervision/supervision.module';
 import { AdminModule } from '../admin/admin.module';
@@ -29,7 +29,7 @@ import { AdminModule } from '../admin/admin.module';
     PaymentsModule,
     ChatModule,
     ReportsModule,
-    UploadsModule,
+    
     SupervisionModule,
     AdminModule,
   ],

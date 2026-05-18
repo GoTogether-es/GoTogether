@@ -2,8 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { Upload, Loader2, CheckCircle } from 'lucide-react';
-import { env } from '@/lib/env';
-import { getAccessToken } from '@/services/api';
+import { createClient } from '@/lib/supabase/client';
 
 type FileUploadProps = {
   onUploaded: (url: string) => void;
@@ -29,43 +28,24 @@ export function FileUpload({ onUploaded, accept, label, helper, uploadedUrl }: F
     setError(null);
 
     try {
-      const token = await getAccessToken();
-      if (!token) throw new Error('No estás autenticado');
+      const supabase = createClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error('No estás autenticado');
 
       const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
       const key = `${Date.now()}-${safeName}`;
 
-      const presignRes = await fetch(`${env.apiUrl}/uploads/presign`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({ key, contentType: file.type }),
-      });
+      const { error: uploadError } = await supabase.storage
+        .from('certificates')
+        .upload(key, file, { contentType: file.type, upsert: true });
 
-      if (!presignRes.ok) {
-        const errBody = await presignRes.text().catch(() => '');
-        throw new Error(errBody || `Error ${presignRes.status} al preparar la subida`);
-      }
+      if (uploadError) throw new Error(uploadError.message || 'Error al subir el archivo');
 
-      const { url: presignedUrl } = await presignRes.json();
+      const { data: urlData } = supabase.storage
+        .from('certificates')
+        .getPublicUrl(key);
 
-      let uploadUrl = presignedUrl;
-      if (typeof uploadUrl !== 'string' || !uploadUrl.startsWith('http')) {
-        uploadUrl = `${env.supabaseUrl}/storage/v1/object/upload/sign/certificates/${key}`;
-      }
-
-      const uploadRes = await fetch(uploadUrl, {
-        method: 'PUT',
-        body: file,
-        headers: { 'Content-Type': file.type },
-      });
-
-      if (!uploadRes.ok) throw new Error('Error al subir el archivo');
-
-      const publicUrl = `${env.supabaseUrl}/storage/v1/object/public/certificates/${key}`;
-      onUploaded(publicUrl);
+      onUploaded(urlData.publicUrl);
       setDone(true);
     } catch (err: any) {
       console.error('Upload failed:', err);
