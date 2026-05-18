@@ -45,12 +45,6 @@ export default function CoordinacionPage() {
   const roomIdRef = useRef('');
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
-  const isNearBottom = useCallback(() => {
-    const el = chatContainerRef.current;
-    if (!el) return true;
-    return el.scrollHeight - el.scrollTop - el.clientHeight < 80;
-  }, []);
-
   const scrollToBottom = useCallback(() => {
     const el = chatContainerRef.current;
     if (!el) return;
@@ -106,7 +100,7 @@ export default function CoordinacionPage() {
                 if (prev.some((m) => m.id === msg.id)) return prev;
                 return [...prev, msg];
               });
-              if (isNearBottom()) scrollToBottom();
+              scrollToBottom();
             },
           )
           .subscribe();
