@@ -318,6 +318,17 @@ export async function getChatRoom(bookingId: string, opts?: FetchOptions): Promi
   return validateResponse(chatRoomSchema, json, 'getChatRoom');
 }
 
+export async function sendChatMessage(bookingId: string, content: string): Promise<any> {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/chat/room/${bookingId}/messages`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ content }),
+  });
+  if (!response.ok) throw new Error('Failed to send message');
+  return response.json();
+}
+
 export async function getAccessToken(): Promise<string | null> {
   const supabase = createClient();
   const { data: { session } } = await supabase.auth.getSession();

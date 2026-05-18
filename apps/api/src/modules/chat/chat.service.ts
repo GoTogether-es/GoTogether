@@ -3,11 +3,40 @@ import {
   NotFoundException,
   ForbiddenException,
 } from '@nestjs/common';
+import { EventEmitter } from 'events';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class ChatService {
+  private ee = new EventEmitter();
+
   constructor(private readonly prisma: PrismaService) {}
+
+  onMessage(roomId: string, callback: (message: any) => void) {
+    const event = `message:${roomId}`;
+    this.ee.on(event, callback);
+    return () => this.ee.off(event, callback);
+  }
+
+  async sendMessage(bookingId: string, userId: string, content: string) {
+    const room = await this.getOrCreateRoom(bookingId, userId);
+
+    await this.validateParticipant(bookingId, userId);
+
+    const message = await this.prisma.chatMessage.create({
+      data: { roomId: room.id, senderId: userId, content },
+    });
+
+    this.ee.emit(`message:${room.id}`, {
+      id: message.id,
+      roomId: message.roomId,
+      senderId: message.senderId,
+      content: message.content,
+      createdAt: message.createdAt,
+    });
+
+    return message;
+  }
 
   async getOrCreateRoom(bookingId: string, userId: string) {
     await this.validateParticipant(bookingId, userId);

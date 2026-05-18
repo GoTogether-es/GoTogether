@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
-import { ChatGateway } from './chat.gateway';
+import { ConfigModule } from '@nestjs/config';
 import { ChatService } from './chat.service';
 import { ChatController } from './chat.controller';
-import { WsSupabaseGuard } from './ws-supabase.guard';
+import { LiveChatGuard } from './live-chat.guard';
 
 @Module({
-  providers: [ChatGateway, ChatService, WsSupabaseGuard],
+  imports: [ConfigModule],
+  providers: [ChatService, LiveChatGuard],
   controllers: [ChatController],
   exports: [ChatService],
 })

@@ -4,8 +4,7 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button, Card, Container, Section } from '@gotogether/ui';
 import { MessageSquare, Phone, MapPin, Clock, Send } from 'lucide-react';
-import type { Socket } from 'socket.io-client';
-import { getChatRoom, getAccessToken, getBooking } from '@/services/api';
+import { getChatRoom, getBooking, sendChatMessage } from '@/services/api';
 import { createClient } from '@/lib/supabase/client';
 import { env } from '@/lib/env';
 
@@ -41,7 +40,7 @@ export default function CoordinacionPage() {
   const [companionName, setCompanionName] = useState('');
   const [roomId, setRoomId] = useState('');
 
-  const socketRef = useRef<Socket | null>(null);
+  const eventSourceRef = useRef<EventSource | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = useCallback(() => {
@@ -53,20 +52,20 @@ export default function CoordinacionPage() {
   }, [messages, scrollToBottom]);
 
   useEffect(() => {
-    let socket: Socket | null = null;
+    let es: EventSource | null = null;
 
     async function init() {
       try {
-        const token = await getAccessToken();
-        if (!token) {
+        const supabase = createClient();
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
           setError('Debes iniciar sesión para acceder al chat.');
           setLoading(false);
           return;
         }
 
-        const supabase = createClient();
-        const { data: { session } } = await supabase.auth.getSession();
-        const currentUserId = session?.user?.id || '';
+        const currentUserId = session.user?.id || '';
+        const token = session.access_token;
 
         const [chatData, bookingData] = await Promise.all([
           getChatRoom(bookingId),
@@ -82,33 +81,25 @@ export default function CoordinacionPage() {
         const companion = bookingData.companion?.profile?.fullName || '';
         setCompanionName(companion || clientName);
 
-        const { io } = await import('socket.io-client');
-        socket = io(`${env.apiUrl}/chat`, {
-          auth: { token },
-          transports: ['websocket', 'polling'],
-        });
+        es = new EventSource(
+          `${env.apiUrl}/chat/room/${bookingId}/live?token=${encodeURIComponent(token)}`
+        );
 
-        socketRef.current = socket;
+        es.onmessage = (event) => {
+          try {
+            const msg = JSON.parse(event.data);
+            setMessages((prev) => {
+              if (prev.some((m) => m.id === msg.id)) return prev;
+              return [...prev, msg];
+            });
+          } catch {}
+        };
 
-        socket.on('connect', () => {
-          socket?.emit('join', { roomId: chatData.room.id });
-        });
+        es.onerror = () => {
+          es?.close();
+        };
 
-        socket.on('history', (data: { messages: ChatMessage[] }) => {
-          setMessages(data.messages);
-        });
-
-        socket.on('message', (msg: ChatMessage) => {
-          setMessages((prev) => [...prev, msg]);
-        });
-
-        socket.on('error', (err: { message: string }) => {
-          console.error('Socket error:', err.message);
-        });
-
-        socket.on('connect_error', (err) => {
-          console.error('Socket connection error:', err.message);
-        });
+        eventSourceRef.current = es;
       } catch (err: any) {
         setError(err.message || 'Error al cargar el chat');
       } finally {
@@ -119,20 +110,23 @@ export default function CoordinacionPage() {
     init();
 
     return () => {
-      socket?.disconnect();
-      socketRef.current = null;
+      es?.close();
+      eventSourceRef.current = null;
     };
   }, [bookingId]);
 
-  const handleSend = useCallback(() => {
-    if (!newMessage.trim() || !socketRef.current || !roomId) return;
+  const handleSend = useCallback(async () => {
+    if (!newMessage.trim() || !bookingId) return;
 
-    socketRef.current.emit('message', {
-      roomId,
-      content: newMessage,
-    });
+    const content = newMessage;
     setNewMessage('');
-  }, [newMessage, roomId]);
+
+    try {
+      await sendChatMessage(bookingId, content);
+    } catch {
+      setNewMessage(content);
+    }
+  }, [newMessage, bookingId]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -181,7 +175,7 @@ export default function CoordinacionPage() {
 
           <h1 className="text-3xl font-bold mb-2">Coordinación del Servicio</h1>
           <p className="text-gray-500 mb-8">
-            Chat seguro en tiempo real para coordinar los detalles del servicio.
+            Chat en tiempo real para coordinar los detalles del servicio.
           </p>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
