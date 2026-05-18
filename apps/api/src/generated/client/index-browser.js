@@ -161,6 +161,7 @@ exports.Prisma.ProfileScalarFieldEnum = {
   disabilityDescription: 'disabilityDescription',
   disabilityDocument: 'disabilityDocument',
   preferences: 'preferences',
+  verified: 'verified',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

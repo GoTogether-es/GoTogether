@@ -19,6 +19,10 @@ const nextConfig = withBundleAnalyzer({
         protocol: 'https',
         hostname: '**.r2.cloudflarestorage.com',
       },
+      {
+        protocol: 'https',
+        hostname: '**.supabase.co',
+      },
     ],
     unoptimized: process.env.NODE_ENV === 'development',
   },

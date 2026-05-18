@@ -4760,6 +4760,7 @@ export namespace Prisma {
     disabilityDescription: string | null
     disabilityDocument: string | null
     preferences: string | null
+    verified: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -4776,6 +4777,7 @@ export namespace Prisma {
     disabilityDescription: string | null
     disabilityDocument: string | null
     preferences: string | null
+    verified: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -4792,6 +4794,7 @@ export namespace Prisma {
     disabilityDescription: number
     disabilityDocument: number
     preferences: number
+    verified: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -4810,6 +4813,7 @@ export namespace Prisma {
     disabilityDescription?: true
     disabilityDocument?: true
     preferences?: true
+    verified?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -4826,6 +4830,7 @@ export namespace Prisma {
     disabilityDescription?: true
     disabilityDocument?: true
     preferences?: true
+    verified?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -4842,6 +4847,7 @@ export namespace Prisma {
     disabilityDescription?: true
     disabilityDocument?: true
     preferences?: true
+    verified?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -4931,6 +4937,7 @@ export namespace Prisma {
     disabilityDescription: string | null
     disabilityDocument: string | null
     preferences: string | null
+    verified: boolean
     createdAt: Date
     updatedAt: Date
     _count: ProfileCountAggregateOutputType | null
@@ -4964,6 +4971,7 @@ export namespace Prisma {
     disabilityDescription?: boolean
     disabilityDocument?: boolean
     preferences?: boolean
+    verified?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -4982,6 +4990,7 @@ export namespace Prisma {
     disabilityDescription?: boolean
     disabilityDocument?: boolean
     preferences?: boolean
+    verified?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -4999,6 +5008,7 @@ export namespace Prisma {
     disabilityDescription?: boolean
     disabilityDocument?: boolean
     preferences?: boolean
+    verified?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
@@ -5029,6 +5039,7 @@ export namespace Prisma {
       disabilityDescription: string | null
       disabilityDocument: string | null
       preferences: string | null
+      verified: boolean
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["profile"]>
@@ -5437,6 +5448,7 @@ export namespace Prisma {
     readonly disabilityDescription: FieldRef<"Profile", 'String'>
     readonly disabilityDocument: FieldRef<"Profile", 'String'>
     readonly preferences: FieldRef<"Profile", 'String'>
+    readonly verified: FieldRef<"Profile", 'Boolean'>
     readonly createdAt: FieldRef<"Profile", 'DateTime'>
     readonly updatedAt: FieldRef<"Profile", 'DateTime'>
   }
@@ -11923,6 +11935,7 @@ export namespace Prisma {
     disabilityDescription: 'disabilityDescription',
     disabilityDocument: 'disabilityDocument',
     preferences: 'preferences',
+    verified: 'verified',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -12350,6 +12363,7 @@ export namespace Prisma {
     disabilityDescription?: StringNullableFilter<"Profile"> | string | null
     disabilityDocument?: StringNullableFilter<"Profile"> | string | null
     preferences?: StringNullableFilter<"Profile"> | string | null
+    verified?: BoolFilter<"Profile"> | boolean
     createdAt?: DateTimeFilter<"Profile"> | Date | string
     updatedAt?: DateTimeFilter<"Profile"> | Date | string
     user?: XOR<UserRelationFilter, UserWhereInput>
@@ -12368,6 +12382,7 @@ export namespace Prisma {
     disabilityDescription?: SortOrderInput | SortOrder
     disabilityDocument?: SortOrderInput | SortOrder
     preferences?: SortOrderInput | SortOrder
+    verified?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -12389,6 +12404,7 @@ export namespace Prisma {
     disabilityDescription?: StringNullableFilter<"Profile"> | string | null
     disabilityDocument?: StringNullableFilter<"Profile"> | string | null
     preferences?: StringNullableFilter<"Profile"> | string | null
+    verified?: BoolFilter<"Profile"> | boolean
     createdAt?: DateTimeFilter<"Profile"> | Date | string
     updatedAt?: DateTimeFilter<"Profile"> | Date | string
     user?: XOR<UserRelationFilter, UserWhereInput>
@@ -12407,6 +12423,7 @@ export namespace Prisma {
     disabilityDescription?: SortOrderInput | SortOrder
     disabilityDocument?: SortOrderInput | SortOrder
     preferences?: SortOrderInput | SortOrder
+    verified?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ProfileCountOrderByAggregateInput
@@ -12429,6 +12446,7 @@ export namespace Prisma {
     disabilityDescription?: StringNullableWithAggregatesFilter<"Profile"> | string | null
     disabilityDocument?: StringNullableWithAggregatesFilter<"Profile"> | string | null
     preferences?: StringNullableWithAggregatesFilter<"Profile"> | string | null
+    verified?: BoolWithAggregatesFilter<"Profile"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Profile"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Profile"> | Date | string
   }
@@ -13101,6 +13119,7 @@ export namespace Prisma {
     disabilityDescription?: string | null
     disabilityDocument?: string | null
     preferences?: string | null
+    verified?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutProfileInput
@@ -13119,6 +13138,7 @@ export namespace Prisma {
     disabilityDescription?: string | null
     disabilityDocument?: string | null
     preferences?: string | null
+    verified?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     companion?: CompanionProfileUncheckedCreateNestedOneWithoutProfileInput
@@ -13135,6 +13155,7 @@ export namespace Prisma {
     disabilityDescription?: NullableStringFieldUpdateOperationsInput | string | null
     disabilityDocument?: NullableStringFieldUpdateOperationsInput | string | null
     preferences?: NullableStringFieldUpdateOperationsInput | string | null
+    verified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutProfileNestedInput
@@ -13153,6 +13174,7 @@ export namespace Prisma {
     disabilityDescription?: NullableStringFieldUpdateOperationsInput | string | null
     disabilityDocument?: NullableStringFieldUpdateOperationsInput | string | null
     preferences?: NullableStringFieldUpdateOperationsInput | string | null
+    verified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companion?: CompanionProfileUncheckedUpdateOneWithoutProfileNestedInput
@@ -13170,6 +13192,7 @@ export namespace Prisma {
     disabilityDescription?: string | null
     disabilityDocument?: string | null
     preferences?: string | null
+    verified?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -13185,6 +13208,7 @@ export namespace Prisma {
     disabilityDescription?: NullableStringFieldUpdateOperationsInput | string | null
     disabilityDocument?: NullableStringFieldUpdateOperationsInput | string | null
     preferences?: NullableStringFieldUpdateOperationsInput | string | null
+    verified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -13201,6 +13225,7 @@ export namespace Prisma {
     disabilityDescription?: NullableStringFieldUpdateOperationsInput | string | null
     disabilityDocument?: NullableStringFieldUpdateOperationsInput | string | null
     preferences?: NullableStringFieldUpdateOperationsInput | string | null
+    verified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -13918,6 +13943,11 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type CompanionProfileNullableRelationFilter = {
     is?: CompanionProfileWhereInput | null
     isNot?: CompanionProfileWhereInput | null
@@ -13935,6 +13965,7 @@ export namespace Prisma {
     disabilityDescription?: SortOrder
     disabilityDocument?: SortOrder
     preferences?: SortOrder
+    verified?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -13951,6 +13982,7 @@ export namespace Prisma {
     disabilityDescription?: SortOrder
     disabilityDocument?: SortOrder
     preferences?: SortOrder
+    verified?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -13967,13 +13999,17 @@ export namespace Prisma {
     disabilityDescription?: SortOrder
     disabilityDocument?: SortOrder
     preferences?: SortOrder
+    verified?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type FloatFilter<$PrismaModel = never> = {
@@ -14056,14 +14092,6 @@ export namespace Prisma {
   export type CompanionProfileSumOrderByAggregateInput = {
     rating?: SortOrder
     yearsOnPlatform?: SortOrder
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type FloatWithAggregatesFilter<$PrismaModel = never> = {
@@ -14661,6 +14689,10 @@ export namespace Prisma {
     connect?: CompanionProfileWhereUniqueInput
   }
 
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
   export type UserUpdateOneRequiredWithoutProfileNestedInput = {
     create?: XOR<UserCreateWithoutProfileInput, UserUncheckedCreateWithoutProfileInput>
     connectOrCreate?: UserCreateOrConnectWithoutProfileInput
@@ -14707,10 +14739,6 @@ export namespace Prisma {
     connectOrCreate?: BookingCreateOrConnectWithoutCompanionInput | BookingCreateOrConnectWithoutCompanionInput[]
     createMany?: BookingCreateManyCompanionInputEnvelope
     connect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
-  }
-
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
   }
 
   export type FloatFieldUpdateOperationsInput = {
@@ -15148,6 +15176,14 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type NestedFloatFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
     in?: number[] | ListFloatFieldRefInput<$PrismaModel>
@@ -15157,14 +15193,6 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
@@ -15254,6 +15282,7 @@ export namespace Prisma {
     disabilityDescription?: string | null
     disabilityDocument?: string | null
     preferences?: string | null
+    verified?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     companion?: CompanionProfileCreateNestedOneWithoutProfileInput
@@ -15270,6 +15299,7 @@ export namespace Prisma {
     disabilityDescription?: string | null
     disabilityDocument?: string | null
     preferences?: string | null
+    verified?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     companion?: CompanionProfileUncheckedCreateNestedOneWithoutProfileInput
@@ -15461,6 +15491,7 @@ export namespace Prisma {
     disabilityDescription?: NullableStringFieldUpdateOperationsInput | string | null
     disabilityDocument?: NullableStringFieldUpdateOperationsInput | string | null
     preferences?: NullableStringFieldUpdateOperationsInput | string | null
+    verified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companion?: CompanionProfileUpdateOneWithoutProfileNestedInput
@@ -15477,6 +15508,7 @@ export namespace Prisma {
     disabilityDescription?: NullableStringFieldUpdateOperationsInput | string | null
     disabilityDocument?: NullableStringFieldUpdateOperationsInput | string | null
     preferences?: NullableStringFieldUpdateOperationsInput | string | null
+    verified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companion?: CompanionProfileUncheckedUpdateOneWithoutProfileNestedInput
@@ -15971,6 +16003,7 @@ export namespace Prisma {
     disabilityDescription?: string | null
     disabilityDocument?: string | null
     preferences?: string | null
+    verified?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutProfileInput
@@ -15988,6 +16021,7 @@ export namespace Prisma {
     disabilityDescription?: string | null
     disabilityDocument?: string | null
     preferences?: string | null
+    verified?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -16063,6 +16097,7 @@ export namespace Prisma {
     disabilityDescription?: NullableStringFieldUpdateOperationsInput | string | null
     disabilityDocument?: NullableStringFieldUpdateOperationsInput | string | null
     preferences?: NullableStringFieldUpdateOperationsInput | string | null
+    verified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutProfileNestedInput
@@ -16080,6 +16115,7 @@ export namespace Prisma {
     disabilityDescription?: NullableStringFieldUpdateOperationsInput | string | null
     disabilityDocument?: NullableStringFieldUpdateOperationsInput | string | null
     preferences?: NullableStringFieldUpdateOperationsInput | string | null
+    verified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

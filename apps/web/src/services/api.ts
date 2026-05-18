@@ -13,6 +13,9 @@ import type {
   UserSearchResult,
   PaginatedResponse,
   HealthStatus,
+  AdminStats,
+  AdminUser,
+  AdminPending,
 } from '@/types';
 
 const API_URL = env.apiUrl;
@@ -438,6 +441,53 @@ export async function getPendingInvites(): Promise<any[]> {
   const response = await fetch(`${API_URL}/supervision/invites`, { headers });
   if (!response.ok) throw new Error('Failed to fetch pending invites');
   return response.json();
+}
+
+function adminHeaders(key: string): Record<string, string> {
+  return { 'x-admin-key': key, 'Content-Type': 'application/json' };
+}
+
+export async function adminLogin(key: string): Promise<boolean> {
+  const res = await fetch(`${API_URL}/admin/stats`, { headers: adminHeaders(key) });
+  return res.ok;
+}
+
+export async function adminGetStats(key: string): Promise<AdminStats> {
+  const res = await fetch(`${API_URL}/admin/stats`, { headers: adminHeaders(key) });
+  if (!res.ok) throw new Error('Error al obtener estadísticas');
+  return res.json();
+}
+
+export async function adminGetUsers(key: string): Promise<AdminUser[]> {
+  const res = await fetch(`${API_URL}/admin/users`, { headers: adminHeaders(key) });
+  if (!res.ok) throw new Error('Error al obtener usuarios');
+  return res.json();
+}
+
+export async function adminGetPending(key: string): Promise<AdminPending> {
+  const res = await fetch(`${API_URL}/admin/pending`, { headers: adminHeaders(key) });
+  if (!res.ok) throw new Error('Error al obtener pendientes');
+  return res.json();
+}
+
+export async function adminVerifyCompanion(key: string, id: string): Promise<void> {
+  const res = await fetch(`${API_URL}/admin/companions/${id}/verify`, { method: 'PUT', headers: adminHeaders(key) });
+  if (!res.ok) throw new Error('Error al verificar acompañante');
+}
+
+export async function adminRejectCompanion(key: string, id: string): Promise<void> {
+  const res = await fetch(`${API_URL}/admin/companions/${id}/reject`, { method: 'PUT', headers: adminHeaders(key) });
+  if (!res.ok) throw new Error('Error al rechazar acompañante');
+}
+
+export async function adminVerifyProfile(key: string, id: string): Promise<void> {
+  const res = await fetch(`${API_URL}/admin/profiles/${id}/verify`, { method: 'PUT', headers: adminHeaders(key) });
+  if (!res.ok) throw new Error('Error al verificar perfil');
+}
+
+export async function adminRejectProfile(key: string, id: string): Promise<void> {
+  const res = await fetch(`${API_URL}/admin/profiles/${id}/reject`, { method: 'PUT', headers: adminHeaders(key) });
+  if (!res.ok) throw new Error('Error al rechazar perfil');
 }
 
 export async function cancelInvitation(id: string): Promise<any> {

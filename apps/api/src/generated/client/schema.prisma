@@ -79,6 +79,7 @@ model Profile {
   disabilityDescription String?
   disabilityDocument    String?
   preferences           String?
+  verified              Boolean  @default(false)
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
 

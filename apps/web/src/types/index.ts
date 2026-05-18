@@ -157,3 +157,55 @@ export type PaginatedResponse<T> = {
 export type HealthStatus = {
   status: string;
 };
+
+export type AdminStats = {
+  users: number;
+  profiles: number;
+  companions: number;
+  pendingCompanions: number;
+  pendingProfiles: number;
+  verifiedProfiles: number;
+};
+
+export type AdminUser = {
+  id: string;
+  email: string;
+  role: string;
+  createdAt: string;
+  profile?: {
+    id: string;
+    fullName: string;
+    avatarUrl: string | null;
+    verified: boolean;
+    disabilityType: string | null;
+    disabilityDocument: string | null;
+    companion?: {
+      id: string;
+      verified: boolean;
+      specialties: string | null;
+      penalCertificate: string | null;
+      sexualCertificate: string | null;
+    } | null;
+  } | null;
+};
+
+export type AdminPending = {
+  companions: {
+    id: string;
+    specialties: string | null;
+    penalCertificate: string | null;
+    sexualCertificate: string | null;
+    profile: {
+      id: string;
+      fullName: string;
+      user: { id: string; email: string };
+    };
+  }[];
+  clients: {
+    id: string;
+    fullName: string;
+    disabilityType: string | null;
+    disabilityDocument: string | null;
+    user: { id: string; email: string };
+  }[];
+};

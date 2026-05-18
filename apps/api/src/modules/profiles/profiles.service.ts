@@ -62,6 +62,7 @@ export class ProfilesService {
 
   listCompanions() {
     return this.prisma.companionProfile.findMany({
+      where: { verified: true },
       include: {
         profile: {
           include: {
