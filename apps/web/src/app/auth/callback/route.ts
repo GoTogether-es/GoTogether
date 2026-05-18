@@ -11,7 +11,7 @@ export async function GET(request: Request) {
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) {
       const redirectCookie = request.headers.get('cookie')?.split(';').find((c) => c.trim().startsWith('gotogether-auth-redirect='))
-      let redirectUrl = next ?? '/perfil?onboarding=true'
+      let redirectUrl = next ?? '/onboarding'
       if (redirectCookie) {
         const cookieValue = decodeURIComponent(redirectCookie.split('=')[1])
         if (cookieValue && cookieValue.startsWith('/')) {

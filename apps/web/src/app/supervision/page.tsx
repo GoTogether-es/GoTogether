@@ -4,7 +4,7 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import { toast } from 'sonner';
 import { Button, Card, Container, Section } from '@gotogether/ui';
 import { Users, UserPlus, Trash2, Loader2, Search } from 'lucide-react';
-import { useMyClients, useMySupervisor, useCreateSupervision, useRemoveSupervision, useSearchUsers } from '@/services/queries';
+import { useMyClients, useMySupervisor, useCreateSupervision, useRemoveSupervision, useSearchUsers, usePendingInvites, useCancelInvitation } from '@/services/queries';
 
 export default function SupervisionPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -15,8 +15,10 @@ export default function SupervisionPage() {
   const { data: clients = [], isLoading, refetch } = useMyClients();
   const { data: supervisor } = useMySupervisor();
   const { data: searchResults = [], isLoading: searching } = useSearchUsers(debouncedSearch);
+  const { data: pendingInvites = [], refetch: refetchInvites } = usePendingInvites();
   const createMutation = useCreateSupervision();
   const removeMutation = useRemoveSupervision();
+  const cancelInviteMutation = useCancelInvitation();
 
   const handleSearch = useCallback((query: string) => {
     setSearchQuery(query);
@@ -57,6 +59,16 @@ export default function SupervisionPage() {
     }
   };
 
+  const onCancelInvite = async (inviteId: string) => {
+    try {
+      await cancelInviteMutation.mutateAsync(inviteId);
+      toast.success('Invitación cancelada');
+      refetchInvites();
+    } catch (err: any) {
+      toast.error(err.message || 'Error al cancelar invitación');
+    }
+  };
+
   if (isLoading) {
     return (
       <Section>
@@ -80,6 +92,30 @@ export default function SupervisionPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <Card className="p-8 border-0 shadow-xl shadow-blue-900/5">
+              {pendingInvites.length > 0 && (
+                <div className="mb-6">
+                  <h4 className="text-sm font-bold uppercase tracking-wider text-gray-400 mb-3">
+                    Pendientes de aceptación
+                  </h4>
+                  <div className="space-y-2">
+                    {pendingInvites.map((inv: any) => (
+                      <div key={inv.id} className="flex items-center justify-between p-3 bg-yellow-50 rounded-xl border border-yellow-100">
+                        <div>
+                          <p className="font-medium text-gray-800">{inv.clientName}</p>
+                          <p className="text-xs text-yellow-600">Invitación enviada</p>
+                        </div>
+                        <button
+                          onClick={() => onCancelInvite(inv.id)}
+                          className="p-2 text-gray-400 hover:text-red-500 transition-colors"
+                          aria-label={`Cancelar invitación a ${inv.clientName}`}
+                        >
+                          <Trash2 className="w-4 h-4" aria-hidden="true" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
               <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
                 <Users className="w-5 h-5 text-blue-600" aria-hidden="true" />
                 Mis supervisados

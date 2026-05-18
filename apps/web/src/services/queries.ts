@@ -152,3 +152,30 @@ export function useSearchUsers(query: string) {
     staleTime: 10 * 1000,
   });
 }
+
+export function usePendingInvites() {
+  return useQuery({
+    queryKey: ['supervision', 'invites'],
+    queryFn: api.getPendingInvites,
+  });
+}
+
+export function useInviteSupervision() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: api.inviteSupervision,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['supervision'] });
+    },
+  });
+}
+
+export function useCancelInvitation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: api.cancelInvitation,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['supervision'] });
+    },
+  });
+}

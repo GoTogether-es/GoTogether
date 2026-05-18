@@ -15,6 +15,7 @@ function PerfilContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const isOnboarding = searchParams.get('onboarding') === 'true';
+  const roleParam = searchParams.get('role');
 
   const {
     register,
@@ -32,7 +33,7 @@ function PerfilContent() {
       phone: '',
       disabilityType: '',
       preferences: '',
-      isCompanion: false,
+      isCompanion: roleParam === 'companion',
       specialties: '',
     },
   });
@@ -65,7 +66,11 @@ function PerfilContent() {
       await upsertProfile(data);
       toast.success(isOnboarding ? '¡Perfil creado! Redirigiendo...' : 'Cambios guardados con éxito');
       if (isOnboarding) {
-        setTimeout(() => router.push('/explorar'), 1500);
+        if (roleParam === 'supervisor') {
+          setTimeout(() => router.push('/onboarding/supervisor'), 1000);
+        } else {
+          setTimeout(() => router.push('/explorar'), 1500);
+        }
       }
     } catch {
       toast.error('Hubo un error al guardar tu perfil. Inténtalo de nuevo.');

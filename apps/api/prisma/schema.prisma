@@ -35,9 +35,10 @@ model User {
 
   profile            Profile?
   bookings           Booking[]     @relation("ClientBookings")
-  supervisedClients  Supervision[] @relation("SupervisorOf")
-  supervisorRef      Supervision?  @relation("SupervisedBy")
-  bookedBookings     Booking[]     @relation("BookedBookings")
+  supervisedClients  Supervision[]     @relation("SupervisorOf")
+  supervisorRef      Supervision?      @relation("SupervisedBy")
+  bookedBookings     Booking[]         @relation("BookedBookings")
+  sentInvites        SupervisionInvite[]
 }
 
 model Supervision {
@@ -48,6 +49,22 @@ model Supervision {
 
   supervisor   User @relation("SupervisorOf", fields: [supervisorId], references: [id])
   client       User @relation("SupervisedBy", fields: [clientId], references: [id])
+}
+
+model SupervisionInvite {
+  id           String   @id @default(uuid())
+  supervisorId String
+  clientName   String
+  clientEmail  String?
+  clientId     String?
+  token        String   @unique
+  status       String   @default("PENDING")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  supervisor   User     @relation(fields: [supervisorId], references: [id])
+
+  @@map("SupervisionInvite")
 }
 
 model Profile {

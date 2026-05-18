@@ -24,6 +24,11 @@ export type User = $Result.DefaultSelection<Prisma.$UserPayload>
  */
 export type Supervision = $Result.DefaultSelection<Prisma.$SupervisionPayload>
 /**
+ * Model SupervisionInvite
+ * 
+ */
+export type SupervisionInvite = $Result.DefaultSelection<Prisma.$SupervisionInvitePayload>
+/**
  * Model Profile
  * 
  */
@@ -237,6 +242,16 @@ export class PrismaClient<
     * ```
     */
   get supervision(): Prisma.SupervisionDelegate<ExtArgs>;
+
+  /**
+   * `prisma.supervisionInvite`: Exposes CRUD operations for the **SupervisionInvite** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SupervisionInvites
+    * const supervisionInvites = await prisma.supervisionInvite.findMany()
+    * ```
+    */
+  get supervisionInvite(): Prisma.SupervisionInviteDelegate<ExtArgs>;
 
   /**
    * `prisma.profile`: Exposes CRUD operations for the **Profile** model.
@@ -750,6 +765,7 @@ export namespace Prisma {
   export const ModelName: {
     User: 'User',
     Supervision: 'Supervision',
+    SupervisionInvite: 'SupervisionInvite',
     Profile: 'Profile',
     CompanionProfile: 'CompanionProfile',
     Booking: 'Booking',
@@ -772,7 +788,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "supervision" | "profile" | "companionProfile" | "booking" | "payment" | "chatRoom" | "chatMessage" | "report"
+      modelProps: "user" | "supervision" | "supervisionInvite" | "profile" | "companionProfile" | "booking" | "payment" | "chatRoom" | "chatMessage" | "report"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -913,6 +929,76 @@ export namespace Prisma {
           count: {
             args: Prisma.SupervisionCountArgs<ExtArgs>
             result: $Utils.Optional<SupervisionCountAggregateOutputType> | number
+          }
+        }
+      }
+      SupervisionInvite: {
+        payload: Prisma.$SupervisionInvitePayload<ExtArgs>
+        fields: Prisma.SupervisionInviteFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SupervisionInviteFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupervisionInvitePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SupervisionInviteFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupervisionInvitePayload>
+          }
+          findFirst: {
+            args: Prisma.SupervisionInviteFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupervisionInvitePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SupervisionInviteFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupervisionInvitePayload>
+          }
+          findMany: {
+            args: Prisma.SupervisionInviteFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupervisionInvitePayload>[]
+          }
+          create: {
+            args: Prisma.SupervisionInviteCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupervisionInvitePayload>
+          }
+          createMany: {
+            args: Prisma.SupervisionInviteCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SupervisionInviteCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupervisionInvitePayload>[]
+          }
+          delete: {
+            args: Prisma.SupervisionInviteDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupervisionInvitePayload>
+          }
+          update: {
+            args: Prisma.SupervisionInviteUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupervisionInvitePayload>
+          }
+          deleteMany: {
+            args: Prisma.SupervisionInviteDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SupervisionInviteUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.SupervisionInviteUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupervisionInvitePayload>
+          }
+          aggregate: {
+            args: Prisma.SupervisionInviteAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSupervisionInvite>
+          }
+          groupBy: {
+            args: Prisma.SupervisionInviteGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SupervisionInviteGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SupervisionInviteCountArgs<ExtArgs>
+            result: $Utils.Optional<SupervisionInviteCountAggregateOutputType> | number
           }
         }
       }
@@ -1570,12 +1656,14 @@ export namespace Prisma {
     bookings: number
     supervisedClients: number
     bookedBookings: number
+    sentInvites: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     bookings?: boolean | UserCountOutputTypeCountBookingsArgs
     supervisedClients?: boolean | UserCountOutputTypeCountSupervisedClientsArgs
     bookedBookings?: boolean | UserCountOutputTypeCountBookedBookingsArgs
+    sentInvites?: boolean | UserCountOutputTypeCountSentInvitesArgs
   }
 
   // Custom InputTypes
@@ -1608,6 +1696,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountBookedBookingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: BookingWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSentInvitesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SupervisionInviteWhereInput
   }
 
 
@@ -1846,6 +1941,7 @@ export namespace Prisma {
     supervisedClients?: boolean | User$supervisedClientsArgs<ExtArgs>
     supervisorRef?: boolean | User$supervisorRefArgs<ExtArgs>
     bookedBookings?: boolean | User$bookedBookingsArgs<ExtArgs>
+    sentInvites?: boolean | User$sentInvitesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1871,6 +1967,7 @@ export namespace Prisma {
     supervisedClients?: boolean | User$supervisedClientsArgs<ExtArgs>
     supervisorRef?: boolean | User$supervisorRefArgs<ExtArgs>
     bookedBookings?: boolean | User$bookedBookingsArgs<ExtArgs>
+    sentInvites?: boolean | User$sentInvitesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1883,6 +1980,7 @@ export namespace Prisma {
       supervisedClients: Prisma.$SupervisionPayload<ExtArgs>[]
       supervisorRef: Prisma.$SupervisionPayload<ExtArgs> | null
       bookedBookings: Prisma.$BookingPayload<ExtArgs>[]
+      sentInvites: Prisma.$SupervisionInvitePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2259,6 +2357,7 @@ export namespace Prisma {
     supervisedClients<T extends User$supervisedClientsArgs<ExtArgs> = {}>(args?: Subset<T, User$supervisedClientsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SupervisionPayload<ExtArgs>, T, "findMany"> | Null>
     supervisorRef<T extends User$supervisorRefArgs<ExtArgs> = {}>(args?: Subset<T, User$supervisorRefArgs<ExtArgs>>): Prisma__SupervisionClient<$Result.GetResult<Prisma.$SupervisionPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     bookedBookings<T extends User$bookedBookingsArgs<ExtArgs> = {}>(args?: Subset<T, User$bookedBookingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findMany"> | Null>
+    sentInvites<T extends User$sentInvitesArgs<ExtArgs> = {}>(args?: Subset<T, User$sentInvitesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SupervisionInvitePayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2694,6 +2793,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: BookingScalarFieldEnum | BookingScalarFieldEnum[]
+  }
+
+  /**
+   * User.sentInvites
+   */
+  export type User$sentInvitesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupervisionInvite
+     */
+    select?: SupervisionInviteSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupervisionInviteInclude<ExtArgs> | null
+    where?: SupervisionInviteWhereInput
+    orderBy?: SupervisionInviteOrderByWithRelationInput | SupervisionInviteOrderByWithRelationInput[]
+    cursor?: SupervisionInviteWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SupervisionInviteScalarFieldEnum | SupervisionInviteScalarFieldEnum[]
   }
 
   /**
@@ -3635,6 +3754,987 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: SupervisionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SupervisionInvite
+   */
+
+  export type AggregateSupervisionInvite = {
+    _count: SupervisionInviteCountAggregateOutputType | null
+    _min: SupervisionInviteMinAggregateOutputType | null
+    _max: SupervisionInviteMaxAggregateOutputType | null
+  }
+
+  export type SupervisionInviteMinAggregateOutputType = {
+    id: string | null
+    supervisorId: string | null
+    clientName: string | null
+    clientEmail: string | null
+    clientId: string | null
+    token: string | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SupervisionInviteMaxAggregateOutputType = {
+    id: string | null
+    supervisorId: string | null
+    clientName: string | null
+    clientEmail: string | null
+    clientId: string | null
+    token: string | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SupervisionInviteCountAggregateOutputType = {
+    id: number
+    supervisorId: number
+    clientName: number
+    clientEmail: number
+    clientId: number
+    token: number
+    status: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SupervisionInviteMinAggregateInputType = {
+    id?: true
+    supervisorId?: true
+    clientName?: true
+    clientEmail?: true
+    clientId?: true
+    token?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SupervisionInviteMaxAggregateInputType = {
+    id?: true
+    supervisorId?: true
+    clientName?: true
+    clientEmail?: true
+    clientId?: true
+    token?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SupervisionInviteCountAggregateInputType = {
+    id?: true
+    supervisorId?: true
+    clientName?: true
+    clientEmail?: true
+    clientId?: true
+    token?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SupervisionInviteAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SupervisionInvite to aggregate.
+     */
+    where?: SupervisionInviteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SupervisionInvites to fetch.
+     */
+    orderBy?: SupervisionInviteOrderByWithRelationInput | SupervisionInviteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SupervisionInviteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SupervisionInvites from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SupervisionInvites.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SupervisionInvites
+    **/
+    _count?: true | SupervisionInviteCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SupervisionInviteMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SupervisionInviteMaxAggregateInputType
+  }
+
+  export type GetSupervisionInviteAggregateType<T extends SupervisionInviteAggregateArgs> = {
+        [P in keyof T & keyof AggregateSupervisionInvite]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSupervisionInvite[P]>
+      : GetScalarType<T[P], AggregateSupervisionInvite[P]>
+  }
+
+
+
+
+  export type SupervisionInviteGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SupervisionInviteWhereInput
+    orderBy?: SupervisionInviteOrderByWithAggregationInput | SupervisionInviteOrderByWithAggregationInput[]
+    by: SupervisionInviteScalarFieldEnum[] | SupervisionInviteScalarFieldEnum
+    having?: SupervisionInviteScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SupervisionInviteCountAggregateInputType | true
+    _min?: SupervisionInviteMinAggregateInputType
+    _max?: SupervisionInviteMaxAggregateInputType
+  }
+
+  export type SupervisionInviteGroupByOutputType = {
+    id: string
+    supervisorId: string
+    clientName: string
+    clientEmail: string | null
+    clientId: string | null
+    token: string
+    status: string
+    createdAt: Date
+    updatedAt: Date
+    _count: SupervisionInviteCountAggregateOutputType | null
+    _min: SupervisionInviteMinAggregateOutputType | null
+    _max: SupervisionInviteMaxAggregateOutputType | null
+  }
+
+  type GetSupervisionInviteGroupByPayload<T extends SupervisionInviteGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SupervisionInviteGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SupervisionInviteGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SupervisionInviteGroupByOutputType[P]>
+            : GetScalarType<T[P], SupervisionInviteGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SupervisionInviteSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    supervisorId?: boolean
+    clientName?: boolean
+    clientEmail?: boolean
+    clientId?: boolean
+    token?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    supervisor?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["supervisionInvite"]>
+
+  export type SupervisionInviteSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    supervisorId?: boolean
+    clientName?: boolean
+    clientEmail?: boolean
+    clientId?: boolean
+    token?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    supervisor?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["supervisionInvite"]>
+
+  export type SupervisionInviteSelectScalar = {
+    id?: boolean
+    supervisorId?: boolean
+    clientName?: boolean
+    clientEmail?: boolean
+    clientId?: boolean
+    token?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type SupervisionInviteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    supervisor?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type SupervisionInviteIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    supervisor?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $SupervisionInvitePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SupervisionInvite"
+    objects: {
+      supervisor: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      supervisorId: string
+      clientName: string
+      clientEmail: string | null
+      clientId: string | null
+      token: string
+      status: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["supervisionInvite"]>
+    composites: {}
+  }
+
+  type SupervisionInviteGetPayload<S extends boolean | null | undefined | SupervisionInviteDefaultArgs> = $Result.GetResult<Prisma.$SupervisionInvitePayload, S>
+
+  type SupervisionInviteCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<SupervisionInviteFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: SupervisionInviteCountAggregateInputType | true
+    }
+
+  export interface SupervisionInviteDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SupervisionInvite'], meta: { name: 'SupervisionInvite' } }
+    /**
+     * Find zero or one SupervisionInvite that matches the filter.
+     * @param {SupervisionInviteFindUniqueArgs} args - Arguments to find a SupervisionInvite
+     * @example
+     * // Get one SupervisionInvite
+     * const supervisionInvite = await prisma.supervisionInvite.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SupervisionInviteFindUniqueArgs>(args: SelectSubset<T, SupervisionInviteFindUniqueArgs<ExtArgs>>): Prisma__SupervisionInviteClient<$Result.GetResult<Prisma.$SupervisionInvitePayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one SupervisionInvite that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {SupervisionInviteFindUniqueOrThrowArgs} args - Arguments to find a SupervisionInvite
+     * @example
+     * // Get one SupervisionInvite
+     * const supervisionInvite = await prisma.supervisionInvite.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SupervisionInviteFindUniqueOrThrowArgs>(args: SelectSubset<T, SupervisionInviteFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SupervisionInviteClient<$Result.GetResult<Prisma.$SupervisionInvitePayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first SupervisionInvite that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupervisionInviteFindFirstArgs} args - Arguments to find a SupervisionInvite
+     * @example
+     * // Get one SupervisionInvite
+     * const supervisionInvite = await prisma.supervisionInvite.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SupervisionInviteFindFirstArgs>(args?: SelectSubset<T, SupervisionInviteFindFirstArgs<ExtArgs>>): Prisma__SupervisionInviteClient<$Result.GetResult<Prisma.$SupervisionInvitePayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first SupervisionInvite that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupervisionInviteFindFirstOrThrowArgs} args - Arguments to find a SupervisionInvite
+     * @example
+     * // Get one SupervisionInvite
+     * const supervisionInvite = await prisma.supervisionInvite.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SupervisionInviteFindFirstOrThrowArgs>(args?: SelectSubset<T, SupervisionInviteFindFirstOrThrowArgs<ExtArgs>>): Prisma__SupervisionInviteClient<$Result.GetResult<Prisma.$SupervisionInvitePayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more SupervisionInvites that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupervisionInviteFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SupervisionInvites
+     * const supervisionInvites = await prisma.supervisionInvite.findMany()
+     * 
+     * // Get first 10 SupervisionInvites
+     * const supervisionInvites = await prisma.supervisionInvite.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const supervisionInviteWithIdOnly = await prisma.supervisionInvite.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SupervisionInviteFindManyArgs>(args?: SelectSubset<T, SupervisionInviteFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SupervisionInvitePayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a SupervisionInvite.
+     * @param {SupervisionInviteCreateArgs} args - Arguments to create a SupervisionInvite.
+     * @example
+     * // Create one SupervisionInvite
+     * const SupervisionInvite = await prisma.supervisionInvite.create({
+     *   data: {
+     *     // ... data to create a SupervisionInvite
+     *   }
+     * })
+     * 
+     */
+    create<T extends SupervisionInviteCreateArgs>(args: SelectSubset<T, SupervisionInviteCreateArgs<ExtArgs>>): Prisma__SupervisionInviteClient<$Result.GetResult<Prisma.$SupervisionInvitePayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many SupervisionInvites.
+     * @param {SupervisionInviteCreateManyArgs} args - Arguments to create many SupervisionInvites.
+     * @example
+     * // Create many SupervisionInvites
+     * const supervisionInvite = await prisma.supervisionInvite.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SupervisionInviteCreateManyArgs>(args?: SelectSubset<T, SupervisionInviteCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SupervisionInvites and returns the data saved in the database.
+     * @param {SupervisionInviteCreateManyAndReturnArgs} args - Arguments to create many SupervisionInvites.
+     * @example
+     * // Create many SupervisionInvites
+     * const supervisionInvite = await prisma.supervisionInvite.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SupervisionInvites and only return the `id`
+     * const supervisionInviteWithIdOnly = await prisma.supervisionInvite.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SupervisionInviteCreateManyAndReturnArgs>(args?: SelectSubset<T, SupervisionInviteCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SupervisionInvitePayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a SupervisionInvite.
+     * @param {SupervisionInviteDeleteArgs} args - Arguments to delete one SupervisionInvite.
+     * @example
+     * // Delete one SupervisionInvite
+     * const SupervisionInvite = await prisma.supervisionInvite.delete({
+     *   where: {
+     *     // ... filter to delete one SupervisionInvite
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SupervisionInviteDeleteArgs>(args: SelectSubset<T, SupervisionInviteDeleteArgs<ExtArgs>>): Prisma__SupervisionInviteClient<$Result.GetResult<Prisma.$SupervisionInvitePayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one SupervisionInvite.
+     * @param {SupervisionInviteUpdateArgs} args - Arguments to update one SupervisionInvite.
+     * @example
+     * // Update one SupervisionInvite
+     * const supervisionInvite = await prisma.supervisionInvite.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SupervisionInviteUpdateArgs>(args: SelectSubset<T, SupervisionInviteUpdateArgs<ExtArgs>>): Prisma__SupervisionInviteClient<$Result.GetResult<Prisma.$SupervisionInvitePayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more SupervisionInvites.
+     * @param {SupervisionInviteDeleteManyArgs} args - Arguments to filter SupervisionInvites to delete.
+     * @example
+     * // Delete a few SupervisionInvites
+     * const { count } = await prisma.supervisionInvite.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SupervisionInviteDeleteManyArgs>(args?: SelectSubset<T, SupervisionInviteDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SupervisionInvites.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupervisionInviteUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SupervisionInvites
+     * const supervisionInvite = await prisma.supervisionInvite.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SupervisionInviteUpdateManyArgs>(args: SelectSubset<T, SupervisionInviteUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one SupervisionInvite.
+     * @param {SupervisionInviteUpsertArgs} args - Arguments to update or create a SupervisionInvite.
+     * @example
+     * // Update or create a SupervisionInvite
+     * const supervisionInvite = await prisma.supervisionInvite.upsert({
+     *   create: {
+     *     // ... data to create a SupervisionInvite
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SupervisionInvite we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SupervisionInviteUpsertArgs>(args: SelectSubset<T, SupervisionInviteUpsertArgs<ExtArgs>>): Prisma__SupervisionInviteClient<$Result.GetResult<Prisma.$SupervisionInvitePayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of SupervisionInvites.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupervisionInviteCountArgs} args - Arguments to filter SupervisionInvites to count.
+     * @example
+     * // Count the number of SupervisionInvites
+     * const count = await prisma.supervisionInvite.count({
+     *   where: {
+     *     // ... the filter for the SupervisionInvites we want to count
+     *   }
+     * })
+    **/
+    count<T extends SupervisionInviteCountArgs>(
+      args?: Subset<T, SupervisionInviteCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SupervisionInviteCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SupervisionInvite.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupervisionInviteAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SupervisionInviteAggregateArgs>(args: Subset<T, SupervisionInviteAggregateArgs>): Prisma.PrismaPromise<GetSupervisionInviteAggregateType<T>>
+
+    /**
+     * Group by SupervisionInvite.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupervisionInviteGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SupervisionInviteGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SupervisionInviteGroupByArgs['orderBy'] }
+        : { orderBy?: SupervisionInviteGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SupervisionInviteGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSupervisionInviteGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SupervisionInvite model
+   */
+  readonly fields: SupervisionInviteFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SupervisionInvite.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SupervisionInviteClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    supervisor<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SupervisionInvite model
+   */ 
+  interface SupervisionInviteFieldRefs {
+    readonly id: FieldRef<"SupervisionInvite", 'String'>
+    readonly supervisorId: FieldRef<"SupervisionInvite", 'String'>
+    readonly clientName: FieldRef<"SupervisionInvite", 'String'>
+    readonly clientEmail: FieldRef<"SupervisionInvite", 'String'>
+    readonly clientId: FieldRef<"SupervisionInvite", 'String'>
+    readonly token: FieldRef<"SupervisionInvite", 'String'>
+    readonly status: FieldRef<"SupervisionInvite", 'String'>
+    readonly createdAt: FieldRef<"SupervisionInvite", 'DateTime'>
+    readonly updatedAt: FieldRef<"SupervisionInvite", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SupervisionInvite findUnique
+   */
+  export type SupervisionInviteFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupervisionInvite
+     */
+    select?: SupervisionInviteSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupervisionInviteInclude<ExtArgs> | null
+    /**
+     * Filter, which SupervisionInvite to fetch.
+     */
+    where: SupervisionInviteWhereUniqueInput
+  }
+
+  /**
+   * SupervisionInvite findUniqueOrThrow
+   */
+  export type SupervisionInviteFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupervisionInvite
+     */
+    select?: SupervisionInviteSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupervisionInviteInclude<ExtArgs> | null
+    /**
+     * Filter, which SupervisionInvite to fetch.
+     */
+    where: SupervisionInviteWhereUniqueInput
+  }
+
+  /**
+   * SupervisionInvite findFirst
+   */
+  export type SupervisionInviteFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupervisionInvite
+     */
+    select?: SupervisionInviteSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupervisionInviteInclude<ExtArgs> | null
+    /**
+     * Filter, which SupervisionInvite to fetch.
+     */
+    where?: SupervisionInviteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SupervisionInvites to fetch.
+     */
+    orderBy?: SupervisionInviteOrderByWithRelationInput | SupervisionInviteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SupervisionInvites.
+     */
+    cursor?: SupervisionInviteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SupervisionInvites from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SupervisionInvites.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SupervisionInvites.
+     */
+    distinct?: SupervisionInviteScalarFieldEnum | SupervisionInviteScalarFieldEnum[]
+  }
+
+  /**
+   * SupervisionInvite findFirstOrThrow
+   */
+  export type SupervisionInviteFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupervisionInvite
+     */
+    select?: SupervisionInviteSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupervisionInviteInclude<ExtArgs> | null
+    /**
+     * Filter, which SupervisionInvite to fetch.
+     */
+    where?: SupervisionInviteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SupervisionInvites to fetch.
+     */
+    orderBy?: SupervisionInviteOrderByWithRelationInput | SupervisionInviteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SupervisionInvites.
+     */
+    cursor?: SupervisionInviteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SupervisionInvites from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SupervisionInvites.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SupervisionInvites.
+     */
+    distinct?: SupervisionInviteScalarFieldEnum | SupervisionInviteScalarFieldEnum[]
+  }
+
+  /**
+   * SupervisionInvite findMany
+   */
+  export type SupervisionInviteFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupervisionInvite
+     */
+    select?: SupervisionInviteSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupervisionInviteInclude<ExtArgs> | null
+    /**
+     * Filter, which SupervisionInvites to fetch.
+     */
+    where?: SupervisionInviteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SupervisionInvites to fetch.
+     */
+    orderBy?: SupervisionInviteOrderByWithRelationInput | SupervisionInviteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SupervisionInvites.
+     */
+    cursor?: SupervisionInviteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SupervisionInvites from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SupervisionInvites.
+     */
+    skip?: number
+    distinct?: SupervisionInviteScalarFieldEnum | SupervisionInviteScalarFieldEnum[]
+  }
+
+  /**
+   * SupervisionInvite create
+   */
+  export type SupervisionInviteCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupervisionInvite
+     */
+    select?: SupervisionInviteSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupervisionInviteInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SupervisionInvite.
+     */
+    data: XOR<SupervisionInviteCreateInput, SupervisionInviteUncheckedCreateInput>
+  }
+
+  /**
+   * SupervisionInvite createMany
+   */
+  export type SupervisionInviteCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SupervisionInvites.
+     */
+    data: SupervisionInviteCreateManyInput | SupervisionInviteCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SupervisionInvite createManyAndReturn
+   */
+  export type SupervisionInviteCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupervisionInvite
+     */
+    select?: SupervisionInviteSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many SupervisionInvites.
+     */
+    data: SupervisionInviteCreateManyInput | SupervisionInviteCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupervisionInviteIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SupervisionInvite update
+   */
+  export type SupervisionInviteUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupervisionInvite
+     */
+    select?: SupervisionInviteSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupervisionInviteInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SupervisionInvite.
+     */
+    data: XOR<SupervisionInviteUpdateInput, SupervisionInviteUncheckedUpdateInput>
+    /**
+     * Choose, which SupervisionInvite to update.
+     */
+    where: SupervisionInviteWhereUniqueInput
+  }
+
+  /**
+   * SupervisionInvite updateMany
+   */
+  export type SupervisionInviteUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SupervisionInvites.
+     */
+    data: XOR<SupervisionInviteUpdateManyMutationInput, SupervisionInviteUncheckedUpdateManyInput>
+    /**
+     * Filter which SupervisionInvites to update
+     */
+    where?: SupervisionInviteWhereInput
+  }
+
+  /**
+   * SupervisionInvite upsert
+   */
+  export type SupervisionInviteUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupervisionInvite
+     */
+    select?: SupervisionInviteSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupervisionInviteInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SupervisionInvite to update in case it exists.
+     */
+    where: SupervisionInviteWhereUniqueInput
+    /**
+     * In case the SupervisionInvite found by the `where` argument doesn't exist, create a new SupervisionInvite with this data.
+     */
+    create: XOR<SupervisionInviteCreateInput, SupervisionInviteUncheckedCreateInput>
+    /**
+     * In case the SupervisionInvite was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SupervisionInviteUpdateInput, SupervisionInviteUncheckedUpdateInput>
+  }
+
+  /**
+   * SupervisionInvite delete
+   */
+  export type SupervisionInviteDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupervisionInvite
+     */
+    select?: SupervisionInviteSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupervisionInviteInclude<ExtArgs> | null
+    /**
+     * Filter which SupervisionInvite to delete.
+     */
+    where: SupervisionInviteWhereUniqueInput
+  }
+
+  /**
+   * SupervisionInvite deleteMany
+   */
+  export type SupervisionInviteDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SupervisionInvites to delete
+     */
+    where?: SupervisionInviteWhereInput
+  }
+
+  /**
+   * SupervisionInvite without action
+   */
+  export type SupervisionInviteDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupervisionInvite
+     */
+    select?: SupervisionInviteSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupervisionInviteInclude<ExtArgs> | null
   }
 
 
@@ -10748,6 +11848,21 @@ export namespace Prisma {
   export type SupervisionScalarFieldEnum = (typeof SupervisionScalarFieldEnum)[keyof typeof SupervisionScalarFieldEnum]
 
 
+  export const SupervisionInviteScalarFieldEnum: {
+    id: 'id',
+    supervisorId: 'supervisorId',
+    clientName: 'clientName',
+    clientEmail: 'clientEmail',
+    clientId: 'clientId',
+    token: 'token',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SupervisionInviteScalarFieldEnum = (typeof SupervisionInviteScalarFieldEnum)[keyof typeof SupervisionInviteScalarFieldEnum]
+
+
   export const ProfileScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
@@ -10984,6 +12099,7 @@ export namespace Prisma {
     supervisedClients?: SupervisionListRelationFilter
     supervisorRef?: XOR<SupervisionNullableRelationFilter, SupervisionWhereInput> | null
     bookedBookings?: BookingListRelationFilter
+    sentInvites?: SupervisionInviteListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -10997,6 +12113,7 @@ export namespace Prisma {
     supervisedClients?: SupervisionOrderByRelationAggregateInput
     supervisorRef?: SupervisionOrderByWithRelationInput
     bookedBookings?: BookingOrderByRelationAggregateInput
+    sentInvites?: SupervisionInviteOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -11013,6 +12130,7 @@ export namespace Prisma {
     supervisedClients?: SupervisionListRelationFilter
     supervisorRef?: XOR<SupervisionNullableRelationFilter, SupervisionWhereInput> | null
     bookedBookings?: BookingListRelationFilter
+    sentInvites?: SupervisionInviteListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -11088,6 +12206,81 @@ export namespace Prisma {
     supervisorId?: StringWithAggregatesFilter<"Supervision"> | string
     clientId?: StringWithAggregatesFilter<"Supervision"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Supervision"> | Date | string
+  }
+
+  export type SupervisionInviteWhereInput = {
+    AND?: SupervisionInviteWhereInput | SupervisionInviteWhereInput[]
+    OR?: SupervisionInviteWhereInput[]
+    NOT?: SupervisionInviteWhereInput | SupervisionInviteWhereInput[]
+    id?: StringFilter<"SupervisionInvite"> | string
+    supervisorId?: StringFilter<"SupervisionInvite"> | string
+    clientName?: StringFilter<"SupervisionInvite"> | string
+    clientEmail?: StringNullableFilter<"SupervisionInvite"> | string | null
+    clientId?: StringNullableFilter<"SupervisionInvite"> | string | null
+    token?: StringFilter<"SupervisionInvite"> | string
+    status?: StringFilter<"SupervisionInvite"> | string
+    createdAt?: DateTimeFilter<"SupervisionInvite"> | Date | string
+    updatedAt?: DateTimeFilter<"SupervisionInvite"> | Date | string
+    supervisor?: XOR<UserRelationFilter, UserWhereInput>
+  }
+
+  export type SupervisionInviteOrderByWithRelationInput = {
+    id?: SortOrder
+    supervisorId?: SortOrder
+    clientName?: SortOrder
+    clientEmail?: SortOrderInput | SortOrder
+    clientId?: SortOrderInput | SortOrder
+    token?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    supervisor?: UserOrderByWithRelationInput
+  }
+
+  export type SupervisionInviteWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    token?: string
+    AND?: SupervisionInviteWhereInput | SupervisionInviteWhereInput[]
+    OR?: SupervisionInviteWhereInput[]
+    NOT?: SupervisionInviteWhereInput | SupervisionInviteWhereInput[]
+    supervisorId?: StringFilter<"SupervisionInvite"> | string
+    clientName?: StringFilter<"SupervisionInvite"> | string
+    clientEmail?: StringNullableFilter<"SupervisionInvite"> | string | null
+    clientId?: StringNullableFilter<"SupervisionInvite"> | string | null
+    status?: StringFilter<"SupervisionInvite"> | string
+    createdAt?: DateTimeFilter<"SupervisionInvite"> | Date | string
+    updatedAt?: DateTimeFilter<"SupervisionInvite"> | Date | string
+    supervisor?: XOR<UserRelationFilter, UserWhereInput>
+  }, "id" | "token">
+
+  export type SupervisionInviteOrderByWithAggregationInput = {
+    id?: SortOrder
+    supervisorId?: SortOrder
+    clientName?: SortOrder
+    clientEmail?: SortOrderInput | SortOrder
+    clientId?: SortOrderInput | SortOrder
+    token?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: SupervisionInviteCountOrderByAggregateInput
+    _max?: SupervisionInviteMaxOrderByAggregateInput
+    _min?: SupervisionInviteMinOrderByAggregateInput
+  }
+
+  export type SupervisionInviteScalarWhereWithAggregatesInput = {
+    AND?: SupervisionInviteScalarWhereWithAggregatesInput | SupervisionInviteScalarWhereWithAggregatesInput[]
+    OR?: SupervisionInviteScalarWhereWithAggregatesInput[]
+    NOT?: SupervisionInviteScalarWhereWithAggregatesInput | SupervisionInviteScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SupervisionInvite"> | string
+    supervisorId?: StringWithAggregatesFilter<"SupervisionInvite"> | string
+    clientName?: StringWithAggregatesFilter<"SupervisionInvite"> | string
+    clientEmail?: StringNullableWithAggregatesFilter<"SupervisionInvite"> | string | null
+    clientId?: StringNullableWithAggregatesFilter<"SupervisionInvite"> | string | null
+    token?: StringWithAggregatesFilter<"SupervisionInvite"> | string
+    status?: StringWithAggregatesFilter<"SupervisionInvite"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"SupervisionInvite"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"SupervisionInvite"> | Date | string
   }
 
   export type ProfileWhereInput = {
@@ -11626,6 +12819,7 @@ export namespace Prisma {
     supervisedClients?: SupervisionCreateNestedManyWithoutSupervisorInput
     supervisorRef?: SupervisionCreateNestedOneWithoutClientInput
     bookedBookings?: BookingCreateNestedManyWithoutBookedByInput
+    sentInvites?: SupervisionInviteCreateNestedManyWithoutSupervisorInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -11639,6 +12833,7 @@ export namespace Prisma {
     supervisedClients?: SupervisionUncheckedCreateNestedManyWithoutSupervisorInput
     supervisorRef?: SupervisionUncheckedCreateNestedOneWithoutClientInput
     bookedBookings?: BookingUncheckedCreateNestedManyWithoutBookedByInput
+    sentInvites?: SupervisionInviteUncheckedCreateNestedManyWithoutSupervisorInput
   }
 
   export type UserUpdateInput = {
@@ -11652,6 +12847,7 @@ export namespace Prisma {
     supervisedClients?: SupervisionUpdateManyWithoutSupervisorNestedInput
     supervisorRef?: SupervisionUpdateOneWithoutClientNestedInput
     bookedBookings?: BookingUpdateManyWithoutBookedByNestedInput
+    sentInvites?: SupervisionInviteUpdateManyWithoutSupervisorNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -11665,6 +12861,7 @@ export namespace Prisma {
     supervisedClients?: SupervisionUncheckedUpdateManyWithoutSupervisorNestedInput
     supervisorRef?: SupervisionUncheckedUpdateOneWithoutClientNestedInput
     bookedBookings?: BookingUncheckedUpdateManyWithoutBookedByNestedInput
+    sentInvites?: SupervisionInviteUncheckedUpdateManyWithoutSupervisorNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -11736,6 +12933,89 @@ export namespace Prisma {
     supervisorId?: StringFieldUpdateOperationsInput | string
     clientId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SupervisionInviteCreateInput = {
+    id?: string
+    clientName: string
+    clientEmail?: string | null
+    clientId?: string | null
+    token: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    supervisor: UserCreateNestedOneWithoutSentInvitesInput
+  }
+
+  export type SupervisionInviteUncheckedCreateInput = {
+    id?: string
+    supervisorId: string
+    clientName: string
+    clientEmail?: string | null
+    clientId?: string | null
+    token: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SupervisionInviteUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clientName?: StringFieldUpdateOperationsInput | string
+    clientEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    clientId?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    supervisor?: UserUpdateOneRequiredWithoutSentInvitesNestedInput
+  }
+
+  export type SupervisionInviteUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    supervisorId?: StringFieldUpdateOperationsInput | string
+    clientName?: StringFieldUpdateOperationsInput | string
+    clientEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    clientId?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SupervisionInviteCreateManyInput = {
+    id?: string
+    supervisorId: string
+    clientName: string
+    clientEmail?: string | null
+    clientId?: string | null
+    token: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SupervisionInviteUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clientName?: StringFieldUpdateOperationsInput | string
+    clientEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    clientId?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SupervisionInviteUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    supervisorId?: StringFieldUpdateOperationsInput | string
+    clientName?: StringFieldUpdateOperationsInput | string
+    clientEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    clientId?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProfileCreateInput = {
@@ -12354,11 +13634,21 @@ export namespace Prisma {
     isNot?: SupervisionWhereInput | null
   }
 
+  export type SupervisionInviteListRelationFilter = {
+    every?: SupervisionInviteWhereInput
+    some?: SupervisionInviteWhereInput
+    none?: SupervisionInviteWhereInput
+  }
+
   export type BookingOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type SupervisionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SupervisionInviteOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -12469,14 +13759,68 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type CompanionProfileNullableRelationFilter = {
-    is?: CompanionProfileWhereInput | null
-    isNot?: CompanionProfileWhereInput | null
-  }
-
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
+  }
+
+  export type SupervisionInviteCountOrderByAggregateInput = {
+    id?: SortOrder
+    supervisorId?: SortOrder
+    clientName?: SortOrder
+    clientEmail?: SortOrder
+    clientId?: SortOrder
+    token?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SupervisionInviteMaxOrderByAggregateInput = {
+    id?: SortOrder
+    supervisorId?: SortOrder
+    clientName?: SortOrder
+    clientEmail?: SortOrder
+    clientId?: SortOrder
+    token?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SupervisionInviteMinOrderByAggregateInput = {
+    id?: SortOrder
+    supervisorId?: SortOrder
+    clientName?: SortOrder
+    clientEmail?: SortOrder
+    clientId?: SortOrder
+    token?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type CompanionProfileNullableRelationFilter = {
+    is?: CompanionProfileWhereInput | null
+    isNot?: CompanionProfileWhereInput | null
   }
 
   export type ProfileCountOrderByAggregateInput = {
@@ -12519,24 +13863,6 @@ export namespace Prisma {
     preferences?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type BoolFilter<$PrismaModel = never> = {
@@ -12948,6 +14274,13 @@ export namespace Prisma {
     connect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
   }
 
+  export type SupervisionInviteCreateNestedManyWithoutSupervisorInput = {
+    create?: XOR<SupervisionInviteCreateWithoutSupervisorInput, SupervisionInviteUncheckedCreateWithoutSupervisorInput> | SupervisionInviteCreateWithoutSupervisorInput[] | SupervisionInviteUncheckedCreateWithoutSupervisorInput[]
+    connectOrCreate?: SupervisionInviteCreateOrConnectWithoutSupervisorInput | SupervisionInviteCreateOrConnectWithoutSupervisorInput[]
+    createMany?: SupervisionInviteCreateManySupervisorInputEnvelope
+    connect?: SupervisionInviteWhereUniqueInput | SupervisionInviteWhereUniqueInput[]
+  }
+
   export type ProfileUncheckedCreateNestedOneWithoutUserInput = {
     create?: XOR<ProfileCreateWithoutUserInput, ProfileUncheckedCreateWithoutUserInput>
     connectOrCreate?: ProfileCreateOrConnectWithoutUserInput
@@ -12979,6 +14312,13 @@ export namespace Prisma {
     connectOrCreate?: BookingCreateOrConnectWithoutBookedByInput | BookingCreateOrConnectWithoutBookedByInput[]
     createMany?: BookingCreateManyBookedByInputEnvelope
     connect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+  }
+
+  export type SupervisionInviteUncheckedCreateNestedManyWithoutSupervisorInput = {
+    create?: XOR<SupervisionInviteCreateWithoutSupervisorInput, SupervisionInviteUncheckedCreateWithoutSupervisorInput> | SupervisionInviteCreateWithoutSupervisorInput[] | SupervisionInviteUncheckedCreateWithoutSupervisorInput[]
+    connectOrCreate?: SupervisionInviteCreateOrConnectWithoutSupervisorInput | SupervisionInviteCreateOrConnectWithoutSupervisorInput[]
+    createMany?: SupervisionInviteCreateManySupervisorInputEnvelope
+    connect?: SupervisionInviteWhereUniqueInput | SupervisionInviteWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -13055,6 +14395,20 @@ export namespace Prisma {
     deleteMany?: BookingScalarWhereInput | BookingScalarWhereInput[]
   }
 
+  export type SupervisionInviteUpdateManyWithoutSupervisorNestedInput = {
+    create?: XOR<SupervisionInviteCreateWithoutSupervisorInput, SupervisionInviteUncheckedCreateWithoutSupervisorInput> | SupervisionInviteCreateWithoutSupervisorInput[] | SupervisionInviteUncheckedCreateWithoutSupervisorInput[]
+    connectOrCreate?: SupervisionInviteCreateOrConnectWithoutSupervisorInput | SupervisionInviteCreateOrConnectWithoutSupervisorInput[]
+    upsert?: SupervisionInviteUpsertWithWhereUniqueWithoutSupervisorInput | SupervisionInviteUpsertWithWhereUniqueWithoutSupervisorInput[]
+    createMany?: SupervisionInviteCreateManySupervisorInputEnvelope
+    set?: SupervisionInviteWhereUniqueInput | SupervisionInviteWhereUniqueInput[]
+    disconnect?: SupervisionInviteWhereUniqueInput | SupervisionInviteWhereUniqueInput[]
+    delete?: SupervisionInviteWhereUniqueInput | SupervisionInviteWhereUniqueInput[]
+    connect?: SupervisionInviteWhereUniqueInput | SupervisionInviteWhereUniqueInput[]
+    update?: SupervisionInviteUpdateWithWhereUniqueWithoutSupervisorInput | SupervisionInviteUpdateWithWhereUniqueWithoutSupervisorInput[]
+    updateMany?: SupervisionInviteUpdateManyWithWhereWithoutSupervisorInput | SupervisionInviteUpdateManyWithWhereWithoutSupervisorInput[]
+    deleteMany?: SupervisionInviteScalarWhereInput | SupervisionInviteScalarWhereInput[]
+  }
+
   export type ProfileUncheckedUpdateOneWithoutUserNestedInput = {
     create?: XOR<ProfileCreateWithoutUserInput, ProfileUncheckedCreateWithoutUserInput>
     connectOrCreate?: ProfileCreateOrConnectWithoutUserInput
@@ -13117,6 +14471,20 @@ export namespace Prisma {
     deleteMany?: BookingScalarWhereInput | BookingScalarWhereInput[]
   }
 
+  export type SupervisionInviteUncheckedUpdateManyWithoutSupervisorNestedInput = {
+    create?: XOR<SupervisionInviteCreateWithoutSupervisorInput, SupervisionInviteUncheckedCreateWithoutSupervisorInput> | SupervisionInviteCreateWithoutSupervisorInput[] | SupervisionInviteUncheckedCreateWithoutSupervisorInput[]
+    connectOrCreate?: SupervisionInviteCreateOrConnectWithoutSupervisorInput | SupervisionInviteCreateOrConnectWithoutSupervisorInput[]
+    upsert?: SupervisionInviteUpsertWithWhereUniqueWithoutSupervisorInput | SupervisionInviteUpsertWithWhereUniqueWithoutSupervisorInput[]
+    createMany?: SupervisionInviteCreateManySupervisorInputEnvelope
+    set?: SupervisionInviteWhereUniqueInput | SupervisionInviteWhereUniqueInput[]
+    disconnect?: SupervisionInviteWhereUniqueInput | SupervisionInviteWhereUniqueInput[]
+    delete?: SupervisionInviteWhereUniqueInput | SupervisionInviteWhereUniqueInput[]
+    connect?: SupervisionInviteWhereUniqueInput | SupervisionInviteWhereUniqueInput[]
+    update?: SupervisionInviteUpdateWithWhereUniqueWithoutSupervisorInput | SupervisionInviteUpdateWithWhereUniqueWithoutSupervisorInput[]
+    updateMany?: SupervisionInviteUpdateManyWithWhereWithoutSupervisorInput | SupervisionInviteUpdateManyWithWhereWithoutSupervisorInput[]
+    deleteMany?: SupervisionInviteScalarWhereInput | SupervisionInviteScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutSupervisedClientsInput = {
     create?: XOR<UserCreateWithoutSupervisedClientsInput, UserUncheckedCreateWithoutSupervisedClientsInput>
     connectOrCreate?: UserCreateOrConnectWithoutSupervisedClientsInput
@@ -13145,6 +14513,24 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSupervisorRefInput, UserUpdateWithoutSupervisorRefInput>, UserUncheckedUpdateWithoutSupervisorRefInput>
   }
 
+  export type UserCreateNestedOneWithoutSentInvitesInput = {
+    create?: XOR<UserCreateWithoutSentInvitesInput, UserUncheckedCreateWithoutSentInvitesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSentInvitesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
+  export type UserUpdateOneRequiredWithoutSentInvitesNestedInput = {
+    create?: XOR<UserCreateWithoutSentInvitesInput, UserUncheckedCreateWithoutSentInvitesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSentInvitesInput
+    upsert?: UserUpsertWithoutSentInvitesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSentInvitesInput, UserUpdateWithoutSentInvitesInput>, UserUncheckedUpdateWithoutSentInvitesInput>
+  }
+
   export type UserCreateNestedOneWithoutProfileInput = {
     create?: XOR<UserCreateWithoutProfileInput, UserUncheckedCreateWithoutProfileInput>
     connectOrCreate?: UserCreateOrConnectWithoutProfileInput
@@ -13161,10 +14547,6 @@ export namespace Prisma {
     create?: XOR<CompanionProfileCreateWithoutProfileInput, CompanionProfileUncheckedCreateWithoutProfileInput>
     connectOrCreate?: CompanionProfileCreateOrConnectWithoutProfileInput
     connect?: CompanionProfileWhereUniqueInput
-  }
-
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
   }
 
   export type UserUpdateOneRequiredWithoutProfileNestedInput = {
@@ -13909,6 +15291,38 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type SupervisionInviteCreateWithoutSupervisorInput = {
+    id?: string
+    clientName: string
+    clientEmail?: string | null
+    clientId?: string | null
+    token: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SupervisionInviteUncheckedCreateWithoutSupervisorInput = {
+    id?: string
+    clientName: string
+    clientEmail?: string | null
+    clientId?: string | null
+    token: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SupervisionInviteCreateOrConnectWithoutSupervisorInput = {
+    where: SupervisionInviteWhereUniqueInput
+    create: XOR<SupervisionInviteCreateWithoutSupervisorInput, SupervisionInviteUncheckedCreateWithoutSupervisorInput>
+  }
+
+  export type SupervisionInviteCreateManySupervisorInputEnvelope = {
+    data: SupervisionInviteCreateManySupervisorInput | SupervisionInviteCreateManySupervisorInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ProfileUpsertWithoutUserInput = {
     update: XOR<ProfileUpdateWithoutUserInput, ProfileUncheckedUpdateWithoutUserInput>
     create: XOR<ProfileCreateWithoutUserInput, ProfileUncheckedCreateWithoutUserInput>
@@ -14047,6 +15461,37 @@ export namespace Prisma {
     data: XOR<BookingUpdateManyMutationInput, BookingUncheckedUpdateManyWithoutBookedByInput>
   }
 
+  export type SupervisionInviteUpsertWithWhereUniqueWithoutSupervisorInput = {
+    where: SupervisionInviteWhereUniqueInput
+    update: XOR<SupervisionInviteUpdateWithoutSupervisorInput, SupervisionInviteUncheckedUpdateWithoutSupervisorInput>
+    create: XOR<SupervisionInviteCreateWithoutSupervisorInput, SupervisionInviteUncheckedCreateWithoutSupervisorInput>
+  }
+
+  export type SupervisionInviteUpdateWithWhereUniqueWithoutSupervisorInput = {
+    where: SupervisionInviteWhereUniqueInput
+    data: XOR<SupervisionInviteUpdateWithoutSupervisorInput, SupervisionInviteUncheckedUpdateWithoutSupervisorInput>
+  }
+
+  export type SupervisionInviteUpdateManyWithWhereWithoutSupervisorInput = {
+    where: SupervisionInviteScalarWhereInput
+    data: XOR<SupervisionInviteUpdateManyMutationInput, SupervisionInviteUncheckedUpdateManyWithoutSupervisorInput>
+  }
+
+  export type SupervisionInviteScalarWhereInput = {
+    AND?: SupervisionInviteScalarWhereInput | SupervisionInviteScalarWhereInput[]
+    OR?: SupervisionInviteScalarWhereInput[]
+    NOT?: SupervisionInviteScalarWhereInput | SupervisionInviteScalarWhereInput[]
+    id?: StringFilter<"SupervisionInvite"> | string
+    supervisorId?: StringFilter<"SupervisionInvite"> | string
+    clientName?: StringFilter<"SupervisionInvite"> | string
+    clientEmail?: StringNullableFilter<"SupervisionInvite"> | string | null
+    clientId?: StringNullableFilter<"SupervisionInvite"> | string | null
+    token?: StringFilter<"SupervisionInvite"> | string
+    status?: StringFilter<"SupervisionInvite"> | string
+    createdAt?: DateTimeFilter<"SupervisionInvite"> | Date | string
+    updatedAt?: DateTimeFilter<"SupervisionInvite"> | Date | string
+  }
+
   export type UserCreateWithoutSupervisedClientsInput = {
     id?: string
     email: string
@@ -14057,6 +15502,7 @@ export namespace Prisma {
     bookings?: BookingCreateNestedManyWithoutClientInput
     supervisorRef?: SupervisionCreateNestedOneWithoutClientInput
     bookedBookings?: BookingCreateNestedManyWithoutBookedByInput
+    sentInvites?: SupervisionInviteCreateNestedManyWithoutSupervisorInput
   }
 
   export type UserUncheckedCreateWithoutSupervisedClientsInput = {
@@ -14069,6 +15515,7 @@ export namespace Prisma {
     bookings?: BookingUncheckedCreateNestedManyWithoutClientInput
     supervisorRef?: SupervisionUncheckedCreateNestedOneWithoutClientInput
     bookedBookings?: BookingUncheckedCreateNestedManyWithoutBookedByInput
+    sentInvites?: SupervisionInviteUncheckedCreateNestedManyWithoutSupervisorInput
   }
 
   export type UserCreateOrConnectWithoutSupervisedClientsInput = {
@@ -14086,6 +15533,7 @@ export namespace Prisma {
     bookings?: BookingCreateNestedManyWithoutClientInput
     supervisedClients?: SupervisionCreateNestedManyWithoutSupervisorInput
     bookedBookings?: BookingCreateNestedManyWithoutBookedByInput
+    sentInvites?: SupervisionInviteCreateNestedManyWithoutSupervisorInput
   }
 
   export type UserUncheckedCreateWithoutSupervisorRefInput = {
@@ -14098,6 +15546,7 @@ export namespace Prisma {
     bookings?: BookingUncheckedCreateNestedManyWithoutClientInput
     supervisedClients?: SupervisionUncheckedCreateNestedManyWithoutSupervisorInput
     bookedBookings?: BookingUncheckedCreateNestedManyWithoutBookedByInput
+    sentInvites?: SupervisionInviteUncheckedCreateNestedManyWithoutSupervisorInput
   }
 
   export type UserCreateOrConnectWithoutSupervisorRefInput = {
@@ -14126,6 +15575,7 @@ export namespace Prisma {
     bookings?: BookingUpdateManyWithoutClientNestedInput
     supervisorRef?: SupervisionUpdateOneWithoutClientNestedInput
     bookedBookings?: BookingUpdateManyWithoutBookedByNestedInput
+    sentInvites?: SupervisionInviteUpdateManyWithoutSupervisorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSupervisedClientsInput = {
@@ -14138,6 +15588,7 @@ export namespace Prisma {
     bookings?: BookingUncheckedUpdateManyWithoutClientNestedInput
     supervisorRef?: SupervisionUncheckedUpdateOneWithoutClientNestedInput
     bookedBookings?: BookingUncheckedUpdateManyWithoutBookedByNestedInput
+    sentInvites?: SupervisionInviteUncheckedUpdateManyWithoutSupervisorNestedInput
   }
 
   export type UserUpsertWithoutSupervisorRefInput = {
@@ -14161,6 +15612,7 @@ export namespace Prisma {
     bookings?: BookingUpdateManyWithoutClientNestedInput
     supervisedClients?: SupervisionUpdateManyWithoutSupervisorNestedInput
     bookedBookings?: BookingUpdateManyWithoutBookedByNestedInput
+    sentInvites?: SupervisionInviteUpdateManyWithoutSupervisorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSupervisorRefInput = {
@@ -14172,6 +15624,75 @@ export namespace Prisma {
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
     bookings?: BookingUncheckedUpdateManyWithoutClientNestedInput
     supervisedClients?: SupervisionUncheckedUpdateManyWithoutSupervisorNestedInput
+    bookedBookings?: BookingUncheckedUpdateManyWithoutBookedByNestedInput
+    sentInvites?: SupervisionInviteUncheckedUpdateManyWithoutSupervisorNestedInput
+  }
+
+  export type UserCreateWithoutSentInvitesInput = {
+    id?: string
+    email: string
+    role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    profile?: ProfileCreateNestedOneWithoutUserInput
+    bookings?: BookingCreateNestedManyWithoutClientInput
+    supervisedClients?: SupervisionCreateNestedManyWithoutSupervisorInput
+    supervisorRef?: SupervisionCreateNestedOneWithoutClientInput
+    bookedBookings?: BookingCreateNestedManyWithoutBookedByInput
+  }
+
+  export type UserUncheckedCreateWithoutSentInvitesInput = {
+    id?: string
+    email: string
+    role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
+    bookings?: BookingUncheckedCreateNestedManyWithoutClientInput
+    supervisedClients?: SupervisionUncheckedCreateNestedManyWithoutSupervisorInput
+    supervisorRef?: SupervisionUncheckedCreateNestedOneWithoutClientInput
+    bookedBookings?: BookingUncheckedCreateNestedManyWithoutBookedByInput
+  }
+
+  export type UserCreateOrConnectWithoutSentInvitesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSentInvitesInput, UserUncheckedCreateWithoutSentInvitesInput>
+  }
+
+  export type UserUpsertWithoutSentInvitesInput = {
+    update: XOR<UserUpdateWithoutSentInvitesInput, UserUncheckedUpdateWithoutSentInvitesInput>
+    create: XOR<UserCreateWithoutSentInvitesInput, UserUncheckedCreateWithoutSentInvitesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSentInvitesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSentInvitesInput, UserUncheckedUpdateWithoutSentInvitesInput>
+  }
+
+  export type UserUpdateWithoutSentInvitesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    profile?: ProfileUpdateOneWithoutUserNestedInput
+    bookings?: BookingUpdateManyWithoutClientNestedInput
+    supervisedClients?: SupervisionUpdateManyWithoutSupervisorNestedInput
+    supervisorRef?: SupervisionUpdateOneWithoutClientNestedInput
+    bookedBookings?: BookingUpdateManyWithoutBookedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSentInvitesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
+    bookings?: BookingUncheckedUpdateManyWithoutClientNestedInput
+    supervisedClients?: SupervisionUncheckedUpdateManyWithoutSupervisorNestedInput
+    supervisorRef?: SupervisionUncheckedUpdateOneWithoutClientNestedInput
     bookedBookings?: BookingUncheckedUpdateManyWithoutBookedByNestedInput
   }
 
@@ -14185,6 +15706,7 @@ export namespace Prisma {
     supervisedClients?: SupervisionCreateNestedManyWithoutSupervisorInput
     supervisorRef?: SupervisionCreateNestedOneWithoutClientInput
     bookedBookings?: BookingCreateNestedManyWithoutBookedByInput
+    sentInvites?: SupervisionInviteCreateNestedManyWithoutSupervisorInput
   }
 
   export type UserUncheckedCreateWithoutProfileInput = {
@@ -14197,6 +15719,7 @@ export namespace Prisma {
     supervisedClients?: SupervisionUncheckedCreateNestedManyWithoutSupervisorInput
     supervisorRef?: SupervisionUncheckedCreateNestedOneWithoutClientInput
     bookedBookings?: BookingUncheckedCreateNestedManyWithoutBookedByInput
+    sentInvites?: SupervisionInviteUncheckedCreateNestedManyWithoutSupervisorInput
   }
 
   export type UserCreateOrConnectWithoutProfileInput = {
@@ -14256,6 +15779,7 @@ export namespace Prisma {
     supervisedClients?: SupervisionUpdateManyWithoutSupervisorNestedInput
     supervisorRef?: SupervisionUpdateOneWithoutClientNestedInput
     bookedBookings?: BookingUpdateManyWithoutBookedByNestedInput
+    sentInvites?: SupervisionInviteUpdateManyWithoutSupervisorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProfileInput = {
@@ -14268,6 +15792,7 @@ export namespace Prisma {
     supervisedClients?: SupervisionUncheckedUpdateManyWithoutSupervisorNestedInput
     supervisorRef?: SupervisionUncheckedUpdateOneWithoutClientNestedInput
     bookedBookings?: BookingUncheckedUpdateManyWithoutBookedByNestedInput
+    sentInvites?: SupervisionInviteUncheckedUpdateManyWithoutSupervisorNestedInput
   }
 
   export type CompanionProfileUpsertWithoutProfileInput = {
@@ -14449,6 +15974,7 @@ export namespace Prisma {
     supervisedClients?: SupervisionCreateNestedManyWithoutSupervisorInput
     supervisorRef?: SupervisionCreateNestedOneWithoutClientInput
     bookedBookings?: BookingCreateNestedManyWithoutBookedByInput
+    sentInvites?: SupervisionInviteCreateNestedManyWithoutSupervisorInput
   }
 
   export type UserUncheckedCreateWithoutBookingsInput = {
@@ -14461,6 +15987,7 @@ export namespace Prisma {
     supervisedClients?: SupervisionUncheckedCreateNestedManyWithoutSupervisorInput
     supervisorRef?: SupervisionUncheckedCreateNestedOneWithoutClientInput
     bookedBookings?: BookingUncheckedCreateNestedManyWithoutBookedByInput
+    sentInvites?: SupervisionInviteUncheckedCreateNestedManyWithoutSupervisorInput
   }
 
   export type UserCreateOrConnectWithoutBookingsInput = {
@@ -14509,6 +16036,7 @@ export namespace Prisma {
     bookings?: BookingCreateNestedManyWithoutClientInput
     supervisedClients?: SupervisionCreateNestedManyWithoutSupervisorInput
     supervisorRef?: SupervisionCreateNestedOneWithoutClientInput
+    sentInvites?: SupervisionInviteCreateNestedManyWithoutSupervisorInput
   }
 
   export type UserUncheckedCreateWithoutBookedBookingsInput = {
@@ -14521,6 +16049,7 @@ export namespace Prisma {
     bookings?: BookingUncheckedCreateNestedManyWithoutClientInput
     supervisedClients?: SupervisionUncheckedCreateNestedManyWithoutSupervisorInput
     supervisorRef?: SupervisionUncheckedCreateNestedOneWithoutClientInput
+    sentInvites?: SupervisionInviteUncheckedCreateNestedManyWithoutSupervisorInput
   }
 
   export type UserCreateOrConnectWithoutBookedBookingsInput = {
@@ -14616,6 +16145,7 @@ export namespace Prisma {
     supervisedClients?: SupervisionUpdateManyWithoutSupervisorNestedInput
     supervisorRef?: SupervisionUpdateOneWithoutClientNestedInput
     bookedBookings?: BookingUpdateManyWithoutBookedByNestedInput
+    sentInvites?: SupervisionInviteUpdateManyWithoutSupervisorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBookingsInput = {
@@ -14628,6 +16158,7 @@ export namespace Prisma {
     supervisedClients?: SupervisionUncheckedUpdateManyWithoutSupervisorNestedInput
     supervisorRef?: SupervisionUncheckedUpdateOneWithoutClientNestedInput
     bookedBookings?: BookingUncheckedUpdateManyWithoutBookedByNestedInput
+    sentInvites?: SupervisionInviteUncheckedUpdateManyWithoutSupervisorNestedInput
   }
 
   export type CompanionProfileUpsertWithoutBookingsInput = {
@@ -14688,6 +16219,7 @@ export namespace Prisma {
     bookings?: BookingUpdateManyWithoutClientNestedInput
     supervisedClients?: SupervisionUpdateManyWithoutSupervisorNestedInput
     supervisorRef?: SupervisionUpdateOneWithoutClientNestedInput
+    sentInvites?: SupervisionInviteUpdateManyWithoutSupervisorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBookedBookingsInput = {
@@ -14700,6 +16232,7 @@ export namespace Prisma {
     bookings?: BookingUncheckedUpdateManyWithoutClientNestedInput
     supervisedClients?: SupervisionUncheckedUpdateManyWithoutSupervisorNestedInput
     supervisorRef?: SupervisionUncheckedUpdateOneWithoutClientNestedInput
+    sentInvites?: SupervisionInviteUncheckedUpdateManyWithoutSupervisorNestedInput
   }
 
   export type PaymentUpsertWithoutBookingInput = {
@@ -15168,6 +16701,17 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type SupervisionInviteCreateManySupervisorInput = {
+    id?: string
+    clientName: string
+    clientEmail?: string | null
+    clientId?: string | null
+    token: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type BookingUpdateWithoutClientInput = {
     id?: StringFieldUpdateOperationsInput | string
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
@@ -15278,6 +16822,39 @@ export namespace Prisma {
     address?: StringFieldUpdateOperationsInput | string
     scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
     disability?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SupervisionInviteUpdateWithoutSupervisorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clientName?: StringFieldUpdateOperationsInput | string
+    clientEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    clientId?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SupervisionInviteUncheckedUpdateWithoutSupervisorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clientName?: StringFieldUpdateOperationsInput | string
+    clientEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    clientId?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SupervisionInviteUncheckedUpdateManyWithoutSupervisorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clientName?: StringFieldUpdateOperationsInput | string
+    clientEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    clientId?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15397,6 +16974,10 @@ export namespace Prisma {
      * @deprecated Use SupervisionDefaultArgs instead
      */
     export type SupervisionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = SupervisionDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use SupervisionInviteDefaultArgs instead
+     */
+    export type SupervisionInviteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = SupervisionInviteDefaultArgs<ExtArgs>
     /**
      * @deprecated Use ProfileDefaultArgs instead
      */

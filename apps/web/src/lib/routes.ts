@@ -7,4 +7,8 @@ export const routes = {
   coordinacion: '/coordinacion',
   valoracion: '/valoracion',
   login: '/auth/login',
+  onboarding: '/onboarding',
+  onboardingSupervisor: '/onboarding/supervisor',
+  supervision: '/supervision',
+  supervisionAccept: '/supervision/accept',
 } as const;

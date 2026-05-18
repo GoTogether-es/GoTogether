@@ -397,3 +397,47 @@ export async function searchUsers(query: string, opts?: FetchOptions): Promise<U
   if (!response.ok) throw new Error('Failed to search users');
   return response.json();
 }
+
+export async function inviteSupervision(data: {
+  clientName: string;
+  clientEmail?: string;
+  clientId?: string;
+}): Promise<any> {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/supervision/invite`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.message || 'Failed to invite');
+  }
+  return response.json();
+}
+
+export async function acceptInvitation(token: string): Promise<any> {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/supervision/accept?token=${encodeURIComponent(token)}`, { headers });
+  return response.json();
+}
+
+export async function getPendingInvites(): Promise<any[]> {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/supervision/invites`, { headers });
+  if (!response.ok) throw new Error('Failed to fetch pending invites');
+  return response.json();
+}
+
+export async function cancelInvitation(id: string): Promise<any> {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/supervision/invite/${id}`, {
+    method: 'DELETE',
+    headers,
+  });
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.message || 'Failed to cancel invitation');
+  }
+  return response.json();
+}

@@ -31,7 +31,7 @@ export default function VerifyPage() {
         });
 
         if (!error) {
-          router.push('/perfil?onboarding=true');
+          router.push('/onboarding');
           return;
         } else {
           console.error('Error de sesión:', error);
@@ -44,7 +44,7 @@ export default function VerifyPage() {
 
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        router.push('/perfil?onboarding=true');
+        router.push('/onboarding');
         return;
       }
 
@@ -55,7 +55,7 @@ export default function VerifyPage() {
           setStatus('No se ha detectado sesión.');
           timeout = setTimeout(() => router.push('/auth/login?error=timeout'), 2000);
         } else {
-          router.push('/perfil?onboarding=true');
+          router.push('/onboarding');
         }
       }, 3000);
     }

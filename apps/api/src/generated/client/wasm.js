@@ -137,6 +137,18 @@ exports.Prisma.SupervisionScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.SupervisionInviteScalarFieldEnum = {
+  id: 'id',
+  supervisorId: 'supervisorId',
+  clientName: 'clientName',
+  clientEmail: 'clientEmail',
+  clientId: 'clientId',
+  token: 'token',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.ProfileScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -249,6 +261,7 @@ exports.BookingStatus = exports.$Enums.BookingStatus = {
 exports.Prisma.ModelName = {
   User: 'User',
   Supervision: 'Supervision',
+  SupervisionInvite: 'SupervisionInvite',
   Profile: 'Profile',
   CompanionProfile: 'CompanionProfile',
   Booking: 'Booking',
