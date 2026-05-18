@@ -37,12 +37,20 @@ export function AvatarUpload({ avatarUrl, onUploaded, readOnly }: AvatarUploadPr
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) throw new Error('No estás autenticado');
 
-      const ext = file.name.split('.').pop() || 'jpg';
-      const key = `${session.user.id}/${Date.now()}.${ext}`;
+      const ext = file.name.split('.').pop()?.toLowerCase();
+      const mimeMap: Record<string, string> = {
+        jpg: 'image/jpeg',
+        jpeg: 'image/jpeg',
+        png: 'image/png',
+        webp: 'image/webp',
+      };
+      const contentType = file.type || mimeMap[ext || ''] || 'image/jpeg';
+
+      const key = `${session.user.id}/${Date.now()}.${ext || 'jpg'}`;
 
       const { error: uploadError } = await supabase.storage
         .from('avatars')
-        .upload(key, file, { contentType: file.type, upsert: true });
+        .upload(key, file, { contentType, upsert: true });
 
       if (uploadError) throw new Error(uploadError.message || 'Error al subir la imagen');
 

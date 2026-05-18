@@ -35,9 +35,19 @@ export function FileUpload({ onUploaded, accept, label, helper, uploadedUrl }: F
       const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
       const key = `${Date.now()}-${safeName}`;
 
+      const ext = file.name.split('.').pop()?.toLowerCase();
+      const mimeMap: Record<string, string> = {
+        pdf: 'application/pdf',
+        jpg: 'image/jpeg',
+        jpeg: 'image/jpeg',
+        png: 'image/png',
+        webp: 'image/webp',
+      };
+      const contentType = file.type || mimeMap[ext || ''] || 'application/octet-stream';
+
       const { error: uploadError } = await supabase.storage
         .from('certificates')
-        .upload(key, file, { contentType: file.type, upsert: true });
+        .upload(key, file, { contentType, upsert: true });
 
       if (uploadError) throw new Error(uploadError.message || 'Error al subir el archivo');
 
