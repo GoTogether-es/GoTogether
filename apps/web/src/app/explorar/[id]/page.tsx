@@ -1,12 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Button, Card, Container, Section } from '@gotogether/ui';
-import { ShieldCheck, Star, MapPin, Phone, Calendar, CheckCircle } from 'lucide-react';
-import { getCompanionById } from '@/services/api';
-import { CompanionDetail } from '@/types';
+import { ShieldCheck, Star, Calendar, CheckCircle } from 'lucide-react';
+import { useCompanion } from '@/services/queries';
 import { SkeletonText, SkeletonAvatar } from '@/components/skeleton';
 
 export default function CompanionDetailPage() {
@@ -14,23 +12,9 @@ export default function CompanionDetailPage() {
   const router = useRouter();
   const id = params.id as string;
 
-  const [companion, setCompanion] = useState<CompanionDetail | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const { data: companion, isLoading, isError } = useCompanion(id);
 
-  useEffect(() => {
-    getCompanionById(id)
-      .then((data) => {
-        setCompanion(data);
-      })
-      .catch((err) => {
-        console.error(err);
-        setError(true);
-      })
-      .finally(() => setLoading(false));
-  }, [id]);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <Section>
         <Container>
@@ -57,7 +41,7 @@ export default function CompanionDetailPage() {
     );
   }
 
-  if (error || !companion) {
+  if (isError || !companion) {
     return (
       <Section>
         <Container>

@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Container, Section } from '@gotogether/ui';
 import { Search, SlidersHorizontal } from 'lucide-react';
-import { CompanionCard, CompanionSummary } from '@/components/companion-card';
-import { getRecommendations } from '@/services/api';
+import { CompanionCard } from '@/components/companion-card';
+import { useRecommendations } from '@/services/queries';
 import { SkeletonCard } from '@/components/skeleton';
+import type { CompanionSummary } from '@/types';
 
 const DISABILITY_OPTIONS = [
   'Movilidad reducida',
@@ -15,16 +16,12 @@ const DISABILITY_OPTIONS = [
 ];
 
 export default function ExplorarPage() {
-  const [companions, setCompanions] = useState<CompanionSummary[]>([]);
-  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [disabilityType, setDisabilityType] = useState('');
   const [verifiedOnly, setVerifiedOnly] = useState(false);
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
-  const [error, setError] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout>>();
 
   useEffect(() => {
@@ -36,31 +33,16 @@ export default function ExplorarPage() {
     };
   }, [search]);
 
-  const fetchCompanions = useCallback(async () => {
-    setLoading(true);
-    setError(false);
-    try {
-      const result = await getRecommendations({
-        search: debouncedSearch || undefined,
-        disabilityType: disabilityType || undefined,
-        verified: verifiedOnly || undefined,
-        page,
-        limit: 9,
-      });
-      setCompanions(result.data || []);
-      setTotalPages(result.meta?.totalPages || 1);
-    } catch (err) {
-      console.error(err);
-      setError(true);
-      setCompanions([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [debouncedSearch, disabilityType, verifiedOnly, page]);
+  const { data, isLoading, isError, refetch, isPlaceholderData } = useRecommendations({
+    search: debouncedSearch || undefined,
+    disabilityType: disabilityType || undefined,
+    verified: verifiedOnly || undefined,
+    page,
+    limit: 9,
+  });
 
-  useEffect(() => {
-    fetchCompanions();
-  }, [fetchCompanions]);
+  const companions: CompanionSummary[] = data?.data ?? [];
+  const totalPages = data?.meta?.totalPages ?? 1;
 
   return (
     <Section>
@@ -127,20 +109,17 @@ export default function ExplorarPage() {
             </div>
           )}
 
-          {loading ? (
+          {isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {Array.from({ length: 6 }).map((_, i) => (
                 <SkeletonCard key={i} />
               ))}
             </div>
-          ) : error ? (
+          ) : isError ? (
             <div className="text-center py-20">
               <p className="text-gray-500 text-lg mb-2">Error al cargar acompañantes</p>
               <p className="text-gray-400 mb-4">No se pudo conectar con el servidor.</p>
-              <button
-                onClick={fetchCompanions}
-                className="gt-button gt-button--primary"
-              >
+              <button onClick={() => refetch()} className="gt-button gt-button--primary">
                 Reintentar
               </button>
             </div>
@@ -151,7 +130,7 @@ export default function ExplorarPage() {
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" style={{ opacity: isPlaceholderData ? 0.6 : 1 }}>
                 {companions.map((companion) => (
                   <CompanionCard key={companion.id} {...companion} />
                 ))}

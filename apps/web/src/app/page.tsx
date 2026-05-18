@@ -38,8 +38,8 @@ export default function HomePage() {
               <Card className="relative p-6 border-0 shadow-2xl bg-white/5 backdrop-blur-sm ring-1 ring-white/10">
                 <div className="relative w-full h-[400px]">
                   <Image
-                    src={sampleCompanion.image || ''}
-                    alt={sampleCompanion.alt || 'Acompañante'}
+                    src={sampleCompanion.profile.avatarUrl || ''}
+                    alt={`Foto de ${sampleCompanion.profile.fullName}`}
                     fill
                     className="object-cover rounded-2xl shadow-inner"
                   />
@@ -47,12 +47,12 @@ export default function HomePage() {
                 <div className="mt-6 p-4 bg-white rounded-xl shadow-lg">
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="text-xl font-bold text-gray-900">{sampleCompanion.name}</h3>
-                      <p className="text-gray-500 mt-1">{sampleCompanion.bio}</p>
+                      <h3 className="text-xl font-bold text-gray-900">{sampleCompanion.profile.fullName}</h3>
+                      <p className="text-gray-500 mt-1">{sampleCompanion.profile.bio}</p>
                     </div>
                     <div className="flex items-center gap-1 bg-yellow-50 text-yellow-700 px-2 py-1 rounded-lg text-sm font-bold">
                       <Star className="w-4 h-4 fill-yellow-400 border-none" />
-                      4.9
+                      {sampleCompanion.rating.toFixed(1)}
                     </div>
                   </div>
                   <div className="flex gap-3 mt-4">

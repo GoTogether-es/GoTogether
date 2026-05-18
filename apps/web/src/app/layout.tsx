@@ -1,6 +1,7 @@
 import './globals.css';
 import { baseMetadata } from '@/lib/metadata';
 import { AppShell } from '@/components/app-shell';
+import { QueryProvider } from '@/services/query-provider';
 import { Toaster } from 'sonner';
 
 export const metadata = baseMetadata;
@@ -21,8 +22,10 @@ export default function RootLayout({
         <link rel="stylesheet" href={fontUrl} />
       </head>
       <body>
-        <AppShell>{children}</AppShell>
-        <Toaster position="top-right" richColors closeButton />
+        <QueryProvider>
+          <AppShell>{children}</AppShell>
+          <Toaster position="top-right" richColors closeButton />
+        </QueryProvider>
       </body>
     </html>
   );

@@ -1,33 +1,43 @@
 import { env } from '@/lib/env';
 import { createClient } from '@/lib/supabase/client';
+import type {
+  UserProfile,
+  CompanionSummary,
+  CompanionDetail,
+  BookingData,
+  ChatRoomData,
+  ReportData,
+  SupervisionData,
+  SupervisorData,
+  UserSearchResult,
+  PaginatedResponse,
+  HealthStatus,
+} from '@/types';
 
 const API_URL = env.apiUrl;
 
 async function getAuthHeaders(): Promise<Record<string, string>> {
   const supabase = createClient();
   const { data: { session } } = await supabase.auth.getSession();
-  
+
   if (!session) return {};
-  
+
   return {
     'Authorization': `Bearer ${session.access_token}`,
     'Content-Type': 'application/json',
   };
 }
 
-export async function requestMagicLink(email: string) {
+export async function requestMagicLink(email: string): Promise<void> {
   const response = await fetch(`${API_URL}/auth/magic-link`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email }),
   });
-  if (!response.ok) {
-    throw new Error('Failed to request magic link');
-  }
-  return response.json();
+  if (!response.ok) throw new Error('Failed to request magic link');
 }
 
-export async function getProfile() {
+export async function getProfile(): Promise<UserProfile | null> {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/profiles/me`, { headers });
   if (!response.ok) {
@@ -37,16 +47,14 @@ export async function getProfile() {
   return response.json();
 }
 
-export async function upsertProfile(data: any) {
+export async function upsertProfile(data: Record<string, unknown>): Promise<UserProfile> {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/profiles/me`, {
     method: 'PUT',
     headers,
     body: JSON.stringify(data),
   });
-  if (!response.ok) {
-    throw new Error('Failed to update profile');
-  }
+  if (!response.ok) throw new Error('Failed to update profile');
   return response.json();
 }
 
@@ -56,7 +64,7 @@ export async function createBooking(data: {
   scheduledAt: string;
   summary?: string;
   disability?: string;
-}) {
+}): Promise<BookingData> {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/bookings`, {
     method: 'POST',
@@ -70,37 +78,34 @@ export async function createBooking(data: {
   return response.json();
 }
 
-export async function requestBooking(bookingId: string) {
+export async function requestBooking(bookingId: string): Promise<BookingData> {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/bookings/${bookingId}/request`, {
     method: 'PUT',
     headers,
   });
-  if (!response.ok) {
-    throw new Error('Failed to request booking');
-  }
+  if (!response.ok) throw new Error('Failed to request booking');
   return response.json();
 }
 
-export async function getMyBookings() {
+export async function getMyBookings(): Promise<BookingData[]> {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/bookings/me`, { headers });
-  if (!response.ok) {
-    throw new Error('Failed to fetch bookings');
-  }
+  if (!response.ok) throw new Error('Failed to fetch bookings');
   return response.json();
 }
 
-export async function getBooking(id: string) {
+export async function getBooking(id: string): Promise<BookingData> {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/bookings/${id}`, { headers });
-  if (!response.ok) {
-    throw new Error('Failed to fetch booking');
-  }
+  if (!response.ok) throw new Error('Failed to fetch booking');
   return response.json();
 }
 
-export async function updateBookingStatus(id: string, status: string) {
+export async function updateBookingStatus(
+  id: string,
+  status: string,
+): Promise<BookingData> {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/bookings/${id}/status`, {
     method: 'PUT',
@@ -114,19 +119,15 @@ export async function updateBookingStatus(id: string, status: string) {
   return response.json();
 }
 
-export async function getCompanions() {
+export async function getCompanions(): Promise<CompanionSummary[]> {
   const response = await fetch(`${API_URL}/profiles/companions`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch companions');
-  }
+  if (!response.ok) throw new Error('Failed to fetch companions');
   return response.json();
 }
 
-export async function getCompanionById(id: string) {
+export async function getCompanionById(id: string): Promise<CompanionDetail> {
   const response = await fetch(`${API_URL}/profiles/companions/${id}`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch companion');
-  }
+  if (!response.ok) throw new Error('Failed to fetch companion');
   return response.json();
 }
 
@@ -137,7 +138,7 @@ export async function getRecommendations(params: {
   verified?: boolean;
   page?: number;
   limit?: number;
-} = {}) {
+} = {}): Promise<PaginatedResponse<CompanionSummary>> {
   const query = new URLSearchParams();
   if (params.search) query.set('search', params.search);
   if (params.disabilityType) query.set('disabilityType', params.disabilityType);
@@ -147,18 +148,14 @@ export async function getRecommendations(params: {
   if (params.limit) query.set('limit', String(params.limit));
 
   const response = await fetch(`${API_URL}/matching/recommendations?${query.toString()}`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch recommendations');
-  }
+  if (!response.ok) throw new Error('Failed to fetch recommendations');
   return response.json();
 }
 
-export async function getChatRoom(bookingId: string) {
+export async function getChatRoom(bookingId: string): Promise<ChatRoomData> {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/chat/room/${bookingId}`, { headers });
-  if (!response.ok) {
-    throw new Error('Failed to fetch chat room');
-  }
+  if (!response.ok) throw new Error('Failed to fetch chat room');
   return response.json();
 }
 
@@ -168,20 +165,22 @@ export async function getAccessToken(): Promise<string | null> {
   return session?.access_token || null;
 }
 
-export async function logout() {
+export async function logout(): Promise<void> {
   const headers = await getAuthHeaders();
   const supabase = createClient();
   await supabase.auth.signOut();
-  const response = await fetch(`${API_URL}/auth/logout`, {
+  await fetch(`${API_URL}/auth/logout`, {
     method: 'POST',
     headers,
-  });
-  if (!response.ok) {
+  }).catch(() => {
     console.warn('Server logout failed, local signOut completed');
-  }
+  });
 }
 
-export async function createReport(bookingId: string, data: { rating: number; summary?: string }) {
+export async function createReport(
+  bookingId: string,
+  data: { rating: number; summary?: string },
+): Promise<ReportData> {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/reports/${bookingId}`, {
     method: 'POST',
@@ -195,7 +194,7 @@ export async function createReport(bookingId: string, data: { rating: number; su
   return response.json();
 }
 
-export async function getReportByBooking(bookingId: string) {
+export async function getReportByBooking(bookingId: string): Promise<ReportData | null> {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/reports/booking/${bookingId}`, { headers });
   if (!response.ok) {
@@ -205,15 +204,13 @@ export async function getReportByBooking(bookingId: string) {
   return response.json();
 }
 
-export async function getHealth() {
+export async function getHealth(): Promise<HealthStatus> {
   const response = await fetch(`${API_URL}/health`);
-  if (!response.ok) {
-    throw new Error('API error');
-  }
-  return response.json() as Promise<{ status: string }>;
+  if (!response.ok) throw new Error('API error');
+  return response.json();
 }
 
-export async function createSupervision(clientId: string) {
+export async function createSupervision(clientId: string): Promise<SupervisionData> {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/supervision`, {
     method: 'POST',
@@ -227,14 +224,14 @@ export async function createSupervision(clientId: string) {
   return response.json();
 }
 
-export async function getMyClients() {
+export async function getMyClients(): Promise<SupervisionData[]> {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/supervision/clients`, { headers });
   if (!response.ok) throw new Error('Failed to fetch clients');
   return response.json();
 }
 
-export async function getMySupervisor() {
+export async function getMySupervisor(): Promise<SupervisorData> {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/supervision/supervisor`, { headers });
   if (!response.ok) {
@@ -244,7 +241,7 @@ export async function getMySupervisor() {
   return response.json();
 }
 
-export async function removeSupervision(id: string) {
+export async function removeSupervision(id: string): Promise<void> {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/supervision/${id}`, {
     method: 'DELETE',
@@ -254,15 +251,11 @@ export async function removeSupervision(id: string) {
     const err = await response.json().catch(() => ({}));
     throw new Error(err.message || 'Failed to remove supervision');
   }
-  return response.json();
 }
 
-export async function searchUsers(query: string) {
+export async function searchUsers(query: string): Promise<UserSearchResult[]> {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/users?search=${encodeURIComponent(query)}`, { headers });
-  if (!response.ok) {
-    throw new Error('Failed to search users');
-  }
-  return response.json() as Promise<{ id: string; email: string; profile?: { fullName: string } }[]>;
+  if (!response.ok) throw new Error('Failed to search users');
+  return response.json();
 }
-

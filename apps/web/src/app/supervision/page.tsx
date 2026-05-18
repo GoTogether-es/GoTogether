@@ -4,36 +4,19 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import { toast } from 'sonner';
 import { Button, Card, Container, Section } from '@gotogether/ui';
 import { Users, UserPlus, Trash2, Loader2, Search } from 'lucide-react';
-import { getMyClients, getMySupervisor, createSupervision, removeSupervision, searchUsers } from '@/services/api';
+import { useMyClients, useMySupervisor, useCreateSupervision, useRemoveSupervision, useSearchUsers } from '@/services/queries';
 
 export default function SupervisionPage() {
-  const [clients, setClients] = useState<any[]>([]);
-  const [supervisor, setSupervisor] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<any[]>([]);
-  const [searching, setSearching] = useState(false);
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [selectedUser, setSelectedUser] = useState<any>(null);
-  const [linking, setLinking] = useState(false);
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
-  const load = async () => {
-    try {
-      const [clientsData, supervisorData] = await Promise.all([
-        getMyClients().catch(() => []),
-        getMySupervisor(),
-      ]);
-      setClients(clientsData);
-      setSupervisor(supervisorData);
-    } catch {
-      toast.error('Error al cargar los datos');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => { load(); }, []);
+  const { data: clients = [], isLoading, refetch } = useMyClients();
+  const { data: supervisor } = useMySupervisor();
+  const { data: searchResults = [], isLoading: searching } = useSearchUsers(debouncedSearch);
+  const createMutation = useCreateSupervision();
+  const removeMutation = useRemoveSupervision();
 
   const handleSearch = useCallback((query: string) => {
     setSearchQuery(query);
@@ -41,58 +24,40 @@ export default function SupervisionPage() {
 
     if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
 
-    if (!query.trim()) {
-      setSearchResults([]);
-      return;
-    }
-
-    searchTimeoutRef.current = setTimeout(async () => {
-      setSearching(true);
-      try {
-        const results = await searchUsers(query);
-        setSearchResults(results.slice(0, 5));
-      } catch {
-        setSearchResults([]);
-      } finally {
-        setSearching(false);
-      }
+    searchTimeoutRef.current = setTimeout(() => {
+      setDebouncedSearch(query);
     }, 300);
   }, []);
 
   const handleSelectUser = (user: any) => {
     setSelectedUser(user);
     setSearchQuery(user.profile?.fullName || user.email);
-    setSearchResults([]);
   };
 
   const onAdd = async () => {
     if (!selectedUser) return;
-    setLinking(true);
     try {
-      await createSupervision(selectedUser.id);
+      await createMutation.mutateAsync(selectedUser.id);
       toast.success('Cliente vinculado correctamente');
       setSearchQuery('');
       setSelectedUser(null);
-      setSearchResults([]);
-      load();
+      refetch();
     } catch (err: any) {
       toast.error(err.message || 'Error al vincular cliente');
-    } finally {
-      setLinking(false);
     }
   };
 
   const onRemove = async (id: string) => {
     try {
-      await removeSupervision(id);
+      await removeMutation.mutateAsync(id);
       toast.success('Vínculo eliminado');
-      load();
+      refetch();
     } catch (err: any) {
       toast.error(err.message || 'Error al eliminar vínculo');
     }
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <Section>
         <Container>
@@ -133,7 +98,7 @@ export default function SupervisionPage() {
                       onChange={(e) => handleSearch(e.target.value)}
                     />
                   </div>
-                  <Button variant="primary" className="shrink-0" onClick={onAdd} disabled={linking || !selectedUser} aria-label="Agregar a supervisados">
+                  <Button variant="primary" className="shrink-0" onClick={onAdd} disabled={createMutation.isPending || !selectedUser} aria-label="Agregar a supervisados">
                     <UserPlus className="w-4 h-4" aria-hidden="true" />
                   </Button>
                 </div>
@@ -143,9 +108,9 @@ export default function SupervisionPage() {
                     Buscando...
                   </p>
                 )}
-                {!searching && searchResults.length > 0 && !selectedUser && (
+                {!searching && searchResults.length > 0 && !selectedUser && debouncedSearch && (
                   <div className="border border-gray-200 rounded-xl overflow-hidden mt-1">
-                    {searchResults.map((user) => (
+                    {searchResults.slice(0, 5).map((user: any) => (
                       <button
                         key={user.id}
                         type="button"

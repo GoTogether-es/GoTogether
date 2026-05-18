@@ -1,11 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { Button, Card, Container, Section } from '@gotogether/ui';
 import { ShieldCheck, Calendar, MapPin, Briefcase, Clock, MessageSquare, Star } from 'lucide-react';
-import { getMyBookings } from '@/services/api';
+import { useMyBookings } from '@/services/queries';
 import { LinkButton } from '@/components/link-button';
-import Link from 'next/link';
 import { SkeletonBookingCard } from '@/components/skeleton';
 
 const STATUS_LABELS: Record<string, string> = {
@@ -29,18 +27,9 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 export default function ReservasPage() {
-  const [bookings, setBookings] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const { data: bookings = [], isLoading, isError, refetch } = useMyBookings();
 
-  useEffect(() => {
-    getMyBookings()
-      .then(setBookings)
-      .catch(() => setError(true))
-      .finally(() => setLoading(false));
-  }, []);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <Section>
         <Container>
@@ -60,13 +49,13 @@ export default function ReservasPage() {
     );
   }
 
-  if (error) {
+  if (isError) {
     return (
       <Section>
         <Container>
           <div className="max-w-5xl mx-auto text-center py-20">
             <p className="text-red-500 text-lg mb-4">Error al cargar las reservas</p>
-            <Button variant="primary" onClick={() => window.location.reload()}>
+            <Button variant="primary" onClick={() => refetch()}>
               Reintentar
             </Button>
           </div>

@@ -5,20 +5,9 @@ import { ShieldCheck, Star } from 'lucide-react';
 import Image from 'next/image';
 import { LinkButton } from '@/components/link-button';
 import { routes } from '@/lib/routes';
+import type { CompanionSummary } from '@/types';
 
-export interface CompanionSummary {
-  id: string;
-  profile: {
-    fullName: string;
-    headline?: string | null;
-    bio?: string | null;
-    avatarUrl?: string | null;
-  };
-  specialties: string | null;
-  rating: number;
-  yearsOnPlatform: number;
-  verified: boolean;
-}
+export type { CompanionSummary };
 
 export function CompanionCard({
   id,
