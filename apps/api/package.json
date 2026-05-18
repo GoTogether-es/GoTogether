@@ -1,6 +1,6 @@
 {
   "name": "@gotogether/api",
-  "version": "0.1.0-alpha.24",
+  "version": "0.1.0-alpha.25",
   "private": true,
   "scripts": {
     "dev": "tsx watch src/main.ts",
@@ -13,8 +13,6 @@
     "test": "jest"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.636.0",
-    "@aws-sdk/s3-request-presigner": "^3.636.0",
     "@gotogether/shared": "workspace:*",
     "@nestjs/common": "^10.4.2",
     "@nestjs/config": "^3.2.3",

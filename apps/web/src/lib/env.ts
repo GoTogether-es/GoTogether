@@ -1,5 +1,5 @@
 export const env = {
   appUrl: process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000',
   apiUrl: process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000',
-  r2PublicBaseUrl: process.env.NEXT_PUBLIC_R2_PUBLIC_BASE_URL ?? '',
+  supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL ?? '',
 };

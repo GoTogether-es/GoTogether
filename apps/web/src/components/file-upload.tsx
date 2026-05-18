@@ -57,10 +57,9 @@ export function FileUpload({ onUploaded, accept, label, helper, uploadedUrl }: F
         headers: { 'Content-Type': file.type },
       });
 
-      if (!uploadRes.ok) throw new Error('Error al subir el archivo a Cloudflare R2');
+      if (!uploadRes.ok) throw new Error('Error al subir el archivo');
 
-      const publicBase = env.r2PublicBaseUrl;
-      const publicUrl = publicBase ? `${publicBase}/${key}` : presignedUrl.split('?')[0];
+      const publicUrl = `${env.supabaseUrl}/storage/v1/object/public/certificates/${key}`;
       onUploaded(publicUrl);
       setDone(true);
     } catch (err: any) {
