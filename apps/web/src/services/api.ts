@@ -48,6 +48,7 @@ const profileSchema = z.object({
   headline: z.string().nullable(),
   bio: z.string().nullable(),
   phone: z.string().nullable(),
+  avatarUrl: z.string().nullable(),
   disabilityType: z.string().nullable(),
   disabilityDescription: z.string().nullable(),
   disabilityDocument: z.string().nullable(),

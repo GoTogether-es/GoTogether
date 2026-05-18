@@ -44,6 +44,7 @@ export type UserProfile = {
   headline: string | null;
   bio: string | null;
   phone: string | null;
+  avatarUrl: string | null;
   disabilityType: string | null;
   disabilityDescription: string | null;
   disabilityDocument: string | null;

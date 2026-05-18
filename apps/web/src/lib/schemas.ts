@@ -38,6 +38,7 @@ export const perfilSchema = z.object({
   headline: z.string().optional(),
   bio: z.string().optional(),
   phone: z.string().optional(),
+  avatarUrl: z.string().optional(),
   disabilityType: z.string().optional(),
   preferences: z.string().optional(),
   isCompanion: z.boolean().optional(),
