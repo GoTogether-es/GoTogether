@@ -4,7 +4,7 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button, Card, Container, Section } from '@gotogether/ui';
 import { Phone, MapPin, Clock, Send } from 'lucide-react';
-import { getChatRoom, getBooking, sendChatMessage } from '@/services/api';
+import { getChatRoom, getBooking } from '@/services/api';
 import { createClient } from '@/lib/supabase/client';
 
 interface ChatMessage {
@@ -40,8 +40,8 @@ export default function CoordinacionPage() {
   const [companionName, setCompanionName] = useState('');
   const [roomId, setRoomId] = useState('');
 
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const latestPollRef = useRef<string[]>([]);
+  const supabaseRef = useRef(createClient());
+  const channelRef = useRef<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = useCallback(() => {
@@ -52,31 +52,12 @@ export default function CoordinacionPage() {
     scrollToBottom();
   }, [messages, scrollToBottom]);
 
-  const pollMessages = useCallback(async () => {
-    if (!bookingId) return;
-    try {
-      const data = await getChatRoom(bookingId);
-      const remote = data.messages || [];
-      const remoteIds = new Set(remote.map((m: ChatMessage) => m.id));
-      setMessages((prev) => {
-        const prevIds = new Set(prev.map((m) => m.id));
-        const merged = [...prev];
-        for (const msg of remote) {
-          if (!prevIds.has(msg.id)) merged.push(msg);
-        }
-        merged.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-        return merged;
-      });
-      latestPollRef.current = Array.from(remoteIds);
-    } catch {}
-  }, [bookingId]);
-
   useEffect(() => {
     let cancelled = false;
 
     async function init() {
       try {
-        const supabase = createClient();
+        const supabase = supabaseRef.current;
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) {
           setError('Debes iniciar sesión para acceder al chat.');
@@ -93,16 +74,37 @@ export default function CoordinacionPage() {
 
         if (cancelled) return;
 
-        const msgs = chatData.messages || [];
-        setMessages(msgs);
+        const initialMessages = chatData.messages || [];
+        setMessages(initialMessages);
         setBooking(bookingData);
         setUserId(currentUserId);
         setRoomId(chatData.room.id);
-        latestPollRef.current = msgs.map((m: ChatMessage) => m.id);
 
         const clientName = bookingData.client?.profile?.fullName || '';
         const companion = bookingData.companion?.profile?.fullName || '';
         setCompanionName(companion || clientName);
+
+        const channel = supabase
+          .channel(`room-${chatData.room.id}`)
+          .on(
+            'postgres_changes',
+            {
+              event: 'INSERT',
+              schema: 'public',
+              table: 'ChatMessage',
+              filter: `roomId=eq.${chatData.room.id}`,
+            },
+            (payload: any) => {
+              const msg = payload.new as ChatMessage;
+              setMessages((prev) => {
+                if (prev.some((m) => m.id === msg.id)) return prev;
+                return [...prev, msg];
+              });
+            },
+          )
+          .subscribe();
+
+        channelRef.current = channel;
       } catch (err: any) {
         if (!cancelled) setError(err.message || 'Error al cargar el chat');
       } finally {
@@ -111,41 +113,33 @@ export default function CoordinacionPage() {
     }
 
     init();
-    intervalRef.current = setInterval(pollMessages, 3000);
 
     return () => {
       cancelled = true;
-      if (intervalRef.current) clearInterval(intervalRef.current);
+      channelRef.current?.unsubscribe();
     };
-  }, [bookingId, pollMessages]);
+  }, [bookingId]);
 
   const handleSend = useCallback(async () => {
-    if (!newMessage.trim() || !bookingId || sending) return;
+    if (!newMessage.trim() || !roomId || sending) return;
 
     const content = newMessage.trim();
     setNewMessage('');
     setSending(true);
 
-    const tempId = `temp-${Date.now()}`;
-    const optimistic: ChatMessage = {
-      id: tempId,
-      roomId: roomId,
-      senderId: userId,
-      content,
-      createdAt: new Date().toISOString(),
-    };
-    setMessages((prev) => [...prev, optimistic]);
-
     try {
-      const saved = await sendChatMessage(bookingId, content);
-      setMessages((prev) => prev.map((m) => (m.id === tempId ? saved : m)));
+      const supabase = supabaseRef.current;
+      const { error: insertError } = await supabase
+        .from('ChatMessage')
+        .insert({ roomId, senderId: userId, content });
+
+      if (insertError) throw insertError;
     } catch {
-      setMessages((prev) => prev.filter((m) => m.id !== tempId));
       setNewMessage(content);
     } finally {
       setSending(false);
     }
-  }, [newMessage, bookingId, sending, roomId, userId]);
+  }, [newMessage, roomId, sending, userId]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -194,7 +188,7 @@ export default function CoordinacionPage() {
 
           <h1 className="text-3xl font-bold mb-2">Coordinación del Servicio</h1>
           <p className="text-gray-500 mb-8">
-            Chat para coordinar los detalles del servicio.
+            Chat en tiempo real para coordinar los detalles del servicio.
           </p>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -223,13 +217,12 @@ export default function CoordinacionPage() {
                 )}
                 {messages.map((msg) => {
                   const isMine = msg.senderId === userId;
-                  const isPending = msg.id.startsWith('temp-');
                   return (
                     <div key={msg.id} className={`flex flex-col ${isMine ? 'items-end' : 'items-start'}`}>
                       <div
                         className={`max-w-[80%] p-4 rounded-2xl shadow-sm ${
                           isMine
-                            ? `bg-blue-600 text-white rounded-tr-none ${isPending ? 'opacity-60' : ''}`
+                            ? 'bg-blue-600 text-white rounded-tr-none'
                             : 'bg-white text-gray-800 rounded-tl-none'
                         }`}
                       >
