@@ -19,9 +19,11 @@ export default function CompanionRegistrationPage() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<CompanionRegistrationFormData>({
     resolver: zodResolver(companionRegistrationSchema),
+    defaultValues: { penalCertificate: '', sexualCertificate: '' },
   });
 
   const onSubmit = async (data: CompanionRegistrationFormData) => {
@@ -114,7 +116,7 @@ export default function CompanionRegistrationPage() {
                   label="Certificado de Antecedentes Penales"
                   helper="Certificado oficial del Ministerio de Justicia que acredite que no tienes antecedentes penales. Formato PDF."
                   accept=".pdf,.jpg,.jpeg,.png"
-                  onUploaded={setPenalCertificate}
+                  onUploaded={(url) => { setPenalCertificate(url); setValue('penalCertificate', url); }}
                 />
                 {errors.penalCertificate && <p className="text-red-500 text-xs mt-1" role="alert">{errors.penalCertificate.message}</p>}
 
@@ -122,7 +124,7 @@ export default function CompanionRegistrationPage() {
                   label="Certificado de Delitos de Naturaleza Sexual"
                   helper="Certificado oficial que acredite que no figuras en el registro de delincuentes sexuales. Formato PDF."
                   accept=".pdf,.jpg,.jpeg,.png"
-                  onUploaded={setSexualCertificate}
+                  onUploaded={(url) => { setSexualCertificate(url); setValue('sexualCertificate', url); }}
                 />
                 {errors.sexualCertificate && <p className="text-red-500 text-xs mt-1" role="alert">{errors.sexualCertificate.message}</p>}
               </div>
