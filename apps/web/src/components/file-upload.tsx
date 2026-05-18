@@ -33,7 +33,7 @@ export function FileUpload({ onUploaded, accept, label, helper, uploadedUrl }: F
       if (!token) throw new Error('No estás autenticado');
 
       const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-      const key = `certificates/${Date.now()}-${safeName}`;
+      const key = `${Date.now()}-${safeName}`;
 
       const presignRes = await fetch(`${env.apiUrl}/uploads/presign`, {
         method: 'POST',
