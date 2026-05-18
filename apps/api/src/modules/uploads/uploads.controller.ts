@@ -8,7 +8,8 @@ export class UploadsController {
 
   @UseGuards(SupabaseAuthGuard)
   @Post('presign')
-  createPresign(@Body() body: { key: string; contentType: string }) {
-    return this.uploadsService.createPresignedUrl(body.key, body.contentType);
+  async createPresign(@Body() body: { key: string; contentType: string }) {
+    const url = await this.uploadsService.createPresignedUrl(body.key, body.contentType);
+    return { url };
   }
 }

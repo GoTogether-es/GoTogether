@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { Upload, Loader2, CheckCircle, FileText } from 'lucide-react';
+import { Upload, Loader2, CheckCircle } from 'lucide-react';
 import { env } from '@/lib/env';
+import { getAccessToken } from '@/services/api';
 
 type FileUploadProps = {
   onUploaded: (url: string) => void;
@@ -14,6 +15,7 @@ type FileUploadProps = {
 
 export function FileUpload({ onUploaded, accept, label, helper, uploadedUrl }: FileUploadProps) {
   const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const [done, setDone] = useState(!!uploadedUrl);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -24,21 +26,30 @@ export function FileUpload({ onUploaded, accept, label, helper, uploadedUrl }: F
 
     setFileName(file.name);
     setUploading(true);
+    setError(null);
 
     try {
-      const key = `certificates/${Date.now()}-${file.name}`;
-      const baseUrl = env.apiUrl;
+      const token = await getAccessToken();
+      if (!token) throw new Error('No estás autenticado');
 
-      const presignRes = await fetch(`${baseUrl}/uploads/presign`, {
+      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+      const key = `certificates/${Date.now()}-${safeName}`;
+
+      const presignRes = await fetch(`${env.apiUrl}/uploads/presign`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
         body: JSON.stringify({ key, contentType: file.type }),
-        credentials: 'include',
       });
 
-      if (!presignRes.ok) throw new Error('Error al generar URL de subida');
+      if (!presignRes.ok) {
+        const errBody = await presignRes.text().catch(() => '');
+        throw new Error(errBody || `Error ${presignRes.status} al preparar la subida`);
+      }
 
-      const presignedUrl = await presignRes.text();
+      const { url: presignedUrl } = await presignRes.json();
 
       const uploadRes = await fetch(presignedUrl, {
         method: 'PUT',
@@ -46,14 +57,15 @@ export function FileUpload({ onUploaded, accept, label, helper, uploadedUrl }: F
         headers: { 'Content-Type': file.type },
       });
 
-      if (!uploadRes.ok) throw new Error('Error al subir el archivo');
+      if (!uploadRes.ok) throw new Error('Error al subir el archivo a Cloudflare R2');
 
-      const publicBase = process.env.NEXT_PUBLIC_R2_PUBLIC_BASE_URL || '';
-      const publicUrl = `${publicBase}/${key}`;
+      const publicBase = env.r2PublicBaseUrl;
+      const publicUrl = publicBase ? `${publicBase}/${key}` : presignedUrl.split('?')[0];
       onUploaded(publicUrl);
       setDone(true);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Upload failed:', err);
+      setError(err.message || 'Error al subir el archivo');
       setFileName(null);
     } finally {
       setUploading(false);
@@ -70,7 +82,9 @@ export function FileUpload({ onUploaded, accept, label, helper, uploadedUrl }: F
         className={`w-full flex items-center justify-center gap-3 p-4 border-2 border-dashed rounded-2xl transition-colors ${
           done
             ? 'border-green-300 bg-green-50 cursor-default'
-            : 'border-gray-300 hover:border-blue-400 hover:bg-blue-50 cursor-pointer'
+            : error
+              ? 'border-red-300 bg-red-50'
+              : 'border-gray-300 hover:border-blue-400 hover:bg-blue-50 cursor-pointer'
         } disabled:opacity-60`}
       >
         {uploading ? (
@@ -89,7 +103,7 @@ export function FileUpload({ onUploaded, accept, label, helper, uploadedUrl }: F
           <>
             <Upload className="w-5 h-5 text-gray-400" />
             <span className="text-sm text-gray-500 font-medium">
-              {fileName ? fileName : 'Haz clic para seleccionar archivo'}
+              {error ? error : 'Haz clic para seleccionar archivo'}
             </span>
           </>
         )}
