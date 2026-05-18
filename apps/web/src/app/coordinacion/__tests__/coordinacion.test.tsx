@@ -2,8 +2,8 @@ import { render, screen } from '@testing-library/react';
 import CoordinationPage from '../page';
 
 describe('CoordinationPage', () => {
-  it('renders chat heading', () => {
+  it('redirects to reservas', () => {
     render(<CoordinationPage />);
-    expect(screen.getByRole('heading', { name: /Coordinación/i })).toBeInTheDocument();
+    expect(screen.getByText(/Redirigiendo a tus reservas/i)).toBeInTheDocument();
   });
 });

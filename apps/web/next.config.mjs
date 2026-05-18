@@ -1,5 +1,11 @@
+import bundleAnalyzer from '@next/bundle-analyzer';
+
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+});
+
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig = withBundleAnalyzer({
   reactStrictMode: true,
   poweredByHeader: false,
   transpilePackages: ['@gotogether/ui', '@gotogether/shared'],
@@ -42,6 +48,6 @@ const nextConfig = {
       },
     ];
   },
-};
+});
 
 export default nextConfig;

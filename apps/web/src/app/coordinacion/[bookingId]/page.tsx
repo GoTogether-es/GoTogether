@@ -4,7 +4,7 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button, Card, Container, Section } from '@gotogether/ui';
 import { MessageSquare, Phone, MapPin, Clock, Send } from 'lucide-react';
-import { io, Socket } from 'socket.io-client';
+import type { Socket } from 'socket.io-client';
 import { getChatRoom, getAccessToken, getBooking } from '@/services/api';
 import { createClient } from '@/lib/supabase/client';
 import { env } from '@/lib/env';
@@ -82,6 +82,7 @@ export default function CoordinacionPage() {
         const companion = bookingData.companion?.profile?.fullName || '';
         setCompanionName(companion || clientName);
 
+        const { io } = await import('socket.io-client');
         socket = io(`${env.apiUrl}/chat`, {
           auth: { token },
           transports: ['websocket', 'polling'],
