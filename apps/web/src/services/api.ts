@@ -160,6 +160,12 @@ export async function requestMagicLink(email: string): Promise<void> {
   if (!response.ok) throw new Error('Failed to request magic link');
 }
 
+export async function syncUser(): Promise<void> {
+  const headers = await getAuthHeaders();
+  if (!headers.Authorization) return;
+  await fetch(`${API_URL}/auth/me`, { headers });
+}
+
 export async function getProfile(opts?: FetchOptions): Promise<UserProfile | null> {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/profiles/me`, { headers, signal: opts?.signal });

@@ -110,7 +110,7 @@ export class ProfilesService {
     await this.prisma.user.upsert({
       where: { id: userId },
       update: {},
-      create: { id: userId, email: `${userId}@unknown` },
+      create: { id: userId, email: `${userId}@placeholder.gotogether` },
     });
   }
 }

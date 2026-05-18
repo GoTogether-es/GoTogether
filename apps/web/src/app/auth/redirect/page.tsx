@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
-import { getProfile } from '@/services/api';
+import { getProfile, syncUser } from '@/services/api';
 import { Loader2 } from 'lucide-react';
 
 export default function AuthRedirectPage() {
@@ -23,6 +23,7 @@ export default function AuthRedirectPage() {
       }
 
       try {
+        await syncUser();
         const profile = await getProfile();
         if (cancelled) return;
 
