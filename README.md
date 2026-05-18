@@ -1,51 +1,68 @@
 # GoTogether
 
-GoTogether is a digital platform that connects older adults and people with disabilities with verified companions for everyday activities.
+Plataforma digital que conecta personas mayores y personas con discapacidad (**clientes**) con acompañantes verificados (**acompañantes**) para actividades cotidianas.
 
-## Monorepo structure
+## Stack
 
-- `apps/web` Next.js frontend (App Router)
-- `apps/api` NestJS backend with Prisma
-- `packages/ui` shared UI components
-- `packages/shared` shared types and constants
-- `infra/docker` local dev services
-- `docs` architecture and product notes
+| Capa | Tecnología |
+|------|-----------|
+| Frontend | Next.js 14 (App Router), React 18, Tailwind CSS |
+| Backend | NestJS 10, Prisma ORM, TypeScript |
+| Base de datos | PostgreSQL (Supabase) |
+| Auth | Supabase Auth (magic link) |
+| Storage | Supabase Storage (certificados, avatares) |
+| Tiempo real | Supabase Realtime (chat, notificaciones) |
+| Email | Resend |
+| Hosting | Vercel (serverless) |
 
-## Quickstart
+## Estructura del monorepo
 
-1. Install dependencies
+```
+GoTogether/
+├── apps/
+│   ├── api/          # NestJS backend (13 módulos)
+│   └── web/          # Next.js frontend (20+ páginas)
+├── packages/
+│   ├── shared/       # Tipos compartidos (@gotogether/shared)
+│   └── ui/           # Componentes UI (@gotogether/ui)
+├── infra/docker/     # Servicios locales (postgres, redis, minio)
+└── docs/             # Documentación completa del proyecto
+```
+
+## Inicio rápido
 
 ```bash
+# 1. Instalar dependencias
 pnpm install
-```
 
-2. Set up environment variables
-
-```bash
+# 2. Configurar variables de entorno
 cp .env.example .env
-```
+cp .env.example apps/api/.env
+# Editar apps/api/.env con valores reales
 
-3. Run web + api
+# 3. Generar Prisma Client
+cd apps/api && npx prisma generate && cd ../..
 
-```bash
+# 4. Iniciar desarrollo (web + api en paralelo)
 pnpm dev
 ```
 
-If pnpm is missing:
+## Documentación
 
-```bash
-npm install -g pnpm
-```
+Toda la documentación técnica está en la carpeta [`docs/`](docs/). Está formateada para verse con [Obsidian](https://obsidian.md).
 
-## Vercel deployment
+- [[docs/README|Índice de documentación]]
+- [[docs/architecture/overview|Arquitectura general]]
+- [[docs/database/schema|Esquema de base de datos]]
+- [[docs/backend/api-endpoints|API Endpoints]]
+- [[docs/frontend/flows|Flujos de usuario]]
+- [[docs/infrastructure/deployment|Despliegue]]
+- [[docs/roadmap|Roadmap y estado actual]]
 
-- Set the project root to `apps/web`.
-- Build command: `pnpm install --frozen-lockfile && pnpm build`.
-- Output directory: `.next`.
-- Add `NEXT_PUBLIC_APP_URL` and `NEXT_PUBLIC_API_URL` in Vercel env.
+## Despliegue
 
-## Local services
+El proyecto se despliega automáticamente en Vercel al hacer push a `main`. Consulta [[docs/infrastructure/deployment]] para más detalles.
 
-```bash
-docker compose -f infra/docker/docker-compose.yml up -d
-```
+## Licencia
+
+Propietaria. Todos los derechos reservados.
