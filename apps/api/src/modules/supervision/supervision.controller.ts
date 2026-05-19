@@ -12,24 +12,20 @@ import {
 } from '@nestjs/common';
 import { SupervisionService } from './supervision.service';
 import { SupabaseAuthGuard } from '../auth/supabase-auth.guard';
-import { RolesAuthGuard, Roles } from '../auth/roles-auth.guard';
 import { CreateSupervisionDto } from './dto/create-supervision.dto';
 import { InviteSupervisionDto } from './dto/invite-supervision.dto';
-import { UserRole } from '../../generated/client';
 
 @Controller('supervision')
 export class SupervisionController {
   constructor(private readonly supervisionService: SupervisionService) {}
 
-  @UseGuards(SupabaseAuthGuard, RolesAuthGuard)
-  @Roles(UserRole.SUPERVISOR)
+  @UseGuards(SupabaseAuthGuard)
   @Post()
   create(@Request() req: any, @Body() dto: CreateSupervisionDto) {
     return this.supervisionService.createSupervision(req.user.userId, dto);
   }
 
-  @UseGuards(SupabaseAuthGuard, RolesAuthGuard)
-  @Roles(UserRole.SUPERVISOR)
+  @UseGuards(SupabaseAuthGuard)
   @Post('invite')
   invite(@Request() req: any, @Body() dto: InviteSupervisionDto) {
     return this.supervisionService.inviteSupervision(req.user.userId, dto);
@@ -45,22 +41,19 @@ export class SupervisionController {
     return this.supervisionService.acceptInvitation(token, userId);
   }
 
-  @UseGuards(SupabaseAuthGuard, RolesAuthGuard)
-  @Roles(UserRole.SUPERVISOR)
+  @UseGuards(SupabaseAuthGuard)
   @Get('invites')
   getInvites(@Request() req: any) {
     return this.supervisionService.getPendingInvites(req.user.userId);
   }
 
-  @UseGuards(SupabaseAuthGuard, RolesAuthGuard)
-  @Roles(UserRole.SUPERVISOR)
+  @UseGuards(SupabaseAuthGuard)
   @Delete('invite/:id')
   cancelInvite(@Request() req: any, @Param('id') id: string) {
     return this.supervisionService.cancelInvitation(id, req.user.userId);
   }
 
-  @UseGuards(SupabaseAuthGuard, RolesAuthGuard)
-  @Roles(UserRole.SUPERVISOR)
+  @UseGuards(SupabaseAuthGuard)
   @Get('clients')
   getMyClients(@Request() req: any) {
     return this.supervisionService.getMyClients(req.user.userId);
@@ -72,8 +65,7 @@ export class SupervisionController {
     return this.supervisionService.getMySupervisor(req.user.userId);
   }
 
-  @UseGuards(SupabaseAuthGuard, RolesAuthGuard)
-  @Roles(UserRole.SUPERVISOR)
+  @UseGuards(SupabaseAuthGuard)
   @Delete(':id')
   remove(@Request() req: any, @Param('id') id: string) {
     return this.supervisionService.removeSupervision(id, req.user.userId);

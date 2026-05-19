@@ -104,7 +104,7 @@ export default function CoordinacionPage() {
               scrollToBottom();
             },
           )
-          .subscribe((status) => {
+          .subscribe((status: string) => {
             switch (status) {
               case 'SUBSCRIBED':
                 setConnectionStatus('connected');
@@ -141,7 +141,7 @@ export default function CoordinacionPage() {
     function handleVisibilityChange() {
       if (document.visibilityState === 'visible' && roomIdRef.current) {
         const supabase = supabaseRef.current;
-        supabase.auth.getSession().then(({ data }) => {
+        supabase.auth.getSession().then(({ data }: { data: { session: { user: { id: string } } | null } }) => {
           if (data.session) {
             getChatRoom(bookingId).then((chatData) => {
               setMessages(chatData.messages || []);

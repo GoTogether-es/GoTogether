@@ -38,6 +38,8 @@ export class SupervisionService {
   }
 
   async createSupervision(supervisorId: string, dto: CreateSupervisionDto) {
+    await this.requireSupervisorRole(supervisorId);
+
     const supervisor = await this.prisma.user.findUnique({ where: { id: supervisorId } });
     if (!supervisor) throw new NotFoundException('Supervisor no encontrado');
 
@@ -59,6 +61,8 @@ export class SupervisionService {
   }
 
   async inviteSupervision(supervisorId: string, dto: InviteSupervisionDto) {
+    await this.requireSupervisorRole(supervisorId);
+
     const supervisor = await this.prisma.user.findUnique({ where: { id: supervisorId } });
     if (!supervisor) throw new NotFoundException('Supervisor no encontrado');
 
@@ -123,6 +127,7 @@ export class SupervisionService {
   }
 
   async getPendingInvites(supervisorId: string) {
+    await this.requireSupervisorRole(supervisorId);
     return this.prisma.supervisionInvite.findMany({
       where: { supervisorId, status: 'PENDING' },
       orderBy: { createdAt: 'desc' },
@@ -130,6 +135,7 @@ export class SupervisionService {
   }
 
   async cancelInvitation(inviteId: string, userId: string) {
+    await this.requireSupervisorRole(userId);
     const invite = await this.prisma.supervisionInvite.findUnique({ where: { id: inviteId } });
     if (!invite) throw new NotFoundException('Invitación no encontrada');
     if (invite.supervisorId !== userId) throw new ForbiddenException('No puedes cancelar esta invitación');
@@ -141,6 +147,7 @@ export class SupervisionService {
   }
 
   async getMyClients(supervisorId: string) {
+    await this.requireSupervisorRole(supervisorId);
     return this.prisma.supervision.findMany({
       where: { supervisorId },
       include: { client: { include: { profile: true } } },
@@ -155,9 +162,20 @@ export class SupervisionService {
   }
 
   async removeSupervision(id: string, userId: string) {
+    await this.requireSupervisorRole(userId);
     const supervision = await this.prisma.supervision.findUnique({ where: { id } });
     if (!supervision) throw new NotFoundException('Supervisión no encontrada');
     if (supervision.supervisorId !== userId) throw new ForbiddenException('Solo el supervisor puede eliminar');
     return this.prisma.supervision.delete({ where: { id } });
+  }
+
+  private async requireSupervisorRole(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { role: true },
+    });
+    if (!user || user.role !== UserRole.SUPERVISOR) {
+      throw new ForbiddenException('Solo los supervisores pueden realizar esta acción');
+    }
   }
 }
