@@ -60,7 +60,7 @@ El núcleo del marketplace está funcional: los usuarios pueden registrarse, bus
 - [ ] Banner de cookies
 - [ ] Política de privacidad detallada
 
-## ⬜ Fase 6 — Producción
+## ⬜ Fase 7 — Producción
 
 - [ ] Migrar API de Vercel serverless a Fly.io / Railway (WebSocket nativo)
 - [ ] Restaurar Socket.IO para chat si se requiere mayor escala
