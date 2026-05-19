@@ -266,7 +266,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/home/emerito/GoTogether/apps/api/src/generated/client",
+      "value": "/app/apps/api/src/generated/client",
       "fromEnvVar": null
     },
     "config": {
@@ -288,12 +288,11 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/home/emerito/GoTogether/apps/api/prisma/schema.prisma",
+    "sourceFilePath": "/app/apps/api/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../../.env"
+    "rootEnvPath": null
   },
   "relativePath": "../../../prisma",
   "clientVersion": "5.22.0",

@@ -11,6 +11,7 @@
     "baseUrl": ".",
     "types": [
       "jest",
+      "@testing-library/jest-dom",
       "node"
     ],
     "paths": {
