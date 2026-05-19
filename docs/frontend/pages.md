@@ -57,7 +57,7 @@ Réplica de la landing page de gotogether.es con secciones:
 - Elige tu perfil: 2 tarjetas con bullets (Personas acompañadas, Acompañantes)
 - ¿Cómo funciona?: 4 pasos (Te registras, Definimos necesidades, Conectamos perfiles, ¡A disfrutar!)
 - Preguntas frecuentes: acordeón FAQ con 12 preguntas en 5 categorías usando [[frontend/components#faqaccordion|FaqAccordion]]
-- CTA final con aviso de privacidad y términos
+- CTA final con botón "Empezar ahora"
 
 Enlazada desde el footer ("Cómo funciona") y la navegación principal.
 

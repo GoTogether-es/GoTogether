@@ -106,8 +106,8 @@ El resultado se almacena en `req.user` como:
 
 El middleware de Next.js protege las rutas del frontend:
 
-- **Rutas protegidas** (requieren sesión Supabase): `/onboarding`, `/solicitud`, `/perfil`, `/reservas`, `/coordinacion`, `/valoracion`, `/supervision`, `/panel`
-- **Rutas públicas:** `/`, `/explorar`, `/info`, `/auth`, `/api`, `/_next`, `/favicon.ico`
+- **Rutas protegidas** (requieren sesión Supabase): `/onboarding`, `/solicitud`, `/perfil`, `/reservas`, `/coordinacion`, `/valoracion`, `/supervision`, `/panel`, `/historial`
+- **Rutas públicas:** `/`, `/explorar`, `/info`, `/legal`, `/auth`, `/api`, `/_next`, `/favicon.ico`
 - **Sin protección (gate propio):** `/admin` — tiene su propio login con contraseña
 
 Si un usuario no autenticado accede a una ruta protegida, es redirigido a `/auth/login?redirect=<ruta>`.

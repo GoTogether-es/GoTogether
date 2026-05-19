@@ -134,3 +134,6 @@ tags: [project, changelog, history]
 - 🔧 app-shell.test.tsx: mock de sub-componentes (pre-existente ESM issue)
 - 📄 Nueva página `/info` réplica de landing page gotogether.es (hero, features, perfiles con scroll al CTA, 4 pasos, FAQ acordeón, CTA) — enlazada desde footer y navbar
 - 🎨 Nuevo componente `FaqAccordion` con animación de apertura/cierre y preguntas en azul
+- 🔒 Middleware: `/historial` añadido a rutas protegidas, `/legal` añadido a rutas públicas
+- 🧭 Navbar: añadido enlace "Historial" para usuarios autenticados (desktop + mobile)
+- 🔗 Homepage: botones "Quiero acompañamiento" / "Quiero ser acompañante" redirigen a login o `/perfil` según sesión

@@ -27,9 +27,9 @@ Layout principal de la aplicación. Renderiza:
 
 | Rol | Nav principal | Nav secundaria |
 |-----|--------------|----------------|
-| No autenticado | Explorar | Entrar |
-| Cliente | Explorar | Mis Reservas, Mi Perfil |
-| Acompañante | Panel | Mis Reservas, Mi Perfil |
+| No autenticado | Cómo funciona, Explorar | Entrar |
+| Cliente | Cómo funciona, Explorar | Mis Reservas, Historial, Mi Perfil |
+| Acompañante | Cómo funciona, Panel | Mis Reservas, Historial, Mi Perfil |
 
 ## FileUpload
 
