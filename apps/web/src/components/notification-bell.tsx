@@ -113,8 +113,10 @@ export function NotificationBell() {
       <button
         ref={buttonRef}
         onClick={() => setOpen(!open)}
-        className="relative p-2 text-gray-500 hover:text-blue-600 hover:bg-gray-50 rounded-lg transition-colors"
+        className="relative p-2 text-gray-500 hover:text-blue-600 hover:bg-gray-50 rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
         aria-label={`Notificaciones (${unreadCount} sin leer)`}
+        aria-expanded={open}
+        aria-haspopup="true"
       >
         <Bell className="w-5 h-5" />
         {unreadCount > 0 && (
@@ -134,7 +136,7 @@ export function NotificationBell() {
             {unreadCount > 0 && (
               <button
                 onClick={handleMarkAll}
-                className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                className="text-xs text-blue-600 hover:text-blue-800 font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-sm"
               >
                 Marcar todas leidas
               </button>
@@ -150,7 +152,7 @@ export function NotificationBell() {
                   key={n.id}
                   onClick={() => handleClick(n)}
                   className={clsx(
-                    'w-full text-left p-3 border-b border-gray-50 hover:bg-gray-50 transition-colors flex gap-3',
+                    'w-full text-left p-3 border-b border-gray-50 hover:bg-gray-50 transition-colors flex gap-3 focus:outline-none focus-visible:bg-blue-50 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500',
                     !n.read && 'bg-blue-50/30',
                   )}
                 >
