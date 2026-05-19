@@ -1,5 +1,7 @@
 export const routes = {
   info: '/info',
+  nosotros: '/nosotros',
+  contacto: '/contacto',
   solicitud: '/solicitud',
   perfil: '/perfil',
   explorar: '/explorar',

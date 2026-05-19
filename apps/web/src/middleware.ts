@@ -17,6 +17,8 @@ const PUBLIC_ROUTES = [
   '/',
   '/explorar',
   '/info',
+  '/nosotros',
+  '/contacto',
   '/legal',
   '/auth',
   '/api',
