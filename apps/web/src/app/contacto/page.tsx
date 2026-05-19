@@ -1,5 +1,5 @@
 import { Card, Container, Section } from '@gotogether/ui';
-import { Mail, MapPin } from 'lucide-react';
+import { Mail, Phone } from 'lucide-react';
 
 export default function ContactoPage() {
   return (
@@ -34,7 +34,7 @@ export default function ContactoPage() {
                   </div>
                   <a
                     href="mailto:info@gotogether.es"
-                    className="text-blue-600 font-medium hover:underline text-lg"
+                    className="inline-flex items-center gap-2 text-blue-600 font-medium hover:underline text-lg"
                   >
                     info@gotogether.es
                   </a>
@@ -43,18 +43,19 @@ export default function ContactoPage() {
                 <div>
                   <div className="flex items-center gap-3 mb-6">
                     <div className="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600">
-                      <MapPin className="w-6 h-6" />
+                      <Phone className="w-6 h-6" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold text-gray-900">Ubicación</h3>
-                      <p className="text-gray-500 text-sm">Operamos desde España</p>
+                      <h3 className="text-lg font-bold text-gray-900">Teléfono</h3>
+                      <p className="text-gray-500 text-sm">Llámanos o envíanos un WhatsApp</p>
                     </div>
                   </div>
-                  <p className="text-gray-600 leading-relaxed">
-                    GoTogether Technologies S.L.
-                    <br />
-                    España
-                  </p>
+                  <a
+                    href="tel:643415190"
+                    className="text-blue-600 font-medium hover:underline text-lg"
+                  >
+                    643 415 190
+                  </a>
                 </div>
               </div>
 
