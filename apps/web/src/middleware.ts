@@ -15,6 +15,7 @@ const PROTECTED_ROUTES = [
 const PUBLIC_ROUTES = [
   '/',
   '/explorar',
+  '/info',
   '/auth',
   '/api',
   '/_next',

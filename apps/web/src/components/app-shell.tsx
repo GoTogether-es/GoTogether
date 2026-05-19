@@ -9,7 +9,7 @@ import { Footer } from './footer';
 import { NotificationBell } from './notification-bell';
 import { ConfirmDialog } from './confirm-dialog';
 import { RouteAnnouncer } from './route-announcer';
-import { User, LogIn, Menu, X, Search, CalendarDays, LogOut, LayoutDashboard } from 'lucide-react';
+import { User, LogIn, Menu, X, Search, CalendarDays, LogOut, LayoutDashboard, Info } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { logout as apiLogout, getProfile } from '@/services/api';
 import type { Session, AuthChangeEvent } from '@supabase/supabase-js';
@@ -127,6 +127,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               </Link>
 
               <nav className="hidden md:flex items-center gap-8" aria-label="Principal">
+                <Link
+                  href={routes.info}
+                  className={clsx(
+                    'flex items-center gap-2 text-sm font-medium transition-colors hover:text-blue-600',
+                    isActive(routes.info) ? 'text-blue-600' : 'text-gray-500'
+                  )}
+                >
+                  <Info className="w-4 h-4" />
+                  Cómo funciona
+                </Link>
                 {isCompanion ? (
                   <Link
                     href={routes.panel}
@@ -223,6 +233,19 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       >
         <Container>
           <nav className="py-6 flex flex-col gap-1" aria-label="Menú móvil">
+            <Link
+              href={routes.info}
+              className={clsx(
+                'flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium transition-colors',
+                isActive(routes.info)
+                  ? 'bg-blue-50 text-blue-600'
+                  : 'text-gray-700 hover:bg-gray-50'
+              )}
+              onClick={closeMenu}
+            >
+              <Info className="w-5 h-5" />
+              Cómo funciona
+            </Link>
             {isCompanion ? (
               <Link
                 href={routes.panel}

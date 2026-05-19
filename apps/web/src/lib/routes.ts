@@ -1,4 +1,5 @@
 export const routes = {
+  info: '/info',
   solicitud: '/solicitud',
   perfil: '/perfil',
   explorar: '/explorar',

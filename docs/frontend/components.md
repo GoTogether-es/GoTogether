@@ -197,7 +197,7 @@ Anunciador de cambios de ruta para lectores de pantalla:
 
 Footer del sitio:
 - Logo y descripción
-- Enlaces: Explorar, Perfil, Solicitud
+- Enlaces: Explorar, Ser acompañante, Cómo funciona
 - Enlaces legales: Privacidad, Términos
 - Copyright dinámico
 

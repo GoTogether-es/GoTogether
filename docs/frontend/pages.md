@@ -10,6 +10,7 @@ Todas las páginas están bajo `apps/web/src/app/` usando Next.js 14 App Router.
 
 ```
 /                               Homepage
+/info                           Cómo funciona (página informativa)
 /auth/
   login                         Magic link login
   verify                        Callback de Supabase Auth
@@ -45,6 +46,19 @@ Todas las páginas están bajo `apps/web/src/app/` usando Next.js 14 App Router.
 **Auth:** Pública
 
 Landing page con hero, pasos del servicio (5 pasos), CTAs y ejemplo de acompañante.
+
+### `/info` — Cómo funciona
+**Archivo:** `info/page.tsx`
+**Auth:** Pública
+
+Página informativa sobre GoTogether con secciones:
+- Hero: qué es GoTogether y su propósito
+- Funcionalidades clave (seguridad, conexión humana, flexibilidad, pago seguro)
+- Cómo funciona (5 pasos del flujo)
+- Para quién es (clientes y acompañantes)
+- CTA para crear cuenta o explorar acompañantes
+
+Enlazada desde el footer ("Cómo funciona") y la navegación principal.
 
 ### `/auth/login` — Login
 **Archivo:** `auth/login/page.tsx`
