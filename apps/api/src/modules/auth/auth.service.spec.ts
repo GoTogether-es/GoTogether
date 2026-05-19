@@ -41,6 +41,15 @@ describe('AuthService', () => {
 
   it('logs out', async () => {
     const service = new AuthService(prisma, mockConfigService);
+    // Mock Supabase admin client locally for this test
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (service as any).supabaseAdmin = {
+      auth: {
+        admin: {
+          signOut: jest.fn().mockResolvedValue({ error: null })
+        }
+      }
+    };
     const result = await service.logout('Bearer test-token');
     expect(result).toEqual({ success: true });
   });
