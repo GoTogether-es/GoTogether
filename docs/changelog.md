@@ -132,4 +132,5 @@ tags: [project, changelog, history]
 - ✅ schemas.test.ts: corregido (serviceType → serviceId)
 - ✅ solicitud.test.tsx: corregido (añadido QueryClientProvider)
 - 🔧 app-shell.test.tsx: mock de sub-componentes (pre-existente ESM issue)
-- 📄 Nueva página `/info` explicativa sobre GoTogether (pública, enlazada desde footer y navbar)
+- 📄 Nueva página `/info` réplica de landing page gotogether.es (hero, features, perfiles, 4 pasos, FAQ acordeón, CTA) — enlazada desde footer y navbar
+- 🎨 Nuevo componente `FaqAccordion` con animación de apertura/cierre

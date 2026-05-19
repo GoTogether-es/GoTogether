@@ -51,12 +51,13 @@ Landing page con hero, pasos del servicio (5 pasos), CTAs y ejemplo de acompaña
 **Archivo:** `info/page.tsx`
 **Auth:** Pública
 
-Página informativa sobre GoTogether con secciones:
-- Hero: qué es GoTogether y su propósito
-- Funcionalidades clave (seguridad, conexión humana, flexibilidad, pago seguro)
-- Cómo funciona (5 pasos del flujo)
-- Para quién es (clientes y acompañantes)
-- CTA para crear cuenta o explorar acompañantes
+Réplica de la landing page de gotogether.es con secciones:
+- Hero: badge "Próximamente disponible", título, subtítulo y CTA
+- ¿Qué es GoTogether?: 4 funcionalidades (Acompañamiento cercano, Seguridad verificada, Actividades variadas, Impacto humano)
+- Elige tu perfil: 2 tarjetas con bullets (Personas acompañadas, Acompañantes)
+- ¿Cómo funciona?: 4 pasos (Te registras, Definimos necesidades, Conectamos perfiles, ¡A disfrutar!)
+- Preguntas frecuentes: acordeón FAQ con 12 preguntas en 5 categorías usando [[frontend/components#faqaccordion|FaqAccordion]]
+- CTA final con aviso de privacidad y términos
 
 Enlazada desde el footer ("Cómo funciona") y la navegación principal.
 

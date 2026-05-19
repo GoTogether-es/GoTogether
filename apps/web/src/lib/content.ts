@@ -23,6 +23,118 @@ export const homeSteps: HomeStep[] = [
   },
 ];
 
+export const infoSteps = [
+  {
+    title: 'Te registras',
+    copy: 'Crea tu perfil en menos de 2 minutos',
+  },
+  {
+    title: 'Definimos necesidades',
+    copy: 'Nos cuentas qué tipo de actividades necesitas o puedes ofrecer',
+  },
+  {
+    title: 'Conectamos perfiles',
+    copy: 'Te emparejamos con la persona ideal según preferencias',
+  },
+  {
+    title: '¡A disfrutar!',
+    copy: 'Realizáis la actividad juntos de forma segura',
+  },
+];
+
+export type FaqCategory = {
+  category: string;
+  items: { question: string; answer: string }[];
+};
+
+export const faqData: FaqCategory[] = [
+  {
+    category: 'Sobre GoTogether',
+    items: [
+      {
+        question: '¿Qué es GoTogether?',
+        answer:
+          'GoTogether es una plataforma que conecta a personas mayores y personas con discapacidad con acompañantes verificados, para que puedan disfrutar de más autonomía, compañía y bienestar en su día a día.',
+      },
+      {
+        question: '¿A quién está dirigido?',
+        answer:
+          'Está pensado para personas mayores, personas con discapacidad y sus familias, así como para personas que quieran ofrecer acompañamiento de forma remunerada y profesional.',
+      },
+      {
+        question: '¿En qué ciudades está disponible?',
+        answer:
+          'Estamos comenzando nuestra actividad de forma progresiva en varias ciudades de España. Apúntate a la lista de espera y te avisaremos en cuanto estemos disponibles en tu zona.',
+      },
+    ],
+  },
+  {
+    category: 'Los acompañantes',
+    items: [
+      {
+        question: '¿Quiénes son los acompañantes?',
+        answer:
+          'Son personas verificadas que ofrecen su tiempo y compañía de forma remunerada. Todas pasan por un proceso de validación de identidad y antecedentes antes de poder ofrecer servicios.',
+      },
+      {
+        question: '¿Cómo se eligen?',
+        answer:
+          'Puedes ver el perfil de cada acompañante, sus valoraciones, intereses y experiencia. Tú eliges con quién quieres compartir tu tiempo, sin compromisos.',
+      },
+      {
+        question: '¿Qué tipo de actividades pueden hacer juntos?',
+        answer:
+          'Pasear, ir al médico, hacer la compra, conversar, acudir a eventos culturales o simplemente acompañarte en casa. Tú decides el plan.',
+      },
+    ],
+  },
+  {
+    category: 'Pagos y funcionamiento',
+    items: [
+      {
+        question: '¿Cómo funcionan los pagos?',
+        answer:
+          'Los pagos se gestionan de forma segura desde la propia plataforma. No es necesario manejar dinero en efectivo durante el acompañamiento.',
+      },
+      {
+        question: '¿Cuánto cuesta?',
+        answer:
+          'El precio depende del tiempo y tipo de acompañamiento. Verás siempre el coste antes de confirmar cualquier reserva, sin sorpresas ni cargos ocultos.',
+      },
+    ],
+  },
+  {
+    category: 'Seguridad y privacidad',
+    items: [
+      {
+        question: '¿Cómo garantizáis la seguridad?',
+        answer:
+          'Verificamos la identidad de todos los acompañantes, contamos con valoraciones mutuas y trazabilidad de cada servicio. La seguridad es nuestra prioridad.',
+      },
+      {
+        question: '¿Qué pasa con mis datos personales?',
+        answer:
+          'Tus datos se tratan con la máxima confidencialidad y conforme al RGPD. Solo se comparten los necesarios para coordinar el acompañamiento.',
+      },
+    ],
+  },
+  {
+    category: 'Quiero ser acompañante',
+    items: [
+      {
+        question: '¿Cómo puedo apuntarme como acompañante?',
+        answer:
+          'Puedes darte de alta desde la propia plataforma seleccionando el perfil de acompañante. Te guiaremos en el proceso de verificación.',
+      },
+      {
+        question: '¿Qué requisitos necesito cumplir?',
+        answer:
+          'Ser mayor de edad, tener documentación en regla, superar la verificación de identidad y antecedentes, y tener vocación de cuidar y acompañar a otras personas.',
+      },
+    ],
+  },
+];
+
 export const sampleCompanion: CompanionSummary = {
   id: 'sample-1',
   profile: {

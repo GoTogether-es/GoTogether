@@ -201,6 +201,17 @@ Footer del sitio:
 - Enlaces legales: Privacidad, Términos
 - Copyright dinámico
 
+## FaqAccordion
+
+**Archivo:** `faq-accordion.tsx`
+
+Componente acordeón para preguntas frecuentes:
+- Estado interno: solo una pregunta abierta a la vez
+- Animación de apertura/cierre con `grid-rows-[0fr]` / `grid-rows-[1fr]`
+- Ícono `ChevronDown` de lucide-react que rota 180° al abrir
+- Props: `items: { question: string, answer: string }[]`
+- Accesible: `aria-expanded` en cada botón
+
 ## Skeleton
 
 **Archivo:** `skeleton.tsx`
