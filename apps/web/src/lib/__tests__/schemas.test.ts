@@ -3,7 +3,7 @@ import { solicitudSchema, perfilSchema, valoracionSchema, validateFutureDate } f
 describe('solicitudSchema', () => {
   it('valida datos correctos', () => {
     const result = solicitudSchema.safeParse({
-      serviceType: 'Médico',
+      serviceId: 'svc-123',
       address: 'Calle Mayor 1, Madrid',
       date: '2026-06-15',
       time: '10:00',
@@ -11,9 +11,9 @@ describe('solicitudSchema', () => {
     expect(result.success).toBe(true);
   });
 
-  it('rechaza serviceType vacío', () => {
+  it('rechaza serviceId vacío', () => {
     const result = solicitudSchema.safeParse({
-      serviceType: '',
+      serviceId: '',
       address: 'Calle Mayor 1',
       date: '2026-06-15',
       time: '10:00',
@@ -23,7 +23,7 @@ describe('solicitudSchema', () => {
 
   it('rechaza dirección muy corta', () => {
     const result = solicitudSchema.safeParse({
-      serviceType: 'Médico',
+      serviceId: 'svc-456',
       address: 'Ca',
       date: '2026-06-15',
       time: '10:00',
@@ -33,7 +33,7 @@ describe('solicitudSchema', () => {
 
   it('permite campos opcionales vacíos', () => {
     const result = solicitudSchema.safeParse({
-      serviceType: 'Ocio',
+      serviceId: 'svc-789',
       address: 'Plaza Mayor',
       date: '2026-06-15',
       time: '14:00',

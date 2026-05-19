@@ -16,6 +16,8 @@ Layout principal de la aplicación. Renderiza:
 - Navegación por rol (Panel para acompañantes, Explorar para otros)
 - [[NotificationBell]] integrada en la barra
 - Menú móvil con overlay
+- [[#confirmdialog|ConfirmDialog]] para cerrar sesión
+- [[#routeannouncer|RouteAnnouncer]] para accesibilidad
 - Footer
 - Skip link para accesibilidad
 
@@ -84,7 +86,9 @@ Subida de foto de perfil:
 Campanita de notificaciones en la barra de navegación:
 - Icono Bell con badge rojo (contador de no leídas)
 - Dropdown con lista de notificaciones
-- Cada notificación: icono emoji según tipo, título, body, timestamp
+- Cada notificación: icono Lucide según tipo (color semántico), título, body, timestamp
+- Mapas de iconos: `Mail` (solicitud), `CheckCircle2` (aceptada), `XCircle` (rechazada),
+  `PartyPopper` (completada), `Ban` (cancelada), `Star` (valoración)
 - Click → marca como leída + navega a `/reservas`
 - Botón "Marcar todas leídas"
 - Suscripción Realtime a `Notification` para nuevas notificaciones
@@ -104,6 +108,89 @@ Tarjeta de acompañante para el grid de `/explorar`:
 - Badge de verificación (ShieldCheck verde)
 - Botón "Ver perfil" → `/explorar/:id`
 
+## ConfirmDialog
+
+**Archivo:** `confirm-dialog.tsx`
+**Props:**
+```typescript
+{
+  open: boolean;
+  title: string;
+  message: string;
+  confirmLabel?: string;
+  cancelLabel?: string;
+  variant?: 'danger' | 'warning';
+  loading?: boolean;
+  onConfirm: () => void;
+  onCancel: () => void;
+}
+```
+
+Modal de confirmación para acciones destructivas:
+- Overlay con backdrop blur
+- Icono AlertTriangle con color según variante (rojo/ámbar)
+- Título y mensaje descriptivo
+- Botones Confirmar/Cancelar
+- Soporte loading state en el botón de confirmación
+- Cierre con Escape
+- Animación fadeUp al aparecer
+- Bloqueo de scroll del body
+
+**Usado en:** AppShell (confirmación de logout)
+
+## StepIndicator
+
+**Archivo:** `step-indicator.tsx`
+**Props:**
+```typescript
+{
+  steps: { label: string; description?: string }[];
+  currentStep: number;
+  className?: string;
+}
+```
+
+Indicador de progreso para flujos multi-paso:
+- Círculos numerados para cada paso
+- Checkmark verde en pasos completados
+- Paso actual resaltado con anillo azul
+- Barras conectoras entre pasos
+- Labels visibles en desktop, solo números en mobile
+- `aria-current="step"` en el paso activo
+
+**Usado en:** `onboarding/page.tsx`, `onboarding/register/client/page.tsx`, `onboarding/register/companion/page.tsx`
+
+## Breadcrumbs
+
+**Archivo:** `breadcrumbs.tsx`
+**Props:**
+```typescript
+{
+  items: { label: string; href?: string }[];
+  className?: string;
+}
+```
+
+Navegación jerárquica tipo migas de pan:
+- Separador ChevronRight entre items
+- Links navegables para items intermedios
+- Último item resaltado con `aria-current="page"`
+- Truncado automático con `max-w-[200px]`
+- `aria-label="Ruta de navegación"`
+
+**Usado en:** `explorar/[id]/page.tsx`, `coordinacion/[bookingId]/page.tsx`
+
+## RouteAnnouncer
+
+**Archivo:** `route-announcer.tsx`
+
+Anunciador de cambios de ruta para lectores de pantalla:
+- Detecta cambios en `usePathname()`
+- Actualiza el contenido con `document.title`
+- `role="status"` + `aria-live="polite"` + `aria-atomic="true"`
+- Visualmente oculto (`sr-only`)
+- Renderizado en AppShell para cobertura global
+
 ## Footer
 
 **Archivo:** `footer.tsx`
@@ -118,10 +205,14 @@ Footer del sitio:
 
 **Archivo:** `skeleton.tsx`
 
-Placeholders de carga:
-- `Skeleton` — rectángulo genérico con animación pulse
-- `CompanionCardSkeleton` — placeholder de tarjeta
-- `CompanionGridSkeleton` — grid de 6 skeletons
+Placeholders de carga para estados loading:
+- `SkeletonText` — línea de texto con ancho/alto personalizables
+- `SkeletonAvatar` — círculo con tamaño personalizable
+- `SkeletonCard` — placeholder de tarjeta (imagen + texto + badges + botón)
+- `SkeletonBookingCard` — placeholder de tarjeta de reserva
+- `SkeletonChat` — placeholder de chat (burbujas alternadas)
+- `SkeletonForm` — placeholder de formulario (labels + inputs)
+- `SkeletonPage` — placeholder de página (título + descripción + contenido)
 
 ## LinkButton
 

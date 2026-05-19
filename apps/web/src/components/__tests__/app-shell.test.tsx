@@ -1,9 +1,22 @@
 import { render, screen } from '@testing-library/react';
-import { AppShell } from '@/components/app-shell';
 
 jest.mock('@/components/footer', () => ({
   Footer: () => <footer data-testid="footer">Footer</footer>,
 }));
+
+jest.mock('@/components/notification-bell', () => ({
+  NotificationBell: () => null,
+}));
+
+jest.mock('@/components/confirm-dialog', () => ({
+  ConfirmDialog: () => null,
+}));
+
+jest.mock('@/components/route-announcer', () => ({
+  RouteAnnouncer: () => null,
+}));
+
+import { AppShell } from '@/components/app-shell';
 
 describe('AppShell', () => {
   it('renders the navigation and footer', () => {

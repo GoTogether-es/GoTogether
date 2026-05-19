@@ -70,13 +70,15 @@ Verifica si el usuario tiene perfil:
 **Archivo:** `onboarding/page.tsx`
 **Auth:** Protegida
 
-Tres tarjetas: Cliente, Acompañante, Supervisor. Redirige a la página de registro correspondiente.
+Indicador de progreso ([[frontend/components#stepindicator|StepIndicator]]) mostrando paso 1/3.
+Tres tarjetas interactivas (botones nativos): Cliente, Acompañante, Supervisor.
+Redirige a la página de registro correspondiente.
 
 ### `/onboarding/register/client` — Registro cliente
 **Archivo:** `onboarding/register/client/page.tsx`
 **Auth:** Protegida
 
-Formulario con:
+Indicador de progreso (paso 2/3). Formulario con:
 - Nombre, teléfono, bio
 - Tipo de discapacidad (select)
 - Descripción de discapacidad
@@ -87,11 +89,12 @@ Formulario con:
 **Archivo:** `onboarding/register/companion/page.tsx`
 **Auth:** Protegida
 
-Formulario con:
+Indicador de progreso (paso 2/3). Formulario con:
+- Auto-guardado en `sessionStorage` (restaura al volver)
 - Nombre, teléfono, bio
 - Especialidades
 - [[frontend/components#fileupload|Subida de certificados]] (penales + sexuales)
-- Al enviar: `upsertProfile` con `isCompanion: true` → redirige a `/panel`
+- Al enviar: limpia auto-guardado, `upsertProfile` con `isCompanion: true` → redirige a `/panel`
 
 ### `/onboarding/supervisor` — Registro supervisor
 **Archivo:** `onboarding/supervisor/page.tsx`
@@ -104,15 +107,17 @@ Formulario para buscar usuarios existentes o invitar por email.
 **Auth:** Pública
 
 Grid de tarjetas de acompañantes con:
-- Búsqueda por nombre/especialidad
-- Filtro por tipo de discapacidad y verificados
-- Paginación (9 por página)
+- Búsqueda por nombre/especialidad (debounced 300ms)
+- Filtro por tipo de discapacidad y verificados (checkbox estilizado)
+- Contador de resultados ("42 acompañantes encontrados")
+- Paginación con scroll-to-top automático (9 por página)
 - Usa `useRecommendations()` (React Query) → `GET /matching/recommendations`
 
 ### `/explorar/[id]` — Detalle de acompañante
 **Archivo:** `explorar/[id]/page.tsx`
 **Auth:** Pública
 
+[[frontend/components#breadcrumbs|Breadcrumbs]]: Explorar > Nombre del acompañante.
 Perfil completo del acompañante con:
 - Avatar, nombre, bio, especialidades
 - Rating, años en plataforma, servicios completados
@@ -156,11 +161,16 @@ Dashboard con:
 **Archivo:** `coordinacion/[bookingId]/page.tsx`
 **Auth:** Protegida
 
+[[frontend/components#breadcrumbs|Breadcrumbs]]: Mis Reservas > Servicio.
 Chat en tiempo real con:
+- Skeleton de carga ([[frontend/components#skeleton|SkeletonChat]]) mientras carga
 - Suscripción Supabase Realtime a `postgres_changes` en `ChatMessage`
 - Envío directo via `supabase.from('ChatMessage').insert()`
 - Panel lateral con detalles de la reserva
-- Scroll automático en el contenedor del chat (no en la página)
+- Botón de emergencia (`tel:112`) en la cabecera del chat
+- Indicador de conexión (verde/amarillo/rojo)
+- Scroll automático en el contenedor del chat
+- Recarga de mensajes al cambiar de pestaña (visibilitychange)
 
 ### `/perfil` — Perfil
 **Archivo:** `perfil/page.tsx`

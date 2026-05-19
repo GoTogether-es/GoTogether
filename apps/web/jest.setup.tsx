@@ -35,68 +35,8 @@ jest.mock('next/navigation', () => ({
   useParams: () => ({}),
 }));
 
-jest.mock('@supabase/ssr', () => ({
-  createBrowserClient: jest.fn(() => ({
-    auth: {
-      getSession: jest.fn(() =>
-        Promise.resolve({ data: { session: null }, error: null }),
-      ),
-      getUser: jest.fn(() =>
-        Promise.resolve({ data: { user: null }, error: null }),
-      ),
-      onAuthStateChange: jest.fn(() => ({
-        data: { subscription: { unsubscribe: jest.fn() } },
-      })),
-      signOut: jest.fn(),
-      setSession: jest.fn(),
-      exchangeCodeForSession: jest.fn(),
-    },
-  })),
-  createServerClient: jest.fn(() => ({
-    auth: {
-      getSession: jest.fn(() =>
-        Promise.resolve({ data: { session: null }, error: null }),
-      ),
-      getUser: jest.fn(() =>
-        Promise.resolve({ data: { user: null }, error: null }),
-      ),
-    },
-  })),
-}));
-
-jest.mock('@supabase/supabase-js', () => ({
-  createClient: jest.fn(() => ({
-    auth: {
-      getSession: jest.fn(() =>
-        Promise.resolve({ data: { session: null }, error: null }),
-      ),
-      getUser: jest.fn(() =>
-        Promise.resolve({ data: { user: null }, error: null }),
-      ),
-      onAuthStateChange: jest.fn(() => ({
-        data: { subscription: { unsubscribe: jest.fn() } },
-      })),
-      signOut: jest.fn(),
-    },
-  })),
-}));
-
-jest.mock('@/lib/supabase/client', () => ({
-  createClient: jest.fn(() => ({
-    auth: {
-      getSession: jest.fn(() =>
-        Promise.resolve({ data: { session: null }, error: null }),
-      ),
-      getUser: jest.fn(() =>
-        Promise.resolve({ data: { user: null }, error: null }),
-      ),
-      onAuthStateChange: jest.fn(() => ({
-        data: { subscription: { unsubscribe: jest.fn() } },
-      })),
-      signOut: jest.fn(),
-      setSession: jest.fn(),
-    },
-  })),
+jest.mock('@/lib/supabase/middleware', () => ({
+  updateSession: jest.fn(() => Promise.resolve(new Response())),
 }));
 
 jest.mock('@/lib/supabase/server', () => ({
@@ -117,26 +57,42 @@ jest.mock('@/services/api', () => ({
   __esModule: true,
   requestMagicLink: jest.fn(),
   logout: jest.fn(),
-  getProfile: jest.fn(),
+  getProfile: jest.fn(() => Promise.resolve(null)),
   upsertProfile: jest.fn(),
   createBooking: jest.fn(),
   requestBooking: jest.fn(),
-  getMyBookings: jest.fn(),
-  getBooking: jest.fn(),
+  getMyBookings: jest.fn(() => Promise.resolve([])),
+  getBooking: jest.fn(() => Promise.resolve(null)),
   updateBookingStatus: jest.fn(),
-  getCompanions: jest.fn(),
-  getCompanionById: jest.fn(),
-  getRecommendations: jest.fn(),
+  getCompanions: jest.fn(() => Promise.resolve([])),
+  getCompanionById: jest.fn(() => Promise.resolve(null)),
+  getRecommendations: jest.fn(() => Promise.resolve({ data: [], meta: { total: 0, page: 1, limit: 9, totalPages: 0 } })),
   getChatRoom: jest.fn(),
   getAccessToken: jest.fn(),
   createReport: jest.fn(),
   getReportByBooking: jest.fn(),
   getHealth: jest.fn(),
   createSupervision: jest.fn(),
-  getMyClients: jest.fn(),
-  getMySupervisor: jest.fn(),
+  getMyClients: jest.fn(() => Promise.resolve([])),
+  getMySupervisor: jest.fn(() => Promise.resolve(null)),
   removeSupervision: jest.fn(),
-  searchUsers: jest.fn(),
+  searchUsers: jest.fn(() => Promise.resolve([])),
+  getServices: jest.fn(() => Promise.resolve([])),
+  getPendingInvites: jest.fn(() => Promise.resolve([])),
+  getBookingStats: jest.fn(() => Promise.resolve({})),
+  getOpenBookings: jest.fn(() => Promise.resolve([])),
+  getCompanionAvailability: jest.fn(() => Promise.resolve([])),
+  setMyAvailability: jest.fn(),
+  getNotifications: jest.fn(() => Promise.resolve([])),
+  getUnreadCount: jest.fn(() => Promise.resolve(0)),
+  markNotificationRead: jest.fn(),
+  markAllNotificationsRead: jest.fn(),
+  getBookingHistory: jest.fn(() => Promise.resolve({ data: [], meta: { total: 0, page: 1, limit: 10, totalPages: 0 } })),
+  sendChatMessage: jest.fn(),
+  inviteSupervision: jest.fn(),
+  acceptInvitation: jest.fn(),
+  cancelInvitation: jest.fn(),
+  syncUser: jest.fn(),
 }));
 
 global.fetch = jest.fn();

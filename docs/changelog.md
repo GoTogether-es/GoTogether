@@ -107,3 +107,28 @@ tags: [project, changelog, history]
 - Tests automatizados
 - CI/CD completo
 - GDPR compliance
+
+## v0.1.0-alpha.28 — Mayo 2026 (UI/UX fixes)
+
+### UI
+- 🎨 Notificaciones: emojis reemplazados por íconos Lucide con colores semánticos
+- 📊 StepIndicator: indicador de progreso en onboarding (3 pasos con checkmarks)
+- 💀 SkeletonChat: placeholder de chat durante carga (antes era texto "Cargando...")
+- ☑️ Checkbox y select nativos estilizados (appearance: none, SVG inline)
+- 🌙 Dark mode: CSS custom properties + Tailwind `darkMode: 'class'`, variantes para cards, inputs, tags, checkboxes, hero
+- 🔴 Botón "Llamar" en chat reemplazado por link funcional `tel:112` (Emergencia)
+
+### UX
+- ⚠️ ConfirmDialog: modal de confirmación para acciones destructivas (logout)
+- 🧭 Breadcrumbs: migas de pan en rutas profundas (Explorar > Nombre | Mis Reservas > Servicio)
+- ♿ RouteAnnouncer: anunciador de cambios de página para lectores de pantalla
+- 💾 Auto-guardado: formulario de registro de acompañante guarda en sessionStorage
+- 🔼 Scroll-to-top automático al paginar en explorar
+- 📊 Contador de resultados en búsqueda ("42 acompañantes encontrados")
+- 🖱️ Botones nativos en onboarding (antes div[role=button])
+- 📝 27 tildes/acentos corregidos en textos en español
+
+### Tests
+- ✅ schemas.test.ts: corregido (serviceType → serviceId)
+- ✅ solicitud.test.tsx: corregido (añadido QueryClientProvider)
+- 🔧 app-shell.test.tsx: mock de sub-componentes (pre-existente ESM issue)
