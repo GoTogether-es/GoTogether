@@ -1,11 +1,28 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import { Card, Container, Section } from '@gotogether/ui';
 import { LinkButton } from '@/components/link-button';
 import { homeSteps, sampleCompanion } from '@/lib/content';
 import { routes } from '@/lib/routes';
+import { createClient } from '@/lib/supabase/client';
 import { CheckCircle2, ArrowRight, Star, ShieldCheck, Users } from 'lucide-react';
 import Image from 'next/image';
+import type { Session } from '@supabase/supabase-js';
 
 export default function HomePage() {
+  const [session, setSession] = useState<Session | null>(null);
+  const supabase = createClient();
+
+  useEffect(() => {
+    (async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setSession(session);
+    })();
+  }, [supabase.auth]);
+
+  const profileOrLogin = session ? routes.perfil : routes.login;
+
   return (
     <main>
       <section className="bg-gradient-to-br from-blue-600 to-blue-700 text-white overflow-hidden">
@@ -98,7 +115,7 @@ export default function HomePage() {
               <p className="text-gray-600 mb-8 leading-relaxed">
                 Crea una solicitud sencilla, revisa perfiles verificados y reserva con total garantía de seguridad y seguimiento.
               </p>
-              <LinkButton href={routes.solicitud} variant="primary" className="w-full sm:w-auto">
+              <LinkButton href={profileOrLogin} variant="primary" className="w-full sm:w-auto">
                 Quiero acompañamiento
               </LinkButton>
             </Card>
@@ -110,7 +127,7 @@ export default function HomePage() {
               <p className="text-gray-600 mb-8 leading-relaxed">
                 Aporta tu tiempo, gana ingresos extra y recibe formación especializada para ayudar a quienes más lo necesitan.
               </p>
-              <LinkButton href={routes.login} variant="secondary" className="w-full sm:w-auto">
+              <LinkButton href={profileOrLogin} variant="secondary" className="w-full sm:w-auto">
                 Quiero ser acompañante
               </LinkButton>
             </Card>
