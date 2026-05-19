@@ -25,7 +25,15 @@ El núcleo del marketplace está funcional: los usuarios pueden registrarse, bus
 - [x] Triggers automáticos en bookings (accept, decline, complete, cancel) + reports (rating)
 - [x] API endpoints: list, unread-count, mark-read, mark-all-read
 
-## ⬜ Fase 3 — Pagos
+## ✅ Fase 3 — Estabilización (bugs) (completada)
+
+- [x] `@Roles()` y `RolesAuthGuard` funcionales: `SupabaseJwtStrategy.validate()` consulta BD para incluir `role` en `req.user`
+- [x] `RolesAuthGuard` aplicado en endpoints de supervisor
+- [x] Redis eliminado de `.env` y Docker Compose
+- [x] Emails transaccionales: aceptación, rechazo, completado, cancelación de reserva + verificación aprobada/rechazada
+- [x] Manejo de reconexión en chat: indicador de estado (conectado/reconectando/sin conexión) + refetch al recuperar visibilidad
+
+## ⬜ Fase 4 — Pagos
 
 - [ ] Configurar `STRIPE_SECRET_KEY` real en Vercel
 - [ ] Integrar PaymentsService en BookingsService
@@ -64,12 +72,12 @@ El núcleo del marketplace está funcional: los usuarios pueden registrarse, bus
 
 ## Bugs conocidos
 
-1. **`@Roles()` y `RolesAuthGuard` no funcionales** — `req.user.role` es undefined porque `SupabaseJwtStrategy.validate()` no incluye el rol. Requiere consulta a BD en la estrategia.
-2. **Redis configurado pero no usado** — `REDIS_URL` existe en `.env` y Docker pero ningún servicio lo utiliza.
+1. **`@Roles()` y `RolesAuthGuard` no funcionales** — ~~`req.user.role` es undefined porque `SupabaseJwtStrategy.validate()` no incluye el rol.~~ ✅ Corregido: la estrategia ahora consulta la BD y el guard se aplica en endpoints de supervisor.
+2. **Redis configurado pero no usado** — ~~`REDIS_URL` existe en `.env` y Docker pero ningún servicio lo utiliza.~~ ✅ Corregido: eliminado de `.env`, `.env.example` y `docker-compose.yml`.
 3. **Webhook de Stripe no procesa eventos** — El endpoint recibe y verifica la firma pero descarta el evento.
-4. **Emails transaccionales limitados** — Solo magic link e invitación de supervisión. Faltan: confirmación de reserva, cambio de estado, verificación aprobada.
+4. **Emails transaccionales limitados** — ~~Solo magic link e invitación de supervisión.~~ ✅ Corregido: ahora se envían emails en cambios de estado de reserva y verificación de documentos.
 5. **`STRIPE_PLATFORM_FEE_PERCENT` no se usa** — La variable está en `.env` pero no se lee en el código.
-6. **No hay reconexión automática en el chat** — Si la conexión Realtime se cae, el chat deja de recibir mensajes hasta recargar. Supabase JS maneja reconexión básica pero no se verifica en el frontend.
+6. **No hay reconexión automática en el chat** — ~~Si la conexión Realtime se cae, el chat deja de recibir mensajes hasta recargar.~~ ✅ Corregido: indicador visual de estado de conexión + refetch de mensajes al recuperar visibilidad de la pestaña.
 
 ---
 

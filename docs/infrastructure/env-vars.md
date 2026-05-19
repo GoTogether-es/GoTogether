@@ -51,14 +51,6 @@ tags: [infrastructure, env, configuration]
 | `RESEND_API_KEY` | Vercel api, local | API key de Resend |
 | `RESEND_FROM` | Vercel api, local | Dirección "from" de los emails |
 
-### Redis (no usado)
-
-| Variable | Dónde | Descripción |
-|----------|-------|-------------|
-| `REDIS_URL` | Local | Conexión Redis (configurado pero sin uso) |
-
-> [!note] Redis está en `docker-compose.yml` y en `.env` pero ningún módulo del backend lo utiliza. Está preparado para futura caché, colas de mensajes o adaptador Socket.IO.
-
 ## Variables con prefijo `NEXT_PUBLIC_`
 
 Estas variables se exponen al navegador. Solo deben contener valores públicos (URLs, keys publicables). **Nunca** poner secretos aquí.

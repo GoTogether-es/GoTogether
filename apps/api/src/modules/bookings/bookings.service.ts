@@ -4,12 +4,20 @@ import {
   ForbiddenException,
   BadRequestException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingStatusDto } from './dto/update-booking-status.dto';
 import { BookingStatus, UserRole } from '../../generated/client';
 import { ChatService } from '../chat/chat.service';
 import { NotificationsService } from '../notifications/notifications.service';
+import { MailService } from '../auth/mail.service';
+import {
+  getBookingAcceptedTemplate,
+  getBookingDeclinedTemplate,
+  getBookingCompletedTemplate,
+  getBookingCancelledTemplate,
+} from '../auth/mail.templates';
 
 const VALID_TRANSITIONS: Record<BookingStatus, BookingStatus[]> = {
   DRAFT: [BookingStatus.REQUESTED, BookingStatus.CANCELLED],
@@ -27,6 +35,8 @@ export class BookingsService {
     private readonly prisma: PrismaService,
     private readonly chatService: ChatService,
     private readonly notifications: NotificationsService,
+    private readonly mailService: MailService,
+    private readonly configService: ConfigService,
   ) {}
 
   async create(userId: string, dto: CreateBookingDto) {
@@ -174,6 +184,7 @@ export class BookingsService {
           body: `${user.profile?.fullName || 'Un acompañante'} ha aceptado tu solicitud`,
           bookingId,
         });
+        this.sendBookingEmail(booking, 'accepted', user.profile?.fullName);
         break;
       case BookingStatus.DECLINED:
         if (!isCompanion && !canClaim) throw new ForbiddenException('Solo el acompañante puede rechazar');
@@ -184,6 +195,7 @@ export class BookingsService {
           body: `${user.profile?.fullName || 'Un acompañante'} ha rechazado tu solicitud`,
           bookingId,
         });
+        this.sendBookingEmail(booking, 'declined', user.profile?.fullName);
         break;
       case BookingStatus.IN_PROGRESS:
         if (!isCompanion) throw new ForbiddenException('Solo el acompañante puede iniciar el servicio');
@@ -198,6 +210,7 @@ export class BookingsService {
             body: `${user.profile.fullName} ha marcado el servicio como completado. ¡Valóralo!`,
             bookingId,
           });
+          this.sendBookingEmail(booking, 'completed', user.profile.fullName);
         }
         break;
       case BookingStatus.CANCELLED:
@@ -212,6 +225,7 @@ export class BookingsService {
             body: `${user.profile?.fullName || 'El acompañante'} ha cancelado la reserva`,
             bookingId,
           });
+          this.sendBookingEmail(booking, 'cancelled', user.profile?.fullName);
         }
         break;
     }
@@ -228,5 +242,58 @@ export class BookingsService {
       where: { supervisorId, clientId },
     });
     return !!supervision;
+  }
+
+  private async sendBookingEmail(
+    booking: Awaited<ReturnType<BookingsService['findById']>>,
+    event: 'accepted' | 'declined' | 'completed' | 'cancelled',
+    actorName?: string | null,
+  ) {
+    try {
+      const appUrl = this.configService.get<string>('NEXT_PUBLIC_APP_URL') || 'http://localhost:3000';
+      const clientUser = await this.prisma.user.findUnique({ where: { id: booking.clientId } });
+      if (!clientUser) return;
+
+      const userName = booking.client?.profile?.fullName || 'Usuario';
+      const serviceType = booking.serviceType;
+      const companionName = booking.companion?.profile?.fullName || actorName || 'Acompañante';
+
+      let subject = '';
+      let html = '';
+
+      switch (event) {
+        case 'accepted':
+          subject = 'Reserva aceptada - GoTogether';
+          html = getBookingAcceptedTemplate({
+            userName,
+            companionName,
+            serviceType,
+            scheduledAt: booking.scheduledAt.toLocaleString('es-ES', {
+              weekday: 'long', day: 'numeric', month: 'long',
+              hour: '2-digit', minute: '2-digit',
+            }),
+            appUrl,
+          });
+          break;
+        case 'declined':
+          subject = 'Reserva rechazada - GoTogether';
+          html = getBookingDeclinedTemplate({ userName, companionName, serviceType, appUrl });
+          break;
+        case 'completed':
+          subject = 'Servicio completado - GoTogether';
+          html = getBookingCompletedTemplate({ userName, companionName, serviceType, appUrl });
+          break;
+        case 'cancelled':
+          subject = 'Reserva cancelada - GoTogether';
+          html = getBookingCancelledTemplate({ userName, cancelledBy: companionName, serviceType, appUrl });
+          break;
+      }
+
+      if (subject && html) {
+        await this.mailService.sendEmail(clientUser.email, subject, html);
+      }
+    } catch (err) {
+      console.error('BookingsService: failed to send email:', err);
+    }
   }
 }

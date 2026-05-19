@@ -39,6 +39,7 @@ export default function CoordinacionPage() {
   const [userId, setUserId] = useState<string>('');
   const [companionName, setCompanionName] = useState('');
   const [roomId, setRoomId] = useState('');
+  const [connectionStatus, setConnectionStatus] = useState<'connected' | 'reconnecting' | 'disconnected'>('connected');
 
   const supabaseRef = useRef(createClient());
   const channelRef = useRef<any>(null);
@@ -103,7 +104,20 @@ export default function CoordinacionPage() {
               scrollToBottom();
             },
           )
-          .subscribe();
+          .subscribe((status) => {
+            switch (status) {
+              case 'SUBSCRIBED':
+                setConnectionStatus('connected');
+                break;
+              case 'CHANNEL_ERROR':
+              case 'TIMED_OUT':
+              case 'CLOSED':
+                setConnectionStatus('disconnected');
+                break;
+              default:
+                setConnectionStatus('reconnecting');
+            }
+          });
 
         channelRef.current = channel;
 
@@ -121,6 +135,25 @@ export default function CoordinacionPage() {
       cancelled = true;
       channelRef.current?.unsubscribe();
     };
+  }, [bookingId]);
+
+  useEffect(() => {
+    function handleVisibilityChange() {
+      if (document.visibilityState === 'visible' && roomIdRef.current) {
+        const supabase = supabaseRef.current;
+        supabase.auth.getSession().then(({ data }) => {
+          if (data.session) {
+            getChatRoom(bookingId).then((chatData) => {
+              setMessages(chatData.messages || []);
+              scrollToBottom();
+            }).catch(() => {});
+          }
+        });
+      }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, [bookingId]);
 
   const handleSend = useCallback(async () => {
@@ -205,7 +238,17 @@ export default function CoordinacionPage() {
                   </div>
                   <div>
                     <h3 className="font-bold">{companionName || 'Acompañante'}</h3>
-                    <p className="text-xs text-green-600 font-medium">En línea</p>
+                    <p className="text-xs font-medium flex items-center gap-1">
+                      {connectionStatus === 'connected' && (
+                        <><span className="w-2 h-2 bg-green-500 rounded-full"></span> En línea</>
+                      )}
+                      {connectionStatus === 'reconnecting' && (
+                        <><span className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></span> Reconectando...</>
+                      )}
+                      {connectionStatus === 'disconnected' && (
+                        <><span className="w-2 h-2 bg-red-500 rounded-full"></span> Sin conexión</>
+                      )}
+                    </p>
                   </div>
                 </div>
                 <Button variant="ghost" className="text-blue-600 flex items-center gap-2">

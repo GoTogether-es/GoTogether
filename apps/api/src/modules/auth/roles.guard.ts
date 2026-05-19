@@ -1,15 +1,9 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { UserRole } from '../../generated/client';
+import { ROLES_KEY } from './roles-auth.guard';
 
-export const ROLES_KEY = 'roles';
-
-export const Roles = (...roles: UserRole[]) => {
-  return (target: any, key?: string, descriptor?: any) => {
-    Reflect.defineMetadata(ROLES_KEY, roles, descriptor?.value || target);
-    return target;
-  };
-};
+export { ROLES_KEY, Roles } from './roles-auth.guard';
 
 @Injectable()
 export class RolesGuard implements CanActivate {

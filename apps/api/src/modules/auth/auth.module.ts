@@ -5,11 +5,13 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { SupabaseJwtStrategy } from './supabase.strategy';
 import { RolesAuthGuard } from './roles-auth.guard';
+import { SupabaseAuthGuard } from './supabase-auth.guard';
+import { MailService } from './mail.service';
 
 @Module({
   imports: [PassportModule, ConfigModule],
-  providers: [AuthService, SupabaseJwtStrategy, RolesAuthGuard],
+  providers: [AuthService, SupabaseJwtStrategy, RolesAuthGuard, SupabaseAuthGuard, MailService],
   controllers: [AuthController],
-  exports: [AuthService],
+  exports: [AuthService, RolesAuthGuard, SupabaseAuthGuard, MailService],
 })
 export class AuthModule {}

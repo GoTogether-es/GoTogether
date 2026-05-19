@@ -63,6 +63,20 @@ tags: [project, changelog, history]
 
 ---
 
+## v0.1.1-alpha — Mayo 2026
+
+### Estabilización
+- ✅ `SupabaseJwtStrategy.validate()` consulta BD para incluir `role` en `req.user`
+- ✅ `RolesAuthGuard` + `@Roles()` aplicado en endpoints de supervisor (SUPERVISOR requerido)
+- ✅ `MailService` centralizado compartido entre módulos
+- ✅ Emails transaccionales en cambios de estado de reserva (aceptada, rechazada, completada, cancelada)
+- ✅ Emails transaccionales en verificación de documentos (aprobada, rechazada)
+- ✅ Indicador de estado de conexión en chat (conectado/reconectando/sin conexión)
+- ✅ Refetch automático de mensajes al recuperar visibilidad de la pestaña
+- ✅ Limpieza de Redis no usado (eliminado de .env, .env.example y docker-compose.yml)
+
+---
+
 ## Próximas versiones
 
 ### v0.2.0-beta — Pagos

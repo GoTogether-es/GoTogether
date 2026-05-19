@@ -2,11 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
+import { PrismaService } from '../prisma/prisma.service';
 import jwksClient from 'jwks-rsa';
 
 @Injectable()
 export class SupabaseJwtStrategy extends PassportStrategy(Strategy, 'supabase') {
-  constructor(configService: ConfigService) {
+  constructor(
+    configService: ConfigService,
+    private readonly prisma: PrismaService,
+  ) {
     const supabaseUrl = configService.get<string>('NEXT_PUBLIC_SUPABASE_URL');
     if (!supabaseUrl) {
       throw new Error('NEXT_PUBLIC_SUPABASE_URL is not defined');
@@ -37,6 +41,14 @@ export class SupabaseJwtStrategy extends PassportStrategy(Strategy, 'supabase') 
   }
 
   async validate(payload: any) {
-    return { userId: payload.sub, email: payload.email };
+    const userId = payload.sub;
+    const email = payload.email;
+
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { role: true },
+    });
+
+    return { userId, email, role: user?.role ?? null };
   }
 }
