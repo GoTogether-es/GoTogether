@@ -1,3 +1,5 @@
+'use client';
+
 import { Card, Container, Section } from '@gotogether/ui';
 import { LinkButton } from '@/components/link-button';
 import { FaqAccordion } from '@/components/faq-accordion';
@@ -5,6 +7,10 @@ import { infoSteps, faqData } from '@/lib/content';
 import { routes } from '@/lib/routes';
 import { Heart, ShieldCheck, Sparkles, Smile, ArrowRight, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
+
+function scrollToFinalCta() {
+  document.getElementById('final-cta')?.scrollIntoView({ behavior: 'smooth' });
+}
 
 const features = [
   {
@@ -49,10 +55,6 @@ export default function InfoPage() {
       <Section className="bg-gradient-to-br from-blue-600 to-blue-700 text-white">
         <Container className="py-16 lg:py-24">
           <div className="max-w-3xl mx-auto text-center">
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/20 border border-blue-400/30 text-sm font-semibold backdrop-blur-sm mb-6">
-              <Sparkles className="w-4 h-4" />
-              Próximamente disponible
-            </span>
             <h1 className="text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight mb-6">
               Acompañamiento humano para vivir con más autonomía
             </h1>
@@ -117,9 +119,9 @@ export default function InfoPage() {
                     </li>
                   ))}
                 </ul>
-                <LinkButton href={routes.login} variant="primary" className="w-full">
+                <button type="button" className="gt-button gt-button--primary w-full" onClick={scrollToFinalCta}>
                   Quiero acompañamiento
-                </LinkButton>
+                </button>
               </Card>
 
               <Card className="p-10 border-0 shadow-lg hover:translate-y-[-4px] transition-transform">
@@ -136,9 +138,9 @@ export default function InfoPage() {
                     </li>
                   ))}
                 </ul>
-                <LinkButton href={routes.login} variant="secondary" className="w-full">
+                <button type="button" className="gt-button gt-button--secondary w-full" onClick={scrollToFinalCta}>
                   Quiero ser acompañante
-                </LinkButton>
+                </button>
               </Card>
             </div>
           </div>
@@ -194,7 +196,7 @@ export default function InfoPage() {
         </Container>
       </Section>
 
-      <Section className="bg-white">
+      <Section className="bg-white" id="final-cta">
         <Container>
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl font-bold mb-4">¿Listo para empezar?</h2>

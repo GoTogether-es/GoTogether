@@ -31,7 +31,7 @@ export function FaqAccordion({ items }: { items: FaqItem[] }) {
               onClick={() => toggle(index)}
               aria-expanded={isOpen}
             >
-              <span className="text-lg font-semibold text-gray-900 pr-4">{item.question}</span>
+              <span className="text-lg font-semibold text-blue-600 pr-4">{item.question}</span>
               <ChevronDown
                 className={`w-5 h-5 text-gray-400 shrink-0 transition-transform duration-300 ${
                   isOpen ? 'rotate-180' : ''

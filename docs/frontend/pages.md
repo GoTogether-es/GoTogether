@@ -52,7 +52,7 @@ Landing page con hero, pasos del servicio (5 pasos), CTAs y ejemplo de acompaña
 **Auth:** Pública
 
 Réplica de la landing page de gotogether.es con secciones:
-- Hero: badge "Próximamente disponible", título, subtítulo y CTA
+- Hero: título, subtítulo y CTA
 - ¿Qué es GoTogether?: 4 funcionalidades (Acompañamiento cercano, Seguridad verificada, Actividades variadas, Impacto humano)
 - Elige tu perfil: 2 tarjetas con bullets (Personas acompañadas, Acompañantes)
 - ¿Cómo funciona?: 4 pasos (Te registras, Definimos necesidades, Conectamos perfiles, ¡A disfrutar!)
