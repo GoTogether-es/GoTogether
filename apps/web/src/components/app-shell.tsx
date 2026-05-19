@@ -9,7 +9,7 @@ import { Footer } from './footer';
 import { NotificationBell } from './notification-bell';
 import { ConfirmDialog } from './confirm-dialog';
 import { RouteAnnouncer } from './route-announcer';
-import { User, LogIn, Menu, X, Search, CalendarDays, LogOut, LayoutDashboard, Info } from 'lucide-react';
+import { User, LogIn, Menu, X, Search, CalendarDays, LogOut, LayoutDashboard, Info, History } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { logout as apiLogout, getProfile } from '@/services/api';
 import type { Session, AuthChangeEvent } from '@supabase/supabase-js';
@@ -161,16 +161,28 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   </Link>
                 )}
                 {session && (
-                  <Link
-                    href={routes.reservas}
-                    className={clsx(
-                      'flex items-center gap-2 text-sm font-medium transition-colors hover:text-blue-600',
-                      isActive(routes.reservas) ? 'text-blue-600' : 'text-gray-500'
-                    )}
-                  >
-                    <CalendarDays className="w-4 h-4" />
-                    Mis Reservas
-                  </Link>
+                  <>
+                    <Link
+                      href={routes.reservas}
+                      className={clsx(
+                        'flex items-center gap-2 text-sm font-medium transition-colors hover:text-blue-600',
+                        isActive(routes.reservas) ? 'text-blue-600' : 'text-gray-500'
+                      )}
+                    >
+                      <CalendarDays className="w-4 h-4" />
+                      Mis Reservas
+                    </Link>
+                    <Link
+                      href={routes.historial}
+                      className={clsx(
+                        'flex items-center gap-2 text-sm font-medium transition-colors hover:text-blue-600',
+                        isActive(routes.historial) ? 'text-blue-600' : 'text-gray-500'
+                      )}
+                    >
+                      <History className="w-4 h-4" />
+                      Historial
+                    </Link>
+                  </>
                 )}
               </nav>
             </div>
@@ -289,6 +301,19 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 >
                   <CalendarDays className="w-5 h-5" />
                   Mis Reservas
+                </Link>
+                <Link
+                  href={routes.historial}
+                  className={clsx(
+                    'flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium transition-colors',
+                    isActive(routes.historial)
+                      ? 'bg-blue-50 text-blue-600'
+                      : 'text-gray-700 hover:bg-gray-50'
+                  )}
+                  onClick={closeMenu}
+                >
+                  <History className="w-5 h-5" />
+                  Historial
                 </Link>
                 <Link
                   href={routes.perfil}

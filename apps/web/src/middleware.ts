@@ -10,12 +10,14 @@ const PROTECTED_ROUTES = [
   '/valoracion',
   '/supervision',
   '/panel',
+  '/historial',
 ]
 
 const PUBLIC_ROUTES = [
   '/',
   '/explorar',
   '/info',
+  '/legal',
   '/auth',
   '/api',
   '/_next',

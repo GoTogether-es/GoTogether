@@ -1,15 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { Card, Container, Section } from '@gotogether/ui';
 import { LinkButton } from '@/components/link-button';
 import { FaqAccordion } from '@/components/faq-accordion';
 import { infoSteps, faqData } from '@/lib/content';
 import { routes } from '@/lib/routes';
-import { createClient } from '@/lib/supabase/client';
 import { Heart, ShieldCheck, Sparkles, Smile, ArrowRight, CheckCircle2 } from 'lucide-react';
-import Link from 'next/link';
-import type { Session } from '@supabase/supabase-js';
+
+function scrollToFinalCta() {
+  document.getElementById('final-cta')?.scrollIntoView({ behavior: 'smooth' });
+}
 
 const features = [
   {
@@ -49,18 +49,6 @@ const companionBullets = [
 ];
 
 export default function InfoPage() {
-  const [session, setSession] = useState<Session | null>(null);
-  const supabase = createClient();
-
-  useEffect(() => {
-    (async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setSession(session);
-    })();
-  }, [supabase.auth]);
-
-  const profileOrLogin = session ? routes.perfil : routes.login;
-
   return (
     <main>
       <Section className="bg-gradient-to-br from-blue-600 to-blue-700 text-white">
@@ -130,9 +118,9 @@ export default function InfoPage() {
                     </li>
                   ))}
                 </ul>
-                <LinkButton href={profileOrLogin} variant="primary" className="w-full">
+                <button type="button" className="gt-button gt-button--primary w-full" onClick={scrollToFinalCta}>
                   Quiero acompañamiento
-                </LinkButton>
+                </button>
               </Card>
 
               <Card className="p-10 border-0 shadow-lg hover:translate-y-[-4px] transition-transform">
@@ -149,9 +137,9 @@ export default function InfoPage() {
                     </li>
                   ))}
                 </ul>
-                <LinkButton href={profileOrLogin} variant="secondary" className="w-full">
+                <button type="button" className="gt-button gt-button--secondary w-full" onClick={scrollToFinalCta}>
                   Quiero ser acompañante
-                </LinkButton>
+                </button>
               </Card>
             </div>
           </div>
@@ -218,12 +206,6 @@ export default function InfoPage() {
               Empezar ahora
               <ArrowRight className="ml-2 w-5 h-5" />
             </LinkButton>
-            <p className="text-sm text-gray-400 mt-6">
-              Al registrarte aceptas nuestra{' '}
-              <Link href="/legal/privacy" className="underline hover:text-blue-600">Política de Privacidad</Link>
-              {' '}y los{' '}
-              <Link href="/legal/terms" className="underline hover:text-blue-600">Términos</Link>
-            </p>
           </div>
         </Container>
       </Section>
