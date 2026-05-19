@@ -101,8 +101,37 @@ model CompanionProfile {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
-  profile  Profile   @relation(fields: [profileId], references: [id])
-  bookings Booking[] @relation("CompanionBookings")
+  profile           Profile            @relation(fields: [profileId], references: [id])
+  bookings          Booking[]          @relation("CompanionBookings")
+  availabilitySlots AvailabilitySlot[]
+}
+
+model Service {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  price       Int      @default(0)
+  category    String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  bookings Booking[]
+
+  @@map("Service")
+}
+
+model AvailabilitySlot {
+  id          String   @id @default(uuid())
+  companionId String
+  dayOfWeek   Int
+  startTime   String
+  endTime     String
+  createdAt   DateTime @default(now())
+
+  companion CompanionProfile @relation(fields: [companionId], references: [id])
+
+  @@map("AvailabilitySlot")
 }
 
 model Booking {
@@ -110,6 +139,7 @@ model Booking {
   clientId    String
   companionId String?
   bookedById  String?
+  serviceId   String?
   status      BookingStatus @default(DRAFT)
   serviceType String
   summary     String?
@@ -122,6 +152,7 @@ model Booking {
   client    User              @relation("ClientBookings", fields: [clientId], references: [id])
   companion CompanionProfile? @relation("CompanionBookings", fields: [companionId], references: [id])
   bookedBy  User?             @relation("BookedBookings", fields: [bookedById], references: [id])
+  service   Service?          @relation(fields: [serviceId], references: [id])
   payment   Payment?
   report    Report?
   chatRoom  ChatRoom?

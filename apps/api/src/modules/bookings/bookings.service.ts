@@ -3,6 +3,7 @@ import {
   NotFoundException,
   ForbiddenException,
   BadRequestException,
+  ConflictException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
@@ -12,6 +13,7 @@ import { BookingStatus, UserRole } from '../../generated/client';
 import { ChatService } from '../chat/chat.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { MailService } from '../auth/mail.service';
+import { AvailabilityService } from '../availability/availability.service';
 import {
   getBookingAcceptedTemplate,
   getBookingDeclinedTemplate,
@@ -37,6 +39,7 @@ export class BookingsService {
     private readonly notifications: NotificationsService,
     private readonly mailService: MailService,
     private readonly configService: ConfigService,
+    private readonly availabilityService: AvailabilityService,
   ) {}
 
   async create(userId: string, dto: CreateBookingDto) {
@@ -49,18 +52,38 @@ export class BookingsService {
       );
     }
 
+    let serviceType = dto.serviceType;
+    let serviceId: string | null = null;
+
+    if (dto.serviceId) {
+      const service = await this.prisma.service.findUnique({ where: { id: dto.serviceId } });
+      if (!service) throw new NotFoundException('Servicio no encontrado');
+      if (!service.active) throw new BadRequestException('Este servicio no está disponible');
+      serviceType = service.name;
+      serviceId = service.id;
+    }
+
+    const scheduledDate = new Date(dto.scheduledAt);
+    if (dto.companionId) {
+      const isAvailable = await this.availabilityService.isCompanionAvailable(dto.companionId, scheduledDate);
+      if (!isAvailable) {
+        throw new ConflictException('El acompañante no está disponible en ese horario');
+      }
+    }
+
     return this.prisma.booking.create({
       data: {
         clientId: userId,
         bookedById: userId,
         companionId: dto.companionId || null,
-        serviceType: dto.serviceType,
+        serviceId,
+        serviceType,
         address: dto.address,
-        scheduledAt: new Date(dto.scheduledAt),
+        scheduledAt: scheduledDate,
         summary: dto.summary,
         disability: dto.disability,
       },
-      include: { payment: true },
+      include: { payment: true, service: true },
     });
   }
 
@@ -242,6 +265,89 @@ export class BookingsService {
       where: { supervisorId, clientId },
     });
     return !!supervision;
+  }
+
+  async findHistory(userId: string, query: { page?: number; limit?: number; status?: string }) {
+    const { page = 1, limit = 10, status } = query;
+    const skip = (page - 1) * limit;
+
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { role: true },
+    });
+    if (!user) throw new NotFoundException('Usuario no encontrado');
+
+    const where: any = {};
+
+    if (user.role === UserRole.COMPANION) {
+      const companion = await this.prisma.companionProfile.findFirst({
+        where: { profile: { userId } },
+        select: { id: true },
+      });
+      where.companionId = companion?.id || '__none__';
+    } else {
+      where.clientId = userId;
+    }
+
+    if (status) where.status = status;
+
+    const [data, total] = await Promise.all([
+      this.prisma.booking.findMany({
+        where,
+        include: {
+          client: { include: { profile: true } },
+          companion: { include: { profile: true } },
+          report: true,
+          service: true,
+        },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+      }),
+      this.prisma.booking.count({ where }),
+    ]);
+
+    return {
+      data,
+      meta: { total, page, limit, totalPages: Math.ceil(total / limit) },
+    };
+  }
+
+  async getStats(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { role: true },
+    });
+    if (!user) throw new NotFoundException('Usuario no encontrado');
+
+    const where: any = { status: BookingStatus.COMPLETED };
+
+    if (user.role === UserRole.COMPANION) {
+      const companion = await this.prisma.companionProfile.findFirst({
+        where: { profile: { userId } },
+        select: { id: true },
+      });
+      where.companionId = companion?.id || '__none__';
+    } else {
+      where.clientId = userId;
+    }
+
+    const [completed, withRating, ratingData] = await Promise.all([
+      this.prisma.booking.count({ where }),
+      this.prisma.booking.count({ where: { ...where, report: { isNot: null } } }),
+      this.prisma.report.aggregate({
+        _avg: { rating: true },
+        where: { booking: where },
+      }),
+    ]);
+
+    return {
+      completed,
+      withRating,
+      averageRating: ratingData._avg.rating
+        ? Math.round(ratingData._avg.rating * 10) / 10
+        : null,
+    };
   }
 
   private async sendBookingEmail(

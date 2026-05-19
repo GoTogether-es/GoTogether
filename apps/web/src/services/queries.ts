@@ -179,3 +179,33 @@ export function useCancelInvitation() {
     },
   });
 }
+
+export function useServices() {
+  return useQuery({
+    queryKey: ['services'],
+    queryFn: api.getServices,
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
+export function useCompanionAvailability(companionId: string) {
+  return useQuery({
+    queryKey: ['availability', companionId],
+    queryFn: () => api.getCompanionAvailability(companionId),
+    enabled: !!companionId,
+  });
+}
+
+export function useBookingHistory(params?: { page?: number; limit?: number; status?: string }) {
+  return useQuery({
+    queryKey: ['bookingHistory', params],
+    queryFn: () => api.getBookingHistory(params),
+  });
+}
+
+export function useBookingStats() {
+  return useQuery({
+    queryKey: ['bookingStats'],
+    queryFn: api.getBookingStats,
+  });
+}

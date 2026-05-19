@@ -39,6 +39,16 @@ export type Profile = $Result.DefaultSelection<Prisma.$ProfilePayload>
  */
 export type CompanionProfile = $Result.DefaultSelection<Prisma.$CompanionProfilePayload>
 /**
+ * Model Service
+ * 
+ */
+export type Service = $Result.DefaultSelection<Prisma.$ServicePayload>
+/**
+ * Model AvailabilitySlot
+ * 
+ */
+export type AvailabilitySlot = $Result.DefaultSelection<Prisma.$AvailabilitySlotPayload>
+/**
  * Model Booking
  * 
  */
@@ -277,6 +287,26 @@ export class PrismaClient<
     * ```
     */
   get companionProfile(): Prisma.CompanionProfileDelegate<ExtArgs>;
+
+  /**
+   * `prisma.service`: Exposes CRUD operations for the **Service** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Services
+    * const services = await prisma.service.findMany()
+    * ```
+    */
+  get service(): Prisma.ServiceDelegate<ExtArgs>;
+
+  /**
+   * `prisma.availabilitySlot`: Exposes CRUD operations for the **AvailabilitySlot** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AvailabilitySlots
+    * const availabilitySlots = await prisma.availabilitySlot.findMany()
+    * ```
+    */
+  get availabilitySlot(): Prisma.AvailabilitySlotDelegate<ExtArgs>;
 
   /**
    * `prisma.booking`: Exposes CRUD operations for the **Booking** model.
@@ -783,6 +813,8 @@ export namespace Prisma {
     SupervisionInvite: 'SupervisionInvite',
     Profile: 'Profile',
     CompanionProfile: 'CompanionProfile',
+    Service: 'Service',
+    AvailabilitySlot: 'AvailabilitySlot',
     Booking: 'Booking',
     Payment: 'Payment',
     ChatRoom: 'ChatRoom',
@@ -804,7 +836,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "supervision" | "supervisionInvite" | "profile" | "companionProfile" | "booking" | "payment" | "chatRoom" | "chatMessage" | "report" | "notification"
+      modelProps: "user" | "supervision" | "supervisionInvite" | "profile" | "companionProfile" | "service" | "availabilitySlot" | "booking" | "payment" | "chatRoom" | "chatMessage" | "report" | "notification"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1155,6 +1187,146 @@ export namespace Prisma {
           count: {
             args: Prisma.CompanionProfileCountArgs<ExtArgs>
             result: $Utils.Optional<CompanionProfileCountAggregateOutputType> | number
+          }
+        }
+      }
+      Service: {
+        payload: Prisma.$ServicePayload<ExtArgs>
+        fields: Prisma.ServiceFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ServiceFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ServicePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ServiceFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ServicePayload>
+          }
+          findFirst: {
+            args: Prisma.ServiceFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ServicePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ServiceFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ServicePayload>
+          }
+          findMany: {
+            args: Prisma.ServiceFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ServicePayload>[]
+          }
+          create: {
+            args: Prisma.ServiceCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ServicePayload>
+          }
+          createMany: {
+            args: Prisma.ServiceCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ServiceCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ServicePayload>[]
+          }
+          delete: {
+            args: Prisma.ServiceDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ServicePayload>
+          }
+          update: {
+            args: Prisma.ServiceUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ServicePayload>
+          }
+          deleteMany: {
+            args: Prisma.ServiceDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ServiceUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.ServiceUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ServicePayload>
+          }
+          aggregate: {
+            args: Prisma.ServiceAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateService>
+          }
+          groupBy: {
+            args: Prisma.ServiceGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ServiceGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ServiceCountArgs<ExtArgs>
+            result: $Utils.Optional<ServiceCountAggregateOutputType> | number
+          }
+        }
+      }
+      AvailabilitySlot: {
+        payload: Prisma.$AvailabilitySlotPayload<ExtArgs>
+        fields: Prisma.AvailabilitySlotFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AvailabilitySlotFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AvailabilitySlotPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AvailabilitySlotFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AvailabilitySlotPayload>
+          }
+          findFirst: {
+            args: Prisma.AvailabilitySlotFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AvailabilitySlotPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AvailabilitySlotFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AvailabilitySlotPayload>
+          }
+          findMany: {
+            args: Prisma.AvailabilitySlotFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AvailabilitySlotPayload>[]
+          }
+          create: {
+            args: Prisma.AvailabilitySlotCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AvailabilitySlotPayload>
+          }
+          createMany: {
+            args: Prisma.AvailabilitySlotCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AvailabilitySlotCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AvailabilitySlotPayload>[]
+          }
+          delete: {
+            args: Prisma.AvailabilitySlotDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AvailabilitySlotPayload>
+          }
+          update: {
+            args: Prisma.AvailabilitySlotUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AvailabilitySlotPayload>
+          }
+          deleteMany: {
+            args: Prisma.AvailabilitySlotDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AvailabilitySlotUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.AvailabilitySlotUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AvailabilitySlotPayload>
+          }
+          aggregate: {
+            args: Prisma.AvailabilitySlotAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAvailabilitySlot>
+          }
+          groupBy: {
+            args: Prisma.AvailabilitySlotGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AvailabilitySlotGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AvailabilitySlotCountArgs<ExtArgs>
+            result: $Utils.Optional<AvailabilitySlotCountAggregateOutputType> | number
           }
         }
       }
@@ -1798,10 +1970,12 @@ export namespace Prisma {
 
   export type CompanionProfileCountOutputType = {
     bookings: number
+    availabilitySlots: number
   }
 
   export type CompanionProfileCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     bookings?: boolean | CompanionProfileCountOutputTypeCountBookingsArgs
+    availabilitySlots?: boolean | CompanionProfileCountOutputTypeCountAvailabilitySlotsArgs
   }
 
   // Custom InputTypes
@@ -1819,6 +1993,44 @@ export namespace Prisma {
    * CompanionProfileCountOutputType without action
    */
   export type CompanionProfileCountOutputTypeCountBookingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BookingWhereInput
+  }
+
+  /**
+   * CompanionProfileCountOutputType without action
+   */
+  export type CompanionProfileCountOutputTypeCountAvailabilitySlotsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AvailabilitySlotWhereInput
+  }
+
+
+  /**
+   * Count Type ServiceCountOutputType
+   */
+
+  export type ServiceCountOutputType = {
+    bookings: number
+  }
+
+  export type ServiceCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    bookings?: boolean | ServiceCountOutputTypeCountBookingsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ServiceCountOutputType without action
+   */
+  export type ServiceCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ServiceCountOutputType
+     */
+    select?: ServiceCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ServiceCountOutputType without action
+   */
+  export type ServiceCountOutputTypeCountBookingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: BookingWhereInput
   }
 
@@ -6144,6 +6356,7 @@ export namespace Prisma {
     updatedAt?: boolean
     profile?: boolean | ProfileDefaultArgs<ExtArgs>
     bookings?: boolean | CompanionProfile$bookingsArgs<ExtArgs>
+    availabilitySlots?: boolean | CompanionProfile$availabilitySlotsArgs<ExtArgs>
     _count?: boolean | CompanionProfileCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["companionProfile"]>
 
@@ -6181,6 +6394,7 @@ export namespace Prisma {
   export type CompanionProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     profile?: boolean | ProfileDefaultArgs<ExtArgs>
     bookings?: boolean | CompanionProfile$bookingsArgs<ExtArgs>
+    availabilitySlots?: boolean | CompanionProfile$availabilitySlotsArgs<ExtArgs>
     _count?: boolean | CompanionProfileCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CompanionProfileIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6192,6 +6406,7 @@ export namespace Prisma {
     objects: {
       profile: Prisma.$ProfilePayload<ExtArgs>
       bookings: Prisma.$BookingPayload<ExtArgs>[]
+      availabilitySlots: Prisma.$AvailabilitySlotPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -6572,6 +6787,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     profile<T extends ProfileDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProfileDefaultArgs<ExtArgs>>): Prisma__ProfileClient<$Result.GetResult<Prisma.$ProfilePayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     bookings<T extends CompanionProfile$bookingsArgs<ExtArgs> = {}>(args?: Subset<T, CompanionProfile$bookingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findMany"> | Null>
+    availabilitySlots<T extends CompanionProfile$availabilitySlotsArgs<ExtArgs> = {}>(args?: Subset<T, CompanionProfile$availabilitySlotsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AvailabilitySlotPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6951,6 +7167,26 @@ export namespace Prisma {
   }
 
   /**
+   * CompanionProfile.availabilitySlots
+   */
+  export type CompanionProfile$availabilitySlotsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AvailabilitySlot
+     */
+    select?: AvailabilitySlotSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AvailabilitySlotInclude<ExtArgs> | null
+    where?: AvailabilitySlotWhereInput
+    orderBy?: AvailabilitySlotOrderByWithRelationInput | AvailabilitySlotOrderByWithRelationInput[]
+    cursor?: AvailabilitySlotWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AvailabilitySlotScalarFieldEnum | AvailabilitySlotScalarFieldEnum[]
+  }
+
+  /**
    * CompanionProfile without action
    */
   export type CompanionProfileDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6962,6 +7198,2003 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: CompanionProfileInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Service
+   */
+
+  export type AggregateService = {
+    _count: ServiceCountAggregateOutputType | null
+    _avg: ServiceAvgAggregateOutputType | null
+    _sum: ServiceSumAggregateOutputType | null
+    _min: ServiceMinAggregateOutputType | null
+    _max: ServiceMaxAggregateOutputType | null
+  }
+
+  export type ServiceAvgAggregateOutputType = {
+    price: number | null
+  }
+
+  export type ServiceSumAggregateOutputType = {
+    price: number | null
+  }
+
+  export type ServiceMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    price: number | null
+    category: string | null
+    active: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ServiceMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    price: number | null
+    category: string | null
+    active: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ServiceCountAggregateOutputType = {
+    id: number
+    name: number
+    description: number
+    price: number
+    category: number
+    active: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ServiceAvgAggregateInputType = {
+    price?: true
+  }
+
+  export type ServiceSumAggregateInputType = {
+    price?: true
+  }
+
+  export type ServiceMinAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    price?: true
+    category?: true
+    active?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ServiceMaxAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    price?: true
+    category?: true
+    active?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ServiceCountAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    price?: true
+    category?: true
+    active?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ServiceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Service to aggregate.
+     */
+    where?: ServiceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Services to fetch.
+     */
+    orderBy?: ServiceOrderByWithRelationInput | ServiceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ServiceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Services from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Services.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Services
+    **/
+    _count?: true | ServiceCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ServiceAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ServiceSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ServiceMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ServiceMaxAggregateInputType
+  }
+
+  export type GetServiceAggregateType<T extends ServiceAggregateArgs> = {
+        [P in keyof T & keyof AggregateService]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateService[P]>
+      : GetScalarType<T[P], AggregateService[P]>
+  }
+
+
+
+
+  export type ServiceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ServiceWhereInput
+    orderBy?: ServiceOrderByWithAggregationInput | ServiceOrderByWithAggregationInput[]
+    by: ServiceScalarFieldEnum[] | ServiceScalarFieldEnum
+    having?: ServiceScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ServiceCountAggregateInputType | true
+    _avg?: ServiceAvgAggregateInputType
+    _sum?: ServiceSumAggregateInputType
+    _min?: ServiceMinAggregateInputType
+    _max?: ServiceMaxAggregateInputType
+  }
+
+  export type ServiceGroupByOutputType = {
+    id: string
+    name: string
+    description: string | null
+    price: number
+    category: string | null
+    active: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: ServiceCountAggregateOutputType | null
+    _avg: ServiceAvgAggregateOutputType | null
+    _sum: ServiceSumAggregateOutputType | null
+    _min: ServiceMinAggregateOutputType | null
+    _max: ServiceMaxAggregateOutputType | null
+  }
+
+  type GetServiceGroupByPayload<T extends ServiceGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ServiceGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ServiceGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ServiceGroupByOutputType[P]>
+            : GetScalarType<T[P], ServiceGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ServiceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    price?: boolean
+    category?: boolean
+    active?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    bookings?: boolean | Service$bookingsArgs<ExtArgs>
+    _count?: boolean | ServiceCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["service"]>
+
+  export type ServiceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    price?: boolean
+    category?: boolean
+    active?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["service"]>
+
+  export type ServiceSelectScalar = {
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    price?: boolean
+    category?: boolean
+    active?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ServiceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    bookings?: boolean | Service$bookingsArgs<ExtArgs>
+    _count?: boolean | ServiceCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ServiceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $ServicePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Service"
+    objects: {
+      bookings: Prisma.$BookingPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      description: string | null
+      price: number
+      category: string | null
+      active: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["service"]>
+    composites: {}
+  }
+
+  type ServiceGetPayload<S extends boolean | null | undefined | ServiceDefaultArgs> = $Result.GetResult<Prisma.$ServicePayload, S>
+
+  type ServiceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<ServiceFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: ServiceCountAggregateInputType | true
+    }
+
+  export interface ServiceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Service'], meta: { name: 'Service' } }
+    /**
+     * Find zero or one Service that matches the filter.
+     * @param {ServiceFindUniqueArgs} args - Arguments to find a Service
+     * @example
+     * // Get one Service
+     * const service = await prisma.service.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ServiceFindUniqueArgs>(args: SelectSubset<T, ServiceFindUniqueArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one Service that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {ServiceFindUniqueOrThrowArgs} args - Arguments to find a Service
+     * @example
+     * // Get one Service
+     * const service = await prisma.service.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ServiceFindUniqueOrThrowArgs>(args: SelectSubset<T, ServiceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first Service that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ServiceFindFirstArgs} args - Arguments to find a Service
+     * @example
+     * // Get one Service
+     * const service = await prisma.service.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ServiceFindFirstArgs>(args?: SelectSubset<T, ServiceFindFirstArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first Service that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ServiceFindFirstOrThrowArgs} args - Arguments to find a Service
+     * @example
+     * // Get one Service
+     * const service = await prisma.service.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ServiceFindFirstOrThrowArgs>(args?: SelectSubset<T, ServiceFindFirstOrThrowArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more Services that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ServiceFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Services
+     * const services = await prisma.service.findMany()
+     * 
+     * // Get first 10 Services
+     * const services = await prisma.service.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const serviceWithIdOnly = await prisma.service.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ServiceFindManyArgs>(args?: SelectSubset<T, ServiceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a Service.
+     * @param {ServiceCreateArgs} args - Arguments to create a Service.
+     * @example
+     * // Create one Service
+     * const Service = await prisma.service.create({
+     *   data: {
+     *     // ... data to create a Service
+     *   }
+     * })
+     * 
+     */
+    create<T extends ServiceCreateArgs>(args: SelectSubset<T, ServiceCreateArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many Services.
+     * @param {ServiceCreateManyArgs} args - Arguments to create many Services.
+     * @example
+     * // Create many Services
+     * const service = await prisma.service.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ServiceCreateManyArgs>(args?: SelectSubset<T, ServiceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Services and returns the data saved in the database.
+     * @param {ServiceCreateManyAndReturnArgs} args - Arguments to create many Services.
+     * @example
+     * // Create many Services
+     * const service = await prisma.service.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Services and only return the `id`
+     * const serviceWithIdOnly = await prisma.service.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ServiceCreateManyAndReturnArgs>(args?: SelectSubset<T, ServiceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a Service.
+     * @param {ServiceDeleteArgs} args - Arguments to delete one Service.
+     * @example
+     * // Delete one Service
+     * const Service = await prisma.service.delete({
+     *   where: {
+     *     // ... filter to delete one Service
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ServiceDeleteArgs>(args: SelectSubset<T, ServiceDeleteArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one Service.
+     * @param {ServiceUpdateArgs} args - Arguments to update one Service.
+     * @example
+     * // Update one Service
+     * const service = await prisma.service.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ServiceUpdateArgs>(args: SelectSubset<T, ServiceUpdateArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more Services.
+     * @param {ServiceDeleteManyArgs} args - Arguments to filter Services to delete.
+     * @example
+     * // Delete a few Services
+     * const { count } = await prisma.service.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ServiceDeleteManyArgs>(args?: SelectSubset<T, ServiceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Services.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ServiceUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Services
+     * const service = await prisma.service.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ServiceUpdateManyArgs>(args: SelectSubset<T, ServiceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Service.
+     * @param {ServiceUpsertArgs} args - Arguments to update or create a Service.
+     * @example
+     * // Update or create a Service
+     * const service = await prisma.service.upsert({
+     *   create: {
+     *     // ... data to create a Service
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Service we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ServiceUpsertArgs>(args: SelectSubset<T, ServiceUpsertArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of Services.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ServiceCountArgs} args - Arguments to filter Services to count.
+     * @example
+     * // Count the number of Services
+     * const count = await prisma.service.count({
+     *   where: {
+     *     // ... the filter for the Services we want to count
+     *   }
+     * })
+    **/
+    count<T extends ServiceCountArgs>(
+      args?: Subset<T, ServiceCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ServiceCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Service.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ServiceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ServiceAggregateArgs>(args: Subset<T, ServiceAggregateArgs>): Prisma.PrismaPromise<GetServiceAggregateType<T>>
+
+    /**
+     * Group by Service.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ServiceGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ServiceGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ServiceGroupByArgs['orderBy'] }
+        : { orderBy?: ServiceGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ServiceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetServiceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Service model
+   */
+  readonly fields: ServiceFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Service.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ServiceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    bookings<T extends Service$bookingsArgs<ExtArgs> = {}>(args?: Subset<T, Service$bookingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findMany"> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Service model
+   */ 
+  interface ServiceFieldRefs {
+    readonly id: FieldRef<"Service", 'String'>
+    readonly name: FieldRef<"Service", 'String'>
+    readonly description: FieldRef<"Service", 'String'>
+    readonly price: FieldRef<"Service", 'Int'>
+    readonly category: FieldRef<"Service", 'String'>
+    readonly active: FieldRef<"Service", 'Boolean'>
+    readonly createdAt: FieldRef<"Service", 'DateTime'>
+    readonly updatedAt: FieldRef<"Service", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Service findUnique
+   */
+  export type ServiceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service
+     */
+    select?: ServiceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceInclude<ExtArgs> | null
+    /**
+     * Filter, which Service to fetch.
+     */
+    where: ServiceWhereUniqueInput
+  }
+
+  /**
+   * Service findUniqueOrThrow
+   */
+  export type ServiceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service
+     */
+    select?: ServiceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceInclude<ExtArgs> | null
+    /**
+     * Filter, which Service to fetch.
+     */
+    where: ServiceWhereUniqueInput
+  }
+
+  /**
+   * Service findFirst
+   */
+  export type ServiceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service
+     */
+    select?: ServiceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceInclude<ExtArgs> | null
+    /**
+     * Filter, which Service to fetch.
+     */
+    where?: ServiceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Services to fetch.
+     */
+    orderBy?: ServiceOrderByWithRelationInput | ServiceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Services.
+     */
+    cursor?: ServiceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Services from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Services.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Services.
+     */
+    distinct?: ServiceScalarFieldEnum | ServiceScalarFieldEnum[]
+  }
+
+  /**
+   * Service findFirstOrThrow
+   */
+  export type ServiceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service
+     */
+    select?: ServiceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceInclude<ExtArgs> | null
+    /**
+     * Filter, which Service to fetch.
+     */
+    where?: ServiceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Services to fetch.
+     */
+    orderBy?: ServiceOrderByWithRelationInput | ServiceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Services.
+     */
+    cursor?: ServiceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Services from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Services.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Services.
+     */
+    distinct?: ServiceScalarFieldEnum | ServiceScalarFieldEnum[]
+  }
+
+  /**
+   * Service findMany
+   */
+  export type ServiceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service
+     */
+    select?: ServiceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceInclude<ExtArgs> | null
+    /**
+     * Filter, which Services to fetch.
+     */
+    where?: ServiceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Services to fetch.
+     */
+    orderBy?: ServiceOrderByWithRelationInput | ServiceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Services.
+     */
+    cursor?: ServiceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Services from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Services.
+     */
+    skip?: number
+    distinct?: ServiceScalarFieldEnum | ServiceScalarFieldEnum[]
+  }
+
+  /**
+   * Service create
+   */
+  export type ServiceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service
+     */
+    select?: ServiceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Service.
+     */
+    data: XOR<ServiceCreateInput, ServiceUncheckedCreateInput>
+  }
+
+  /**
+   * Service createMany
+   */
+  export type ServiceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Services.
+     */
+    data: ServiceCreateManyInput | ServiceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Service createManyAndReturn
+   */
+  export type ServiceCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service
+     */
+    select?: ServiceSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Services.
+     */
+    data: ServiceCreateManyInput | ServiceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Service update
+   */
+  export type ServiceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service
+     */
+    select?: ServiceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Service.
+     */
+    data: XOR<ServiceUpdateInput, ServiceUncheckedUpdateInput>
+    /**
+     * Choose, which Service to update.
+     */
+    where: ServiceWhereUniqueInput
+  }
+
+  /**
+   * Service updateMany
+   */
+  export type ServiceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Services.
+     */
+    data: XOR<ServiceUpdateManyMutationInput, ServiceUncheckedUpdateManyInput>
+    /**
+     * Filter which Services to update
+     */
+    where?: ServiceWhereInput
+  }
+
+  /**
+   * Service upsert
+   */
+  export type ServiceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service
+     */
+    select?: ServiceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Service to update in case it exists.
+     */
+    where: ServiceWhereUniqueInput
+    /**
+     * In case the Service found by the `where` argument doesn't exist, create a new Service with this data.
+     */
+    create: XOR<ServiceCreateInput, ServiceUncheckedCreateInput>
+    /**
+     * In case the Service was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ServiceUpdateInput, ServiceUncheckedUpdateInput>
+  }
+
+  /**
+   * Service delete
+   */
+  export type ServiceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service
+     */
+    select?: ServiceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceInclude<ExtArgs> | null
+    /**
+     * Filter which Service to delete.
+     */
+    where: ServiceWhereUniqueInput
+  }
+
+  /**
+   * Service deleteMany
+   */
+  export type ServiceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Services to delete
+     */
+    where?: ServiceWhereInput
+  }
+
+  /**
+   * Service.bookings
+   */
+  export type Service$bookingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Booking
+     */
+    select?: BookingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingInclude<ExtArgs> | null
+    where?: BookingWhereInput
+    orderBy?: BookingOrderByWithRelationInput | BookingOrderByWithRelationInput[]
+    cursor?: BookingWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: BookingScalarFieldEnum | BookingScalarFieldEnum[]
+  }
+
+  /**
+   * Service without action
+   */
+  export type ServiceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service
+     */
+    select?: ServiceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model AvailabilitySlot
+   */
+
+  export type AggregateAvailabilitySlot = {
+    _count: AvailabilitySlotCountAggregateOutputType | null
+    _avg: AvailabilitySlotAvgAggregateOutputType | null
+    _sum: AvailabilitySlotSumAggregateOutputType | null
+    _min: AvailabilitySlotMinAggregateOutputType | null
+    _max: AvailabilitySlotMaxAggregateOutputType | null
+  }
+
+  export type AvailabilitySlotAvgAggregateOutputType = {
+    dayOfWeek: number | null
+  }
+
+  export type AvailabilitySlotSumAggregateOutputType = {
+    dayOfWeek: number | null
+  }
+
+  export type AvailabilitySlotMinAggregateOutputType = {
+    id: string | null
+    companionId: string | null
+    dayOfWeek: number | null
+    startTime: string | null
+    endTime: string | null
+    createdAt: Date | null
+  }
+
+  export type AvailabilitySlotMaxAggregateOutputType = {
+    id: string | null
+    companionId: string | null
+    dayOfWeek: number | null
+    startTime: string | null
+    endTime: string | null
+    createdAt: Date | null
+  }
+
+  export type AvailabilitySlotCountAggregateOutputType = {
+    id: number
+    companionId: number
+    dayOfWeek: number
+    startTime: number
+    endTime: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type AvailabilitySlotAvgAggregateInputType = {
+    dayOfWeek?: true
+  }
+
+  export type AvailabilitySlotSumAggregateInputType = {
+    dayOfWeek?: true
+  }
+
+  export type AvailabilitySlotMinAggregateInputType = {
+    id?: true
+    companionId?: true
+    dayOfWeek?: true
+    startTime?: true
+    endTime?: true
+    createdAt?: true
+  }
+
+  export type AvailabilitySlotMaxAggregateInputType = {
+    id?: true
+    companionId?: true
+    dayOfWeek?: true
+    startTime?: true
+    endTime?: true
+    createdAt?: true
+  }
+
+  export type AvailabilitySlotCountAggregateInputType = {
+    id?: true
+    companionId?: true
+    dayOfWeek?: true
+    startTime?: true
+    endTime?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type AvailabilitySlotAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AvailabilitySlot to aggregate.
+     */
+    where?: AvailabilitySlotWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AvailabilitySlots to fetch.
+     */
+    orderBy?: AvailabilitySlotOrderByWithRelationInput | AvailabilitySlotOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AvailabilitySlotWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AvailabilitySlots from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AvailabilitySlots.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AvailabilitySlots
+    **/
+    _count?: true | AvailabilitySlotCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: AvailabilitySlotAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: AvailabilitySlotSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AvailabilitySlotMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AvailabilitySlotMaxAggregateInputType
+  }
+
+  export type GetAvailabilitySlotAggregateType<T extends AvailabilitySlotAggregateArgs> = {
+        [P in keyof T & keyof AggregateAvailabilitySlot]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAvailabilitySlot[P]>
+      : GetScalarType<T[P], AggregateAvailabilitySlot[P]>
+  }
+
+
+
+
+  export type AvailabilitySlotGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AvailabilitySlotWhereInput
+    orderBy?: AvailabilitySlotOrderByWithAggregationInput | AvailabilitySlotOrderByWithAggregationInput[]
+    by: AvailabilitySlotScalarFieldEnum[] | AvailabilitySlotScalarFieldEnum
+    having?: AvailabilitySlotScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AvailabilitySlotCountAggregateInputType | true
+    _avg?: AvailabilitySlotAvgAggregateInputType
+    _sum?: AvailabilitySlotSumAggregateInputType
+    _min?: AvailabilitySlotMinAggregateInputType
+    _max?: AvailabilitySlotMaxAggregateInputType
+  }
+
+  export type AvailabilitySlotGroupByOutputType = {
+    id: string
+    companionId: string
+    dayOfWeek: number
+    startTime: string
+    endTime: string
+    createdAt: Date
+    _count: AvailabilitySlotCountAggregateOutputType | null
+    _avg: AvailabilitySlotAvgAggregateOutputType | null
+    _sum: AvailabilitySlotSumAggregateOutputType | null
+    _min: AvailabilitySlotMinAggregateOutputType | null
+    _max: AvailabilitySlotMaxAggregateOutputType | null
+  }
+
+  type GetAvailabilitySlotGroupByPayload<T extends AvailabilitySlotGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AvailabilitySlotGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AvailabilitySlotGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AvailabilitySlotGroupByOutputType[P]>
+            : GetScalarType<T[P], AvailabilitySlotGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AvailabilitySlotSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companionId?: boolean
+    dayOfWeek?: boolean
+    startTime?: boolean
+    endTime?: boolean
+    createdAt?: boolean
+    companion?: boolean | CompanionProfileDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["availabilitySlot"]>
+
+  export type AvailabilitySlotSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companionId?: boolean
+    dayOfWeek?: boolean
+    startTime?: boolean
+    endTime?: boolean
+    createdAt?: boolean
+    companion?: boolean | CompanionProfileDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["availabilitySlot"]>
+
+  export type AvailabilitySlotSelectScalar = {
+    id?: boolean
+    companionId?: boolean
+    dayOfWeek?: boolean
+    startTime?: boolean
+    endTime?: boolean
+    createdAt?: boolean
+  }
+
+  export type AvailabilitySlotInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    companion?: boolean | CompanionProfileDefaultArgs<ExtArgs>
+  }
+  export type AvailabilitySlotIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    companion?: boolean | CompanionProfileDefaultArgs<ExtArgs>
+  }
+
+  export type $AvailabilitySlotPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AvailabilitySlot"
+    objects: {
+      companion: Prisma.$CompanionProfilePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      companionId: string
+      dayOfWeek: number
+      startTime: string
+      endTime: string
+      createdAt: Date
+    }, ExtArgs["result"]["availabilitySlot"]>
+    composites: {}
+  }
+
+  type AvailabilitySlotGetPayload<S extends boolean | null | undefined | AvailabilitySlotDefaultArgs> = $Result.GetResult<Prisma.$AvailabilitySlotPayload, S>
+
+  type AvailabilitySlotCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<AvailabilitySlotFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: AvailabilitySlotCountAggregateInputType | true
+    }
+
+  export interface AvailabilitySlotDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AvailabilitySlot'], meta: { name: 'AvailabilitySlot' } }
+    /**
+     * Find zero or one AvailabilitySlot that matches the filter.
+     * @param {AvailabilitySlotFindUniqueArgs} args - Arguments to find a AvailabilitySlot
+     * @example
+     * // Get one AvailabilitySlot
+     * const availabilitySlot = await prisma.availabilitySlot.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AvailabilitySlotFindUniqueArgs>(args: SelectSubset<T, AvailabilitySlotFindUniqueArgs<ExtArgs>>): Prisma__AvailabilitySlotClient<$Result.GetResult<Prisma.$AvailabilitySlotPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one AvailabilitySlot that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {AvailabilitySlotFindUniqueOrThrowArgs} args - Arguments to find a AvailabilitySlot
+     * @example
+     * // Get one AvailabilitySlot
+     * const availabilitySlot = await prisma.availabilitySlot.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AvailabilitySlotFindUniqueOrThrowArgs>(args: SelectSubset<T, AvailabilitySlotFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AvailabilitySlotClient<$Result.GetResult<Prisma.$AvailabilitySlotPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first AvailabilitySlot that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AvailabilitySlotFindFirstArgs} args - Arguments to find a AvailabilitySlot
+     * @example
+     * // Get one AvailabilitySlot
+     * const availabilitySlot = await prisma.availabilitySlot.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AvailabilitySlotFindFirstArgs>(args?: SelectSubset<T, AvailabilitySlotFindFirstArgs<ExtArgs>>): Prisma__AvailabilitySlotClient<$Result.GetResult<Prisma.$AvailabilitySlotPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first AvailabilitySlot that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AvailabilitySlotFindFirstOrThrowArgs} args - Arguments to find a AvailabilitySlot
+     * @example
+     * // Get one AvailabilitySlot
+     * const availabilitySlot = await prisma.availabilitySlot.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AvailabilitySlotFindFirstOrThrowArgs>(args?: SelectSubset<T, AvailabilitySlotFindFirstOrThrowArgs<ExtArgs>>): Prisma__AvailabilitySlotClient<$Result.GetResult<Prisma.$AvailabilitySlotPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more AvailabilitySlots that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AvailabilitySlotFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AvailabilitySlots
+     * const availabilitySlots = await prisma.availabilitySlot.findMany()
+     * 
+     * // Get first 10 AvailabilitySlots
+     * const availabilitySlots = await prisma.availabilitySlot.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const availabilitySlotWithIdOnly = await prisma.availabilitySlot.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AvailabilitySlotFindManyArgs>(args?: SelectSubset<T, AvailabilitySlotFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AvailabilitySlotPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a AvailabilitySlot.
+     * @param {AvailabilitySlotCreateArgs} args - Arguments to create a AvailabilitySlot.
+     * @example
+     * // Create one AvailabilitySlot
+     * const AvailabilitySlot = await prisma.availabilitySlot.create({
+     *   data: {
+     *     // ... data to create a AvailabilitySlot
+     *   }
+     * })
+     * 
+     */
+    create<T extends AvailabilitySlotCreateArgs>(args: SelectSubset<T, AvailabilitySlotCreateArgs<ExtArgs>>): Prisma__AvailabilitySlotClient<$Result.GetResult<Prisma.$AvailabilitySlotPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many AvailabilitySlots.
+     * @param {AvailabilitySlotCreateManyArgs} args - Arguments to create many AvailabilitySlots.
+     * @example
+     * // Create many AvailabilitySlots
+     * const availabilitySlot = await prisma.availabilitySlot.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AvailabilitySlotCreateManyArgs>(args?: SelectSubset<T, AvailabilitySlotCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AvailabilitySlots and returns the data saved in the database.
+     * @param {AvailabilitySlotCreateManyAndReturnArgs} args - Arguments to create many AvailabilitySlots.
+     * @example
+     * // Create many AvailabilitySlots
+     * const availabilitySlot = await prisma.availabilitySlot.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AvailabilitySlots and only return the `id`
+     * const availabilitySlotWithIdOnly = await prisma.availabilitySlot.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AvailabilitySlotCreateManyAndReturnArgs>(args?: SelectSubset<T, AvailabilitySlotCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AvailabilitySlotPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a AvailabilitySlot.
+     * @param {AvailabilitySlotDeleteArgs} args - Arguments to delete one AvailabilitySlot.
+     * @example
+     * // Delete one AvailabilitySlot
+     * const AvailabilitySlot = await prisma.availabilitySlot.delete({
+     *   where: {
+     *     // ... filter to delete one AvailabilitySlot
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AvailabilitySlotDeleteArgs>(args: SelectSubset<T, AvailabilitySlotDeleteArgs<ExtArgs>>): Prisma__AvailabilitySlotClient<$Result.GetResult<Prisma.$AvailabilitySlotPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one AvailabilitySlot.
+     * @param {AvailabilitySlotUpdateArgs} args - Arguments to update one AvailabilitySlot.
+     * @example
+     * // Update one AvailabilitySlot
+     * const availabilitySlot = await prisma.availabilitySlot.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AvailabilitySlotUpdateArgs>(args: SelectSubset<T, AvailabilitySlotUpdateArgs<ExtArgs>>): Prisma__AvailabilitySlotClient<$Result.GetResult<Prisma.$AvailabilitySlotPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more AvailabilitySlots.
+     * @param {AvailabilitySlotDeleteManyArgs} args - Arguments to filter AvailabilitySlots to delete.
+     * @example
+     * // Delete a few AvailabilitySlots
+     * const { count } = await prisma.availabilitySlot.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AvailabilitySlotDeleteManyArgs>(args?: SelectSubset<T, AvailabilitySlotDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AvailabilitySlots.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AvailabilitySlotUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AvailabilitySlots
+     * const availabilitySlot = await prisma.availabilitySlot.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AvailabilitySlotUpdateManyArgs>(args: SelectSubset<T, AvailabilitySlotUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one AvailabilitySlot.
+     * @param {AvailabilitySlotUpsertArgs} args - Arguments to update or create a AvailabilitySlot.
+     * @example
+     * // Update or create a AvailabilitySlot
+     * const availabilitySlot = await prisma.availabilitySlot.upsert({
+     *   create: {
+     *     // ... data to create a AvailabilitySlot
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AvailabilitySlot we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AvailabilitySlotUpsertArgs>(args: SelectSubset<T, AvailabilitySlotUpsertArgs<ExtArgs>>): Prisma__AvailabilitySlotClient<$Result.GetResult<Prisma.$AvailabilitySlotPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of AvailabilitySlots.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AvailabilitySlotCountArgs} args - Arguments to filter AvailabilitySlots to count.
+     * @example
+     * // Count the number of AvailabilitySlots
+     * const count = await prisma.availabilitySlot.count({
+     *   where: {
+     *     // ... the filter for the AvailabilitySlots we want to count
+     *   }
+     * })
+    **/
+    count<T extends AvailabilitySlotCountArgs>(
+      args?: Subset<T, AvailabilitySlotCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AvailabilitySlotCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AvailabilitySlot.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AvailabilitySlotAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AvailabilitySlotAggregateArgs>(args: Subset<T, AvailabilitySlotAggregateArgs>): Prisma.PrismaPromise<GetAvailabilitySlotAggregateType<T>>
+
+    /**
+     * Group by AvailabilitySlot.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AvailabilitySlotGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AvailabilitySlotGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AvailabilitySlotGroupByArgs['orderBy'] }
+        : { orderBy?: AvailabilitySlotGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AvailabilitySlotGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAvailabilitySlotGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AvailabilitySlot model
+   */
+  readonly fields: AvailabilitySlotFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AvailabilitySlot.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AvailabilitySlotClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    companion<T extends CompanionProfileDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanionProfileDefaultArgs<ExtArgs>>): Prisma__CompanionProfileClient<$Result.GetResult<Prisma.$CompanionProfilePayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AvailabilitySlot model
+   */ 
+  interface AvailabilitySlotFieldRefs {
+    readonly id: FieldRef<"AvailabilitySlot", 'String'>
+    readonly companionId: FieldRef<"AvailabilitySlot", 'String'>
+    readonly dayOfWeek: FieldRef<"AvailabilitySlot", 'Int'>
+    readonly startTime: FieldRef<"AvailabilitySlot", 'String'>
+    readonly endTime: FieldRef<"AvailabilitySlot", 'String'>
+    readonly createdAt: FieldRef<"AvailabilitySlot", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AvailabilitySlot findUnique
+   */
+  export type AvailabilitySlotFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AvailabilitySlot
+     */
+    select?: AvailabilitySlotSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AvailabilitySlotInclude<ExtArgs> | null
+    /**
+     * Filter, which AvailabilitySlot to fetch.
+     */
+    where: AvailabilitySlotWhereUniqueInput
+  }
+
+  /**
+   * AvailabilitySlot findUniqueOrThrow
+   */
+  export type AvailabilitySlotFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AvailabilitySlot
+     */
+    select?: AvailabilitySlotSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AvailabilitySlotInclude<ExtArgs> | null
+    /**
+     * Filter, which AvailabilitySlot to fetch.
+     */
+    where: AvailabilitySlotWhereUniqueInput
+  }
+
+  /**
+   * AvailabilitySlot findFirst
+   */
+  export type AvailabilitySlotFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AvailabilitySlot
+     */
+    select?: AvailabilitySlotSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AvailabilitySlotInclude<ExtArgs> | null
+    /**
+     * Filter, which AvailabilitySlot to fetch.
+     */
+    where?: AvailabilitySlotWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AvailabilitySlots to fetch.
+     */
+    orderBy?: AvailabilitySlotOrderByWithRelationInput | AvailabilitySlotOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AvailabilitySlots.
+     */
+    cursor?: AvailabilitySlotWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AvailabilitySlots from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AvailabilitySlots.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AvailabilitySlots.
+     */
+    distinct?: AvailabilitySlotScalarFieldEnum | AvailabilitySlotScalarFieldEnum[]
+  }
+
+  /**
+   * AvailabilitySlot findFirstOrThrow
+   */
+  export type AvailabilitySlotFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AvailabilitySlot
+     */
+    select?: AvailabilitySlotSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AvailabilitySlotInclude<ExtArgs> | null
+    /**
+     * Filter, which AvailabilitySlot to fetch.
+     */
+    where?: AvailabilitySlotWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AvailabilitySlots to fetch.
+     */
+    orderBy?: AvailabilitySlotOrderByWithRelationInput | AvailabilitySlotOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AvailabilitySlots.
+     */
+    cursor?: AvailabilitySlotWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AvailabilitySlots from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AvailabilitySlots.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AvailabilitySlots.
+     */
+    distinct?: AvailabilitySlotScalarFieldEnum | AvailabilitySlotScalarFieldEnum[]
+  }
+
+  /**
+   * AvailabilitySlot findMany
+   */
+  export type AvailabilitySlotFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AvailabilitySlot
+     */
+    select?: AvailabilitySlotSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AvailabilitySlotInclude<ExtArgs> | null
+    /**
+     * Filter, which AvailabilitySlots to fetch.
+     */
+    where?: AvailabilitySlotWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AvailabilitySlots to fetch.
+     */
+    orderBy?: AvailabilitySlotOrderByWithRelationInput | AvailabilitySlotOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AvailabilitySlots.
+     */
+    cursor?: AvailabilitySlotWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AvailabilitySlots from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AvailabilitySlots.
+     */
+    skip?: number
+    distinct?: AvailabilitySlotScalarFieldEnum | AvailabilitySlotScalarFieldEnum[]
+  }
+
+  /**
+   * AvailabilitySlot create
+   */
+  export type AvailabilitySlotCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AvailabilitySlot
+     */
+    select?: AvailabilitySlotSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AvailabilitySlotInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AvailabilitySlot.
+     */
+    data: XOR<AvailabilitySlotCreateInput, AvailabilitySlotUncheckedCreateInput>
+  }
+
+  /**
+   * AvailabilitySlot createMany
+   */
+  export type AvailabilitySlotCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AvailabilitySlots.
+     */
+    data: AvailabilitySlotCreateManyInput | AvailabilitySlotCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AvailabilitySlot createManyAndReturn
+   */
+  export type AvailabilitySlotCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AvailabilitySlot
+     */
+    select?: AvailabilitySlotSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many AvailabilitySlots.
+     */
+    data: AvailabilitySlotCreateManyInput | AvailabilitySlotCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AvailabilitySlotIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AvailabilitySlot update
+   */
+  export type AvailabilitySlotUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AvailabilitySlot
+     */
+    select?: AvailabilitySlotSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AvailabilitySlotInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AvailabilitySlot.
+     */
+    data: XOR<AvailabilitySlotUpdateInput, AvailabilitySlotUncheckedUpdateInput>
+    /**
+     * Choose, which AvailabilitySlot to update.
+     */
+    where: AvailabilitySlotWhereUniqueInput
+  }
+
+  /**
+   * AvailabilitySlot updateMany
+   */
+  export type AvailabilitySlotUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AvailabilitySlots.
+     */
+    data: XOR<AvailabilitySlotUpdateManyMutationInput, AvailabilitySlotUncheckedUpdateManyInput>
+    /**
+     * Filter which AvailabilitySlots to update
+     */
+    where?: AvailabilitySlotWhereInput
+  }
+
+  /**
+   * AvailabilitySlot upsert
+   */
+  export type AvailabilitySlotUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AvailabilitySlot
+     */
+    select?: AvailabilitySlotSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AvailabilitySlotInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AvailabilitySlot to update in case it exists.
+     */
+    where: AvailabilitySlotWhereUniqueInput
+    /**
+     * In case the AvailabilitySlot found by the `where` argument doesn't exist, create a new AvailabilitySlot with this data.
+     */
+    create: XOR<AvailabilitySlotCreateInput, AvailabilitySlotUncheckedCreateInput>
+    /**
+     * In case the AvailabilitySlot was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AvailabilitySlotUpdateInput, AvailabilitySlotUncheckedUpdateInput>
+  }
+
+  /**
+   * AvailabilitySlot delete
+   */
+  export type AvailabilitySlotDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AvailabilitySlot
+     */
+    select?: AvailabilitySlotSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AvailabilitySlotInclude<ExtArgs> | null
+    /**
+     * Filter which AvailabilitySlot to delete.
+     */
+    where: AvailabilitySlotWhereUniqueInput
+  }
+
+  /**
+   * AvailabilitySlot deleteMany
+   */
+  export type AvailabilitySlotDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AvailabilitySlots to delete
+     */
+    where?: AvailabilitySlotWhereInput
+  }
+
+  /**
+   * AvailabilitySlot without action
+   */
+  export type AvailabilitySlotDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AvailabilitySlot
+     */
+    select?: AvailabilitySlotSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AvailabilitySlotInclude<ExtArgs> | null
   }
 
 
@@ -6980,6 +9213,7 @@ export namespace Prisma {
     clientId: string | null
     companionId: string | null
     bookedById: string | null
+    serviceId: string | null
     status: $Enums.BookingStatus | null
     serviceType: string | null
     summary: string | null
@@ -6995,6 +9229,7 @@ export namespace Prisma {
     clientId: string | null
     companionId: string | null
     bookedById: string | null
+    serviceId: string | null
     status: $Enums.BookingStatus | null
     serviceType: string | null
     summary: string | null
@@ -7010,6 +9245,7 @@ export namespace Prisma {
     clientId: number
     companionId: number
     bookedById: number
+    serviceId: number
     status: number
     serviceType: number
     summary: number
@@ -7027,6 +9263,7 @@ export namespace Prisma {
     clientId?: true
     companionId?: true
     bookedById?: true
+    serviceId?: true
     status?: true
     serviceType?: true
     summary?: true
@@ -7042,6 +9279,7 @@ export namespace Prisma {
     clientId?: true
     companionId?: true
     bookedById?: true
+    serviceId?: true
     status?: true
     serviceType?: true
     summary?: true
@@ -7057,6 +9295,7 @@ export namespace Prisma {
     clientId?: true
     companionId?: true
     bookedById?: true
+    serviceId?: true
     status?: true
     serviceType?: true
     summary?: true
@@ -7145,6 +9384,7 @@ export namespace Prisma {
     clientId: string
     companionId: string | null
     bookedById: string | null
+    serviceId: string | null
     status: $Enums.BookingStatus
     serviceType: string
     summary: string | null
@@ -7177,6 +9417,7 @@ export namespace Prisma {
     clientId?: boolean
     companionId?: boolean
     bookedById?: boolean
+    serviceId?: boolean
     status?: boolean
     serviceType?: boolean
     summary?: boolean
@@ -7188,6 +9429,7 @@ export namespace Prisma {
     client?: boolean | UserDefaultArgs<ExtArgs>
     companion?: boolean | Booking$companionArgs<ExtArgs>
     bookedBy?: boolean | Booking$bookedByArgs<ExtArgs>
+    service?: boolean | Booking$serviceArgs<ExtArgs>
     payment?: boolean | Booking$paymentArgs<ExtArgs>
     report?: boolean | Booking$reportArgs<ExtArgs>
     chatRoom?: boolean | Booking$chatRoomArgs<ExtArgs>
@@ -7198,6 +9440,7 @@ export namespace Prisma {
     clientId?: boolean
     companionId?: boolean
     bookedById?: boolean
+    serviceId?: boolean
     status?: boolean
     serviceType?: boolean
     summary?: boolean
@@ -7209,6 +9452,7 @@ export namespace Prisma {
     client?: boolean | UserDefaultArgs<ExtArgs>
     companion?: boolean | Booking$companionArgs<ExtArgs>
     bookedBy?: boolean | Booking$bookedByArgs<ExtArgs>
+    service?: boolean | Booking$serviceArgs<ExtArgs>
   }, ExtArgs["result"]["booking"]>
 
   export type BookingSelectScalar = {
@@ -7216,6 +9460,7 @@ export namespace Prisma {
     clientId?: boolean
     companionId?: boolean
     bookedById?: boolean
+    serviceId?: boolean
     status?: boolean
     serviceType?: boolean
     summary?: boolean
@@ -7230,6 +9475,7 @@ export namespace Prisma {
     client?: boolean | UserDefaultArgs<ExtArgs>
     companion?: boolean | Booking$companionArgs<ExtArgs>
     bookedBy?: boolean | Booking$bookedByArgs<ExtArgs>
+    service?: boolean | Booking$serviceArgs<ExtArgs>
     payment?: boolean | Booking$paymentArgs<ExtArgs>
     report?: boolean | Booking$reportArgs<ExtArgs>
     chatRoom?: boolean | Booking$chatRoomArgs<ExtArgs>
@@ -7238,6 +9484,7 @@ export namespace Prisma {
     client?: boolean | UserDefaultArgs<ExtArgs>
     companion?: boolean | Booking$companionArgs<ExtArgs>
     bookedBy?: boolean | Booking$bookedByArgs<ExtArgs>
+    service?: boolean | Booking$serviceArgs<ExtArgs>
   }
 
   export type $BookingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7246,6 +9493,7 @@ export namespace Prisma {
       client: Prisma.$UserPayload<ExtArgs>
       companion: Prisma.$CompanionProfilePayload<ExtArgs> | null
       bookedBy: Prisma.$UserPayload<ExtArgs> | null
+      service: Prisma.$ServicePayload<ExtArgs> | null
       payment: Prisma.$PaymentPayload<ExtArgs> | null
       report: Prisma.$ReportPayload<ExtArgs> | null
       chatRoom: Prisma.$ChatRoomPayload<ExtArgs> | null
@@ -7255,6 +9503,7 @@ export namespace Prisma {
       clientId: string
       companionId: string | null
       bookedById: string | null
+      serviceId: string | null
       status: $Enums.BookingStatus
       serviceType: string
       summary: string | null
@@ -7630,6 +9879,7 @@ export namespace Prisma {
     client<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     companion<T extends Booking$companionArgs<ExtArgs> = {}>(args?: Subset<T, Booking$companionArgs<ExtArgs>>): Prisma__CompanionProfileClient<$Result.GetResult<Prisma.$CompanionProfilePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     bookedBy<T extends Booking$bookedByArgs<ExtArgs> = {}>(args?: Subset<T, Booking$bookedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    service<T extends Booking$serviceArgs<ExtArgs> = {}>(args?: Subset<T, Booking$serviceArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     payment<T extends Booking$paymentArgs<ExtArgs> = {}>(args?: Subset<T, Booking$paymentArgs<ExtArgs>>): Prisma__PaymentClient<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     report<T extends Booking$reportArgs<ExtArgs> = {}>(args?: Subset<T, Booking$reportArgs<ExtArgs>>): Prisma__ReportClient<$Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     chatRoom<T extends Booking$chatRoomArgs<ExtArgs> = {}>(args?: Subset<T, Booking$chatRoomArgs<ExtArgs>>): Prisma__ChatRoomClient<$Result.GetResult<Prisma.$ChatRoomPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
@@ -7666,6 +9916,7 @@ export namespace Prisma {
     readonly clientId: FieldRef<"Booking", 'String'>
     readonly companionId: FieldRef<"Booking", 'String'>
     readonly bookedById: FieldRef<"Booking", 'String'>
+    readonly serviceId: FieldRef<"Booking", 'String'>
     readonly status: FieldRef<"Booking", 'BookingStatus'>
     readonly serviceType: FieldRef<"Booking", 'String'>
     readonly summary: FieldRef<"Booking", 'String'>
@@ -8019,6 +10270,21 @@ export namespace Prisma {
      */
     include?: UserInclude<ExtArgs> | null
     where?: UserWhereInput
+  }
+
+  /**
+   * Booking.service
+   */
+  export type Booking$serviceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service
+     */
+    select?: ServiceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceInclude<ExtArgs> | null
+    where?: ServiceWhereInput
   }
 
   /**
@@ -12961,11 +15227,38 @@ export namespace Prisma {
   export type CompanionProfileScalarFieldEnum = (typeof CompanionProfileScalarFieldEnum)[keyof typeof CompanionProfileScalarFieldEnum]
 
 
+  export const ServiceScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    description: 'description',
+    price: 'price',
+    category: 'category',
+    active: 'active',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ServiceScalarFieldEnum = (typeof ServiceScalarFieldEnum)[keyof typeof ServiceScalarFieldEnum]
+
+
+  export const AvailabilitySlotScalarFieldEnum: {
+    id: 'id',
+    companionId: 'companionId',
+    dayOfWeek: 'dayOfWeek',
+    startTime: 'startTime',
+    endTime: 'endTime',
+    createdAt: 'createdAt'
+  };
+
+  export type AvailabilitySlotScalarFieldEnum = (typeof AvailabilitySlotScalarFieldEnum)[keyof typeof AvailabilitySlotScalarFieldEnum]
+
+
   export const BookingScalarFieldEnum: {
     id: 'id',
     clientId: 'clientId',
     companionId: 'companionId',
     bookedById: 'bookedById',
+    serviceId: 'serviceId',
     status: 'status',
     serviceType: 'serviceType',
     summary: 'summary',
@@ -13483,6 +15776,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"CompanionProfile"> | Date | string
     profile?: XOR<ProfileRelationFilter, ProfileWhereInput>
     bookings?: BookingListRelationFilter
+    availabilitySlots?: AvailabilitySlotListRelationFilter
   }
 
   export type CompanionProfileOrderByWithRelationInput = {
@@ -13500,6 +15794,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     profile?: ProfileOrderByWithRelationInput
     bookings?: BookingOrderByRelationAggregateInput
+    availabilitySlots?: AvailabilitySlotOrderByRelationAggregateInput
   }
 
   export type CompanionProfileWhereUniqueInput = Prisma.AtLeast<{
@@ -13520,6 +15815,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"CompanionProfile"> | Date | string
     profile?: XOR<ProfileRelationFilter, ProfileWhereInput>
     bookings?: BookingListRelationFilter
+    availabilitySlots?: AvailabilitySlotListRelationFilter
   }, "id" | "profileId">
 
   export type CompanionProfileOrderByWithAggregationInput = {
@@ -13560,6 +15856,140 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"CompanionProfile"> | Date | string
   }
 
+  export type ServiceWhereInput = {
+    AND?: ServiceWhereInput | ServiceWhereInput[]
+    OR?: ServiceWhereInput[]
+    NOT?: ServiceWhereInput | ServiceWhereInput[]
+    id?: StringFilter<"Service"> | string
+    name?: StringFilter<"Service"> | string
+    description?: StringNullableFilter<"Service"> | string | null
+    price?: IntFilter<"Service"> | number
+    category?: StringNullableFilter<"Service"> | string | null
+    active?: BoolFilter<"Service"> | boolean
+    createdAt?: DateTimeFilter<"Service"> | Date | string
+    updatedAt?: DateTimeFilter<"Service"> | Date | string
+    bookings?: BookingListRelationFilter
+  }
+
+  export type ServiceOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    price?: SortOrder
+    category?: SortOrderInput | SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    bookings?: BookingOrderByRelationAggregateInput
+  }
+
+  export type ServiceWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ServiceWhereInput | ServiceWhereInput[]
+    OR?: ServiceWhereInput[]
+    NOT?: ServiceWhereInput | ServiceWhereInput[]
+    name?: StringFilter<"Service"> | string
+    description?: StringNullableFilter<"Service"> | string | null
+    price?: IntFilter<"Service"> | number
+    category?: StringNullableFilter<"Service"> | string | null
+    active?: BoolFilter<"Service"> | boolean
+    createdAt?: DateTimeFilter<"Service"> | Date | string
+    updatedAt?: DateTimeFilter<"Service"> | Date | string
+    bookings?: BookingListRelationFilter
+  }, "id">
+
+  export type ServiceOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    price?: SortOrder
+    category?: SortOrderInput | SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ServiceCountOrderByAggregateInput
+    _avg?: ServiceAvgOrderByAggregateInput
+    _max?: ServiceMaxOrderByAggregateInput
+    _min?: ServiceMinOrderByAggregateInput
+    _sum?: ServiceSumOrderByAggregateInput
+  }
+
+  export type ServiceScalarWhereWithAggregatesInput = {
+    AND?: ServiceScalarWhereWithAggregatesInput | ServiceScalarWhereWithAggregatesInput[]
+    OR?: ServiceScalarWhereWithAggregatesInput[]
+    NOT?: ServiceScalarWhereWithAggregatesInput | ServiceScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Service"> | string
+    name?: StringWithAggregatesFilter<"Service"> | string
+    description?: StringNullableWithAggregatesFilter<"Service"> | string | null
+    price?: IntWithAggregatesFilter<"Service"> | number
+    category?: StringNullableWithAggregatesFilter<"Service"> | string | null
+    active?: BoolWithAggregatesFilter<"Service"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"Service"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Service"> | Date | string
+  }
+
+  export type AvailabilitySlotWhereInput = {
+    AND?: AvailabilitySlotWhereInput | AvailabilitySlotWhereInput[]
+    OR?: AvailabilitySlotWhereInput[]
+    NOT?: AvailabilitySlotWhereInput | AvailabilitySlotWhereInput[]
+    id?: StringFilter<"AvailabilitySlot"> | string
+    companionId?: StringFilter<"AvailabilitySlot"> | string
+    dayOfWeek?: IntFilter<"AvailabilitySlot"> | number
+    startTime?: StringFilter<"AvailabilitySlot"> | string
+    endTime?: StringFilter<"AvailabilitySlot"> | string
+    createdAt?: DateTimeFilter<"AvailabilitySlot"> | Date | string
+    companion?: XOR<CompanionProfileRelationFilter, CompanionProfileWhereInput>
+  }
+
+  export type AvailabilitySlotOrderByWithRelationInput = {
+    id?: SortOrder
+    companionId?: SortOrder
+    dayOfWeek?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    createdAt?: SortOrder
+    companion?: CompanionProfileOrderByWithRelationInput
+  }
+
+  export type AvailabilitySlotWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: AvailabilitySlotWhereInput | AvailabilitySlotWhereInput[]
+    OR?: AvailabilitySlotWhereInput[]
+    NOT?: AvailabilitySlotWhereInput | AvailabilitySlotWhereInput[]
+    companionId?: StringFilter<"AvailabilitySlot"> | string
+    dayOfWeek?: IntFilter<"AvailabilitySlot"> | number
+    startTime?: StringFilter<"AvailabilitySlot"> | string
+    endTime?: StringFilter<"AvailabilitySlot"> | string
+    createdAt?: DateTimeFilter<"AvailabilitySlot"> | Date | string
+    companion?: XOR<CompanionProfileRelationFilter, CompanionProfileWhereInput>
+  }, "id">
+
+  export type AvailabilitySlotOrderByWithAggregationInput = {
+    id?: SortOrder
+    companionId?: SortOrder
+    dayOfWeek?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    createdAt?: SortOrder
+    _count?: AvailabilitySlotCountOrderByAggregateInput
+    _avg?: AvailabilitySlotAvgOrderByAggregateInput
+    _max?: AvailabilitySlotMaxOrderByAggregateInput
+    _min?: AvailabilitySlotMinOrderByAggregateInput
+    _sum?: AvailabilitySlotSumOrderByAggregateInput
+  }
+
+  export type AvailabilitySlotScalarWhereWithAggregatesInput = {
+    AND?: AvailabilitySlotScalarWhereWithAggregatesInput | AvailabilitySlotScalarWhereWithAggregatesInput[]
+    OR?: AvailabilitySlotScalarWhereWithAggregatesInput[]
+    NOT?: AvailabilitySlotScalarWhereWithAggregatesInput | AvailabilitySlotScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AvailabilitySlot"> | string
+    companionId?: StringWithAggregatesFilter<"AvailabilitySlot"> | string
+    dayOfWeek?: IntWithAggregatesFilter<"AvailabilitySlot"> | number
+    startTime?: StringWithAggregatesFilter<"AvailabilitySlot"> | string
+    endTime?: StringWithAggregatesFilter<"AvailabilitySlot"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"AvailabilitySlot"> | Date | string
+  }
+
   export type BookingWhereInput = {
     AND?: BookingWhereInput | BookingWhereInput[]
     OR?: BookingWhereInput[]
@@ -13568,6 +15998,7 @@ export namespace Prisma {
     clientId?: StringFilter<"Booking"> | string
     companionId?: StringNullableFilter<"Booking"> | string | null
     bookedById?: StringNullableFilter<"Booking"> | string | null
+    serviceId?: StringNullableFilter<"Booking"> | string | null
     status?: EnumBookingStatusFilter<"Booking"> | $Enums.BookingStatus
     serviceType?: StringFilter<"Booking"> | string
     summary?: StringNullableFilter<"Booking"> | string | null
@@ -13579,6 +16010,7 @@ export namespace Prisma {
     client?: XOR<UserRelationFilter, UserWhereInput>
     companion?: XOR<CompanionProfileNullableRelationFilter, CompanionProfileWhereInput> | null
     bookedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    service?: XOR<ServiceNullableRelationFilter, ServiceWhereInput> | null
     payment?: XOR<PaymentNullableRelationFilter, PaymentWhereInput> | null
     report?: XOR<ReportNullableRelationFilter, ReportWhereInput> | null
     chatRoom?: XOR<ChatRoomNullableRelationFilter, ChatRoomWhereInput> | null
@@ -13589,6 +16021,7 @@ export namespace Prisma {
     clientId?: SortOrder
     companionId?: SortOrderInput | SortOrder
     bookedById?: SortOrderInput | SortOrder
+    serviceId?: SortOrderInput | SortOrder
     status?: SortOrder
     serviceType?: SortOrder
     summary?: SortOrderInput | SortOrder
@@ -13600,6 +16033,7 @@ export namespace Prisma {
     client?: UserOrderByWithRelationInput
     companion?: CompanionProfileOrderByWithRelationInput
     bookedBy?: UserOrderByWithRelationInput
+    service?: ServiceOrderByWithRelationInput
     payment?: PaymentOrderByWithRelationInput
     report?: ReportOrderByWithRelationInput
     chatRoom?: ChatRoomOrderByWithRelationInput
@@ -13613,6 +16047,7 @@ export namespace Prisma {
     clientId?: StringFilter<"Booking"> | string
     companionId?: StringNullableFilter<"Booking"> | string | null
     bookedById?: StringNullableFilter<"Booking"> | string | null
+    serviceId?: StringNullableFilter<"Booking"> | string | null
     status?: EnumBookingStatusFilter<"Booking"> | $Enums.BookingStatus
     serviceType?: StringFilter<"Booking"> | string
     summary?: StringNullableFilter<"Booking"> | string | null
@@ -13624,6 +16059,7 @@ export namespace Prisma {
     client?: XOR<UserRelationFilter, UserWhereInput>
     companion?: XOR<CompanionProfileNullableRelationFilter, CompanionProfileWhereInput> | null
     bookedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    service?: XOR<ServiceNullableRelationFilter, ServiceWhereInput> | null
     payment?: XOR<PaymentNullableRelationFilter, PaymentWhereInput> | null
     report?: XOR<ReportNullableRelationFilter, ReportWhereInput> | null
     chatRoom?: XOR<ChatRoomNullableRelationFilter, ChatRoomWhereInput> | null
@@ -13634,6 +16070,7 @@ export namespace Prisma {
     clientId?: SortOrder
     companionId?: SortOrderInput | SortOrder
     bookedById?: SortOrderInput | SortOrder
+    serviceId?: SortOrderInput | SortOrder
     status?: SortOrder
     serviceType?: SortOrder
     summary?: SortOrderInput | SortOrder
@@ -13655,6 +16092,7 @@ export namespace Prisma {
     clientId?: StringWithAggregatesFilter<"Booking"> | string
     companionId?: StringNullableWithAggregatesFilter<"Booking"> | string | null
     bookedById?: StringNullableWithAggregatesFilter<"Booking"> | string | null
+    serviceId?: StringNullableWithAggregatesFilter<"Booking"> | string | null
     status?: EnumBookingStatusWithAggregatesFilter<"Booking"> | $Enums.BookingStatus
     serviceType?: StringWithAggregatesFilter<"Booking"> | string
     summary?: StringNullableWithAggregatesFilter<"Booking"> | string | null
@@ -14325,6 +16763,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     profile: ProfileCreateNestedOneWithoutCompanionInput
     bookings?: BookingCreateNestedManyWithoutCompanionInput
+    availabilitySlots?: AvailabilitySlotCreateNestedManyWithoutCompanionInput
   }
 
   export type CompanionProfileUncheckedCreateInput = {
@@ -14341,6 +16780,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     bookings?: BookingUncheckedCreateNestedManyWithoutCompanionInput
+    availabilitySlots?: AvailabilitySlotUncheckedCreateNestedManyWithoutCompanionInput
   }
 
   export type CompanionProfileUpdateInput = {
@@ -14357,6 +16797,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     profile?: ProfileUpdateOneRequiredWithoutCompanionNestedInput
     bookings?: BookingUpdateManyWithoutCompanionNestedInput
+    availabilitySlots?: AvailabilitySlotUpdateManyWithoutCompanionNestedInput
   }
 
   export type CompanionProfileUncheckedUpdateInput = {
@@ -14373,6 +16814,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     bookings?: BookingUncheckedUpdateManyWithoutCompanionNestedInput
+    availabilitySlots?: AvailabilitySlotUncheckedUpdateManyWithoutCompanionNestedInput
   }
 
   export type CompanionProfileCreateManyInput = {
@@ -14419,6 +16861,149 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ServiceCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    price?: number
+    category?: string | null
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bookings?: BookingCreateNestedManyWithoutServiceInput
+  }
+
+  export type ServiceUncheckedCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    price?: number
+    category?: string | null
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bookings?: BookingUncheckedCreateNestedManyWithoutServiceInput
+  }
+
+  export type ServiceUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: IntFieldUpdateOperationsInput | number
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bookings?: BookingUpdateManyWithoutServiceNestedInput
+  }
+
+  export type ServiceUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: IntFieldUpdateOperationsInput | number
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bookings?: BookingUncheckedUpdateManyWithoutServiceNestedInput
+  }
+
+  export type ServiceCreateManyInput = {
+    id?: string
+    name: string
+    description?: string | null
+    price?: number
+    category?: string | null
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ServiceUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: IntFieldUpdateOperationsInput | number
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ServiceUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: IntFieldUpdateOperationsInput | number
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AvailabilitySlotCreateInput = {
+    id?: string
+    dayOfWeek: number
+    startTime: string
+    endTime: string
+    createdAt?: Date | string
+    companion: CompanionProfileCreateNestedOneWithoutAvailabilitySlotsInput
+  }
+
+  export type AvailabilitySlotUncheckedCreateInput = {
+    id?: string
+    companionId: string
+    dayOfWeek: number
+    startTime: string
+    endTime: string
+    createdAt?: Date | string
+  }
+
+  export type AvailabilitySlotUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    dayOfWeek?: IntFieldUpdateOperationsInput | number
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    companion?: CompanionProfileUpdateOneRequiredWithoutAvailabilitySlotsNestedInput
+  }
+
+  export type AvailabilitySlotUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companionId?: StringFieldUpdateOperationsInput | string
+    dayOfWeek?: IntFieldUpdateOperationsInput | number
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AvailabilitySlotCreateManyInput = {
+    id?: string
+    companionId: string
+    dayOfWeek: number
+    startTime: string
+    endTime: string
+    createdAt?: Date | string
+  }
+
+  export type AvailabilitySlotUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    dayOfWeek?: IntFieldUpdateOperationsInput | number
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AvailabilitySlotUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companionId?: StringFieldUpdateOperationsInput | string
+    dayOfWeek?: IntFieldUpdateOperationsInput | number
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type BookingCreateInput = {
     id?: string
     status?: $Enums.BookingStatus
@@ -14432,6 +17017,7 @@ export namespace Prisma {
     client: UserCreateNestedOneWithoutBookingsInput
     companion?: CompanionProfileCreateNestedOneWithoutBookingsInput
     bookedBy?: UserCreateNestedOneWithoutBookedBookingsInput
+    service?: ServiceCreateNestedOneWithoutBookingsInput
     payment?: PaymentCreateNestedOneWithoutBookingInput
     report?: ReportCreateNestedOneWithoutBookingInput
     chatRoom?: ChatRoomCreateNestedOneWithoutBookingInput
@@ -14442,6 +17028,7 @@ export namespace Prisma {
     clientId: string
     companionId?: string | null
     bookedById?: string | null
+    serviceId?: string | null
     status?: $Enums.BookingStatus
     serviceType: string
     summary?: string | null
@@ -14468,6 +17055,7 @@ export namespace Prisma {
     client?: UserUpdateOneRequiredWithoutBookingsNestedInput
     companion?: CompanionProfileUpdateOneWithoutBookingsNestedInput
     bookedBy?: UserUpdateOneWithoutBookedBookingsNestedInput
+    service?: ServiceUpdateOneWithoutBookingsNestedInput
     payment?: PaymentUpdateOneWithoutBookingNestedInput
     report?: ReportUpdateOneWithoutBookingNestedInput
     chatRoom?: ChatRoomUpdateOneWithoutBookingNestedInput
@@ -14478,6 +17066,7 @@ export namespace Prisma {
     clientId?: StringFieldUpdateOperationsInput | string
     companionId?: NullableStringFieldUpdateOperationsInput | string | null
     bookedById?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     serviceType?: StringFieldUpdateOperationsInput | string
     summary?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14496,6 +17085,7 @@ export namespace Prisma {
     clientId: string
     companionId?: string | null
     bookedById?: string | null
+    serviceId?: string | null
     status?: $Enums.BookingStatus
     serviceType: string
     summary?: string | null
@@ -14523,6 +17113,7 @@ export namespace Prisma {
     clientId?: StringFieldUpdateOperationsInput | string
     companionId?: NullableStringFieldUpdateOperationsInput | string | null
     bookedById?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     serviceType?: StringFieldUpdateOperationsInput | string
     summary?: NullableStringFieldUpdateOperationsInput | string | null
@@ -15197,6 +17788,16 @@ export namespace Prisma {
     isNot?: ProfileWhereInput
   }
 
+  export type AvailabilitySlotListRelationFilter = {
+    every?: AvailabilitySlotWhereInput
+    some?: AvailabilitySlotWhereInput
+    none?: AvailabilitySlotWhereInput
+  }
+
+  export type AvailabilitySlotOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type CompanionProfileCountOrderByAggregateInput = {
     id?: SortOrder
     profileId?: SortOrder
@@ -15284,6 +17885,87 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
+  export type ServiceCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    price?: SortOrder
+    category?: SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ServiceAvgOrderByAggregateInput = {
+    price?: SortOrder
+  }
+
+  export type ServiceMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    price?: SortOrder
+    category?: SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ServiceMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    price?: SortOrder
+    category?: SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ServiceSumOrderByAggregateInput = {
+    price?: SortOrder
+  }
+
+  export type CompanionProfileRelationFilter = {
+    is?: CompanionProfileWhereInput
+    isNot?: CompanionProfileWhereInput
+  }
+
+  export type AvailabilitySlotCountOrderByAggregateInput = {
+    id?: SortOrder
+    companionId?: SortOrder
+    dayOfWeek?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AvailabilitySlotAvgOrderByAggregateInput = {
+    dayOfWeek?: SortOrder
+  }
+
+  export type AvailabilitySlotMaxOrderByAggregateInput = {
+    id?: SortOrder
+    companionId?: SortOrder
+    dayOfWeek?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AvailabilitySlotMinOrderByAggregateInput = {
+    id?: SortOrder
+    companionId?: SortOrder
+    dayOfWeek?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AvailabilitySlotSumOrderByAggregateInput = {
+    dayOfWeek?: SortOrder
+  }
+
   export type EnumBookingStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.BookingStatus | EnumBookingStatusFieldRefInput<$PrismaModel>
     in?: $Enums.BookingStatus[] | ListEnumBookingStatusFieldRefInput<$PrismaModel>
@@ -15294,6 +17976,11 @@ export namespace Prisma {
   export type UserNullableRelationFilter = {
     is?: UserWhereInput | null
     isNot?: UserWhereInput | null
+  }
+
+  export type ServiceNullableRelationFilter = {
+    is?: ServiceWhereInput | null
+    isNot?: ServiceWhereInput | null
   }
 
   export type PaymentNullableRelationFilter = {
@@ -15316,6 +18003,7 @@ export namespace Prisma {
     clientId?: SortOrder
     companionId?: SortOrder
     bookedById?: SortOrder
+    serviceId?: SortOrder
     status?: SortOrder
     serviceType?: SortOrder
     summary?: SortOrder
@@ -15331,6 +18019,7 @@ export namespace Prisma {
     clientId?: SortOrder
     companionId?: SortOrder
     bookedById?: SortOrder
+    serviceId?: SortOrder
     status?: SortOrder
     serviceType?: SortOrder
     summary?: SortOrder
@@ -15346,6 +18035,7 @@ export namespace Prisma {
     clientId?: SortOrder
     companionId?: SortOrder
     bookedById?: SortOrder
+    serviceId?: SortOrder
     status?: SortOrder
     serviceType?: SortOrder
     summary?: SortOrder
@@ -15925,11 +18615,25 @@ export namespace Prisma {
     connect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
   }
 
+  export type AvailabilitySlotCreateNestedManyWithoutCompanionInput = {
+    create?: XOR<AvailabilitySlotCreateWithoutCompanionInput, AvailabilitySlotUncheckedCreateWithoutCompanionInput> | AvailabilitySlotCreateWithoutCompanionInput[] | AvailabilitySlotUncheckedCreateWithoutCompanionInput[]
+    connectOrCreate?: AvailabilitySlotCreateOrConnectWithoutCompanionInput | AvailabilitySlotCreateOrConnectWithoutCompanionInput[]
+    createMany?: AvailabilitySlotCreateManyCompanionInputEnvelope
+    connect?: AvailabilitySlotWhereUniqueInput | AvailabilitySlotWhereUniqueInput[]
+  }
+
   export type BookingUncheckedCreateNestedManyWithoutCompanionInput = {
     create?: XOR<BookingCreateWithoutCompanionInput, BookingUncheckedCreateWithoutCompanionInput> | BookingCreateWithoutCompanionInput[] | BookingUncheckedCreateWithoutCompanionInput[]
     connectOrCreate?: BookingCreateOrConnectWithoutCompanionInput | BookingCreateOrConnectWithoutCompanionInput[]
     createMany?: BookingCreateManyCompanionInputEnvelope
     connect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+  }
+
+  export type AvailabilitySlotUncheckedCreateNestedManyWithoutCompanionInput = {
+    create?: XOR<AvailabilitySlotCreateWithoutCompanionInput, AvailabilitySlotUncheckedCreateWithoutCompanionInput> | AvailabilitySlotCreateWithoutCompanionInput[] | AvailabilitySlotUncheckedCreateWithoutCompanionInput[]
+    connectOrCreate?: AvailabilitySlotCreateOrConnectWithoutCompanionInput | AvailabilitySlotCreateOrConnectWithoutCompanionInput[]
+    createMany?: AvailabilitySlotCreateManyCompanionInputEnvelope
+    connect?: AvailabilitySlotWhereUniqueInput | AvailabilitySlotWhereUniqueInput[]
   }
 
   export type FloatFieldUpdateOperationsInput = {
@@ -15970,6 +18674,20 @@ export namespace Prisma {
     deleteMany?: BookingScalarWhereInput | BookingScalarWhereInput[]
   }
 
+  export type AvailabilitySlotUpdateManyWithoutCompanionNestedInput = {
+    create?: XOR<AvailabilitySlotCreateWithoutCompanionInput, AvailabilitySlotUncheckedCreateWithoutCompanionInput> | AvailabilitySlotCreateWithoutCompanionInput[] | AvailabilitySlotUncheckedCreateWithoutCompanionInput[]
+    connectOrCreate?: AvailabilitySlotCreateOrConnectWithoutCompanionInput | AvailabilitySlotCreateOrConnectWithoutCompanionInput[]
+    upsert?: AvailabilitySlotUpsertWithWhereUniqueWithoutCompanionInput | AvailabilitySlotUpsertWithWhereUniqueWithoutCompanionInput[]
+    createMany?: AvailabilitySlotCreateManyCompanionInputEnvelope
+    set?: AvailabilitySlotWhereUniqueInput | AvailabilitySlotWhereUniqueInput[]
+    disconnect?: AvailabilitySlotWhereUniqueInput | AvailabilitySlotWhereUniqueInput[]
+    delete?: AvailabilitySlotWhereUniqueInput | AvailabilitySlotWhereUniqueInput[]
+    connect?: AvailabilitySlotWhereUniqueInput | AvailabilitySlotWhereUniqueInput[]
+    update?: AvailabilitySlotUpdateWithWhereUniqueWithoutCompanionInput | AvailabilitySlotUpdateWithWhereUniqueWithoutCompanionInput[]
+    updateMany?: AvailabilitySlotUpdateManyWithWhereWithoutCompanionInput | AvailabilitySlotUpdateManyWithWhereWithoutCompanionInput[]
+    deleteMany?: AvailabilitySlotScalarWhereInput | AvailabilitySlotScalarWhereInput[]
+  }
+
   export type BookingUncheckedUpdateManyWithoutCompanionNestedInput = {
     create?: XOR<BookingCreateWithoutCompanionInput, BookingUncheckedCreateWithoutCompanionInput> | BookingCreateWithoutCompanionInput[] | BookingUncheckedCreateWithoutCompanionInput[]
     connectOrCreate?: BookingCreateOrConnectWithoutCompanionInput | BookingCreateOrConnectWithoutCompanionInput[]
@@ -15982,6 +18700,76 @@ export namespace Prisma {
     update?: BookingUpdateWithWhereUniqueWithoutCompanionInput | BookingUpdateWithWhereUniqueWithoutCompanionInput[]
     updateMany?: BookingUpdateManyWithWhereWithoutCompanionInput | BookingUpdateManyWithWhereWithoutCompanionInput[]
     deleteMany?: BookingScalarWhereInput | BookingScalarWhereInput[]
+  }
+
+  export type AvailabilitySlotUncheckedUpdateManyWithoutCompanionNestedInput = {
+    create?: XOR<AvailabilitySlotCreateWithoutCompanionInput, AvailabilitySlotUncheckedCreateWithoutCompanionInput> | AvailabilitySlotCreateWithoutCompanionInput[] | AvailabilitySlotUncheckedCreateWithoutCompanionInput[]
+    connectOrCreate?: AvailabilitySlotCreateOrConnectWithoutCompanionInput | AvailabilitySlotCreateOrConnectWithoutCompanionInput[]
+    upsert?: AvailabilitySlotUpsertWithWhereUniqueWithoutCompanionInput | AvailabilitySlotUpsertWithWhereUniqueWithoutCompanionInput[]
+    createMany?: AvailabilitySlotCreateManyCompanionInputEnvelope
+    set?: AvailabilitySlotWhereUniqueInput | AvailabilitySlotWhereUniqueInput[]
+    disconnect?: AvailabilitySlotWhereUniqueInput | AvailabilitySlotWhereUniqueInput[]
+    delete?: AvailabilitySlotWhereUniqueInput | AvailabilitySlotWhereUniqueInput[]
+    connect?: AvailabilitySlotWhereUniqueInput | AvailabilitySlotWhereUniqueInput[]
+    update?: AvailabilitySlotUpdateWithWhereUniqueWithoutCompanionInput | AvailabilitySlotUpdateWithWhereUniqueWithoutCompanionInput[]
+    updateMany?: AvailabilitySlotUpdateManyWithWhereWithoutCompanionInput | AvailabilitySlotUpdateManyWithWhereWithoutCompanionInput[]
+    deleteMany?: AvailabilitySlotScalarWhereInput | AvailabilitySlotScalarWhereInput[]
+  }
+
+  export type BookingCreateNestedManyWithoutServiceInput = {
+    create?: XOR<BookingCreateWithoutServiceInput, BookingUncheckedCreateWithoutServiceInput> | BookingCreateWithoutServiceInput[] | BookingUncheckedCreateWithoutServiceInput[]
+    connectOrCreate?: BookingCreateOrConnectWithoutServiceInput | BookingCreateOrConnectWithoutServiceInput[]
+    createMany?: BookingCreateManyServiceInputEnvelope
+    connect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+  }
+
+  export type BookingUncheckedCreateNestedManyWithoutServiceInput = {
+    create?: XOR<BookingCreateWithoutServiceInput, BookingUncheckedCreateWithoutServiceInput> | BookingCreateWithoutServiceInput[] | BookingUncheckedCreateWithoutServiceInput[]
+    connectOrCreate?: BookingCreateOrConnectWithoutServiceInput | BookingCreateOrConnectWithoutServiceInput[]
+    createMany?: BookingCreateManyServiceInputEnvelope
+    connect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+  }
+
+  export type BookingUpdateManyWithoutServiceNestedInput = {
+    create?: XOR<BookingCreateWithoutServiceInput, BookingUncheckedCreateWithoutServiceInput> | BookingCreateWithoutServiceInput[] | BookingUncheckedCreateWithoutServiceInput[]
+    connectOrCreate?: BookingCreateOrConnectWithoutServiceInput | BookingCreateOrConnectWithoutServiceInput[]
+    upsert?: BookingUpsertWithWhereUniqueWithoutServiceInput | BookingUpsertWithWhereUniqueWithoutServiceInput[]
+    createMany?: BookingCreateManyServiceInputEnvelope
+    set?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    disconnect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    delete?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    connect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    update?: BookingUpdateWithWhereUniqueWithoutServiceInput | BookingUpdateWithWhereUniqueWithoutServiceInput[]
+    updateMany?: BookingUpdateManyWithWhereWithoutServiceInput | BookingUpdateManyWithWhereWithoutServiceInput[]
+    deleteMany?: BookingScalarWhereInput | BookingScalarWhereInput[]
+  }
+
+  export type BookingUncheckedUpdateManyWithoutServiceNestedInput = {
+    create?: XOR<BookingCreateWithoutServiceInput, BookingUncheckedCreateWithoutServiceInput> | BookingCreateWithoutServiceInput[] | BookingUncheckedCreateWithoutServiceInput[]
+    connectOrCreate?: BookingCreateOrConnectWithoutServiceInput | BookingCreateOrConnectWithoutServiceInput[]
+    upsert?: BookingUpsertWithWhereUniqueWithoutServiceInput | BookingUpsertWithWhereUniqueWithoutServiceInput[]
+    createMany?: BookingCreateManyServiceInputEnvelope
+    set?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    disconnect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    delete?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    connect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    update?: BookingUpdateWithWhereUniqueWithoutServiceInput | BookingUpdateWithWhereUniqueWithoutServiceInput[]
+    updateMany?: BookingUpdateManyWithWhereWithoutServiceInput | BookingUpdateManyWithWhereWithoutServiceInput[]
+    deleteMany?: BookingScalarWhereInput | BookingScalarWhereInput[]
+  }
+
+  export type CompanionProfileCreateNestedOneWithoutAvailabilitySlotsInput = {
+    create?: XOR<CompanionProfileCreateWithoutAvailabilitySlotsInput, CompanionProfileUncheckedCreateWithoutAvailabilitySlotsInput>
+    connectOrCreate?: CompanionProfileCreateOrConnectWithoutAvailabilitySlotsInput
+    connect?: CompanionProfileWhereUniqueInput
+  }
+
+  export type CompanionProfileUpdateOneRequiredWithoutAvailabilitySlotsNestedInput = {
+    create?: XOR<CompanionProfileCreateWithoutAvailabilitySlotsInput, CompanionProfileUncheckedCreateWithoutAvailabilitySlotsInput>
+    connectOrCreate?: CompanionProfileCreateOrConnectWithoutAvailabilitySlotsInput
+    upsert?: CompanionProfileUpsertWithoutAvailabilitySlotsInput
+    connect?: CompanionProfileWhereUniqueInput
+    update?: XOR<XOR<CompanionProfileUpdateToOneWithWhereWithoutAvailabilitySlotsInput, CompanionProfileUpdateWithoutAvailabilitySlotsInput>, CompanionProfileUncheckedUpdateWithoutAvailabilitySlotsInput>
   }
 
   export type UserCreateNestedOneWithoutBookingsInput = {
@@ -16000,6 +18788,12 @@ export namespace Prisma {
     create?: XOR<UserCreateWithoutBookedBookingsInput, UserUncheckedCreateWithoutBookedBookingsInput>
     connectOrCreate?: UserCreateOrConnectWithoutBookedBookingsInput
     connect?: UserWhereUniqueInput
+  }
+
+  export type ServiceCreateNestedOneWithoutBookingsInput = {
+    create?: XOR<ServiceCreateWithoutBookingsInput, ServiceUncheckedCreateWithoutBookingsInput>
+    connectOrCreate?: ServiceCreateOrConnectWithoutBookingsInput
+    connect?: ServiceWhereUniqueInput
   }
 
   export type PaymentCreateNestedOneWithoutBookingInput = {
@@ -16068,6 +18862,16 @@ export namespace Prisma {
     delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutBookedBookingsInput, UserUpdateWithoutBookedBookingsInput>, UserUncheckedUpdateWithoutBookedBookingsInput>
+  }
+
+  export type ServiceUpdateOneWithoutBookingsNestedInput = {
+    create?: XOR<ServiceCreateWithoutBookingsInput, ServiceUncheckedCreateWithoutBookingsInput>
+    connectOrCreate?: ServiceCreateOrConnectWithoutBookingsInput
+    upsert?: ServiceUpsertWithoutBookingsInput
+    disconnect?: ServiceWhereInput | boolean
+    delete?: ServiceWhereInput | boolean
+    connect?: ServiceWhereUniqueInput
+    update?: XOR<XOR<ServiceUpdateToOneWithWhereWithoutBookingsInput, ServiceUpdateWithoutBookingsInput>, ServiceUncheckedUpdateWithoutBookingsInput>
   }
 
   export type PaymentUpdateOneWithoutBookingNestedInput = {
@@ -16513,6 +19317,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     companion?: CompanionProfileCreateNestedOneWithoutBookingsInput
     bookedBy?: UserCreateNestedOneWithoutBookedBookingsInput
+    service?: ServiceCreateNestedOneWithoutBookingsInput
     payment?: PaymentCreateNestedOneWithoutBookingInput
     report?: ReportCreateNestedOneWithoutBookingInput
     chatRoom?: ChatRoomCreateNestedOneWithoutBookingInput
@@ -16522,6 +19327,7 @@ export namespace Prisma {
     id?: string
     companionId?: string | null
     bookedById?: string | null
+    serviceId?: string | null
     status?: $Enums.BookingStatus
     serviceType: string
     summary?: string | null
@@ -16596,6 +19402,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     client: UserCreateNestedOneWithoutBookingsInput
     companion?: CompanionProfileCreateNestedOneWithoutBookingsInput
+    service?: ServiceCreateNestedOneWithoutBookingsInput
     payment?: PaymentCreateNestedOneWithoutBookingInput
     report?: ReportCreateNestedOneWithoutBookingInput
     chatRoom?: ChatRoomCreateNestedOneWithoutBookingInput
@@ -16605,6 +19412,7 @@ export namespace Prisma {
     id?: string
     clientId: string
     companionId?: string | null
+    serviceId?: string | null
     status?: $Enums.BookingStatus
     serviceType: string
     summary?: string | null
@@ -16729,6 +19537,7 @@ export namespace Prisma {
     clientId?: StringFilter<"Booking"> | string
     companionId?: StringNullableFilter<"Booking"> | string | null
     bookedById?: StringNullableFilter<"Booking"> | string | null
+    serviceId?: StringNullableFilter<"Booking"> | string | null
     status?: EnumBookingStatusFilter<"Booking"> | $Enums.BookingStatus
     serviceType?: StringFilter<"Booking"> | string
     summary?: StringNullableFilter<"Booking"> | string | null
@@ -17083,6 +19892,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     bookings?: BookingCreateNestedManyWithoutCompanionInput
+    availabilitySlots?: AvailabilitySlotCreateNestedManyWithoutCompanionInput
   }
 
   export type CompanionProfileUncheckedCreateWithoutProfileInput = {
@@ -17098,6 +19908,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     bookings?: BookingUncheckedCreateNestedManyWithoutCompanionInput
+    availabilitySlots?: AvailabilitySlotUncheckedCreateNestedManyWithoutCompanionInput
   }
 
   export type CompanionProfileCreateOrConnectWithoutProfileInput = {
@@ -17166,6 +19977,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     bookings?: BookingUpdateManyWithoutCompanionNestedInput
+    availabilitySlots?: AvailabilitySlotUpdateManyWithoutCompanionNestedInput
   }
 
   export type CompanionProfileUncheckedUpdateWithoutProfileInput = {
@@ -17181,6 +19993,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     bookings?: BookingUncheckedUpdateManyWithoutCompanionNestedInput
+    availabilitySlots?: AvailabilitySlotUncheckedUpdateManyWithoutCompanionNestedInput
   }
 
   export type ProfileCreateWithoutCompanionInput = {
@@ -17234,6 +20047,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     client: UserCreateNestedOneWithoutBookingsInput
     bookedBy?: UserCreateNestedOneWithoutBookedBookingsInput
+    service?: ServiceCreateNestedOneWithoutBookingsInput
     payment?: PaymentCreateNestedOneWithoutBookingInput
     report?: ReportCreateNestedOneWithoutBookingInput
     chatRoom?: ChatRoomCreateNestedOneWithoutBookingInput
@@ -17243,6 +20057,7 @@ export namespace Prisma {
     id?: string
     clientId: string
     bookedById?: string | null
+    serviceId?: string | null
     status?: $Enums.BookingStatus
     serviceType: string
     summary?: string | null
@@ -17263,6 +20078,32 @@ export namespace Prisma {
 
   export type BookingCreateManyCompanionInputEnvelope = {
     data: BookingCreateManyCompanionInput | BookingCreateManyCompanionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AvailabilitySlotCreateWithoutCompanionInput = {
+    id?: string
+    dayOfWeek: number
+    startTime: string
+    endTime: string
+    createdAt?: Date | string
+  }
+
+  export type AvailabilitySlotUncheckedCreateWithoutCompanionInput = {
+    id?: string
+    dayOfWeek: number
+    startTime: string
+    endTime: string
+    createdAt?: Date | string
+  }
+
+  export type AvailabilitySlotCreateOrConnectWithoutCompanionInput = {
+    where: AvailabilitySlotWhereUniqueInput
+    create: XOR<AvailabilitySlotCreateWithoutCompanionInput, AvailabilitySlotUncheckedCreateWithoutCompanionInput>
+  }
+
+  export type AvailabilitySlotCreateManyCompanionInputEnvelope = {
+    data: AvailabilitySlotCreateManyCompanionInput | AvailabilitySlotCreateManyCompanionInput[]
     skipDuplicates?: boolean
   }
 
@@ -17327,6 +20168,176 @@ export namespace Prisma {
     data: XOR<BookingUpdateManyMutationInput, BookingUncheckedUpdateManyWithoutCompanionInput>
   }
 
+  export type AvailabilitySlotUpsertWithWhereUniqueWithoutCompanionInput = {
+    where: AvailabilitySlotWhereUniqueInput
+    update: XOR<AvailabilitySlotUpdateWithoutCompanionInput, AvailabilitySlotUncheckedUpdateWithoutCompanionInput>
+    create: XOR<AvailabilitySlotCreateWithoutCompanionInput, AvailabilitySlotUncheckedCreateWithoutCompanionInput>
+  }
+
+  export type AvailabilitySlotUpdateWithWhereUniqueWithoutCompanionInput = {
+    where: AvailabilitySlotWhereUniqueInput
+    data: XOR<AvailabilitySlotUpdateWithoutCompanionInput, AvailabilitySlotUncheckedUpdateWithoutCompanionInput>
+  }
+
+  export type AvailabilitySlotUpdateManyWithWhereWithoutCompanionInput = {
+    where: AvailabilitySlotScalarWhereInput
+    data: XOR<AvailabilitySlotUpdateManyMutationInput, AvailabilitySlotUncheckedUpdateManyWithoutCompanionInput>
+  }
+
+  export type AvailabilitySlotScalarWhereInput = {
+    AND?: AvailabilitySlotScalarWhereInput | AvailabilitySlotScalarWhereInput[]
+    OR?: AvailabilitySlotScalarWhereInput[]
+    NOT?: AvailabilitySlotScalarWhereInput | AvailabilitySlotScalarWhereInput[]
+    id?: StringFilter<"AvailabilitySlot"> | string
+    companionId?: StringFilter<"AvailabilitySlot"> | string
+    dayOfWeek?: IntFilter<"AvailabilitySlot"> | number
+    startTime?: StringFilter<"AvailabilitySlot"> | string
+    endTime?: StringFilter<"AvailabilitySlot"> | string
+    createdAt?: DateTimeFilter<"AvailabilitySlot"> | Date | string
+  }
+
+  export type BookingCreateWithoutServiceInput = {
+    id?: string
+    status?: $Enums.BookingStatus
+    serviceType: string
+    summary?: string | null
+    address: string
+    scheduledAt: Date | string
+    disability?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    client: UserCreateNestedOneWithoutBookingsInput
+    companion?: CompanionProfileCreateNestedOneWithoutBookingsInput
+    bookedBy?: UserCreateNestedOneWithoutBookedBookingsInput
+    payment?: PaymentCreateNestedOneWithoutBookingInput
+    report?: ReportCreateNestedOneWithoutBookingInput
+    chatRoom?: ChatRoomCreateNestedOneWithoutBookingInput
+  }
+
+  export type BookingUncheckedCreateWithoutServiceInput = {
+    id?: string
+    clientId: string
+    companionId?: string | null
+    bookedById?: string | null
+    status?: $Enums.BookingStatus
+    serviceType: string
+    summary?: string | null
+    address: string
+    scheduledAt: Date | string
+    disability?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    payment?: PaymentUncheckedCreateNestedOneWithoutBookingInput
+    report?: ReportUncheckedCreateNestedOneWithoutBookingInput
+    chatRoom?: ChatRoomUncheckedCreateNestedOneWithoutBookingInput
+  }
+
+  export type BookingCreateOrConnectWithoutServiceInput = {
+    where: BookingWhereUniqueInput
+    create: XOR<BookingCreateWithoutServiceInput, BookingUncheckedCreateWithoutServiceInput>
+  }
+
+  export type BookingCreateManyServiceInputEnvelope = {
+    data: BookingCreateManyServiceInput | BookingCreateManyServiceInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type BookingUpsertWithWhereUniqueWithoutServiceInput = {
+    where: BookingWhereUniqueInput
+    update: XOR<BookingUpdateWithoutServiceInput, BookingUncheckedUpdateWithoutServiceInput>
+    create: XOR<BookingCreateWithoutServiceInput, BookingUncheckedCreateWithoutServiceInput>
+  }
+
+  export type BookingUpdateWithWhereUniqueWithoutServiceInput = {
+    where: BookingWhereUniqueInput
+    data: XOR<BookingUpdateWithoutServiceInput, BookingUncheckedUpdateWithoutServiceInput>
+  }
+
+  export type BookingUpdateManyWithWhereWithoutServiceInput = {
+    where: BookingScalarWhereInput
+    data: XOR<BookingUpdateManyMutationInput, BookingUncheckedUpdateManyWithoutServiceInput>
+  }
+
+  export type CompanionProfileCreateWithoutAvailabilitySlotsInput = {
+    id?: string
+    specialties?: string | null
+    verified?: boolean
+    backgroundCheck?: string | null
+    sexualCheck?: string | null
+    penalCertificate?: string | null
+    sexualCertificate?: string | null
+    rating?: number
+    yearsOnPlatform?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    profile: ProfileCreateNestedOneWithoutCompanionInput
+    bookings?: BookingCreateNestedManyWithoutCompanionInput
+  }
+
+  export type CompanionProfileUncheckedCreateWithoutAvailabilitySlotsInput = {
+    id?: string
+    profileId: string
+    specialties?: string | null
+    verified?: boolean
+    backgroundCheck?: string | null
+    sexualCheck?: string | null
+    penalCertificate?: string | null
+    sexualCertificate?: string | null
+    rating?: number
+    yearsOnPlatform?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bookings?: BookingUncheckedCreateNestedManyWithoutCompanionInput
+  }
+
+  export type CompanionProfileCreateOrConnectWithoutAvailabilitySlotsInput = {
+    where: CompanionProfileWhereUniqueInput
+    create: XOR<CompanionProfileCreateWithoutAvailabilitySlotsInput, CompanionProfileUncheckedCreateWithoutAvailabilitySlotsInput>
+  }
+
+  export type CompanionProfileUpsertWithoutAvailabilitySlotsInput = {
+    update: XOR<CompanionProfileUpdateWithoutAvailabilitySlotsInput, CompanionProfileUncheckedUpdateWithoutAvailabilitySlotsInput>
+    create: XOR<CompanionProfileCreateWithoutAvailabilitySlotsInput, CompanionProfileUncheckedCreateWithoutAvailabilitySlotsInput>
+    where?: CompanionProfileWhereInput
+  }
+
+  export type CompanionProfileUpdateToOneWithWhereWithoutAvailabilitySlotsInput = {
+    where?: CompanionProfileWhereInput
+    data: XOR<CompanionProfileUpdateWithoutAvailabilitySlotsInput, CompanionProfileUncheckedUpdateWithoutAvailabilitySlotsInput>
+  }
+
+  export type CompanionProfileUpdateWithoutAvailabilitySlotsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    specialties?: NullableStringFieldUpdateOperationsInput | string | null
+    verified?: BoolFieldUpdateOperationsInput | boolean
+    backgroundCheck?: NullableStringFieldUpdateOperationsInput | string | null
+    sexualCheck?: NullableStringFieldUpdateOperationsInput | string | null
+    penalCertificate?: NullableStringFieldUpdateOperationsInput | string | null
+    sexualCertificate?: NullableStringFieldUpdateOperationsInput | string | null
+    rating?: FloatFieldUpdateOperationsInput | number
+    yearsOnPlatform?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    profile?: ProfileUpdateOneRequiredWithoutCompanionNestedInput
+    bookings?: BookingUpdateManyWithoutCompanionNestedInput
+  }
+
+  export type CompanionProfileUncheckedUpdateWithoutAvailabilitySlotsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    profileId?: StringFieldUpdateOperationsInput | string
+    specialties?: NullableStringFieldUpdateOperationsInput | string | null
+    verified?: BoolFieldUpdateOperationsInput | boolean
+    backgroundCheck?: NullableStringFieldUpdateOperationsInput | string | null
+    sexualCheck?: NullableStringFieldUpdateOperationsInput | string | null
+    penalCertificate?: NullableStringFieldUpdateOperationsInput | string | null
+    sexualCertificate?: NullableStringFieldUpdateOperationsInput | string | null
+    rating?: FloatFieldUpdateOperationsInput | number
+    yearsOnPlatform?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bookings?: BookingUncheckedUpdateManyWithoutCompanionNestedInput
+  }
+
   export type UserCreateWithoutBookingsInput = {
     id?: string
     email: string
@@ -17371,6 +20382,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     profile: ProfileCreateNestedOneWithoutCompanionInput
+    availabilitySlots?: AvailabilitySlotCreateNestedManyWithoutCompanionInput
   }
 
   export type CompanionProfileUncheckedCreateWithoutBookingsInput = {
@@ -17386,6 +20398,7 @@ export namespace Prisma {
     yearsOnPlatform?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    availabilitySlots?: AvailabilitySlotUncheckedCreateNestedManyWithoutCompanionInput
   }
 
   export type CompanionProfileCreateOrConnectWithoutBookingsInput = {
@@ -17422,6 +20435,33 @@ export namespace Prisma {
   export type UserCreateOrConnectWithoutBookedBookingsInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutBookedBookingsInput, UserUncheckedCreateWithoutBookedBookingsInput>
+  }
+
+  export type ServiceCreateWithoutBookingsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    price?: number
+    category?: string | null
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ServiceUncheckedCreateWithoutBookingsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    price?: number
+    category?: string | null
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ServiceCreateOrConnectWithoutBookingsInput = {
+    where: ServiceWhereUniqueInput
+    create: XOR<ServiceCreateWithoutBookingsInput, ServiceUncheckedCreateWithoutBookingsInput>
   }
 
   export type PaymentCreateWithoutBookingInput = {
@@ -17552,6 +20592,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     profile?: ProfileUpdateOneRequiredWithoutCompanionNestedInput
+    availabilitySlots?: AvailabilitySlotUpdateManyWithoutCompanionNestedInput
   }
 
   export type CompanionProfileUncheckedUpdateWithoutBookingsInput = {
@@ -17567,6 +20608,7 @@ export namespace Prisma {
     yearsOnPlatform?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    availabilitySlots?: AvailabilitySlotUncheckedUpdateManyWithoutCompanionNestedInput
   }
 
   export type UserUpsertWithoutBookedBookingsInput = {
@@ -17604,6 +20646,39 @@ export namespace Prisma {
     supervisedClients?: SupervisionUncheckedUpdateManyWithoutSupervisorNestedInput
     supervisorRef?: SupervisionUncheckedUpdateOneWithoutClientNestedInput
     sentInvites?: SupervisionInviteUncheckedUpdateManyWithoutSupervisorNestedInput
+  }
+
+  export type ServiceUpsertWithoutBookingsInput = {
+    update: XOR<ServiceUpdateWithoutBookingsInput, ServiceUncheckedUpdateWithoutBookingsInput>
+    create: XOR<ServiceCreateWithoutBookingsInput, ServiceUncheckedCreateWithoutBookingsInput>
+    where?: ServiceWhereInput
+  }
+
+  export type ServiceUpdateToOneWithWhereWithoutBookingsInput = {
+    where?: ServiceWhereInput
+    data: XOR<ServiceUpdateWithoutBookingsInput, ServiceUncheckedUpdateWithoutBookingsInput>
+  }
+
+  export type ServiceUpdateWithoutBookingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: IntFieldUpdateOperationsInput | number
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ServiceUncheckedUpdateWithoutBookingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: IntFieldUpdateOperationsInput | number
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PaymentUpsertWithoutBookingInput = {
@@ -17704,6 +20779,7 @@ export namespace Prisma {
     client: UserCreateNestedOneWithoutBookingsInput
     companion?: CompanionProfileCreateNestedOneWithoutBookingsInput
     bookedBy?: UserCreateNestedOneWithoutBookedBookingsInput
+    service?: ServiceCreateNestedOneWithoutBookingsInput
     report?: ReportCreateNestedOneWithoutBookingInput
     chatRoom?: ChatRoomCreateNestedOneWithoutBookingInput
   }
@@ -17713,6 +20789,7 @@ export namespace Prisma {
     clientId: string
     companionId?: string | null
     bookedById?: string | null
+    serviceId?: string | null
     status?: $Enums.BookingStatus
     serviceType: string
     summary?: string | null
@@ -17754,6 +20831,7 @@ export namespace Prisma {
     client?: UserUpdateOneRequiredWithoutBookingsNestedInput
     companion?: CompanionProfileUpdateOneWithoutBookingsNestedInput
     bookedBy?: UserUpdateOneWithoutBookedBookingsNestedInput
+    service?: ServiceUpdateOneWithoutBookingsNestedInput
     report?: ReportUpdateOneWithoutBookingNestedInput
     chatRoom?: ChatRoomUpdateOneWithoutBookingNestedInput
   }
@@ -17763,6 +20841,7 @@ export namespace Prisma {
     clientId?: StringFieldUpdateOperationsInput | string
     companionId?: NullableStringFieldUpdateOperationsInput | string | null
     bookedById?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     serviceType?: StringFieldUpdateOperationsInput | string
     summary?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17788,6 +20867,7 @@ export namespace Prisma {
     client: UserCreateNestedOneWithoutBookingsInput
     companion?: CompanionProfileCreateNestedOneWithoutBookingsInput
     bookedBy?: UserCreateNestedOneWithoutBookedBookingsInput
+    service?: ServiceCreateNestedOneWithoutBookingsInput
     payment?: PaymentCreateNestedOneWithoutBookingInput
     report?: ReportCreateNestedOneWithoutBookingInput
   }
@@ -17797,6 +20877,7 @@ export namespace Prisma {
     clientId: string
     companionId?: string | null
     bookedById?: string | null
+    serviceId?: string | null
     status?: $Enums.BookingStatus
     serviceType: string
     summary?: string | null
@@ -17862,6 +20943,7 @@ export namespace Prisma {
     client?: UserUpdateOneRequiredWithoutBookingsNestedInput
     companion?: CompanionProfileUpdateOneWithoutBookingsNestedInput
     bookedBy?: UserUpdateOneWithoutBookedBookingsNestedInput
+    service?: ServiceUpdateOneWithoutBookingsNestedInput
     payment?: PaymentUpdateOneWithoutBookingNestedInput
     report?: ReportUpdateOneWithoutBookingNestedInput
   }
@@ -17871,6 +20953,7 @@ export namespace Prisma {
     clientId?: StringFieldUpdateOperationsInput | string
     companionId?: NullableStringFieldUpdateOperationsInput | string | null
     bookedById?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     serviceType?: StringFieldUpdateOperationsInput | string
     summary?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17967,6 +21050,7 @@ export namespace Prisma {
     client: UserCreateNestedOneWithoutBookingsInput
     companion?: CompanionProfileCreateNestedOneWithoutBookingsInput
     bookedBy?: UserCreateNestedOneWithoutBookedBookingsInput
+    service?: ServiceCreateNestedOneWithoutBookingsInput
     payment?: PaymentCreateNestedOneWithoutBookingInput
     chatRoom?: ChatRoomCreateNestedOneWithoutBookingInput
   }
@@ -17976,6 +21060,7 @@ export namespace Prisma {
     clientId: string
     companionId?: string | null
     bookedById?: string | null
+    serviceId?: string | null
     status?: $Enums.BookingStatus
     serviceType: string
     summary?: string | null
@@ -18017,6 +21102,7 @@ export namespace Prisma {
     client?: UserUpdateOneRequiredWithoutBookingsNestedInput
     companion?: CompanionProfileUpdateOneWithoutBookingsNestedInput
     bookedBy?: UserUpdateOneWithoutBookedBookingsNestedInput
+    service?: ServiceUpdateOneWithoutBookingsNestedInput
     payment?: PaymentUpdateOneWithoutBookingNestedInput
     chatRoom?: ChatRoomUpdateOneWithoutBookingNestedInput
   }
@@ -18026,6 +21112,7 @@ export namespace Prisma {
     clientId?: StringFieldUpdateOperationsInput | string
     companionId?: NullableStringFieldUpdateOperationsInput | string | null
     bookedById?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     serviceType?: StringFieldUpdateOperationsInput | string
     summary?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18042,6 +21129,7 @@ export namespace Prisma {
     id?: string
     companionId?: string | null
     bookedById?: string | null
+    serviceId?: string | null
     status?: $Enums.BookingStatus
     serviceType: string
     summary?: string | null
@@ -18062,6 +21150,7 @@ export namespace Prisma {
     id?: string
     clientId: string
     companionId?: string | null
+    serviceId?: string | null
     status?: $Enums.BookingStatus
     serviceType: string
     summary?: string | null
@@ -18095,6 +21184,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companion?: CompanionProfileUpdateOneWithoutBookingsNestedInput
     bookedBy?: UserUpdateOneWithoutBookedBookingsNestedInput
+    service?: ServiceUpdateOneWithoutBookingsNestedInput
     payment?: PaymentUpdateOneWithoutBookingNestedInput
     report?: ReportUpdateOneWithoutBookingNestedInput
     chatRoom?: ChatRoomUpdateOneWithoutBookingNestedInput
@@ -18104,6 +21194,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     companionId?: NullableStringFieldUpdateOperationsInput | string | null
     bookedById?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     serviceType?: StringFieldUpdateOperationsInput | string
     summary?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18121,6 +21212,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     companionId?: NullableStringFieldUpdateOperationsInput | string | null
     bookedById?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     serviceType?: StringFieldUpdateOperationsInput | string
     summary?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18161,6 +21253,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     client?: UserUpdateOneRequiredWithoutBookingsNestedInput
     companion?: CompanionProfileUpdateOneWithoutBookingsNestedInput
+    service?: ServiceUpdateOneWithoutBookingsNestedInput
     payment?: PaymentUpdateOneWithoutBookingNestedInput
     report?: ReportUpdateOneWithoutBookingNestedInput
     chatRoom?: ChatRoomUpdateOneWithoutBookingNestedInput
@@ -18170,6 +21263,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     clientId?: StringFieldUpdateOperationsInput | string
     companionId?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     serviceType?: StringFieldUpdateOperationsInput | string
     summary?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18187,6 +21281,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     clientId?: StringFieldUpdateOperationsInput | string
     companionId?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     serviceType?: StringFieldUpdateOperationsInput | string
     summary?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18234,6 +21329,7 @@ export namespace Prisma {
     id?: string
     clientId: string
     bookedById?: string | null
+    serviceId?: string | null
     status?: $Enums.BookingStatus
     serviceType: string
     summary?: string | null
@@ -18242,6 +21338,14 @@ export namespace Prisma {
     disability?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type AvailabilitySlotCreateManyCompanionInput = {
+    id?: string
+    dayOfWeek: number
+    startTime: string
+    endTime: string
+    createdAt?: Date | string
   }
 
   export type BookingUpdateWithoutCompanionInput = {
@@ -18256,6 +21360,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     client?: UserUpdateOneRequiredWithoutBookingsNestedInput
     bookedBy?: UserUpdateOneWithoutBookedBookingsNestedInput
+    service?: ServiceUpdateOneWithoutBookingsNestedInput
     payment?: PaymentUpdateOneWithoutBookingNestedInput
     report?: ReportUpdateOneWithoutBookingNestedInput
     chatRoom?: ChatRoomUpdateOneWithoutBookingNestedInput
@@ -18265,6 +21370,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     clientId?: StringFieldUpdateOperationsInput | string
     bookedById?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     serviceType?: StringFieldUpdateOperationsInput | string
     summary?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18281,6 +21387,97 @@ export namespace Prisma {
   export type BookingUncheckedUpdateManyWithoutCompanionInput = {
     id?: StringFieldUpdateOperationsInput | string
     clientId?: StringFieldUpdateOperationsInput | string
+    bookedById?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
+    serviceType?: StringFieldUpdateOperationsInput | string
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    disability?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AvailabilitySlotUpdateWithoutCompanionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    dayOfWeek?: IntFieldUpdateOperationsInput | number
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AvailabilitySlotUncheckedUpdateWithoutCompanionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    dayOfWeek?: IntFieldUpdateOperationsInput | number
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AvailabilitySlotUncheckedUpdateManyWithoutCompanionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    dayOfWeek?: IntFieldUpdateOperationsInput | number
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BookingCreateManyServiceInput = {
+    id?: string
+    clientId: string
+    companionId?: string | null
+    bookedById?: string | null
+    status?: $Enums.BookingStatus
+    serviceType: string
+    summary?: string | null
+    address: string
+    scheduledAt: Date | string
+    disability?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BookingUpdateWithoutServiceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
+    serviceType?: StringFieldUpdateOperationsInput | string
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    disability?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    client?: UserUpdateOneRequiredWithoutBookingsNestedInput
+    companion?: CompanionProfileUpdateOneWithoutBookingsNestedInput
+    bookedBy?: UserUpdateOneWithoutBookedBookingsNestedInput
+    payment?: PaymentUpdateOneWithoutBookingNestedInput
+    report?: ReportUpdateOneWithoutBookingNestedInput
+    chatRoom?: ChatRoomUpdateOneWithoutBookingNestedInput
+  }
+
+  export type BookingUncheckedUpdateWithoutServiceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clientId?: StringFieldUpdateOperationsInput | string
+    companionId?: NullableStringFieldUpdateOperationsInput | string | null
+    bookedById?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
+    serviceType?: StringFieldUpdateOperationsInput | string
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    disability?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    payment?: PaymentUncheckedUpdateOneWithoutBookingNestedInput
+    report?: ReportUncheckedUpdateOneWithoutBookingNestedInput
+    chatRoom?: ChatRoomUncheckedUpdateOneWithoutBookingNestedInput
+  }
+
+  export type BookingUncheckedUpdateManyWithoutServiceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clientId?: StringFieldUpdateOperationsInput | string
+    companionId?: NullableStringFieldUpdateOperationsInput | string | null
     bookedById?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     serviceType?: StringFieldUpdateOperationsInput | string
@@ -18334,6 +21531,10 @@ export namespace Prisma {
      */
     export type CompanionProfileCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = CompanionProfileCountOutputTypeDefaultArgs<ExtArgs>
     /**
+     * @deprecated Use ServiceCountOutputTypeDefaultArgs instead
+     */
+    export type ServiceCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ServiceCountOutputTypeDefaultArgs<ExtArgs>
+    /**
      * @deprecated Use ChatRoomCountOutputTypeDefaultArgs instead
      */
     export type ChatRoomCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ChatRoomCountOutputTypeDefaultArgs<ExtArgs>
@@ -18357,6 +21558,14 @@ export namespace Prisma {
      * @deprecated Use CompanionProfileDefaultArgs instead
      */
     export type CompanionProfileArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = CompanionProfileDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use ServiceDefaultArgs instead
+     */
+    export type ServiceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ServiceDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use AvailabilitySlotDefaultArgs instead
+     */
+    export type AvailabilitySlotArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = AvailabilitySlotDefaultArgs<ExtArgs>
     /**
      * @deprecated Use BookingDefaultArgs instead
      */

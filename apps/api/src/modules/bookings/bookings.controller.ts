@@ -5,6 +5,7 @@ import {
   Put,
   Body,
   Param,
+  Query,
   UseGuards,
   Request,
 } from '@nestjs/common';
@@ -33,6 +34,27 @@ export class BookingsController {
   @Get('open')
   findOpenBookings() {
     return this.bookingsService.findOpenBookings();
+  }
+
+  @UseGuards(SupabaseAuthGuard)
+  @Get('history')
+  findHistory(
+    @Request() req: any,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+    @Query('status') status?: string,
+  ) {
+    return this.bookingsService.findHistory(req.user.userId, {
+      page: page ? Number(page) : undefined,
+      limit: limit ? Number(limit) : undefined,
+      status,
+    });
+  }
+
+  @UseGuards(SupabaseAuthGuard)
+  @Get('stats')
+  getStats(@Request() req: any) {
+    return this.bookingsService.getStats(req.user.userId);
   }
 
   @UseGuards(SupabaseAuthGuard)

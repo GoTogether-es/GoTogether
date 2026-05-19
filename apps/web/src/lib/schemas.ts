@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const solicitudSchema = z.object({
-  serviceType: z.string().min(1, 'Selecciona un tipo de servicio'),
+  serviceId: z.string().min(1, 'Selecciona un tipo de servicio'),
   address: z.string().min(3, 'La dirección debe tener al menos 3 caracteres'),
   date: z.string().min(1, 'Selecciona una fecha'),
   time: z.string().min(1, 'Selecciona una hora'),

@@ -17,6 +17,10 @@ import type {
   AdminUser,
   AdminPending,
   NotificationData,
+  ServiceData,
+  AvailabilitySlotData,
+  BookingHistoryResponse,
+  BookingStats,
 } from '@/types';
 
 const API_URL = env.apiUrl;
@@ -58,6 +62,7 @@ const profileSchema = z.object({
   disabilityDocument: z.string().nullable(),
   preferences: z.string().nullable(),
   companion: z.object({
+    id: z.string(),
     specialties: z.string().nullable(),
     verified: z.boolean(),
     backgroundCheck: z.string().nullable(),
@@ -108,6 +113,7 @@ const bookingSchema = z.object({
   clientId: z.string(),
   companionId: z.string().nullable(),
   bookedById: z.string().nullable(),
+  serviceId: z.string().nullable(),
   status: z.string(),
   serviceType: z.string(),
   summary: z.string().nullable(),
@@ -122,6 +128,14 @@ const bookingSchema = z.object({
   }).nullable().optional(),
   companion: z.object({
     profile: z.object({ fullName: z.string() }).nullable().optional(),
+  }).nullable().optional(),
+  service: z.object({
+    id: z.string(),
+    name: z.string(),
+    description: z.string().nullable().optional(),
+    price: z.number(),
+    category: z.string().nullable().optional(),
+    active: z.boolean().optional(),
   }).nullable().optional(),
   payment: z.object({
     id: z.string(),
@@ -201,6 +215,7 @@ export async function createBooking(data: {
   summary?: string;
   disability?: string;
   companionId?: string;
+  serviceId?: string;
 }): Promise<BookingData> {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/bookings`, {
@@ -550,4 +565,46 @@ export async function markAllNotificationsRead(): Promise<void> {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/notifications/read-all`, { method: 'PUT', headers });
   if (!response.ok) throw new Error('Failed to mark all read');
+}
+
+export async function getServices(): Promise<ServiceData[]> {
+  const response = await fetch(`${API_URL}/services`);
+  if (!response.ok) throw new Error('Failed to fetch services');
+  return response.json();
+}
+
+export async function getCompanionAvailability(companionId: string): Promise<AvailabilitySlotData[]> {
+  const response = await fetch(`${API_URL}/companions/${companionId}/availability`);
+  if (!response.ok) throw new Error('Failed to fetch availability');
+  return response.json();
+}
+
+export async function setMyAvailability(slots: { dayOfWeek: number; startTime: string; endTime: string }[]) {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/availability`, {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify({ slots }),
+  });
+  if (!response.ok) throw new Error('Failed to set availability');
+  return response.json();
+}
+
+export async function getBookingHistory(params?: { page?: number; limit?: number; status?: string }): Promise<BookingHistoryResponse> {
+  const headers = await getAuthHeaders();
+  const query = new URLSearchParams();
+  if (params?.page) query.set('page', String(params.page));
+  if (params?.limit) query.set('limit', String(params.limit));
+  if (params?.status) query.set('status', params.status);
+  const qs = query.toString();
+  const response = await fetch(`${API_URL}/bookings/history${qs ? `?${qs}` : ''}`, { headers });
+  if (!response.ok) throw new Error('Failed to fetch history');
+  return response.json();
+}
+
+export async function getBookingStats(): Promise<BookingStats> {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/bookings/stats`, { headers });
+  if (!response.ok) throw new Error('Failed to fetch stats');
+  return response.json();
 }

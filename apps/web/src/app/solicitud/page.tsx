@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { Button, Card, Container, Section } from '@gotogether/ui';
 import { createBooking, requestBooking } from '@/services/api';
 import { solicitudSchema, type SolicitudFormData, validateFutureDate } from '@/lib/schemas';
+import { useServices } from '@/services/queries';
 import { User } from 'lucide-react';
 
 function SolicitudForm() {
@@ -15,14 +16,20 @@ function SolicitudForm() {
   const searchParams = useSearchParams();
   const companionId = searchParams.get('companionId');
 
+  const { data: services = [], isLoading: servicesLoading } = useServices();
+
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
     setError,
   } = useForm<SolicitudFormData>({
     resolver: zodResolver(solicitudSchema),
   });
+
+  const selectedServiceId = watch('serviceId');
+  const selectedService = services.find((s) => s.id === selectedServiceId);
 
   const onSubmit = async (data: SolicitudFormData) => {
     const dateError = validateFutureDate(data.date, data.time);
@@ -33,8 +40,10 @@ function SolicitudForm() {
 
     try {
       const scheduledAt = new Date(`${data.date}T${data.time}:00`).toISOString();
+      const service = services.find((s) => s.id === data.serviceId);
       const booking = await createBooking({
-        serviceType: data.serviceType,
+        serviceType: service?.name || 'Servicio',
+        serviceId: data.serviceId,
         address: data.address,
         scheduledAt,
         summary: data.notes || undefined,
@@ -69,17 +78,31 @@ function SolicitudForm() {
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="serviceType">
+              <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="serviceId">
                 ¿Qué tipo de acompañamiento buscas?
               </label>
-              <input
-                id="serviceType"
-                className="gt-input"
-                placeholder="Ej: Médico, ocio, gestiones..."
-                {...register('serviceType')}
-              />
-              {errors.serviceType && (
-                <p className="text-red-500 text-xs mt-1" role="alert">{errors.serviceType.message}</p>
+              {servicesLoading ? (
+                <div className="gt-input bg-gray-100 animate-pulse h-12 rounded-xl" />
+              ) : (
+                <select id="serviceId" className="gt-input" {...register('serviceId')}>
+                  <option value="">Selecciona un servicio...</option>
+                  {services.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.name} — {new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(s.price / 100)}/h
+                    </option>
+                  ))}
+                </select>
+              )}
+              {errors.serviceId && (
+                <p className="text-red-500 text-xs mt-1" role="alert">{errors.serviceId.message}</p>
+              )}
+              {selectedService && (
+                <div className="mt-2 p-3 bg-blue-50 rounded-xl border border-blue-100">
+                  <p className="text-sm text-blue-800">{selectedService.description}</p>
+                  <p className="text-xs text-blue-500 mt-1">
+                    Precio orientativo: {new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(selectedService.price / 100)}/h
+                  </p>
+                </div>
               )}
             </div>
             <div>

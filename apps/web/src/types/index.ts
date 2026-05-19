@@ -53,6 +53,7 @@ export type UserProfile = {
 };
 
 export type CompanionProfileData = {
+  id: string;
   specialties: string | null;
   verified: boolean;
   backgroundCheck: string | null;
@@ -69,6 +70,7 @@ export type BookingData = {
   clientId: string;
   companionId: string | null;
   bookedById: string | null;
+  serviceId: string | null;
   status: string;
   serviceType: string;
   summary: string | null;
@@ -79,6 +81,7 @@ export type BookingData = {
   updatedAt: string;
   client?: { id: string; profile?: { fullName: string } | null } | null;
   companion?: { profile?: { fullName: string } | null } | null;
+  service?: ServiceData | null;
   payment?: PaymentData | null;
   chatRoom?: { id: string } | null;
   report?: { id: string } | null;
@@ -219,4 +222,32 @@ export type AdminPending = {
     disabilityDocument: string | null;
     user: { id: string; email: string };
   }[];
+};
+
+export type ServiceData = {
+  id: string;
+  name: string;
+  description?: string | null;
+  price: number;
+  category?: string | null;
+  active?: boolean;
+};
+
+export type AvailabilitySlotData = {
+  id: string;
+  companionId: string;
+  dayOfWeek: number;
+  startTime: string;
+  endTime: string;
+};
+
+export type BookingHistoryResponse = {
+  data: BookingData[];
+  meta: { total: number; page: number; limit: number; totalPages: number };
+};
+
+export type BookingStats = {
+  completed: number;
+  withRating: number;
+  averageRating: number | null;
 };

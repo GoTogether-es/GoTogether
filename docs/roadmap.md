@@ -44,14 +44,16 @@ El núcleo del marketplace está funcional: los usuarios pueden registrarse, bus
 - [ ] Aplicar `STRIPE_PLATFORM_FEE_PERCENT` (12%)
 - [ ] UI de pago en el frontend (Stripe Elements o Checkout)
 
-## ⬜ Fase 4 — Funcionalidades avanzadas
+## ✅ Fase 5 — Funcionalidades avanzadas (completada)
 
-- [ ] Catálogo de servicios con precios (reemplazar `serviceType` free-text)
-- [ ] Disponibilidad / calendario para acompañantes
-- [ ] Aplicar `@Roles()` y `RolesAuthGuard` en endpoints de admin y supervisor
-- [ ] Historial de servicios completados con estadísticas
+- [x] Catálogo de servicios con precios: modelo `Service` + seed data + endpoint `GET /services` + dropdown en `/solicitud`
+- [x] Disponibilidad semanal para acompañantes: modelo `AvailabilitySlot` + endpoint `PUT /availability` + UI en `/panel`
+- [x] Validación de disponibilidad al crear reserva con companionId
+- [x] Historial de servicios completados: `GET /bookings/history` + `GET /bookings/stats` + página `/historial` con paginación
+- [x] Roles en supervisor: chequeo manual `requireSupervisorRole()` en `SupervisionService`
+- [x] Roles en admin: documentado como `AdminGuard` por header `x-admin-key` (simplificación alpha)
 
-## ⬜ Fase 5 — GDPR y cumplimiento
+## ⬜ Fase 6 — GDPR y cumplimiento
 
 - [ ] Eliminación de cuenta (derecho al olvido)
 - [ ] Exportación de datos (portabilidad)

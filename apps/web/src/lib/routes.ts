@@ -15,4 +15,5 @@ export const routes = {
   supervision: '/supervision',
   supervisionAccept: '/supervision/accept',
   admin: '/admin',
+  historial: '/historial',
 } as const;

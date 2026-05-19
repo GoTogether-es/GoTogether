@@ -21,4 +21,8 @@ export class CreateBookingDto {
   @IsString()
   @IsOptional()
   companionId?: string;
+
+  @IsString()
+  @IsOptional()
+  serviceId?: string;
 }

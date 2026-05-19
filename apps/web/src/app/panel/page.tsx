@@ -3,10 +3,17 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Button, Card, Container, Section } from '@gotogether/ui';
-import { getMyBookings, getOpenBookings, updateBookingStatus, getProfile } from '@/services/api';
+import { getMyBookings, getOpenBookings, updateBookingStatus, getProfile, getCompanionAvailability, setMyAvailability } from '@/services/api';
 import { Loader2, CalendarDays, ClipboardList, CheckCircle, XCircle, Clock, MessageCircle, ShieldCheck, ShieldAlert } from 'lucide-react';
-import type { BookingData } from '@/types';
+import type { BookingData, AvailabilitySlotData } from '@/types';
 import { toast } from 'sonner';
+
+const DAY_NAMES = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+const TIME_SLOTS = [
+  { label: 'Mañana', start: '08:00', end: '12:00' },
+  { label: 'Tarde', start: '12:00', end: '17:00' },
+  { label: 'Noche', start: '17:00', end: '21:00' },
+];
 
 export default function PanelPage() {
   const [myBookings, setMyBookings] = useState<BookingData[]>([]);
@@ -14,6 +21,8 @@ export default function PanelPage() {
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [verified, setVerified] = useState<boolean | null>(null);
+  const [availabilitySlots, setAvailabilitySlots] = useState<AvailabilitySlotData[]>([]);
+  const [savingAvailability, setSavingAvailability] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -29,6 +38,11 @@ export default function PanelPage() {
       setMyBookings(my);
       setOpenBookings(open);
       setVerified(profile?.companion?.verified ?? null);
+
+      if (profile?.companion) {
+        const slots = await getCompanionAvailability(profile.companion.id);
+        setAvailabilitySlots(slots);
+      }
     } catch {
       toast.error('Error al cargar los datos');
     } finally {
@@ -47,6 +61,41 @@ export default function PanelPage() {
     } finally {
       setActionLoading(null);
     }
+  };
+
+  const toggleAvailability = async (dayOfWeek: number, slot: { start: string; end: string }) => {
+    const exists = availabilitySlots.some(
+      (s) => s.dayOfWeek === dayOfWeek && s.startTime === slot.start && s.endTime === slot.end,
+    );
+
+    let newSlots: { dayOfWeek: number; startTime: string; endTime: string }[];
+    if (exists) {
+      newSlots = availabilitySlots
+        .filter((s) => !(s.dayOfWeek === dayOfWeek && s.startTime === slot.start && s.endTime === slot.end))
+        .map((s) => ({ dayOfWeek: s.dayOfWeek, startTime: s.startTime, endTime: s.endTime }));
+    } else {
+      newSlots = [
+        ...availabilitySlots.map((s) => ({ dayOfWeek: s.dayOfWeek, startTime: s.startTime, endTime: s.endTime })),
+        { dayOfWeek, startTime: slot.start, endTime: slot.end },
+      ];
+    }
+
+    setSavingAvailability(true);
+    try {
+      const result = await setMyAvailability(newSlots);
+      setAvailabilitySlots(result);
+      toast.success('Disponibilidad actualizada');
+    } catch {
+      toast.error('Error al actualizar disponibilidad');
+    } finally {
+      setSavingAvailability(false);
+    }
+  };
+
+  const isSlotActive = (dayOfWeek: number, slot: { start: string; end: string }) => {
+    return availabilitySlots.some(
+      (s) => s.dayOfWeek === dayOfWeek && s.startTime === slot.start && s.endTime === slot.end,
+    );
   };
 
   const pendingCount = myBookings.filter((b) => b.status === 'REQUESTED').length;
@@ -116,6 +165,50 @@ export default function PanelPage() {
                 <p className="font-semibold text-emerald-800">Perfil verificado</p>
                 <p className="text-sm text-emerald-700">Tu documentación ha sido aprobada. Eres visible para los usuarios en la plataforma.</p>
               </div>
+            </Card>
+          )}
+
+          {/* Availability */}
+          {verified !== null && (
+            <Card className="p-6 mb-6">
+              <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+                <CalendarDays className="w-5 h-5 text-blue-600" />
+                Mi disponibilidad semanal
+              </h2>
+              <p className="text-sm text-gray-500 mb-4">
+                Marca las franjas horarias en las que estás disponible. Los clientes solo podrán solicitarte en estos horarios.
+              </p>
+              <div className="overflow-x-auto">
+                <div className="grid grid-cols-[80px_repeat(7,1fr)] gap-1 min-w-[500px]">
+                  <div className="p-2"></div>
+                  {DAY_NAMES.map((day) => (
+                    <div key={day} className="p-2 text-center text-xs font-bold text-gray-500">{day}</div>
+                  ))}
+                  {TIME_SLOTS.map((slot) => (
+                    <>
+                      <div key={`label-${slot.start}`} className="p-2 text-xs text-gray-400 flex items-center">{slot.label}</div>
+                      {Array.from({ length: 7 }).map((_, dayIdx) => (
+                        <button
+                          key={`${dayIdx}-${slot.start}`}
+                          type="button"
+                          onClick={() => toggleAvailability(dayIdx, { start: slot.start, end: slot.end })}
+                          disabled={savingAvailability}
+                          className={`p-2 rounded-lg text-xs font-medium transition-colors border ${
+                            isSlotActive(dayIdx, slot)
+                              ? 'bg-blue-600 text-white border-blue-600'
+                              : 'bg-gray-50 text-gray-400 border-gray-100 hover:border-blue-200 hover:bg-blue-50'
+                          } ${savingAvailability ? 'opacity-50 cursor-wait' : ''}`}
+                        >
+                          {slot.label.substring(0, 2)}
+                        </button>
+                      ))}
+                    </>
+                  ))}
+                </div>
+              </div>
+              {availabilitySlots.length === 0 && (
+                <p className="text-sm text-gray-400 mt-3 text-center">No has configurado tu disponibilidad.</p>
+              )}
             </Card>
           )}
 

@@ -67,13 +67,25 @@ tags: [project, changelog, history]
 
 ### Estabilización
 - ✅ `SupabaseJwtStrategy.validate()` consulta BD para incluir `role` en `req.user`
-- ✅ `RolesAuthGuard` + `@Roles()` aplicado en endpoints de supervisor (SUPERVISOR requerido)
+- ✅ `RolesAuthGuard` + `@Roles()` aplicado en endpoints de supervisor
 - ✅ `MailService` centralizado compartido entre módulos
 - ✅ Emails transaccionales en cambios de estado de reserva (aceptada, rechazada, completada, cancelada)
 - ✅ Emails transaccionales en verificación de documentos (aprobada, rechazada)
 - ✅ Indicador de estado de conexión en chat (conectado/reconectando/sin conexión)
 - ✅ Refetch automático de mensajes al recuperar visibilidad de la pestaña
 - ✅ Limpieza de Redis no usado (eliminado de .env, .env.example y docker-compose.yml)
+
+## v0.2.0-alpha — Mayo 2026
+
+### Funcionalidades avanzadas
+- ✅ Catálogo de servicios: modelo `Service` con nombre, descripción, precio y categoría + seed data + endpoint público
+- ✅ Dropdown de servicios en `/solicitud` reemplazando input de texto libre, con precio orientativo visible
+- ✅ Disponibilidad semanal para acompañantes: modelo `AvailabilitySlot` + API `PUT /availability` + editor en `/panel`
+- ✅ Validación de disponibilidad al crear reserva (rechaza si companion no tiene el slot disponible)
+- ✅ Historial de servicios: `GET /bookings/history` con paginación y `GET /bookings/stats` con agregados
+- ✅ Página `/historial` con estadísticas (total, valoración media, valoraciones recibidas) y lista paginada
+- ✅ `BookingData` ampliado con `serviceId` y `service` relation
+- ✅ `CompanionProfileData` ampliado con `id` para acceso directo
 
 ---
 

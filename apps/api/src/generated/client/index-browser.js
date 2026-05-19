@@ -181,11 +181,32 @@ exports.Prisma.CompanionProfileScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ServiceScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  price: 'price',
+  category: 'category',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AvailabilitySlotScalarFieldEnum = {
+  id: 'id',
+  companionId: 'companionId',
+  dayOfWeek: 'dayOfWeek',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.BookingScalarFieldEnum = {
   id: 'id',
   clientId: 'clientId',
   companionId: 'companionId',
   bookedById: 'bookedById',
+  serviceId: 'serviceId',
   status: 'status',
   serviceType: 'serviceType',
   summary: 'summary',
@@ -280,6 +301,8 @@ exports.Prisma.ModelName = {
   SupervisionInvite: 'SupervisionInvite',
   Profile: 'Profile',
   CompanionProfile: 'CompanionProfile',
+  Service: 'Service',
+  AvailabilitySlot: 'AvailabilitySlot',
   Booking: 'Booking',
   Payment: 'Payment',
   ChatRoom: 'ChatRoom',
