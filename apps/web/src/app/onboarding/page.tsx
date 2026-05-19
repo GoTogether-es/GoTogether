@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { Card, Container, Section } from '@gotogether/ui';
 import { User, UserPlus, ShieldCheck, ArrowRight } from 'lucide-react';
 import { LinkButton } from '@/components/link-button';
+import { StepIndicator } from '@/components/step-indicator';
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -39,6 +40,16 @@ export default function OnboardingPage() {
     <Section>
       <Container>
         <div className="max-w-4xl mx-auto text-center">
+          <StepIndicator
+            steps={[
+              { label: 'Elegir rol', description: 'Selecciona cómo participar' },
+              { label: 'Completar perfil', description: 'Cuéntanos sobre ti' },
+              { label: 'Empezar', description: 'Comienza a usar la plataforma' },
+            ]}
+            currentStep={0}
+            className="mb-10"
+          />
+
           <h1 className="text-3xl font-extrabold mb-3">
             ¡Bienvenido a GoTogether!
           </h1>
@@ -50,18 +61,10 @@ export default function OnboardingPage() {
             {roles.map((role) => {
               const Icon = role.icon;
               return (
-                <div
+                <button
                   key={role.key}
-                  role="button"
-                  tabIndex={0}
                   onClick={() => router.push(role.route)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      router.push(role.route);
-                    }
-                  }}
-                  className="cursor-pointer group outline-none focus-visible:ring-4 focus-visible:ring-blue-500/30 rounded-[24px]"
+                  className="cursor-pointer group outline-none focus-visible:ring-4 focus-visible:ring-blue-500/30 rounded-[24px] text-left w-full"
                 >
                   <Card className="p-8 border-0 shadow-xl hover:shadow-2xl hover:translate-y-[-4px] transition-all duration-300">
                     <div
@@ -78,7 +81,7 @@ export default function OnboardingPage() {
                       <ArrowRight className="w-4 h-4" />
                     </div>
                   </Card>
-                </div>
+                </button>
               );
             })}
           </div>

@@ -6,6 +6,7 @@ import { Button, Card, Container, Section } from '@gotogether/ui';
 import { ShieldCheck, Star, Calendar, CheckCircle } from 'lucide-react';
 import { useCompanion } from '@/services/queries';
 import { SkeletonText, SkeletonAvatar } from '@/components/skeleton';
+import { Breadcrumbs } from '@/components/breadcrumbs';
 
 export default function CompanionDetailPage() {
   const params = useParams();
@@ -19,6 +20,13 @@ export default function CompanionDetailPage() {
       <Section>
         <Container>
           <div className="max-w-4xl mx-auto">
+            <Breadcrumbs
+              items={[
+                { label: 'Explorar', href: '/explorar' },
+                { label: '...' },
+              ]}
+              className="mb-6"
+            />
             <SkeletonText width="30%" height="1rem" />
             <div className="mt-6 p-8 rounded-2xl bg-white border border-gray-100 shadow-sm">
               <div className="flex flex-col md:flex-row gap-8">
@@ -60,15 +68,15 @@ export default function CompanionDetailPage() {
 
   return (
     <Section>
-      <Container>
-        <div className="max-w-4xl mx-auto">
-          <button
-            onClick={() => router.push('/explorar')}
-            className="text-sm text-blue-600 hover:text-blue-800 mb-6 inline-block font-medium"
-            aria-label="Volver a resultados de búsqueda"
-          >
-            &larr; Volver a resultados
-          </button>
+        <Container>
+          <div className="max-w-4xl mx-auto">
+            <Breadcrumbs
+              items={[
+                { label: 'Explorar', href: '/explorar' },
+                { label: profile.fullName },
+              ]}
+              className="mb-6"
+            />
 
           <Card className="p-8 border-0 shadow-xl shadow-blue-900/5">
             <div className="flex flex-col md:flex-row gap-8">

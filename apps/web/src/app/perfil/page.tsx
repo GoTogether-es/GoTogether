@@ -72,7 +72,7 @@ function PerfilContent() {
     try {
       const payload = { ...data, avatarUrl: avatarUrl || '' };
       await upsertProfile(payload);
-      toast.success(isOnboarding ? 'Perfil creado con exito' : 'Cambios guardados con exito');
+      toast.success(isOnboarding ? 'Perfil creado con éxito' : 'Cambios guardados con éxito');
       if (isOnboarding) {
         if (roleParam === 'supervisor') {
           setTimeout(() => router.push('/onboarding/supervisor'), 1000);
@@ -88,7 +88,7 @@ function PerfilContent() {
         setEditing(false);
       }
     } catch {
-      toast.error('Hubo un error al guardar tu perfil. Intentalo de nuevo.');
+      toast.error('Hubo un error al guardar tu perfil. Inténtalo de nuevo.');
     } finally {
       setSaving(false);
     }
@@ -134,7 +134,7 @@ function PerfilContent() {
             {isOnboarding
               ? 'Para empezar, necesitamos conocerte un poco mejor.'
               : editing
-                ? 'Edita tu informacion personal.'
+                ? 'Edita tu información personal.'
                 : 'Revisa y edita tu perfil cuando quieras.'}
           </p>
         </div>
@@ -180,7 +180,7 @@ function PerfilContent() {
             <Card className="p-8 border-0 shadow-xl shadow-blue-900/5">
               <div className="flex items-center gap-3 mb-4 border-b pb-4">
                 <Briefcase className="w-5 h-5 text-blue-600" />
-                <h3 className="text-lg font-bold">Acompanante</h3>
+                <h3 className="text-lg font-bold">Acompañante</h3>
               </div>
               <div className="space-y-3">
                 {profile.companion?.specialties && (
@@ -202,11 +202,11 @@ function PerfilContent() {
                   ) : (
                     <span className="gt-tag flex items-center gap-1 bg-amber-50 text-amber-700">
                       <UserCircle className="w-3.5 h-3.5 text-amber-500" />
-                      Pendiente de verificacion
+                      Pendiente de verificación
                     </span>
                   )}
                   <span className="gt-tag flex items-center gap-1">
-                    {profile.companion?.yearsOnPlatform ?? 0} anos en la plataforma
+                    {profile.companion?.yearsOnPlatform ?? 0} años en la plataforma
                   </span>
                 </div>
               </div>
@@ -229,7 +229,7 @@ function PerfilContent() {
                 )}
                 {profile.disabilityDescription && (
                   <div>
-                    <span className="text-sm font-semibold text-gray-500">Descripcion</span>
+                    <span className="text-sm font-semibold text-gray-500">Descripción</span>
                     <p className="mt-0.5 text-gray-600 leading-relaxed">{profile.disabilityDescription}</p>
                   </div>
                 )}
@@ -277,7 +277,7 @@ function PerfilContent() {
 
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="headline">
-                  A que te dedicas?
+                  ¿A qué te dedicas?
                 </label>
                 <input
                   id="headline"
@@ -289,7 +289,7 @@ function PerfilContent() {
 
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="phone">
-                  Telefono de contacto
+                  Teléfono de contacto
                 </label>
                 <input
                   id="phone"
@@ -307,7 +307,7 @@ function PerfilContent() {
                   id="bio"
                   className="gt-input"
                   rows={4}
-                  placeholder="Cuentanos tus gustos, hobbies o que buscas en GoTogether..."
+                  placeholder="Cuéntanos tus gustos, hobbies o qué buscas en GoTogether..."
                   {...register('bio')}
                 />
               </div>
@@ -319,7 +319,7 @@ function PerfilContent() {
             <Card className="p-8 border-0 shadow-xl shadow-blue-900/5">
               <div className="flex items-center gap-3 mb-6 border-b pb-4">
                 <Briefcase className="w-5 h-5 text-blue-600" />
-                <h3 className="text-lg font-bold">Acompanante</h3>
+                <h3 className="text-lg font-bold">Acompañante</h3>
               </div>
               <div className="grid grid-cols-1 gap-6">
                 <div>
@@ -353,7 +353,7 @@ function PerfilContent() {
                   className="gt-input"
                   {...register('disabilityType')}
                 >
-                  <option value="">Selecciona una opcion</option>
+                  <option value="">Selecciona una opción</option>
                   <option value="movilidad">Movilidad reducida</option>
                   <option value="visual">Discapacidad visual</option>
                   <option value="auditiva">Discapacidad auditiva</option>

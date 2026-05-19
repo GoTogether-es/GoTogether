@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -9,7 +9,10 @@ import { Button, Card, Container, Section } from '@gotogether/ui';
 import { Loader2, UserCircle, Briefcase, ShieldCheck } from 'lucide-react';
 import { upsertProfile } from '@/services/api';
 import { FileUpload } from '@/components/file-upload';
+import { StepIndicator } from '@/components/step-indicator';
 import { companionRegistrationSchema, type CompanionRegistrationFormData } from '@/lib/schemas';
+
+const AUTO_SAVE_KEY = 'companion-registration';
 
 export default function CompanionRegistrationPage() {
   const router = useRouter();
@@ -20,11 +23,47 @@ export default function CompanionRegistrationPage() {
     register,
     handleSubmit,
     setValue,
+    watch,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<CompanionRegistrationFormData>({
     resolver: zodResolver(companionRegistrationSchema),
     defaultValues: { penalCertificate: '', sexualCertificate: '' },
   });
+
+  const formValues = watch();
+
+  // Restore saved data on mount
+  useEffect(() => {
+    try {
+      const saved = sessionStorage.getItem(AUTO_SAVE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        reset(parsed);
+        if (parsed.penalCertificate) setPenalCertificate(parsed.penalCertificate);
+        if (parsed.sexualCertificate) setSexualCertificate(parsed.sexualCertificate);
+        toast.info('Formulario restaurado', { duration: 2000 });
+      }
+    } catch {
+      sessionStorage.removeItem(AUTO_SAVE_KEY);
+    }
+  }, [reset]);
+
+  // Auto-save form data on change
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      try {
+        sessionStorage.setItem(AUTO_SAVE_KEY, JSON.stringify({
+          ...formValues,
+          penalCertificate,
+          sexualCertificate,
+        }));
+      } catch {
+        // Storage full
+      }
+    }, 800);
+    return () => clearTimeout(timer);
+  }, [formValues, penalCertificate, sexualCertificate]);
 
   const onSubmit = async (data: CompanionRegistrationFormData) => {
     try {
@@ -38,6 +77,7 @@ export default function CompanionRegistrationPage() {
         sexualCertificate: sexualCertificate || undefined,
       });
       toast.success('¡Perfil creado! Nuestro equipo revisará tu documentación.');
+      sessionStorage.removeItem(AUTO_SAVE_KEY);
       setTimeout(() => router.push('/panel'), 1500);
     } catch {
       toast.error('Error al guardar tu perfil. Inténtalo de nuevo.');
@@ -48,6 +88,16 @@ export default function CompanionRegistrationPage() {
     <Section>
       <Container>
         <div className="max-w-4xl mx-auto">
+          <StepIndicator
+            steps={[
+              { label: 'Elegir rol' },
+              { label: 'Completar perfil' },
+              { label: 'Empezar' },
+            ]}
+            currentStep={1}
+            className="mb-8"
+          />
+
           <div className="mb-10 text-center md:text-left">
             <h1 className="text-3xl font-extrabold mb-3">Regístrate como acompañante</h1>
             <p className="text-gray-500 text-lg">

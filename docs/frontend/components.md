@@ -90,7 +90,7 @@ Campanita de notificaciones en la barra de navegación:
 - Suscripción Realtime a `Notification` para nuevas notificaciones
 - Polling REST como fuente inicial
 
-**Integrado en:** [[AppShell]]
+**Integrado en:** AppShell
 
 ## CompanionCard
 

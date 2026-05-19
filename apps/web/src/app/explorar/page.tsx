@@ -43,6 +43,12 @@ export default function ExplorarPage() {
 
   const companions: CompanionSummary[] = data?.data ?? [];
   const totalPages = data?.meta?.totalPages ?? 1;
+  const totalItems = data?.meta?.total ?? companions.length;
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <Section>
@@ -136,10 +142,16 @@ export default function ExplorarPage() {
                 ))}
               </div>
 
+              {totalItems > 0 && (
+                <p className="text-sm text-gray-500 mb-4">
+                  {totalItems} {totalItems === 1 ? 'acompañante encontrado' : 'acompañantes encontrados'}
+                </p>
+              )}
+
               {totalPages > 1 && (
                 <div className="flex justify-center items-center gap-3 mt-10">
                   <button
-                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    onClick={() => handlePageChange(Math.max(1, page - 1))}
                     disabled={page === 1}
                     className="gt-button gt-button--ghost h-10 px-4 disabled:opacity-30"
                     aria-label="Página anterior"
@@ -150,7 +162,7 @@ export default function ExplorarPage() {
                     Página {page} de {totalPages}
                   </span>
                   <button
-                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                    onClick={() => handlePageChange(Math.min(totalPages, page + 1))}
                     disabled={page === totalPages}
                     className="gt-button gt-button--ghost h-10 px-4 disabled:opacity-30"
                     aria-label="Página siguiente"

@@ -15,7 +15,7 @@ export const homeSteps: HomeStep[] = [
   },
   {
     title: 'Reserva con garantía',
-    copy: 'El pago es seguro y solo se libera una vez que el acompañante acepta la solicitud.',
+    copy: 'El pago es seguro y sólo se libera una vez que el acompañante acepta la solicitud.',
   },
   {
     title: 'Seguimiento y valoración',

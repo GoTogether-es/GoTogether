@@ -7,11 +7,8 @@ import { Container, Button } from '@gotogether/ui';
 import { routes } from '@/lib/routes';
 import { Footer } from './footer';
 import { NotificationBell } from './notification-bell';
-import { User, LogIn, Menu, X, Search, CalendarDays, LogOut, LayoutDashboard } from 'lucide-react';
-import { createClient } from '@/lib/supabase/client';
-import { logout as apiLogout, getProfile } from '@/services/api';
-import type { Session, AuthChangeEvent } from '@supabase/supabase-js';
-import clsx from 'clsx';
+import { ConfirmDialog } from './confirm-dialog';
+import { RouteAnnouncer } from './route-announcer';
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -20,6 +17,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const [isCompanion, setIsCompanion] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const supabase = createClient();
@@ -182,7 +180,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   <Button
                     variant="ghost"
                     className="flex items-center gap-2 text-gray-500 hover:text-red-600"
-                    onClick={handleLogout}
+                    onClick={() => setShowLogoutConfirm(true)}
                     disabled={loggingOut}
                     aria-label="Cerrar sesión"
                   >
@@ -282,7 +280,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   className="flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium text-red-600 hover:bg-red-50 transition-colors w-full text-left"
                   onClick={() => {
                     closeMenu();
-                    handleLogout();
+                    setShowLogoutConfirm(true);
                   }}
                 >
                   <LogOut className="w-5 h-5" />
@@ -307,6 +305,20 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <main id="main-content" className="flex-grow">{children}</main>
 
       <Footer />
+
+      <RouteAnnouncer />
+
+      <ConfirmDialog
+        open={showLogoutConfirm}
+        title="Cerrar sesión"
+        message="¿Estás seguro de que quieres cerrar sesión?"
+        confirmLabel="Cerrar sesión"
+        cancelLabel="Cancelar"
+        variant="danger"
+        loading={loggingOut}
+        onConfirm={handleLogout}
+        onCancel={() => setShowLogoutConfirm(false)}
+      />
     </div>
   );
 }

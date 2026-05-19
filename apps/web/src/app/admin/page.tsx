@@ -67,7 +67,7 @@ export default function AdminPage() {
         toast.error('Contraseña incorrecta');
       }
     } catch {
-      toast.error('Error de conexion');
+      toast.error('Error de conexión');
     } finally {
       setLoading(false);
     }
@@ -90,8 +90,8 @@ export default function AdminPage() {
               <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <ShieldCheck className="w-8 h-8 text-blue-600" />
               </div>
-              <h1 className="text-2xl font-extrabold">Panel de Administracion</h1>
-              <p className="text-gray-500 mt-2">Introduce la contrasena de administrador</p>
+              <h1 className="text-2xl font-extrabold">Panel de Administración</h1>
+              <p className="text-gray-500 mt-2">Introduce la contraseña de administrador</p>
             </div>
             <form onSubmit={handleLogin} className="space-y-4">
               <input
@@ -99,7 +99,7 @@ export default function AdminPage() {
                 value={inputKey}
                 onChange={(e) => setInputKey(e.target.value)}
                 className="gt-input w-full"
-                placeholder="Contrasena de administrador"
+                placeholder="Contraseña de administrador"
                 autoFocus
               />
               <button
@@ -124,7 +124,7 @@ export default function AdminPage() {
           <div className="flex items-center justify-between mb-8">
             <div>
               <h1 className="text-3xl font-extrabold">Admin</h1>
-              <p className="text-gray-500 mt-1">Panel de administracion de GoTogether</p>
+              <p className="text-gray-500 mt-1">Panel de administración de GoTogether</p>
             </div>
             <button
               onClick={handleLogout}
@@ -162,7 +162,7 @@ export default function AdminPage() {
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               <StatCard label="Usuarios" value={stats.users} />
               <StatCard label="Perfiles" value={stats.profiles} />
-              <StatCard label="Acompanantes" value={stats.companions} />
+              <StatCard label="Acompañantes" value={stats.companions} />
               <StatCard label="Pendientes comprobar" value={stats.pendingCompanions} color="amber" />
               <StatCard label="Perfiles verificados" value={stats.verifiedProfiles} color="green" />
               <StatCard label="Clientes pendientes" value={stats.pendingProfiles} color="amber" />
@@ -217,10 +217,10 @@ export default function AdminPage() {
               <div>
                 <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
                   <ShieldCheck className="w-5 h-5 text-blue-600" />
-                  Acompanantes pendientes ({pending.companions.length})
+                  Acompañantes pendientes ({pending.companions.length})
                 </h2>
                 {pending.companions.length === 0 ? (
-                  <p className="text-gray-400 py-4">No hay acompanantes pendientes</p>
+                  <p className="text-gray-400 py-4">No hay acompañantes pendientes</p>
                 ) : (
                   <div className="space-y-4">
                     {pending.companions.map((c) => (
@@ -266,7 +266,7 @@ export default function AdminPage() {
                               onClick={async () => {
                                 try {
                                   await adminVerifyCompanion(key!, c.id);
-                                  toast.success('Acompanante verificado');
+                                  toast.success('Acompañante verificado');
                                   loadData();
                                 } catch { toast.error('Error al verificar'); }
                               }}
@@ -279,7 +279,7 @@ export default function AdminPage() {
                               onClick={async () => {
                                 try {
                                   await adminRejectCompanion(key!, c.id);
-                                  toast.success('Acompanante rechazado');
+                                  toast.success('Acompañante rechazado');
                                   loadData();
                                 } catch { toast.error('Error al rechazar'); }
                               }}

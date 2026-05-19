@@ -1,20 +1,20 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { Bell } from 'lucide-react';
+import { Bell, Mail, CheckCircle2, XCircle, PartyPopper, Ban, Star } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { getNotifications, getUnreadCount, markNotificationRead, markAllNotificationsRead } from '@/services/api';
 import type { NotificationData } from '@/types';
 import { useRouter } from 'next/navigation';
 import clsx from 'clsx';
 
-const ICONS: Record<string, string> = {
-  booking_requested: '📩',
-  booking_accepted: '✅',
-  booking_declined: '❌',
-  booking_completed: '🎉',
-  booking_cancelled: '⛔',
-  rating_received: '⭐',
+const ICON_MAP: Record<string, { icon: typeof Bell; className: string }> = {
+  booking_requested: { icon: Mail, className: 'text-blue-500' },
+  booking_accepted: { icon: CheckCircle2, className: 'text-emerald-500' },
+  booking_declined: { icon: XCircle, className: 'text-red-500' },
+  booking_completed: { icon: PartyPopper, className: 'text-amber-500' },
+  booking_cancelled: { icon: Ban, className: 'text-red-500' },
+  rating_received: { icon: Star, className: 'text-amber-500' },
 };
 
 export function NotificationBell() {
@@ -154,7 +154,15 @@ export function NotificationBell() {
                     !n.read && 'bg-blue-50/30',
                   )}
                 >
-                  <span className="text-lg shrink-0">{ICONS[n.type] || '🔔'}</span>
+                  {(() => {
+                    const mapped = ICON_MAP[n.type];
+                    const IconComponent = mapped?.icon || Bell;
+                    return (
+                      <span className={`shrink-0 ${mapped?.className || 'text-gray-400'}`}>
+                        <IconComponent className="w-5 h-5" />
+                      </span>
+                    );
+                  })()}
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
                       <p className="text-sm font-semibold truncate">{n.title}</p>

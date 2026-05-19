@@ -6,6 +6,8 @@ import { Button, Card, Container, Section } from '@gotogether/ui';
 import { Phone, MapPin, Clock, Send } from 'lucide-react';
 import { getChatRoom, getBooking } from '@/services/api';
 import { createClient } from '@/lib/supabase/client';
+import { SkeletonChat } from '@/components/skeleton';
+import { Breadcrumbs } from '@/components/breadcrumbs';
 
 interface ChatMessage {
   id: string;
@@ -190,8 +192,11 @@ export default function CoordinacionPage() {
     return (
       <Section>
         <Container>
-          <div className="max-w-6xl mx-auto text-center py-20">
-            <p className="text-gray-500">Cargando chat...</p>
+          <div className="max-w-6xl mx-auto">
+            <div className="h-5 w-40 bg-gray-200 rounded-lg animate-pulse mb-4" />
+            <div className="h-8 w-64 bg-gray-200 rounded-lg animate-pulse mb-2" />
+            <div className="h-5 w-80 bg-gray-200 rounded-lg animate-pulse mb-8" />
+            <SkeletonChat />
           </div>
         </Container>
       </Section>
@@ -217,12 +222,13 @@ export default function CoordinacionPage() {
     <Section>
       <Container>
         <div className="max-w-6xl mx-auto">
-          <button
-            onClick={() => router.push('/reservas')}
-            className="text-sm text-blue-600 hover:text-blue-800 mb-4 inline-block font-medium"
-          >
-            &larr; Volver a Mis Reservas
-          </button>
+          <Breadcrumbs
+            items={[
+              { label: 'Mis Reservas', href: '/reservas' },
+              { label: booking ? (booking.serviceType || 'Coordinación') : 'Coordinación' },
+            ]}
+            className="mb-4"
+          />
 
           <h1 className="text-3xl font-bold mb-2">Coordinación del Servicio</h1>
           <p className="text-gray-500 mb-8">
@@ -251,10 +257,14 @@ export default function CoordinacionPage() {
                     </p>
                   </div>
                 </div>
-                <Button variant="ghost" className="text-blue-600 flex items-center gap-2">
+                <a
+                  href="tel:112"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold text-blue-600 border border-blue-200 hover:bg-blue-50 transition-colors"
+                  title="Llamada de emergencia"
+                >
                   <Phone className="w-4 h-4" />
-                  Llamar
-                </Button>
+                  Emergencia
+                </a>
               </div>
 
               <div className="bg-gray-50 p-6 min-h-[400px] max-h-[500px] overflow-y-auto flex flex-col gap-4" role="log" aria-live="polite" aria-label="Mensajes del chat" ref={chatContainerRef}>

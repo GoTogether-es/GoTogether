@@ -9,6 +9,7 @@ import { Button, Card, Container, Section } from '@gotogether/ui';
 import { Loader2, UserCircle, FileText, Heart } from 'lucide-react';
 import { upsertProfile } from '@/services/api';
 import { FileUpload } from '@/components/file-upload';
+import { StepIndicator } from '@/components/step-indicator';
 import { clientRegistrationSchema, type ClientRegistrationFormData } from '@/lib/schemas';
 
 const DISABILITY_OPTIONS = [
@@ -48,6 +49,16 @@ export default function ClientRegistrationPage() {
     <Section>
       <Container>
         <div className="max-w-4xl mx-auto">
+          <StepIndicator
+            steps={[
+              { label: 'Elegir rol' },
+              { label: 'Completar perfil' },
+              { label: 'Empezar' },
+            ]}
+            currentStep={1}
+            className="mb-8"
+          />
+
           <div className="mb-10 text-center md:text-left">
             <h1 className="text-3xl font-extrabold mb-3">Completa tu perfil</h1>
             <p className="text-gray-500 text-lg">

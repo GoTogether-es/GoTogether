@@ -145,7 +145,7 @@ export default function PanelPage() {
       <Container>
         <div className="max-w-5xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-3xl font-extrabold mb-2">Panel de Acompanante</h1>
+            <h1 className="text-3xl font-extrabold mb-2">Panel de Acompañante</h1>
             <p className="text-gray-500 text-lg">Gestiona tus servicios y descubre nuevas solicitudes.</p>
           </div>
 
