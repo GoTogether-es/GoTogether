@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import Image from 'next/image';
 import { Camera, Loader2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
@@ -75,10 +76,13 @@ export function AvatarUpload({ avatarUrl, onUploaded, readOnly }: AvatarUploadPr
         aria-label={readOnly ? undefined : 'Cambiar foto de perfil'}
       >
         {avatarUrl ? (
-          <img
+          <Image
             src={avatarUrl}
             alt="Foto de perfil"
+            width={128}
+            height={128}
             className="w-full h-full object-cover"
+            unoptimized
           />
         ) : (
           <svg className="w-16 h-16 text-blue-200" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">

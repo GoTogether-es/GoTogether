@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Container, Section } from '@gotogether/ui';
 import { Loader2, ShieldCheck, ShieldX, Users, FileText, CheckCircle, XCircle, ExternalLink, LogOut } from 'lucide-react';
 import {
@@ -28,6 +28,20 @@ export default function AdminPage() {
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [pending, setPending] = useState<AdminPending | null>(null);
 
+  const loadData = useCallback(async () => {
+    if (!key) return;
+    try {
+      const [s, u, p] = await Promise.all([adminGetStats(key), adminGetUsers(key), adminGetPending(key)]);
+      setStats(s);
+      setUsers(u);
+      setPending(p);
+    } catch {
+      toast.error('Error al cargar los datos');
+      sessionStorage.removeItem('admin_key');
+      setKey(null);
+    }
+  }, [key]);
+
   useEffect(() => {
     const saved = sessionStorage.getItem('admin_key');
     if (saved) {
@@ -38,21 +52,7 @@ export default function AdminPage() {
   useEffect(() => {
     if (!key) return;
     loadData();
-  }, [key]);
-
-  const loadData = async () => {
-    if (!key) return;
-    try {
-      const [s, u, p] = await Promise.all([adminGetStats(key), adminGetUsers(key), adminGetPending(key)]);
-      setStats(s);
-      setUsers(u);
-      setPending(p);
-    } catch {
-      toast.error('Error al cargar datos');
-      sessionStorage.removeItem('admin_key');
-      setKey(null);
-    }
-  };
+  }, [key, loadData]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();

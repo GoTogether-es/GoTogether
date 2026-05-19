@@ -137,7 +137,7 @@ export default function CoordinacionPage() {
       cancelled = true;
       channelRef.current?.unsubscribe();
     };
-  }, [bookingId]);
+  }, [bookingId, scrollToBottom]);
 
   useEffect(() => {
     function handleVisibilityChange() {
@@ -156,7 +156,7 @@ export default function CoordinacionPage() {
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-  }, [bookingId]);
+  }, [bookingId, scrollToBottom]);
 
   const handleSend = useCallback(async () => {
     if (!newMessage.trim() || !roomIdRef.current || sending) return;
@@ -179,7 +179,7 @@ export default function CoordinacionPage() {
     } finally {
       setSending(false);
     }
-  }, [newMessage, sending, userId]);
+  }, [newMessage, sending, userId, scrollToBottom]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {

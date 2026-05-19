@@ -9,6 +9,11 @@ import { Footer } from './footer';
 import { NotificationBell } from './notification-bell';
 import { ConfirmDialog } from './confirm-dialog';
 import { RouteAnnouncer } from './route-announcer';
+import { User, LogIn, Menu, X, Search, CalendarDays, LogOut, LayoutDashboard } from 'lucide-react';
+import { createClient } from '@/lib/supabase/client';
+import { logout as apiLogout, getProfile } from '@/services/api';
+import type { Session, AuthChangeEvent } from '@supabase/supabase-js';
+import clsx from 'clsx';
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
