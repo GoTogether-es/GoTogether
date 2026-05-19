@@ -61,11 +61,7 @@ export const faqData: FaqCategory[] = [
         answer:
           'Está pensado para personas mayores, personas con discapacidad y sus familias, así como para personas que quieran ofrecer acompañamiento de forma remunerada y profesional.',
       },
-      {
-        question: '¿En qué ciudades está disponible?',
-        answer:
-          'Estamos comenzando nuestra actividad de forma progresiva en varias ciudades de España. Apúntate a la lista de espera y te avisaremos en cuanto estemos disponibles en tu zona.',
-      },
+
     ],
   },
   {
