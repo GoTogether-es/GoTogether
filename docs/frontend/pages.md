@@ -11,6 +11,8 @@ Todas las páginas están bajo `apps/web/src/app/` usando Next.js 14 App Router.
 ```
 /                               Homepage
 /info                           Cómo funciona (página informativa)
+/nosotros                       Quiénes somos
+/contacto                       Contactar
 /auth/
   login                         Magic link login
   verify                        Callback de Supabase Auth
@@ -60,6 +62,18 @@ Réplica de la landing page de gotogether.es con secciones:
 - CTA final con botón "Empezar ahora"
 
 Enlazada desde el footer ("Cómo funciona") y la navegación principal.
+
+### `/nosotros` — Quiénes somos
+**Archivo:** `nosotros/page.tsx`
+**Auth:** Pública
+
+Página corporativa con visión, misión, valores (empatía, confianza, comunidad, autonomía) e información del equipo.
+
+### `/contacto` — Contactar
+**Archivo:** `contacto/page.tsx`
+**Auth:** Pública
+
+Página de contacto con email (info@gotogether.es), ubicación y enlaces a info y legal.
 
 ### `/auth/login` — Login
 **Archivo:** `auth/login/page.tsx`

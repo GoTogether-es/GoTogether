@@ -137,3 +137,5 @@ tags: [project, changelog, history]
 - 🔒 Middleware: `/historial` añadido a rutas protegidas, `/legal` añadido a rutas públicas
 - 🧭 Navbar: añadido enlace "Historial" para usuarios autenticados (desktop + mobile)
 - 🔗 Homepage: botones "Quiero acompañamiento" / "Quiero ser acompañante" redirigen a login o `/perfil` según sesión
+- 📄 Nuevas páginas `/nosotros` (Quiénes somos) y `/contacto` (Contactar con info@gotogether.es)
+- 🦶 Footer: reemplazados enlaces de producto por Quiénes somos, Cómo funciona y Contactar
