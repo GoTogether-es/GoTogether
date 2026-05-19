@@ -53,7 +53,10 @@ export default function InfoPage() {
   const supabase = createClient();
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
+    (async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setSession(session);
+    })();
   }, [supabase.auth]);
 
   const profileOrLogin = session ? routes.perfil : routes.login;
