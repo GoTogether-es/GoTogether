@@ -5,13 +5,15 @@ export function Section({
   children,
   className,
   style,
+  id,
 }: {
   children: ReactNode;
   className?: string;
   style?: React.CSSProperties;
+  id?: string;
 }) {
   return (
-    <section className={clsx('gt-section', className)} style={style}>
+    <section className={clsx('gt-section', className)} style={style} id={id}>
       {children}
     </section>
   );
