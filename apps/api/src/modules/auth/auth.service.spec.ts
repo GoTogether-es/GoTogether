@@ -2,10 +2,25 @@ import { AuthService } from './auth.service';
 import type { PrismaService } from '../prisma/prisma.service';
 import type { ConfigService } from '@nestjs/config';
 
+jest.mock('@supabase/supabase-js', () => ({
+  createClient: jest.fn(() => ({
+    auth: {
+      admin: {
+        generateLink: jest.fn().mockResolvedValue({
+          data: { properties: { action_link: 'https://test.com' } },
+          error: null,
+        }),
+        signOut: jest.fn().mockResolvedValue({ error: null }),
+      },
+    },
+  })),
+}));
+
 describe('AuthService', () => {
   const prisma = {
     user: {
       upsert: jest.fn().mockResolvedValue({ id: 'user-1', email: 'test@test.com', role: 'CLIENT' }),
+      findUnique: jest.fn().mockResolvedValue(null),
     },
   } as unknown as PrismaService;
 
@@ -26,6 +41,7 @@ describe('AuthService', () => {
   });
 
   it('validates and syncs user', async () => {
+    jest.spyOn(prisma.user, 'findUnique').mockResolvedValueOnce(null);
     const service = new AuthService(prisma, mockConfigService);
     const result = await service.validateAndSyncUser({
       userId: 'user-1',
