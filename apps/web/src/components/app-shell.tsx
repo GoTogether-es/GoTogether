@@ -46,9 +46,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       setSession(session);
       if (session) {
         getProfile().then(profile => setIsCompanion(!!profile?.companion)).catch(() => {});
-        supabase.auth.getUser().then(({ data: { user } }) => {
+        (async () => {
+          const { data: { user } } = await supabase.auth.getUser();
           setIsSupervisor(user?.user_metadata?.role === 'SUPERVISOR' || user?.app_metadata?.role === 'SUPERVISOR');
-        }).catch(() => {});
+        })().catch(() => {});
       } else {
         setIsCompanion(false);
         setIsSupervisor(false);
