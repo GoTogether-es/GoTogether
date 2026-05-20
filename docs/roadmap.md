@@ -48,12 +48,15 @@ El núcleo del marketplace está funcional: los usuarios pueden registrarse, bus
 - [ ] Aplicar `STRIPE_PLATFORM_FEE_PERCENT` (12%)
 - [ ] UI de pago en el frontend (Stripe Elements o Checkout)
 
-## ✅ Fase 5 — Funcionalidades avanzadas + Admin (completada)
+## ✅ Fase 5 — Funcionalidades avanzadas + Admin + Supervisión (completada)
 
 - [x] Catálogo de servicios con precios
 - [x] Disponibilidad semanal para acompañantes
 - [x] Historial de servicios
-- [x] Admin ampliado (8 pestañas: dashboard, usuarios, pendientes, reservas, servicios, pagos, valoraciones, notificaciones)
+- [x] Admin ampliado (8 pestañas)
+- [x] Supervisión: pestaña reservas de clientes + ubicación en tiempo real (Leaflet)
+- [x] Flujo de finalización: acompañante solicita → cliente confirma → valoración
+- [x] Toggle compartir ubicación en perfil
 
 ## ⬜ Fase 6 — GDPR y cumplimiento (prioridad media)
 

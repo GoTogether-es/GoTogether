@@ -39,6 +39,8 @@ Lista completa de todos los endpoints REST del backend NestJS.
 | GET | `/bookings/:id` | JWT | Detalle de reserva |
 | PUT | `/bookings/:id/request` | JWT | Solicitar (DRAFT → REQUESTED) |
 | PUT | `/bookings/:id/status` | JWT | Cambiar estado |
+| PUT | `/bookings/:id/request-completion` | JWT | Acompañante solicita finalizar (notifica al cliente) |
+| PUT | `/bookings/:id/complete` | JWT | Cliente confirma finalización → COMPLETED |
 
 ### Body de `PUT /bookings/:id/status`
 ```json

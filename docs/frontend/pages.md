@@ -222,13 +222,12 @@ Formulario de valoración:
 
 ### `/supervision` — Supervisión
 **Archivo:** `supervision/page.tsx`
-**Auth:** Protegida
+**Auth:** Protegida + restringida a rol SUPERVISOR
 
-Gestión de supervisión:
-- Ver clientes supervisados
-- Ver mi supervisor
-- Invitar nuevos clientes
-- Gestionar invitaciones pendientes
+Panel con 3 pestañas:
+- **Mis supervisados**: buscar, vincular, eliminar clientes y gestionar invitaciones
+- **Reservas de clientes**: tabla paginada con todas las reservas de los supervisados
+- **Ubicación**: mapa Leaflet en tiempo real con la posición de los clientes que comparten ubicación
 
 ### `/admin` — Administración
 **Archivo:** `admin/page.tsx`

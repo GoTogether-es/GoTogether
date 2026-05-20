@@ -148,8 +148,11 @@ tags: [project, changelog, history]
 - 💰 Admin Pagos: historial paginado con importe, comisión y estado
 - ⭐ Admin Valoraciones: listado con opción de eliminar
 - 📢 Admin Notificaciones: envío masivo por rol (todos, clientes, acompañantes)
-- 👥 Supervisión: nueva pestaña "Reservas de clientes" con tabla paginada de todas las reservas de supervisados
-- 🔗 Navbar: añadido enlace "Supervisión" para usuarios autenticados
-- 🔧 API: nuevo endpoint `GET /supervision/bookings` para consultar reservas de clientes supervisados
-- 🗺️ Ubicación en tiempo real: nuevo modelo `ClientLocation`, hook `useLocationSharing`, componente `ClientLocationMap`, pestaña "Ubicación" en supervisión
-- 📍 Perfil: toggle para que el cliente comparta su ubicación con su supervisor
+- 👥 Supervisión: nueva pestaña "Reservas de clientes" con tabla paginada
+- 🔗 Navbar: enlace "Supervisión" solo visible para supervisores (restricción por rol)
+- 🔧 API: endpoint `GET /supervision/bookings` para reservas de supervisados
+- 🗺️ Ubicación en tiempo real: modelo `ClientLocation`, hook `useLocationSharing`, mapa Leaflet, pestaña "Ubicación" en supervisión
+- 📍 Perfil: toggle para compartir ubicación con el supervisor
+- 🔄 Flujo de finalización: acompañante solicita finalizar → cliente confirma → redirigido a valoración
+- 🛠️ Backend: endpoints `PUT /bookings/:id/request-completion` y `PUT /bookings/:id/complete`
+- 🔒 `/supervision` restringido a supervisores (no accesible por clientes ni acompañantes)
