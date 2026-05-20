@@ -139,5 +139,12 @@ tags: [project, changelog, history]
 - 🔗 Homepage: botones "Quiero acompañamiento" / "Quiero ser acompañante" redirigen a login o `/perfil` según sesión
 - 📄 Nuevas páginas `/nosotros` (Quiénes somos) y `/contacto` (Contactar con info@gotogether.es)
 - 🦶 Footer: reemplazados enlaces de producto por Quiénes somos, Cómo funciona y Contactar
-- 🛡️ Admin: panel ampliado con 8 pestañas (Dashboard, Usuarios, Pendientes, Reservas, Servicios, Pagos, Valoraciones, Notificaciones)
-- 🔧 Admin API: nuevos endpoints para gestión de reservas, servicios, pagos, valoraciones y notificaciones masivas
+- 📄 Nuevas páginas `/nosotros` (visión, misión, valores, equipo) y `/contacto` (email info@gotogether.es, teléfono 643415190)
+- 🛡️ Admin: panel ampliado de 3 a 8 pestañas (Dashboard, Usuarios, Pendientes, Reservas, Servicios, Pagos, Valoraciones, Notificaciones)
+- 🔧 Admin API: 11 nuevos endpoints (bookings CRUD, services CRUD, payments, reports, notifications masivas)
+- 📊 Admin Dashboard: stats ampliados con reservas, pagos y facturación
+- 📋 Admin Reservas: tabla con filtro por estado, detalle con chat, pagos y valoración
+- 🛒 Admin Servicios: CRUD completo con modal y toggle activar/desactivar
+- 💰 Admin Pagos: historial paginado con importe, comisión y estado
+- ⭐ Admin Valoraciones: listado con opción de eliminar
+- 📢 Admin Notificaciones: envío masivo por rol (todos, clientes, acompañantes)

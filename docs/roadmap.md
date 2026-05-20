@@ -6,7 +6,7 @@ tags: [project, roadmap, planning]
 
 ## Estado actual: Alpha (v0.1.0)
 
-El núcleo del marketplace está funcional: los usuarios pueden registrarse, buscar acompañantes, crear reservas, chatear en tiempo real y valorar servicios. Los pagos están deshabilitados — el servicio es gratuito durante la alpha.
+El núcleo del marketplace está funcional: los usuarios pueden registrarse, buscar acompañantes, crear reservas, chatear en tiempo real y valorar servicios. Los pagos están deshabilitados — el servicio es gratuito durante la alpha. El panel de administración está completo con 8 pestañas funcionales. La landing page está replicada en `/info`.
 
 ---
 
@@ -17,6 +17,10 @@ El núcleo del marketplace está funcional: los usuarios pueden registrarse, bus
 - [x] Banner de estado de verificación en `/panel`
 - [x] Badge de verificación en `/perfil` modo vista
 - [x] Ruta `/admin` en `routes.ts`
+- [x] Footer actualizado (Quiénes somos, Cómo funciona, Contactar)
+- [x] Páginas `/nosotros`, `/contacto`, `/info`
+- [x] Enlaces de homepage e info con detección de sesión (login vs perfil)
+- [x] Navegación con "Cómo funciona" e "Historial"
 
 ## ✅ Fase 2 — Notificaciones (completada)
 
@@ -27,13 +31,13 @@ El núcleo del marketplace está funcional: los usuarios pueden registrarse, bus
 
 ## ✅ Fase 3 — Estabilización (bugs) (completada)
 
-- [x] `@Roles()` y `RolesAuthGuard` funcionales: `SupabaseJwtStrategy.validate()` consulta BD para incluir `role` en `req.user`
+- [x] `@Roles()` y `RolesAuthGuard` funcionales
 - [x] `RolesAuthGuard` aplicado en endpoints de supervisor
 - [x] Redis eliminado de `.env` y Docker Compose
-- [x] Emails transaccionales: aceptación, rechazo, completado, cancelación de reserva + verificación aprobada/rechazada
-- [x] Manejo de reconexión en chat: indicador de estado (conectado/reconectando/sin conexión) + refetch al recuperar visibilidad
+- [x] Emails transaccionales
+- [x] Manejo de reconexión en chat
 
-## ⬜ Fase 4 — Pagos
+## ⬜ Fase 4 — Pagos (prioridad alta)
 
 - [ ] Configurar `STRIPE_SECRET_KEY` real en Vercel
 - [ ] Integrar PaymentsService en BookingsService
@@ -44,23 +48,21 @@ El núcleo del marketplace está funcional: los usuarios pueden registrarse, bus
 - [ ] Aplicar `STRIPE_PLATFORM_FEE_PERCENT` (12%)
 - [ ] UI de pago en el frontend (Stripe Elements o Checkout)
 
-## ✅ Fase 5 — Funcionalidades avanzadas (completada)
+## ✅ Fase 5 — Funcionalidades avanzadas + Admin (completada)
 
-- [x] Catálogo de servicios con precios: modelo `Service` + seed data + endpoint `GET /services` + dropdown en `/solicitud`
-- [x] Disponibilidad semanal para acompañantes: modelo `AvailabilitySlot` + endpoint `PUT /availability` + UI en `/panel`
-- [x] Validación de disponibilidad al crear reserva con companionId
-- [x] Historial de servicios completados: `GET /bookings/history` + `GET /bookings/stats` + página `/historial` con paginación
-- [x] Roles en supervisor: chequeo manual `requireSupervisorRole()` en `SupervisionService`
-- [x] Roles en admin: documentado como `AdminGuard` por header `x-admin-key` (simplificación alpha)
+- [x] Catálogo de servicios con precios
+- [x] Disponibilidad semanal para acompañantes
+- [x] Historial de servicios
+- [x] Admin ampliado (8 pestañas: dashboard, usuarios, pendientes, reservas, servicios, pagos, valoraciones, notificaciones)
 
-## ⬜ Fase 6 — GDPR y cumplimiento
+## ⬜ Fase 6 — GDPR y cumplimiento (prioridad media)
 
 - [ ] Eliminación de cuenta (derecho al olvido)
 - [ ] Exportación de datos (portabilidad)
 - [ ] Banner de cookies
 - [ ] Política de privacidad detallada
 
-## ⬜ Fase 7 — Producción
+## ⬜ Fase 7 — Producción (prioridad media-baja)
 
 - [ ] Migrar API de Vercel serverless a Fly.io / Railway (WebSocket nativo)
 - [ ] Restaurar Socket.IO para chat si se requiere mayor escala
@@ -70,16 +72,33 @@ El núcleo del marketplace está funcional: los usuarios pueden registrarse, bus
 - [ ] Monitorización y alertas (Sentry, Vercel Analytics)
 - [ ] Plan de Disaster Recovery (backups de BD, rollback)
 
+## 🆕 Fase 8 — SEO y métricas (prioridad media)
+
+- [ ] Metadata y Open Graph en todas las páginas
+- [ ] Sitemap.xml y robots.txt
+- [ ] Google Analytics / Plausible
+- [ ] Página de error 404 personalizada
+- [ ] Optimización de imágenes con next/image
+
+## 🆕 Fase 9 — UX y conversión (prioridad baja)
+
+- [ ] Onboarding guiado paso a paso con tooltips
+- [ ] Emails de bienvenida y reenganche
+- [ ] Página de precios pública
+- [ ] Blog / recursos
+- [ ] Programa de referidos
+
 ---
 
 ## Bugs conocidos
 
-1. **`@Roles()` y `RolesAuthGuard` no funcionales** — ~~`req.user.role` es undefined porque `SupabaseJwtStrategy.validate()` no incluye el rol.~~ ✅ Corregido: la estrategia ahora consulta la BD y el guard se aplica en endpoints de supervisor.
-2. **Redis configurado pero no usado** — ~~`REDIS_URL` existe en `.env` y Docker pero ningún servicio lo utiliza.~~ ✅ Corregido: eliminado de `.env`, `.env.example` y `docker-compose.yml`.
+1. **`@Roles()` y `RolesAuthGuard` no funcionales** — ~~`req.user.role` es undefined.~~ ✅ Corregido.
+2. **Redis configurado pero no usado** — ✅ Corregido: eliminado.
 3. **Webhook de Stripe no procesa eventos** — El endpoint recibe y verifica la firma pero descarta el evento.
-4. **Emails transaccionales limitados** — ~~Solo magic link e invitación de supervisión.~~ ✅ Corregido: ahora se envían emails en cambios de estado de reserva y verificación de documentos.
-5. **`STRIPE_PLATFORM_FEE_PERCENT` no se usa** — La variable está en `.env` pero no se lee en el código.
-6. **No hay reconexión automática en el chat** — ~~Si la conexión Realtime se cae, el chat deja de recibir mensajes hasta recargar.~~ ✅ Corregido: indicador visual de estado de conexión + refetch de mensajes al recuperar visibilidad de la pestaña.
+4. **`STRIPE_PLATFORM_FEE_PERCENT` no se usa** — La variable está en `.env` pero no se lee en el código.
+5. **Emails transaccionales limitados** — ✅ Corregido.
+6. **No hay reconexión automática en el chat** — ✅ Corregido.
+7. **Tests rotos (pre-existente)** — Varios tests fallan por `@testing-library/jest-dom` no tipado y mocks ESM.
 
 ---
 
