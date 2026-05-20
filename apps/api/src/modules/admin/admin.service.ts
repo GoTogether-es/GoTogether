@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
 import { MailService } from '../auth/mail.service';
 import { getVerificationApprovedTemplate, getVerificationRejectedTemplate } from '../auth/mail.templates';
-import type { BookingStatus } from '@prisma/client';
+import { BookingStatus } from '../../generated/client';
 
 @Injectable()
 export class AdminService {
