@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { Container, Button } from '@gotogether/ui';
 import { routes } from '@/lib/routes';
@@ -130,8 +131,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <Container>
           <div className="flex items-center justify-between h-20">
             <div className="flex items-center gap-12">
-              <Link href="/" className="text-2xl font-bold text-blue-600 tracking-tight">
-                GoTogether
+              <Link href="/" className="flex items-center">
+                <Image src="/logo.jpg" alt="GoTogether" width={40} height={40} className="rounded-lg" priority />
               </Link>
 
               <nav className="hidden md:flex items-center gap-8" aria-label="Principal">

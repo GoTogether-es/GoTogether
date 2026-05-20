@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Container } from '@gotogether/ui';
 import { Heart } from 'lucide-react';
 
@@ -8,8 +9,8 @@ export function Footer() {
       <Container>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
-            <Link href="/" className="text-xl font-bold text-blue-600 mb-4 block">
-              GoTogether
+            <Link href="/" className="mb-4 block">
+              <Image src="/logo.jpg" alt="GoTogether" width={48} height={48} className="rounded-xl" />
             </Link>
             <p className="text-gray-500 max-w-sm mb-4">
               Acompañamiento humano y empoderamiento para vivir con más autonomía y seguridad.

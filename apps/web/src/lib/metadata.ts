@@ -42,10 +42,10 @@ export const baseMetadata: Metadata = {
     description,
     images: [
       {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'GoTogether - Acompañamiento humano',
+        url: '/logo.jpg',
+        width: 512,
+        height: 512,
+        alt: 'GoTogether',
       },
     ],
   },
@@ -53,12 +53,12 @@ export const baseMetadata: Metadata = {
     card: 'summary_large_image',
     title,
     description,
-    images: ['/og-image.png'],
+    images: ['/logo.jpg'],
   },
   icons: {
-    icon: '/favicon.svg',
-    shortcut: '/favicon.svg',
-    apple: '/favicon.svg',
+    icon: '/logo.jpg',
+    shortcut: '/logo.jpg',
+    apple: '/logo.jpg',
   },
   alternates: {
     canonical: '/',
