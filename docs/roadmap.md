@@ -72,13 +72,13 @@ El núcleo del marketplace está funcional: los usuarios pueden registrarse, bus
 - [ ] Monitorización y alertas (Sentry, Vercel Analytics)
 - [ ] Plan de Disaster Recovery (backups de BD, rollback)
 
-## 🆕 Fase 8 — SEO y métricas (prioridad media)
+## 🆕 Fase 8 — SEO y métricas
 
-- [ ] Metadata y Open Graph en todas las páginas
-- [ ] Sitemap.xml y robots.txt
-- [ ] Google Analytics / Plausible
-- [ ] Página de error 404 personalizada
-- [ ] Optimización de imágenes con next/image
+- [x] Metadata + Open Graph en todas las páginas
+- [x] Sitemap.xml y robots.txt
+- [ ] Analytics (Plausible): el componente `Analytics` ya está creado en `components/analytics.tsx`. Para activarlo, importarlo en `layout.tsx` y definir `NEXT_PUBLIC_PLAUSIBLE_DOMAIN=gotogether.es`
+- [x] Página 404 personalizada con metadata
+- [ ] OG image real (actualmente referenciada pero no generada)
 
 ## 🆕 Fase 9 — UX y conversión (prioridad baja)
 
