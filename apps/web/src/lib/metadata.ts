@@ -42,7 +42,7 @@ export const baseMetadata: Metadata = {
     description,
     images: [
       {
-        url: '/logo.jpg',
+        url: '/sintexto.png',
         width: 512,
         height: 512,
         alt: 'GoTogether',
@@ -53,12 +53,12 @@ export const baseMetadata: Metadata = {
     card: 'summary_large_image',
     title,
     description,
-    images: ['/logo.jpg'],
+    images: ['/sintexto.png'],
   },
   icons: {
-    icon: '/logo.jpg',
-    shortcut: '/logo.jpg',
-    apple: '/logo.jpg',
+    icon: '/sintextosinfondo.png',
+    shortcut: '/sintextosinfondo.png',
+    apple: '/sintextosinfondo.png',
   },
   alternates: {
     canonical: '/',
