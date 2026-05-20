@@ -6,7 +6,7 @@ tags: [database, prisma, postgresql, rls, realtime]
 
 El esquema está definido en `apps/api/prisma/schema.prisma` y se sincroniza con PostgreSQL en Supabase. El ORM es Prisma 5.x.
 
-## Resumen de modelos (11 tablas)
+## Resumen de modelos (14 tablas)
 
 | Modelo | Tabla | Propósito |
 |--------|-------|-----------|
@@ -18,9 +18,13 @@ El esquema está definido en `apps/api/prisma/schema.prisma` y se sincroniza con
 | `ChatRoom` | ChatRoom | Salas de chat por reserva |
 | `ChatMessage` | ChatMessage | Mensajes del chat |
 | `Report` | Report | Valoraciones (1-5 estrellas + comentario) |
+| `Service` | Service | Catálogo de servicios con nombre, precio, categoría |
+| `AvailabilitySlot` | AvailabilitySlot | Disponibilidad semanal del acompañante |
+| `ClientLocation` | ClientLocation | Ubicación en tiempo real del cliente |
 | `Supervision` | Supervision | Relación supervisor-cliente |
 | `SupervisionInvite` | SupervisionInvite | Invitaciones de supervisión |
 | `Notification` | Notification | Notificaciones in-app |
+
 
 ## Enums
 
@@ -197,25 +201,79 @@ model Notification {
 Tablas con replicación activada para Realtime:
 - `ChatMessage` — mensajes en tiempo real
 - `Notification` — notificaciones push instantáneas
+- `ClientLocation` — ubicación en tiempo real de clientes
 
 La replicación se activó con:
 ```sql
 ALTER PUBLICATION supabase_realtime ADD TABLE "ChatMessage";
 ALTER PUBLICATION supabase_realtime ADD TABLE "Notification";
+ALTER PUBLICATION supabase_realtime ADD TABLE "ClientLocation";
 ```
+
+## Modelos nuevos
+
+### Service
+```prisma
+model Service {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  price       Int      @default(0)       // en céntimos
+  category    String?
+  active      Boolean  @default(true)
+  bookings    Booking[]
+}
+```
+
+### AvailabilitySlot
+```prisma
+model AvailabilitySlot {
+  id           String @id @default(uuid())
+  companionId  String
+  dayOfWeek    Int
+  startTime    String
+  endTime      String
+  companion    CompanionProfile @relation(fields: [companionId], references: [id])
+}
+```
+
+### ClientLocation
+```prisma
+model ClientLocation {
+  id        String   @id @default(uuid())
+  clientId  String   @unique
+  latitude  Float
+  longitude Float
+  accuracy  Float?
+  timestamp DateTime @default(now())
+  client    User     @relation(fields: [clientId], references: [id])
+}
+```
+
+## RLS actualizado
+
+RLS activado en **13 tablas** (todas). Políticas definidas en:
+- `ChatMessage` — solo participantes de la sala
+- `Notification` — solo el destinatario
+- `ClientLocation` — dueño + supervisor
+
+Las otras 10 tablas tienen RLS habilitado sin políticas (acceso solo vía NestJS/Prisma con conexión directa, bypass RLS).
 
 ## Relaciones del esquema completo
 
 ```
 User ──1:1── Profile ──1:0..1── CompanionProfile
-  │                                    │
+  │           │                        │
+  │           │                        ├── 1:N ── AvailabilitySlot
+  │           │                        │
   │ 1:N (clientId)                     │ 1:N (companionId)
-  │                                    │
+  │           │                        │
   └──→ Booking ←───────────────────────┘
          │
          ├── 1:0..1 ── Payment
          ├── 1:0..1 ── ChatRoom ── 1:N ── ChatMessage
-         └── 1:0..1 ── Report
+         ├── 1:0..1 ── Report
+         └── N:1 ── Service
 
 User ──1:N── Supervision (supervisorId)
 User ──1:1── Supervision (clientId)

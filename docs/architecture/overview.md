@@ -62,14 +62,14 @@ GoTogether/
 ├── apps/
 │   ├── api/                         # NestJS backend
 │   │   ├── api/index.ts             # Entry point Vercel serverless
-│   │   ├── prisma/schema.prisma     # 11 modelos PostgreSQL
+│   │   ├── prisma/schema.prisma     # 14 modelos PostgreSQL
 │   │   └── src/
 │   │       ├── main.ts              # Entry point desarrollo local
 │   │       ├── generated/client/    # Prisma Client autogenerado
 │   │       └── modules/             # 13 módulos NestJS
 │   └── web/                         # Next.js frontend
 │       └── src/
-│           ├── app/                 # App Router (20+ rutas)
+│           ├── app/                 # App Router (28+ rutas)
 │           ├── components/          # Componentes React reutilizables
 │           ├── lib/                 # Utilidades, schemas Zod, rutas
 │           ├── services/            # Cliente API REST

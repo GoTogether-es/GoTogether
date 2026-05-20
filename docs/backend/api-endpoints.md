@@ -51,6 +51,7 @@ Lista completa de todos los endpoints REST del backend NestJS.
 ```json
 {
   "serviceType": "Acompañamiento médico",
+  "serviceId": "uuid-opcional (catálogo de servicios)",
   "address": "Calle Mayor 1, Madrid",
   "scheduledAt": "2026-06-01T10:00:00.000Z",
   "summary": "Notas opcionales",
@@ -58,6 +59,27 @@ Lista completa de todos los endpoints REST del backend NestJS.
   "companionId": "uuid-opcional"
 }
 ```
+
+## Bookings (historial y stats)
+
+| Método | Ruta | Auth | Descripción |
+|--------|------|------|-------------|
+| GET | `/bookings/history?page=&limit=&status=` | JWT | Historial paginado |
+| GET | `/bookings/stats` | JWT | Estadísticas (completadas, valoración media) |
+
+## Services
+
+| Método | Ruta | Auth | Descripción |
+|--------|------|------|-------------|
+| GET | `/services` | Ninguna | Catálogo de servicios activos |
+| GET | `/services/all` | JWT | Todos los servicios (incluye inactivos) |
+
+## Availability
+
+| Método | Ruta | Auth | Descripción |
+|--------|------|------|-------------|
+| GET | `/companions/:id/availability` | JWT | Disponibilidad semanal |
+| PUT | `/availability` | JWT | Guardar disponibilidad semanal |
 
 ## Matching
 
@@ -98,6 +120,7 @@ Lista completa de todos los endpoints REST del backend NestJS.
 | GET | `/supervision/clients` | JWT | Clientes supervisados |
 | GET | `/supervision/supervisor` | JWT | Mi supervisor |
 | DELETE | `/supervision/:id` | JWT | Eliminar supervisión |
+| GET | `/supervision/bookings?page=&limit=` | JWT | Reservas de clientes supervisados |
 
 ## Payments (deshabilitado)
 
@@ -142,10 +165,10 @@ Lista completa de todos los endpoints REST del backend NestJS.
 
 ## Totales
 
-- **Endpoints totales:** 38
-- **Protegidos (JWT):** 29
+- **Endpoints totales:** 49
+- **Protegidos (JWT):** 35
 - **Protegidos (admin key):** 18
-- **Públicos:** 6 (magic-link, companions, matching, supervision accept, webhook)
+- **Públicos:** 8 (magic-link, companions, matching, services, supervision accept, webhook)
 
 ## Formato de errores
 

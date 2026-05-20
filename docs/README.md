@@ -18,7 +18,7 @@ Bienvenido a la documentación técnica de GoTogether. Esta carpeta contiene tod
 - [[database/migrations]] — Historial de migraciones aplicadas
 
 ### Backend (API NestJS)
-- [[backend/modules]] — Los 13 módulos y sus responsabilidades
+- [[backend/modules]] — Los 15 módulos y sus responsabilidades
 - [[backend/api-endpoints]] — Lista completa de endpoints REST
 - [[backend/auth]] — Sistema de autenticación y autorización
 
