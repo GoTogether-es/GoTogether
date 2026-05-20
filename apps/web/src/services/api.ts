@@ -33,11 +33,29 @@ type FetchOptions = {
   signal?: AbortSignal;
 };
 
+let cachedSession: { token: string; expiresAt: number } | null = null;
+
 async function getAuthHeaders(): Promise<Record<string, string>> {
+  const now = Date.now();
+  if (cachedSession && cachedSession.expiresAt > now) {
+    return {
+      'Authorization': `Bearer ${cachedSession.token}`,
+      'Content-Type': 'application/json',
+    };
+  }
+
   const supabase = createClient();
   const { data: { session } } = await supabase.auth.getSession();
 
-  if (!session) return {};
+  if (!session) {
+    cachedSession = null;
+    return {};
+  }
+
+  cachedSession = {
+    token: session.access_token,
+    expiresAt: (session.expires_at ?? 0) * 1000 - 30000,
+  };
 
   return {
     'Authorization': `Bearer ${session.access_token}`,

@@ -1,13 +1,17 @@
 import './globals.css';
+import { Plus_Jakarta_Sans } from 'next/font/google';
 import { baseMetadata } from '@/lib/metadata';
 import { AppShell } from '@/components/app-shell';
 import { QueryProvider } from '@/services/query-provider';
 import { Toaster } from 'sonner';
 
-export const metadata = baseMetadata;
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+});
 
-const fontUrl =
-  'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap';
+export const metadata = baseMetadata;
 
 export default function RootLayout({
   children,
@@ -15,12 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="stylesheet" href={fontUrl} />
-      </head>
+    <html lang="es" className={plusJakartaSans.className}>
       <body>
         <QueryProvider>
           <AppShell>{children}</AppShell>

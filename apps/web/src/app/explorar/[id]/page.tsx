@@ -89,7 +89,6 @@ export default function CompanionDetailPage() {
                       fill
                       sizes="(max-width: 768px) 128px, 160px"
                       className="object-cover"
-                      unoptimized
                     />
                   ) : (
                     <svg className="w-20 h-20" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">

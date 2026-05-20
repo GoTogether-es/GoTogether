@@ -1,18 +1,16 @@
-'use client';
-
-import { useEffect, useState } from 'react';
 import { Card, Container, Section } from '@gotogether/ui';
-import { LinkButton } from '@/components/link-button';
+import { AuthLink } from '@/components/auth-link';
 import { FaqAccordion } from '@/components/faq-accordion';
 import { infoSteps, faqData } from '@/lib/content';
-import { routes } from '@/lib/routes';
-import { createClient } from '@/lib/supabase/client';
 import { Heart, ShieldCheck, Sparkles, Smile, ArrowRight, CheckCircle2 } from 'lucide-react';
-import type { Session } from '@supabase/supabase-js';
+import { ScrollToCta } from '@/components/scroll-to-cta';
+import type { Metadata } from 'next';
 
-function scrollToFinalCta() {
-  document.getElementById('final-cta')?.scrollIntoView({ behavior: 'smooth' });
-}
+export const metadata: Metadata = {
+  title: 'Cómo funciona',
+  description: 'Descubre cómo GoTogether conecta a personas mayores y con discapacidad con acompañantes verificados. Seguro, sencillo y humano.',
+  openGraph: { title: 'Cómo funciona GoTogether' },
+};
 
 const features = [
   {
@@ -52,18 +50,6 @@ const companionBullets = [
 ];
 
 export default function InfoPage() {
-  const [session, setSession] = useState<Session | null>(null);
-  const supabase = createClient();
-
-  useEffect(() => {
-    (async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setSession(session);
-    })();
-  }, [supabase.auth]);
-
-  const profileOrLogin = session ? routes.perfil : routes.login;
-
   return (
     <main>
       <Section className="bg-gradient-to-br from-blue-600 to-blue-700 text-white">
@@ -75,10 +61,10 @@ export default function InfoPage() {
             <p className="text-xl text-blue-100 max-w-2xl mx-auto leading-relaxed mb-8">
               Conecta con acompañantes empáticos y verificados para actividades cotidianas o de ocio
             </p>
-            <LinkButton href={profileOrLogin} className="h-14 px-10 text-lg">
+            <AuthLink className="gt-button gt-button--primary h-14 px-10 text-lg inline-flex items-center">
               Empezar ahora
               <ArrowRight className="ml-2 w-5 h-5" />
-            </LinkButton>
+            </AuthLink>
           </div>
         </Container>
       </Section>
@@ -92,7 +78,6 @@ export default function InfoPage() {
                 Una plataforma que conecta a personas con discapacidad y mayores con acompañantes verificados para cualquier actividad
               </p>
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {features.map((feature) => (
                 <Card key={feature.title} className="p-8 border-gray-50 hover:shadow-lg transition-shadow">
@@ -117,7 +102,6 @@ export default function InfoPage() {
                 ¿Necesitas acompañamiento o quieres acompañar?
               </p>
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <Card className="p-10 border-0 shadow-lg hover:translate-y-[-4px] transition-transform">
                 <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 text-blue-700 text-sm font-semibold mb-6">
@@ -133,9 +117,9 @@ export default function InfoPage() {
                     </li>
                   ))}
                 </ul>
-                <button type="button" className="gt-button gt-button--primary w-full" onClick={scrollToFinalCta}>
+                <ScrollToCta variant="primary" className="w-full">
                   Quiero acompañamiento
-                </button>
+                </ScrollToCta>
               </Card>
 
               <Card className="p-10 border-0 shadow-lg hover:translate-y-[-4px] transition-transform">
@@ -152,9 +136,9 @@ export default function InfoPage() {
                     </li>
                   ))}
                 </ul>
-                <button type="button" className="gt-button gt-button--secondary w-full" onClick={scrollToFinalCta}>
+                <ScrollToCta variant="secondary" className="w-full">
                   Quiero ser acompañante
-                </button>
+                </ScrollToCta>
               </Card>
             </div>
           </div>
@@ -170,7 +154,6 @@ export default function InfoPage() {
                 Simple, rápido y seguro. En 4 pasos estarás listo
               </p>
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {infoSteps.map((step, i) => (
                 <div key={step.title} className="relative group">
@@ -197,7 +180,6 @@ export default function InfoPage() {
                 Resolvemos las dudas más comunes sobre GoTogether
               </p>
             </div>
-
             <div className="space-y-12">
               {faqData.map((category) => (
                 <div key={category.category}>
@@ -217,10 +199,10 @@ export default function InfoPage() {
             <p className="text-gray-500 text-lg mb-8 max-w-xl mx-auto leading-relaxed">
               Únete a GoTogether y descubre una nueva forma de vivir con más autonomía y compañía.
             </p>
-            <LinkButton href={profileOrLogin} className="h-14 px-10 text-lg">
+            <AuthLink className="gt-button gt-button--primary h-14 px-10 text-lg inline-flex items-center">
               Empezar ahora
               <ArrowRight className="ml-2 w-5 h-5" />
-            </LinkButton>
+            </AuthLink>
           </div>
         </Container>
       </Section>
