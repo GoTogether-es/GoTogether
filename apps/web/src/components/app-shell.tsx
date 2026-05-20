@@ -20,6 +20,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [session, setSession] = useState<Session | null>(null);
   const [isCompanion, setIsCompanion] = useState(false);
+  const [isSupervisor, setIsSupervisor] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
@@ -34,6 +35,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       if (session) {
         const profile = await getProfile().catch(() => null);
         setIsCompanion(!!profile?.companion);
+        const { data: { user } } = await supabase.auth.getUser();
+        setIsSupervisor(user?.user_metadata?.role === 'SUPERVISOR' || user?.app_metadata?.role === 'SUPERVISOR');
       }
     })();
 
@@ -43,8 +46,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       setSession(session);
       if (session) {
         getProfile().then(profile => setIsCompanion(!!profile?.companion)).catch(() => {});
+        supabase.auth.getUser().then(({ data: { user } }) => {
+          setIsSupervisor(user?.user_metadata?.role === 'SUPERVISOR' || user?.app_metadata?.role === 'SUPERVISOR');
+        }).catch(() => {});
       } else {
         setIsCompanion(false);
+        setIsSupervisor(false);
       }
     });
 
@@ -182,6 +189,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                       <History className="w-4 h-4" />
                       Historial
                     </Link>
+                    {isSupervisor && (
                     <Link
                       href={routes.supervision}
                       className={clsx(
@@ -192,6 +200,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                       <Users className="w-4 h-4" />
                       Supervisión
                     </Link>
+                    )}
                   </>
                 )}
               </nav>
@@ -325,6 +334,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   <History className="w-5 h-5" />
                   Historial
                 </Link>
+                {isSupervisor && (
                 <Link
                   href={routes.supervision}
                   className={clsx(
@@ -338,6 +348,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   <Users className="w-5 h-5" />
                   Supervisión
                 </Link>
+                )}
                 <Link
                   href={routes.perfil}
                   className={clsx(
