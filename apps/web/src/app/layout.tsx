@@ -1,6 +1,7 @@
 import './globals.css';
 import { baseMetadata } from '@/lib/metadata';
 import { AppShell } from '@/components/app-shell';
+import { Analytics } from '@/components/analytics';
 import { QueryProvider } from '@/services/query-provider';
 import { Toaster } from 'sonner';
 
@@ -26,6 +27,7 @@ export default function RootLayout({
           <AppShell>{children}</AppShell>
           <Toaster position="top-right" richColors closeButton />
         </QueryProvider>
+        <Analytics />
       </body>
     </html>
   );

@@ -1,5 +1,12 @@
 import { Card, Container, Section } from '@gotogether/ui';
 import { Mail, Phone } from 'lucide-react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Contactar',
+  description: 'Contacta con GoTogether. Escríbenos a info@gotogether.es o llámanos al 643 415 190. Resolvemos tus dudas.',
+  openGraph: { title: 'Contactar - GoTogether' },
+};
 
 export default function ContactoPage() {
   return (

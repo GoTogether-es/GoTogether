@@ -1,5 +1,12 @@
 import { Card, Container, Section } from '@gotogether/ui';
 import { Heart, ShieldCheck, Users, Target, Eye } from 'lucide-react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Quiénes somos',
+  description: 'GoTogether es un equipo comprometido con devolver la autonomía, la compañía y la dignidad a quienes más lo necesitan. Conoce nuestra visión, misión y valores.',
+  openGraph: { title: 'Quiénes somos - GoTogether' },
+};
 
 const values = [
   {

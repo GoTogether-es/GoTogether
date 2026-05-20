@@ -2,6 +2,12 @@ import { Container, Section } from '@gotogether/ui';
 import { LinkButton } from '@/components/link-button';
 import { Compass, ArrowLeft, Search } from 'lucide-react';
 import { routes } from '@/lib/routes';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Página no encontrada',
+  description: 'La página que buscas no existe. Vuelve al inicio de GoTogether.',
+};
 
 export default function NotFound() {
   return (
