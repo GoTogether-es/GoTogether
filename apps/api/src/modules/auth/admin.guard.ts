@@ -11,6 +11,10 @@ export class AdminGuard implements CanActivate {
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    if (!this.adminPasswordHash) {
+      throw new UnauthorizedException('ADMIN_PASSWORD_HASH no configurado en el servidor');
+    }
+
     const request = context.switchToHttp().getRequest();
     const adminKey = request.headers['x-admin-key'];
 
@@ -18,17 +22,9 @@ export class AdminGuard implements CanActivate {
       throw new UnauthorizedException('Clave de administrador requerida');
     }
 
-    // Use bcrypt hash if configured, fallback to plaintext comparison
-    if (this.adminPasswordHash) {
-      const valid = await bcrypt.compare(adminKey, this.adminPasswordHash);
-      if (!valid) {
-        throw new UnauthorizedException('Clave de administrador incorrecta');
-      }
-    } else {
-      const plainPassword = this.configService.get<string>('ADMIN_PASSWORD');
-      if (!plainPassword || adminKey !== plainPassword) {
-        throw new UnauthorizedException('Clave de administrador incorrecta');
-      }
+    const valid = await bcrypt.compare(adminKey, this.adminPasswordHash);
+    if (!valid) {
+      throw new UnauthorizedException('Clave de administrador incorrecta');
     }
 
     return true;
