@@ -179,6 +179,11 @@ export type AdminStats = {
   pendingCompanions: number;
   pendingProfiles: number;
   verifiedProfiles: number;
+  totalBookings: number;
+  activeBookings: number;
+  completedBookings: number;
+  totalPayments: number;
+  totalRevenue: number;
 };
 
 export type AdminUser = {
@@ -250,4 +255,54 @@ export type BookingStats = {
   completed: number;
   withRating: number;
   averageRating: number | null;
+};
+
+export type AdminBooking = {
+  id: string;
+  status: string;
+  serviceType: string;
+  address: string;
+  scheduledAt: string;
+  createdAt: string;
+  client?: { id: string; profile?: { fullName: string } | null } | null;
+  companion?: { profile?: { fullName: string } | null } | null;
+  service?: { name: string } | null;
+  payment?: { amount: number } | null;
+};
+
+export type AdminBookingDetail = AdminBooking & {
+  client?: { id: string; email: string; profile?: { fullName: string; phone: string | null } | null } | null;
+  companion?: { id: string; profile?: { fullName: string; phone: string | null } | null } | null;
+  service?: { id: string; name: string; price: number } | null;
+  payment?: { id: string; amount: number; fee: number; status: string; stripePaymentId: string | null } | null;
+  report?: { id: string; rating: number | null; summary: string | null } | null;
+  chatRoom?: { id: string; messages: { id: string; senderId: string; content: string; createdAt: string }[] } | null;
+};
+
+export type AdminPayment = {
+  id: string;
+  amount: number;
+  fee: number;
+  currency: string;
+  status: string;
+  createdAt: string;
+  booking: {
+    id: string;
+    serviceType: string;
+    client?: { profile?: { fullName: string } | null } | null;
+    companion?: { profile?: { fullName: string } | null } | null;
+  };
+};
+
+export type AdminReport = {
+  id: string;
+  rating: number | null;
+  summary: string | null;
+  createdAt: string;
+  booking: {
+    id: string;
+    serviceType: string;
+    client?: { profile?: { fullName: string } | null } | null;
+    companion?: { profile?: { fullName: string } | null } | null;
+  };
 };

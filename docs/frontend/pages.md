@@ -234,7 +234,12 @@ Gestión de supervisión:
 **Archivo:** `admin/page.tsx`
 **Auth:** Propia (password gate)
 
-Panel con:
-- Gate de contraseña (sessionStorage)
-- Tabs: Dashboard (stats), Usuarios (tabla), Pendientes (aprobar/rechazar)
-- Links a documentos subidos (certificados penales, sexuales, discapacidad)
+Panel con 8 pestañas:
+- **Dashboard**: stats ampliados (usuarios, reservas, pagos, facturación, pendientes)
+- **Usuarios**: tabla con nombre, email, rol, verificado y fecha de registro
+- **Pendientes**: aprobar/rechazar acompañantes y clientes con links a documentos
+- **Reservas**: tabla paginada con filtro por estado, detalle con chat y pagos
+- **Servicios**: CRUD del catálogo (crear, editar, activar/desactivar)
+- **Pagos**: historial paginado con importe, comisión y estado
+- **Valoraciones**: listado paginado con opción de eliminar
+- **Notificaciones**: envío masivo por rol (todos, clientes, acompañantes)

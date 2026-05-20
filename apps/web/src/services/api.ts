@@ -16,6 +16,10 @@ import type {
   AdminStats,
   AdminUser,
   AdminPending,
+  AdminBooking,
+  AdminBookingDetail,
+  AdminPayment,
+  AdminReport,
   NotificationData,
   ServiceData,
   AvailabilitySlotData,
@@ -525,6 +529,98 @@ export async function adminVerifyProfile(key: string, id: string): Promise<void>
 export async function adminRejectProfile(key: string, id: string): Promise<void> {
   const res = await fetch(`${API_URL}/admin/profiles/${id}/reject`, { method: 'PUT', headers: adminHeaders(key) });
   if (!res.ok) throw new Error('Error al rechazar perfil');
+}
+
+// --- Admin Bookings ---
+
+export async function adminGetBookings(key: string, page = 1, status?: string): Promise<PaginatedResponse<AdminBooking>> {
+  const params = new URLSearchParams({ page: String(page), limit: '20' });
+  if (status) params.set('status', status);
+  const res = await fetch(`${API_URL}/admin/bookings?${params}`, { headers: adminHeaders(key) });
+  if (!res.ok) throw new Error('Error al obtener reservas');
+  return res.json();
+}
+
+export async function adminGetBooking(key: string, id: string): Promise<AdminBookingDetail> {
+  const res = await fetch(`${API_URL}/admin/bookings/${id}`, { headers: adminHeaders(key) });
+  if (!res.ok) throw new Error('Error al obtener reserva');
+  return res.json();
+}
+
+export async function adminUpdateBookingStatus(key: string, id: string, status: string): Promise<void> {
+  const res = await fetch(`${API_URL}/admin/bookings/${id}/status`, {
+    method: 'PUT',
+    headers: adminHeaders(key),
+    body: JSON.stringify({ status }),
+  });
+  if (!res.ok) throw new Error('Error al actualizar estado');
+}
+
+// --- Admin Services ---
+
+export async function adminGetServices(key: string): Promise<ServiceData[]> {
+  const res = await fetch(`${API_URL}/admin/services`, { headers: adminHeaders(key) });
+  if (!res.ok) throw new Error('Error al obtener servicios');
+  return res.json();
+}
+
+export async function adminCreateService(key: string, data: { name: string; description?: string; price: number; category?: string }): Promise<ServiceData> {
+  const res = await fetch(`${API_URL}/admin/services`, {
+    method: 'POST',
+    headers: adminHeaders(key),
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error('Error al crear servicio');
+  return res.json();
+}
+
+export async function adminUpdateService(key: string, id: string, data: { name?: string; description?: string; price?: number; category?: string }): Promise<ServiceData> {
+  const res = await fetch(`${API_URL}/admin/services/${id}`, {
+    method: 'PUT',
+    headers: adminHeaders(key),
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error('Error al actualizar servicio');
+  return res.json();
+}
+
+export async function adminToggleService(key: string, id: string): Promise<ServiceData> {
+  const res = await fetch(`${API_URL}/admin/services/${id}/toggle`, { method: 'PUT', headers: adminHeaders(key) });
+  if (!res.ok) throw new Error('Error al alternar servicio');
+  return res.json();
+}
+
+// --- Admin Payments ---
+
+export async function adminGetPayments(key: string, page = 1): Promise<PaginatedResponse<AdminPayment>> {
+  const res = await fetch(`${API_URL}/admin/payments?page=${page}&limit=20`, { headers: adminHeaders(key) });
+  if (!res.ok) throw new Error('Error al obtener pagos');
+  return res.json();
+}
+
+// --- Admin Reports ---
+
+export async function adminGetReports(key: string, page = 1): Promise<PaginatedResponse<AdminReport>> {
+  const res = await fetch(`${API_URL}/admin/reports?page=${page}&limit=20`, { headers: adminHeaders(key) });
+  if (!res.ok) throw new Error('Error al obtener valoraciones');
+  return res.json();
+}
+
+export async function adminDeleteReport(key: string, id: string): Promise<void> {
+  const res = await fetch(`${API_URL}/admin/reports/${id}`, { method: 'DELETE', headers: adminHeaders(key) });
+  if (!res.ok) throw new Error('Error al eliminar valoración');
+}
+
+// --- Admin Notifications ---
+
+export async function adminSendNotification(key: string, data: { title: string; body: string; role?: string }): Promise<{ sent: number }> {
+  const res = await fetch(`${API_URL}/admin/notifications`, {
+    method: 'POST',
+    headers: adminHeaders(key),
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error('Error al enviar notificación');
+  return res.json();
 }
 
 export async function cancelInvitation(id: string): Promise<any> {

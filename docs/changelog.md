@@ -139,3 +139,5 @@ tags: [project, changelog, history]
 - 🔗 Homepage: botones "Quiero acompañamiento" / "Quiero ser acompañante" redirigen a login o `/perfil` según sesión
 - 📄 Nuevas páginas `/nosotros` (Quiénes somos) y `/contacto` (Contactar con info@gotogether.es)
 - 🦶 Footer: reemplazados enlaces de producto por Quiénes somos, Cómo funciona y Contactar
+- 🛡️ Admin: panel ampliado con 8 pestañas (Dashboard, Usuarios, Pendientes, Reservas, Servicios, Pagos, Valoraciones, Notificaciones)
+- 🔧 Admin API: nuevos endpoints para gestión de reservas, servicios, pagos, valoraciones y notificaciones masivas

@@ -126,12 +126,23 @@ Lista completa de todos los endpoints REST del backend NestJS.
 | PUT | `/admin/companions/:id/reject` | x-admin-key | Rechazar acompañante |
 | PUT | `/admin/profiles/:id/verify` | x-admin-key | Verificar cliente |
 | PUT | `/admin/profiles/:id/reject` | x-admin-key | Rechazar cliente |
+| GET | `/admin/bookings` | x-admin-key | Reservas paginadas (?status=, ?page=) |
+| GET | `/admin/bookings/:id` | x-admin-key | Detalle reserva con chat y pagos |
+| PUT | `/admin/bookings/:id/status` | x-admin-key | Cambiar estado de reserva |
+| GET | `/admin/services` | x-admin-key | Catálogo de servicios |
+| POST | `/admin/services` | x-admin-key | Crear servicio |
+| PUT | `/admin/services/:id` | x-admin-key | Editar servicio |
+| PUT | `/admin/services/:id/toggle` | x-admin-key | Activar/desactivar servicio |
+| GET | `/admin/payments` | x-admin-key | Pagos paginados |
+| GET | `/admin/reports` | x-admin-key | Valoraciones paginadas |
+| DELETE | `/admin/reports/:id` | x-admin-key | Eliminar valoración |
+| POST | `/admin/notifications` | x-admin-key | Enviar notificación masiva |
 
 ## Totales
 
 - **Endpoints totales:** 38
 - **Protegidos (JWT):** 29
-- **Protegidos (admin key):** 7
+- **Protegidos (admin key):** 18
 - **Públicos:** 6 (magic-link, companions, matching, supervision accept, webhook)
 
 ## Formato de errores
