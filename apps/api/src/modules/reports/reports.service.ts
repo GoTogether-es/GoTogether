@@ -48,9 +48,12 @@ export class ReportsService {
       throw new ForbiddenException('No eres participante de esta reserva');
     }
 
-    return this.prisma.report.findUnique({
+    const report = await this.prisma.report.findUnique({
       where: { bookingId },
     });
+    if (!report) throw new NotFoundException('Valoración no encontrada');
+
+    return report;
   }
 
   async create(bookingId: string, userId: string, dto: CreateReportDto) {
