@@ -149,6 +149,15 @@ exports.Prisma.SupervisionInviteScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ClientLocationScalarFieldEnum = {
+  id: 'id',
+  clientId: 'clientId',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  accuracy: 'accuracy',
+  timestamp: 'timestamp'
+};
+
 exports.Prisma.ProfileScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -299,6 +308,7 @@ exports.Prisma.ModelName = {
   User: 'User',
   Supervision: 'Supervision',
   SupervisionInvite: 'SupervisionInvite',
+  ClientLocation: 'ClientLocation',
   Profile: 'Profile',
   CompanionProfile: 'CompanionProfile',
   Service: 'Service',

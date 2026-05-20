@@ -41,7 +41,17 @@ describe('AuthService', () => {
 
   it('logs out', async () => {
     const service = new AuthService(prisma, mockConfigService);
+    // Mock the signOut method to avoid making actual network requests
+    // since the client is configured with a dummy test.supabase.co URL
+    (service as any).supabaseAdmin = {
+      auth: {
+        admin: {
+          signOut: jest.fn().mockResolvedValue({ error: null })
+        }
+      }
+    };
     const result = await service.logout('Bearer test-token');
     expect(result).toEqual({ success: true });
+    expect((service as any).supabaseAdmin.auth.admin.signOut).toHaveBeenCalledWith('test-token');
   });
 });
