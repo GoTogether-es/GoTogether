@@ -1,15 +1,20 @@
 'use client';
 
 import { useEffect, useState, useRef, useCallback } from 'react';
+import dynamic from 'next/dynamic';
 import { toast } from 'sonner';
 import { Card, Container, Section } from '@gotogether/ui';
-import { Users, UserPlus, Trash2, Loader2, Search, CalendarDays, History as HistoryIcon, MapPin } from 'lucide-react';
+import { Users, UserPlus, Trash2, Loader2, Search, CalendarDays, MapPin } from 'lucide-react';
 import {
   useMyClients, useMySupervisor, useCreateSupervision, useRemoveSupervision,
   useSearchUsers, usePendingInvites, useCancelInvitation, useSupervisorBookings,
 } from '@/services/queries';
-import { ClientLocationMap } from '@/components/client-location-map';
 import type { AdminBooking } from '@/types';
+
+const ClientLocationMap = dynamic(
+  () => import('@/components/client-location-map').then((mod) => mod.ClientLocationMap),
+  { ssr: false, loading: () => <div className="h-[500px] bg-gray-50 rounded-2xl flex items-center justify-center"><Loader2 className="w-6 h-6 animate-spin text-blue-600" /></div> }
+);
 
 type Tab = 'clients' | 'bookings' | 'location';
 
