@@ -55,6 +55,11 @@ export const baseMetadata: Metadata = {
     description,
     images: ['/sintexto.png'],
   },
+  icons: {
+    icon: '/sintextosinfondo.png',
+    shortcut: '/sintextosinfondo.png',
+    apple: '/sintextosinfondo.png',
+  },
   alternates: {
     canonical: '/',
   },
