@@ -26,7 +26,7 @@ describe('AppShell', () => {
       </AppShell>,
     );
 
-    expect(screen.getByText('GoTogether')).toBeInTheDocument();
+    expect(screen.getByAltText('GoTogether')).toBeInTheDocument();
     expect(screen.getAllByText('Explorar').length).toBeGreaterThanOrEqual(1);
     expect(screen.getByLabelText('Abrir menú principal')).toBeInTheDocument();
     expect(screen.getByTestId('content')).toBeInTheDocument();
