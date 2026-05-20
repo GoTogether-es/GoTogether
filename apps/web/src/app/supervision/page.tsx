@@ -3,14 +3,15 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { toast } from 'sonner';
 import { Card, Container, Section } from '@gotogether/ui';
-import { Users, UserPlus, Trash2, Loader2, Search, CalendarDays, History as HistoryIcon } from 'lucide-react';
+import { Users, UserPlus, Trash2, Loader2, Search, CalendarDays, History as HistoryIcon, MapPin } from 'lucide-react';
 import {
   useMyClients, useMySupervisor, useCreateSupervision, useRemoveSupervision,
   useSearchUsers, usePendingInvites, useCancelInvitation, useSupervisorBookings,
 } from '@/services/queries';
+import { ClientLocationMap } from '@/components/client-location-map';
 import type { AdminBooking } from '@/types';
 
-type Tab = 'clients' | 'bookings';
+type Tab = 'clients' | 'bookings' | 'location';
 
 export default function SupervisionPage() {
   const [tab, setTab] = useState<Tab>('clients');
@@ -62,6 +63,11 @@ export default function SupervisionPage() {
   const bookings = bookingsData?.data || [];
   const meta = bookingsData?.meta || { total: 0, page: 1, totalPages: 1 };
 
+  const clientNames: Record<string, string> = {};
+  clients.forEach((s: any) => {
+    clientNames[s.clientId] = s.client?.profile?.fullName || s.client?.email || s.clientId;
+  });
+
   return (
     <Section>
       <Container>
@@ -75,6 +81,7 @@ export default function SupervisionPage() {
             {([
               { id: 'clients' as Tab, label: 'Mis supervisados', icon: Users },
               { id: 'bookings' as Tab, label: 'Reservas de clientes', icon: CalendarDays },
+              { id: 'location' as Tab, label: 'Ubicación', icon: MapPin },
             ]).map(({ id, label, icon: Icon }) => (
               <button key={id} onClick={() => setTab(id)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-t-lg text-sm font-semibold transition-colors ${tab === id ? 'bg-white text-blue-600 border border-b-white -mb-[1px]' : 'text-gray-500 hover:text-gray-700'}`}>
@@ -181,6 +188,13 @@ export default function SupervisionPage() {
                   ))}
                 </div>
               )}
+            </div>
+          )}
+
+          {tab === 'location' && (
+            <div>
+              <p className="text-gray-500 mb-4 text-sm">Ubicación en tiempo real de tus clientes que están compartiendo su posición.</p>
+              <ClientLocationMap clientNames={clientNames} />
             </div>
           )}
         </div>

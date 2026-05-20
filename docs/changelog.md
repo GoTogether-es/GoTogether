@@ -151,3 +151,5 @@ tags: [project, changelog, history]
 - 👥 Supervisión: nueva pestaña "Reservas de clientes" con tabla paginada de todas las reservas de supervisados
 - 🔗 Navbar: añadido enlace "Supervisión" para usuarios autenticados
 - 🔧 API: nuevo endpoint `GET /supervision/bookings` para consultar reservas de clientes supervisados
+- 🗺️ Ubicación en tiempo real: nuevo modelo `ClientLocation`, hook `useLocationSharing`, componente `ClientLocationMap`, pestaña "Ubicación" en supervisión
+- 📍 Perfil: toggle para que el cliente comparta su ubicación con su supervisor

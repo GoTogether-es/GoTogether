@@ -7,9 +7,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import { Button, Card, Container, Section } from '@gotogether/ui';
 import { getProfile, upsertProfile } from '@/services/api';
-import { Loader2, Pencil, X, UserCircle, Briefcase, Heart, Phone, FileText } from 'lucide-react';
+import { Loader2, Pencil, X, UserCircle, Briefcase, Heart, Phone, FileText, MapPin } from 'lucide-react';
 import { AvatarUpload } from '@/components/avatar-upload';
 import { perfilSchema, type PerfilFormData } from '@/lib/schemas';
+import { useLocationSharing } from '@/hooks/use-location-sharing';
 import type { UserProfile } from '@/types';
 
 function PerfilContent() {
@@ -190,7 +191,10 @@ function PerfilContent() {
                       {profile.companion.specialties.split(',').map((s, i) => (
                         <span key={i} className="gt-tag">{s.trim()}</span>
                       ))}
-                    </div>
+          {/* Location Sharing */}
+          {!isCompanion && <LocationSharingCard />}
+
+        </div>
                   </div>
                 )}
                 <div className="flex items-center gap-3 text-sm text-gray-500">
@@ -409,6 +413,47 @@ function PerfilContent() {
         </form>
       )}
     </div>
+  );
+}
+
+function LocationSharingCard() {
+  const { sharing, lastSent, toggle } = useLocationSharing();
+
+  return (
+    <Card className="p-8 border-0 shadow-xl shadow-blue-900/5">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600">
+            <MapPin className="w-5 h-5" />
+          </div>
+          <div>
+            <h3 className="font-bold text-gray-900">Compartir mi ubicación</h3>
+            <p className="text-sm text-gray-500">
+              {sharing
+                ? lastSent
+                  ? `Enviada a las ${lastSent.toLocaleTimeString('es-ES')}`
+                  : 'Compartiendo en tiempo real'
+                : 'Permite que tu supervisor vea dónde estás'}
+            </p>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={toggle}
+          className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ${
+            sharing ? 'bg-blue-600' : 'bg-gray-200'
+          }`}
+          role="switch"
+          aria-checked={sharing}
+        >
+          <span
+            className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow ring-0 transition duration-200 ${
+              sharing ? 'translate-x-5' : 'translate-x-0'
+            }`}
+          />
+        </button>
+      </div>
+    </Card>
   );
 }
 
