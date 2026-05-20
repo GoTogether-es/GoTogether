@@ -1,4 +1,4 @@
-import { IsInt, IsString, IsOptional, Min, Max } from 'class-validator';
+import { IsInt, IsString, IsOptional, Min, Max, MaxLength } from 'class-validator';
 
 export class CreateReportDto {
   @IsInt()
@@ -8,5 +8,6 @@ export class CreateReportDto {
 
   @IsString()
   @IsOptional()
+  @MaxLength(2000)
   summary?: string;
 }

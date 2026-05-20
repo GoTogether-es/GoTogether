@@ -31,6 +31,7 @@ export class SupervisionController {
     return this.supervisionService.inviteSupervision(req.user.userId, dto);
   }
 
+  @UseGuards(SupabaseAuthGuard)
   @Get('accept')
   @HttpCode(200)
   async accept(@Query('token') token: string, @Request() req: any) {

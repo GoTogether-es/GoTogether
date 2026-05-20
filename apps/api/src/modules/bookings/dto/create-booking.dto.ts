@@ -1,10 +1,12 @@
-import { IsString, IsOptional, IsDateString } from 'class-validator';
+import { IsString, IsOptional, IsDateString, MaxLength } from 'class-validator';
 
 export class CreateBookingDto {
   @IsString()
+  @MaxLength(200)
   serviceType!: string;
 
   @IsString()
+  @MaxLength(500)
   address!: string;
 
   @IsDateString()
@@ -12,10 +14,12 @@ export class CreateBookingDto {
 
   @IsString()
   @IsOptional()
+  @MaxLength(1000)
   summary?: string;
 
   @IsString()
   @IsOptional()
+  @MaxLength(200)
   disability?: string;
 
   @IsString()

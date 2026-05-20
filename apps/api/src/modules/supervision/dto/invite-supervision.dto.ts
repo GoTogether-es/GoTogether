@@ -1,7 +1,8 @@
-import { IsString, IsOptional, IsEmail } from 'class-validator';
+import { IsString, IsOptional, IsEmail, MaxLength } from 'class-validator';
 
 export class InviteSupervisionDto {
   @IsString()
+  @MaxLength(200)
   clientName!: string;
 
   @IsOptional()

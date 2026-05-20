@@ -1,19 +1,23 @@
-import { IsString, IsOptional, IsBoolean } from 'class-validator';
+import { IsString, IsOptional, IsBoolean, MaxLength } from 'class-validator';
 
 export class UpsertProfileDto {
   @IsString()
+  @MaxLength(200)
   fullName!: string;
 
   @IsString()
   @IsOptional()
+  @MaxLength(200)
   headline?: string;
 
   @IsString()
   @IsOptional()
+  @MaxLength(2000)
   bio?: string;
 
   @IsString()
   @IsOptional()
+  @MaxLength(30)
   phone?: string;
 
   @IsString()
@@ -22,14 +26,17 @@ export class UpsertProfileDto {
 
   @IsString()
   @IsOptional()
+  @MaxLength(100)
   disabilityType?: string;
 
   @IsString()
   @IsOptional()
+  @MaxLength(2000)
   preferences?: string;
 
   @IsString()
   @IsOptional()
+  @MaxLength(2000)
   disabilityDescription?: string;
 
   @IsString()
@@ -42,6 +49,7 @@ export class UpsertProfileDto {
 
   @IsString()
   @IsOptional()
+  @MaxLength(500)
   specialties?: string;
 
   @IsString()
