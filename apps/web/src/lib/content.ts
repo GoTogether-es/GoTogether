@@ -143,4 +143,44 @@ export const sampleCompanion: CompanionSummary = {
   rating: 4.9,
   yearsOnPlatform: 2,
   verified: true,
+  completedServices: 47,
 };
+
+export const testimonials = [
+  {
+    name: 'María G.',
+    role: 'Cliente',
+    text: 'Desde que uso GoTogether voy al médico sin depender de mis hijos. Mi acompañante es un sol.',
+    rating: 5,
+  },
+  {
+    name: 'Antonio R.',
+    role: 'Familiar',
+    text: 'Contraté un acompañante para mi madre de 82 años. Verificados, puntuales y con un trato exquisito.',
+    rating: 5,
+  },
+  {
+    name: 'Carmen L.',
+    role: 'Cliente',
+    text: 'Pensé que sería complicado, pero en 5 minutos tenía reserva. La app es facilísima y el acompañante encantador.',
+    rating: 5,
+  },
+  {
+    name: 'Javier M.',
+    role: 'Acompañante',
+    text: 'Ser acompañante en GoTogether me ha permitido ayudar a personas que lo necesitan y ganar un dinero extra. Muy recomendable.',
+    rating: 5,
+  },
+  {
+    name: 'Pilar S.',
+    role: 'Cliente',
+    text: 'Mi acompañante me ayuda con la compra semanal. Es como tener un amigo que además te echa una mano.',
+    rating: 4,
+  },
+  {
+    name: 'Diego F.',
+    role: 'Familiar',
+    text: 'La función de supervisión me da tranquilidad. Puedo ver dónde está mi padre durante el acompañamiento.',
+    rating: 5,
+  },
+];

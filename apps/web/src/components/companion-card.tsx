@@ -5,6 +5,7 @@ import { ShieldCheck, Star } from 'lucide-react';
 import Image from 'next/image';
 import { LinkButton } from '@/components/link-button';
 import { routes } from '@/lib/routes';
+import { getCompanionLevel } from '@/lib/levels';
 import type { CompanionSummary } from '@/types';
 
 export type { CompanionSummary };
@@ -16,7 +17,12 @@ export function CompanionCard({
   rating,
   yearsOnPlatform,
   verified,
+  completedServices,
+  _count,
 }: CompanionSummary) {
+  const services = completedServices || _count?.bookings || 0;
+  const level = getCompanionLevel(services);
+
   return (
     <Card className="p-5 flex flex-col">
       <div className="relative w-full h-[180px] rounded-2xl overflow-hidden bg-blue-50">
@@ -46,6 +52,9 @@ export function CompanionCard({
           {profile.headline || profile.bio || 'Acompañante en GoTogether'}
         </p>
         <div className="flex flex-wrap gap-2 mt-3">
+          <span className="gt-tag" title={`${services} servicios completados`}>
+            {level.emoji} {level.name}
+          </span>
           {specialties && (
             <span className="gt-tag">{specialties}</span>
           )}

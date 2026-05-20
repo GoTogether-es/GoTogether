@@ -3,7 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
-import { getMagicLinkTemplate } from './mail.templates';
+import { getMagicLinkTemplate, getWelcomeTemplate } from './mail.templates';
 
 @Injectable()
 export class AuthService {
@@ -85,7 +85,9 @@ export class AuthService {
   }
 
   async validateAndSyncUser(supabaseUser: { userId: string; email: string }) {
-    return this.prisma.user.upsert({
+    const existing = await this.prisma.user.findUnique({ where: { id: supabaseUser.userId } });
+
+    const user = await this.prisma.user.upsert({
       where: { id: supabaseUser.userId },
       update: { email: supabaseUser.email },
       create: {
@@ -93,6 +95,23 @@ export class AuthService {
         email: supabaseUser.email,
       },
     });
+
+    // Send welcome email on first registration
+    if (!existing && this.resend) {
+      const appUrl = this.configService.get<string>('NEXT_PUBLIC_APP_URL') || 'http://localhost:3000';
+      try {
+        await this.resend.emails.send({
+          from: this.configService.get<string>('RESEND_FROM')!,
+          to: [supabaseUser.email],
+          subject: 'Bienvenido a GoTogether',
+          html: getWelcomeTemplate({ appUrl }),
+        });
+      } catch (err) {
+        console.error('Failed to send welcome email:', err);
+      }
+    }
+
+    return user;
   }
 
   async logout(token: string) {

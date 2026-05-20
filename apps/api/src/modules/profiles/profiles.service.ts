@@ -60,7 +60,7 @@ export class ProfilesService {
     });
   }
 
-  listCompanions() {
+  async listCompanions() {
     return this.prisma.companionProfile.findMany({
       where: { verified: true },
       include: {
@@ -68,7 +68,8 @@ export class ProfilesService {
           include: {
             user: true
           }
-        }
+        },
+        _count: { select: { bookings: true } }
       },
     });
   }

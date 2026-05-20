@@ -15,6 +15,8 @@ export type CompanionSummary = {
   rating: number;
   yearsOnPlatform: number;
   verified: boolean;
+  completedServices?: number;
+  _count?: { bookings: number };
 };
 
 export type CompanionDetail = {

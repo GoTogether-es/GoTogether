@@ -128,3 +128,17 @@ export function getVerificationRejectedTemplate(params: {
       <div style="margin:32px 0;text-align:center"><a href="${params.appUrl}/perfil" style="background:${brandColor};color:#fff;padding:16px 32px;border-radius:12px;font-weight:600;text-decoration:none;display:inline-block;font-size:16px;box-shadow:0 4px 6px -1px rgba(37,99,235,.2)">Actualizar perfil</a></div>
     </div>`);
 }
+
+export const getWelcomeTemplate = (params: { appUrl: string }) => {
+  return wrap('Bienvenido a GoTogether', `
+    <div style="padding:0 40px 40px;color:#374151;line-height:1.6">
+      <h1 style="font-size:24px;font-weight:700;color:#111827;margin-bottom:16px">¡Bienvenido a GoTogether!</h1>
+      <p>Gracias por unirte a nuestra comunidad. GoTogether conecta a personas que necesitan acompañamiento con acompañantes verificados y empáticos.</p>
+      <div style="background:#f0f9ff;border-radius:12px;padding:20px;margin:24px 0">
+        <p style="font-weight:600;margin:0 0 8px">Tus primeros pasos:</p>
+        <p style="margin:0">1. Completa tu perfil<br/>2. Explora acompañantes<br/>3. Crea tu primera solicitud</p>
+      </div>
+      <div style="margin:32px 0;text-align:center"><a href="${params.appUrl}/perfil" style="background:${brandColor};color:#fff;padding:16px 32px;border-radius:12px;font-weight:600;text-decoration:none;display:inline-block;font-size:16px;box-shadow:0 4px 6px -1px rgba(37,99,235,.2)">Completar mi perfil</a></div>
+      <p style="color:#6b7280;font-size:14px">Si tienes alguna duda, visita nuestra página de <a href="${params.appUrl}/info" style="color:${brandColor}">ayuda</a>.</p>
+    </div>`);
+}

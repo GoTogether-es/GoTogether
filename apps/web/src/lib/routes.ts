@@ -2,6 +2,7 @@ export const routes = {
   info: '/info',
   nosotros: '/nosotros',
   contacto: '/contacto',
+  primerosPasos: '/primeros-pasos',
   solicitud: '/solicitud',
   perfil: '/perfil',
   explorar: '/explorar',

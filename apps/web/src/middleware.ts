@@ -20,6 +20,7 @@ const PUBLIC_ROUTES = [
   '/info',
   '/nosotros',
   '/contacto',
+  '/primeros-pasos',
   '/legal',
   '/auth',
   '/api',

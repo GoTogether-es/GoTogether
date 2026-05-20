@@ -1,8 +1,8 @@
 import { Card, Container, Section } from '@gotogether/ui';
 import { AuthLink } from '@/components/auth-link';
 import { FaqAccordion } from '@/components/faq-accordion';
-import { infoSteps, faqData } from '@/lib/content';
-import { Heart, ShieldCheck, Sparkles, Smile, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { infoSteps, faqData, testimonials } from '@/lib/content';
+import { Heart, ShieldCheck, Sparkles, Smile, ArrowRight, CheckCircle2, Star } from 'lucide-react';
 import { ScrollToCta } from '@/components/scroll-to-cta';
 import type { Metadata } from 'next';
 
@@ -167,6 +167,36 @@ export default function InfoPage() {
                 </div>
               ))}
             </div>
+          </div>
+        </Container>
+      </Section>
+
+      <Section className="bg-white">
+        <Container>
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <h2 className="text-3xl font-bold mb-4">Lo que dicen nuestros usuarios</h2>
+            <p className="text-gray-500 text-lg">Historias reales de personas que ya confían en GoTogether</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {testimonials.slice(0, 6).map((t) => (
+              <Card key={t.name} className="p-6 border-gray-50 hover:shadow-lg transition-shadow">
+                <div className="flex items-center gap-1 mb-3">
+                  {Array.from({ length: t.rating }).map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-amber-400 stroke-amber-400" />
+                  ))}
+                </div>
+                <p className="text-gray-600 mb-4 leading-relaxed italic">&quot;{t.text}&quot;</p>
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold text-sm">
+                    {t.name[0]}
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm text-gray-900">{t.name}</p>
+                    <p className="text-xs text-gray-400">{t.role}</p>
+                  </div>
+                </div>
+              </Card>
+            ))}
           </div>
         </Container>
       </Section>
