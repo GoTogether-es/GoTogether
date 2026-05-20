@@ -156,3 +156,9 @@ tags: [project, changelog, history]
 - 🔄 Flujo de finalización: acompañante solicita finalizar → cliente confirma → redirigido a valoración
 - 🛠️ Backend: endpoints `PUT /bookings/:id/request-completion` y `PUT /bookings/:id/complete`
 - 🔒 `/supervision` restringido a supervisores (no accesible por clientes ni acompañantes)
+- 🛡️ Seguridad: RLS activado en 11 tablas, admin password con bcrypt, CSP sin unsafe-eval, Swagger solo en dev, MaxLength en DTOs
+- 🚀 Rendimiento: next/font/google (fuente self-hosted), React Query staleTime 2min + gcTime 10min, sesión cacheada en API calls, middleware optimizado
+- ⚡ Home e Info convertidos a Server Components (JS enviado al cliente reducido drásticamente)
+- 📦 socket.io-client eliminado (~50KB dead code)
+- 🌍 Vercel: región cambiada a fra1 (Frankfurt) para menor latencia en España, memoria API a 1769MB
+- 🎨 Branding: logo JPG como favicon y en navbar/footer, favicon.png dedicado para pestaña

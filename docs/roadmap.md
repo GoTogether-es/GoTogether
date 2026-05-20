@@ -6,7 +6,7 @@ tags: [project, roadmap, planning]
 
 ## Estado actual: Alpha (v0.1.0)
 
-El núcleo del marketplace está funcional: los usuarios pueden registrarse, buscar acompañantes, crear reservas, chatear en tiempo real y valorar servicios. Los pagos están deshabilitados — el servicio es gratuito durante la alpha. El panel de administración está completo con 8 pestañas funcionales. La landing page está replicada en `/info`.
+El núcleo del marketplace está funcional. Pagos pendientes de activar. Seguridad reforzada (RLS, bcrypt admin, CSP). Rendimiento optimizado (Server Components, next/font, session cache, Vercel EU).
 
 ---
 
@@ -48,15 +48,18 @@ El núcleo del marketplace está funcional: los usuarios pueden registrarse, bus
 - [ ] Aplicar `STRIPE_PLATFORM_FEE_PERCENT` (12%)
 - [ ] UI de pago en el frontend (Stripe Elements o Checkout)
 
-## ✅ Fase 5 — Funcionalidades avanzadas + Admin + Supervisión (completada)
+## ✅ Fase 5 — Funcionalidades avanzadas + Admin + Supervisión + Perf + Seguridad (completada)
 
 - [x] Catálogo de servicios con precios
 - [x] Disponibilidad semanal para acompañantes
 - [x] Historial de servicios
 - [x] Admin ampliado (8 pestañas)
-- [x] Supervisión: pestaña reservas de clientes + ubicación en tiempo real (Leaflet)
+- [x] Supervisión: reservas de clientes + ubicación en tiempo real
 - [x] Flujo de finalización: acompañante solicita → cliente confirma → valoración
 - [x] Toggle compartir ubicación en perfil
+- [x] RLS activado en 11 tablas + admin bcrypt + CSP reforzado + Swagger solo dev
+- [x] next/font/google, React Query tuning, session cache, Server Components (Home + Info)
+- [x] Vercel región fra1 + memoria API 1769MB + socket.io-client eliminado
 
 ## ⬜ Fase 6 — GDPR y cumplimiento (prioridad media)
 
@@ -81,7 +84,10 @@ El núcleo del marketplace está funcional: los usuarios pueden registrarse, bus
 - [x] Sitemap.xml y robots.txt
 - [ ] Analytics (Plausible): el componente `Analytics` ya está creado en `components/analytics.tsx`. Para activarlo, importarlo en `layout.tsx` y definir `NEXT_PUBLIC_PLAUSIBLE_DOMAIN=gotogether.es`
 - [x] Página 404 personalizada con metadata
-- [ ] OG image real (actualmente referenciada pero no generada)
+- [x] OG image (`sintexto.png` en public/)
+- [x] Favicon (`favicon.png` en public/)
+- [x] Logo en navbar y footer (`sinfondo.png`)
+- [x] next/font/google para fuente auto-hospedada
 
 ## 🆕 Fase 9 — UX y conversión (prioridad baja)
 
