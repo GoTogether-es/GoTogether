@@ -60,6 +60,29 @@ El núcleo del marketplace está funcional. Pagos pendientes de activar. Segurid
 - [x] RLS activado en 11 tablas + admin bcrypt + CSP reforzado + Swagger solo dev
 - [x] next/font/google, React Query tuning, session cache, Server Components (Home + Info)
 - [x] Vercel región fra1 + memoria API 1769MB + socket.io-client eliminado
+- [x] PWA (instalable en móvil)
+- [x] Niveles de acompañante (bronce, plata, oro) visibles en tarjetas y detalle
+- [x] Email de bienvenida automático al primer login
+
+## ✅ Fase 10 — Onboarding y retención (completada)
+
+- [x] Email de bienvenida automático al registrarse
+- [x] Página `/primeros-pasos` con guía adaptada por rol (cliente vs acompañante)
+
+## ✅ Fase 11 — Confianza y verificación (parcial)
+
+- [x] Niveles de acompañante (bronce, plata, oro) según servicios completados
+- [ ] Verificación por videollamada (pospuesto)
+
+## ✅ Fase 12 — Comunidad y contenido (parcial)
+
+- [x] Testimonios de usuarios en homepage y `/info`
+- [ ] Blog (pospuesto)
+
+## ✅ Fase 13 — Móvil y accesibilidad (parcial)
+
+- [x] PWA (manifest.json, instalable en homescreen)
+- [ ] Modo texto grande (pospuesto)
 
 ## ⬜ Fase 6 — GDPR y cumplimiento (prioridad media)
 
@@ -78,21 +101,21 @@ El núcleo del marketplace está funcional. Pagos pendientes de activar. Segurid
 - [ ] Monitorización y alertas (Sentry, Vercel Analytics)
 - [ ] Plan de Disaster Recovery (backups de BD, rollback)
 
-## 🆕 Fase 8 — SEO y métricas
+## 🆕 Fase 8 — SEO y analítica (casi completa)
 
 - [x] Metadata + Open Graph en todas las páginas
 - [x] Sitemap.xml y robots.txt
-- [ ] Analytics (Plausible): el componente `Analytics` ya está creado en `components/analytics.tsx`. Para activarlo, importarlo en `layout.tsx` y definir `NEXT_PUBLIC_PLAUSIBLE_DOMAIN=gotogether.es`
+- [ ] Analytics (Plausible)
 - [x] Página 404 personalizada con metadata
-- [x] OG image (`sintexto.png` en public/)
-- [x] Favicon (`favicon.png` en public/)
-- [x] Logo en navbar y footer (`sinfondo.png`)
+- [x] OG image, favicon, logo en navbar/footer
 - [x] next/font/google para fuente auto-hospedada
 
-## 🆕 Fase 9 — UX y conversión (prioridad baja)
+## 🆕 Fase 9 — UX, conversión y retención
 
-- [ ] Onboarding guiado paso a paso con tooltips
-- [ ] Emails de bienvenida y reenganche
+- [x] Email de bienvenida automático
+- [x] Página `/primeros-pasos` adaptada por rol
+- [x] PWA (instalable en móvil)
+- [ ] Tooltips de onboarding
 - [ ] Página de precios pública
 - [ ] Blog / recursos
 - [ ] Programa de referidos

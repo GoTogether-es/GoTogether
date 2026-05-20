@@ -162,3 +162,8 @@ tags: [project, changelog, history]
 - 📦 socket.io-client eliminado (~50KB dead code)
 - 🌍 Vercel: región cambiada a fra1 (Frankfurt) para menor latencia en España, memoria API a 1769MB
 - 🎨 Branding: logo JPG como favicon y en navbar/footer, favicon.png dedicado para pestaña
+- 🚀 Primeros pasos: nueva página `/primeros-pasos` con guía adaptada por rol (cliente vs acompañante)
+- 📱 PWA: manifest.json, instalable en homescreen del móvil
+- 🏅 Niveles de acompañante: bronce, plata, oro según servicios completados, badge visible en tarjetas
+- 💬 Testimonios: sección con 6 historias reales en homepage y `/info`
+- ✉️ Email de bienvenida automático al registrarse
