@@ -1,10 +1,12 @@
 'use client';
 
 import { useEffect, useState, useRef, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { toast } from 'sonner';
 import { Card, Container, Section } from '@gotogether/ui';
-import { Users, UserPlus, Trash2, Loader2, Search, CalendarDays, MapPin } from 'lucide-react';
+import { Users, UserPlus, Trash2, Loader2, Search, CalendarDays, MapPin, ShieldX } from 'lucide-react';
+import { createClient } from '@/lib/supabase/client';
 import {
   useMyClients, useMySupervisor, useCreateSupervision, useRemoveSupervision,
   useSearchUsers, usePendingInvites, useCancelInvitation, useSupervisorBookings,
@@ -19,12 +21,24 @@ const ClientLocationMap = dynamic(
 type Tab = 'clients' | 'bookings' | 'location';
 
 export default function SupervisionPage() {
+  const router = useRouter();
+  const supabase = createClient();
+  const [authorized, setAuthorized] = useState<boolean | null>(null);
   const [tab, setTab] = useState<Tab>('clients');
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [bookingPage, setBookingPage] = useState(1);
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
+
+  useEffect(() => {
+    (async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { router.push('/auth/login'); return; }
+      const role = user.user_metadata?.role || user.app_metadata?.role;
+      setAuthorized(role === 'SUPERVISOR');
+    })();
+  }, [supabase.auth, router]);
 
   const { data: clients = [], isLoading, refetch } = useMyClients();
   const { data: supervisor } = useMySupervisor();
@@ -62,6 +76,21 @@ export default function SupervisionPage() {
   };
 
   if (isLoading) {
+    return <Section><Container><div className="flex items-center justify-center min-h-[60vh]"><Loader2 className="w-8 h-8 animate-spin text-blue-600" /></div></Container></Section>;
+  }
+
+  if (authorized === false) {
+    return (
+      <Section><Container><div className="max-w-md mx-auto text-center py-20">
+        <div className="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center mx-auto mb-4"><ShieldX className="w-8 h-8 text-red-400" /></div>
+        <h1 className="text-2xl font-extrabold mb-2">Acceso restringido</h1>
+        <p className="text-gray-500">Solo los supervisores pueden acceder a esta página.</p>
+        <button onClick={() => router.push('/perfil')} className="gt-button gt-button--primary mt-6">Ir a mi perfil</button>
+      </div></Container></Section>
+    );
+  }
+
+  if (authorized === null) {
     return <Section><Container><div className="flex items-center justify-center min-h-[60vh]"><Loader2 className="w-8 h-8 animate-spin text-blue-600" /></div></Container></Section>;
   }
 

@@ -402,4 +402,93 @@ export class BookingsService {
       console.error('BookingsService: failed to send email:', err);
     }
   }
+
+  async requestCompletion(bookingId: string, userId: string) {
+    const booking = await this.findById(bookingId);
+    if (booking.status !== BookingStatus.IN_PROGRESS) {
+      throw new BadRequestException('Solo se puede solicitar finalizar servicios en curso');
+    }
+
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: { profile: { include: { companion: true } } },
+    });
+    if (!user?.profile?.companion || booking.companionId !== user.profile.companion.id) {
+      throw new ForbiddenException('Solo el acompañante asignado puede solicitar finalizar');
+    }
+
+    await this.notifications.create({
+      userId: booking.clientId,
+      type: 'completion_requested',
+      title: 'Solicitud de finalización',
+      body: `${user.profile.fullName} ha solicitado finalizar el servicio. Confírmalo cuando esté todo listo.`,
+      bookingId,
+    });
+
+    return { success: true, message: 'Solicitud enviada al cliente' };
+  }
+
+  async completeByClient(bookingId: string, userId: string) {
+    const booking = await this.findById(bookingId);
+    if (booking.status !== BookingStatus.IN_PROGRESS) {
+      throw new BadRequestException('Solo se puede finalizar servicios en curso');
+    }
+    if (booking.clientId !== userId) {
+      throw new ForbiddenException('Solo el cliente puede confirmar la finalización');
+    }
+
+    const companion = booking.companionId
+      ? await this.prisma.companionProfile.findUnique({
+          where: { id: booking.companionId },
+          include: { profile: true },
+        })
+      : null;
+
+    const result = await this.prisma.booking.update({
+      where: { id: bookingId },
+      data: { status: BookingStatus.COMPLETED },
+      include: { payment: true },
+    });
+
+    if (companion) {
+      await this.notifications.create({
+        userId: companion.profile!.userId,
+        type: 'booking_completed',
+        title: 'Servicio finalizado',
+        body: 'El cliente ha confirmado la finalización del servicio.',
+        bookingId,
+      });
+    }
+
+    await this.notifications.create({
+      userId: booking.clientId,
+      type: 'booking_completed',
+      title: 'Servicio completado',
+      body: '¡Servicio finalizado! Valora a tu acompañante.',
+      bookingId,
+    });
+
+    if (booking.companionId && companion?.profile) {
+      try {
+        const clientUser = await this.prisma.user.findUnique({ where: { id: booking.clientId } });
+        if (clientUser) {
+          const appUrl = this.configService.get<string>('NEXT_PUBLIC_APP_URL') || 'http://localhost:3000';
+          await this.mailService.sendEmail(
+            clientUser.email,
+            'Servicio completado - GoTogether',
+            getBookingCompletedTemplate({
+              userName: clientUser.email,
+              companionName: companion.profile.fullName || 'Acompañante',
+              serviceType: booking.serviceType,
+              appUrl,
+            }),
+          );
+        }
+      } catch (err) {
+        console.error('Failed to send completion email:', err);
+      }
+    }
+
+    return result;
+  }
 }

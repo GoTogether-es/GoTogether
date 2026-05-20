@@ -78,4 +78,16 @@ export class BookingsController {
   requestBooking(@Param('id') id: string) {
     return this.bookingsService.requestBooking(id);
   }
+
+  @UseGuards(SupabaseAuthGuard)
+  @Put(':id/request-completion')
+  requestCompletion(@Request() req: any, @Param('id') id: string) {
+    return this.bookingsService.requestCompletion(id, req.user.userId);
+  }
+
+  @UseGuards(SupabaseAuthGuard)
+  @Put(':id/complete')
+  completeByClient(@Request() req: any, @Param('id') id: string) {
+    return this.bookingsService.completeByClient(id, req.user.userId);
+  }
 }

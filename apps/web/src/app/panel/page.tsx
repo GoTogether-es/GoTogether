@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Button, Card, Container, Section } from '@gotogether/ui';
-import { getMyBookings, getOpenBookings, updateBookingStatus, getProfile, getCompanionAvailability, setMyAvailability } from '@/services/api';
+import { getMyBookings, getOpenBookings, updateBookingStatus, getProfile, getCompanionAvailability, setMyAvailability, requestCompletion } from '@/services/api';
 import { Loader2, CalendarDays, ClipboardList, CheckCircle, XCircle, Clock, MessageCircle, ShieldCheck, ShieldAlert } from 'lucide-react';
 import type { BookingData, AvailabilitySlotData } from '@/types';
 import { toast } from 'sonner';
@@ -334,11 +334,18 @@ export default function PanelPage() {
                             <Button
                               variant="primary"
                               className="px-4 py-2 text-sm"
-                              onClick={() => handleAction(b.id, 'COMPLETED')}
+                              onClick={async () => {
+                                setActionLoading(b.id);
+                                try {
+                                  await requestCompletion(b.id);
+                                  toast.success('Solicitud enviada al cliente');
+                                } catch { toast.error('Error al solicitar finalización'); }
+                                finally { setActionLoading(null); }
+                              }}
                               disabled={actionLoading === b.id}
                             >
                               {actionLoading === b.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4 mr-1" />}
-                              {actionLoading !== b.id && 'Completar'}
+                              {actionLoading !== b.id && 'Solicitar finalizar'}
                             </Button>
                           </>
                         )}

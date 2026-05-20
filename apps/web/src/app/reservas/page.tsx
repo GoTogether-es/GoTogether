@@ -1,8 +1,12 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { toast } from 'sonner';
 import { Button, Card, Container, Section } from '@gotogether/ui';
-import { ShieldCheck, Calendar, MapPin, Briefcase, Clock, MessageSquare, Star } from 'lucide-react';
+import { ShieldCheck, Calendar, MapPin, Briefcase, Clock, MessageSquare, Star, CheckCircle, Loader2 } from 'lucide-react';
 import { useMyBookings } from '@/services/queries';
+import { completeByClient } from '@/services/api';
 import { LinkButton } from '@/components/link-button';
 import { SkeletonBookingCard } from '@/components/skeleton';
 
@@ -27,7 +31,22 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 export default function ReservasPage() {
+  const router = useRouter();
   const { data: bookings = [], isLoading, isError, refetch } = useMyBookings();
+  const [completing, setCompleting] = useState<string | null>(null);
+
+  const handleComplete = async (bookingId: string) => {
+    setCompleting(bookingId);
+    try {
+      await completeByClient(bookingId);
+      toast.success('Servicio finalizado');
+      router.push(`/valoracion/${bookingId}`);
+    } catch (err: any) {
+      toast.error(err.message || 'Error al finalizar');
+    } finally {
+      setCompleting(null);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -160,6 +179,23 @@ export default function ReservasPage() {
                         <MessageSquare className="w-4 h-4" />
                         Chat
                       </LinkButton>
+                    </div>
+                  )}
+
+                  {booking.status === 'IN_PROGRESS' && (
+                    <div className="flex gap-2 mt-3">
+                      <button
+                        className="gt-button gt-button--primary h-10 text-sm"
+                        onClick={() => handleComplete(booking.id)}
+                        disabled={completing === booking.id}
+                      >
+                        {completing === booking.id ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <CheckCircle className="w-4 h-4 mr-1" />
+                        )}
+                        {completing !== booking.id && 'Confirmar finalización'}
+                      </button>
                     </div>
                   )}
 

@@ -290,6 +290,31 @@ export async function updateBookingStatus(
   return validateResponse(bookingSchema, json, 'updateBookingStatus');
 }
 
+export async function requestCompletion(bookingId: string): Promise<void> {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/bookings/${bookingId}/request-completion`, {
+    method: 'PUT',
+    headers,
+  });
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.message || 'Failed to request completion');
+  }
+}
+
+export async function completeByClient(bookingId: string): Promise<BookingData> {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/bookings/${bookingId}/complete`, {
+    method: 'PUT',
+    headers,
+  });
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.message || 'Failed to complete booking');
+  }
+  return response.json();
+}
+
 export async function getCompanions(opts?: FetchOptions): Promise<CompanionSummary[]> {
   const response = await fetch(`${API_URL}/profiles/companions`, { signal: opts?.signal });
   if (!response.ok) throw new Error('Failed to fetch companions');
