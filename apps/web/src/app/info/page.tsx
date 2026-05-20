@@ -1,11 +1,14 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { Card, Container, Section } from '@gotogether/ui';
 import { LinkButton } from '@/components/link-button';
 import { FaqAccordion } from '@/components/faq-accordion';
 import { infoSteps, faqData } from '@/lib/content';
 import { routes } from '@/lib/routes';
+import { createClient } from '@/lib/supabase/client';
 import { Heart, ShieldCheck, Sparkles, Smile, ArrowRight, CheckCircle2 } from 'lucide-react';
+import type { Session } from '@supabase/supabase-js';
 
 function scrollToFinalCta() {
   document.getElementById('final-cta')?.scrollIntoView({ behavior: 'smooth' });
@@ -49,6 +52,18 @@ const companionBullets = [
 ];
 
 export default function InfoPage() {
+  const [session, setSession] = useState<Session | null>(null);
+  const supabase = createClient();
+
+  useEffect(() => {
+    (async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setSession(session);
+    })();
+  }, [supabase.auth]);
+
+  const profileOrLogin = session ? routes.perfil : routes.login;
+
   return (
     <main>
       <Section className="bg-gradient-to-br from-blue-600 to-blue-700 text-white">
@@ -60,7 +75,7 @@ export default function InfoPage() {
             <p className="text-xl text-blue-100 max-w-2xl mx-auto leading-relaxed mb-8">
               Conecta con acompañantes empáticos y verificados para actividades cotidianas o de ocio
             </p>
-            <LinkButton href={routes.login} className="h-14 px-10 text-lg">
+            <LinkButton href={profileOrLogin} className="h-14 px-10 text-lg">
               Empezar ahora
               <ArrowRight className="ml-2 w-5 h-5" />
             </LinkButton>
@@ -202,7 +217,7 @@ export default function InfoPage() {
             <p className="text-gray-500 text-lg mb-8 max-w-xl mx-auto leading-relaxed">
               Únete a GoTogether y descubre una nueva forma de vivir con más autonomía y compañía.
             </p>
-            <LinkButton href={routes.login} className="h-14 px-10 text-lg">
+            <LinkButton href={profileOrLogin} className="h-14 px-10 text-lg">
               Empezar ahora
               <ArrowRight className="ml-2 w-5 h-5" />
             </LinkButton>
