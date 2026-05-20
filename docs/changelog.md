@@ -148,3 +148,6 @@ tags: [project, changelog, history]
 - 💰 Admin Pagos: historial paginado con importe, comisión y estado
 - ⭐ Admin Valoraciones: listado con opción de eliminar
 - 📢 Admin Notificaciones: envío masivo por rol (todos, clientes, acompañantes)
+- 👥 Supervisión: nueva pestaña "Reservas de clientes" con tabla paginada de todas las reservas de supervisados
+- 🔗 Navbar: añadido enlace "Supervisión" para usuarios autenticados
+- 🔧 API: nuevo endpoint `GET /supervision/bookings` para consultar reservas de clientes supervisados

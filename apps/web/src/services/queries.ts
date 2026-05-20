@@ -180,6 +180,13 @@ export function useCancelInvitation() {
   });
 }
 
+export function useSupervisorBookings(page = 1) {
+  return useQuery({
+    queryKey: ['supervision', 'bookings', page],
+    queryFn: () => api.getSupervisorBookings(page),
+  });
+}
+
 export function useServices() {
   return useQuery({
     queryKey: ['services'],

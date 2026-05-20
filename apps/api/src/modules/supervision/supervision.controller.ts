@@ -70,4 +70,18 @@ export class SupervisionController {
   remove(@Request() req: any, @Param('id') id: string) {
     return this.supervisionService.removeSupervision(id, req.user.userId);
   }
+
+  @UseGuards(SupabaseAuthGuard)
+  @Get('bookings')
+  getClientBookings(
+    @Request() req: any,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
+    return this.supervisionService.getClientBookings(
+      req.user.userId,
+      Number(page) || 1,
+      Number(limit) || 20,
+    );
+  }
 }

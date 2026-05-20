@@ -636,6 +636,13 @@ export async function cancelInvitation(id: string): Promise<any> {
   return response.json();
 }
 
+export async function getSupervisorBookings(page = 1): Promise<PaginatedResponse<AdminBooking>> {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/supervision/bookings?page=${page}&limit=20`, { headers });
+  if (!response.ok) throw new Error('Failed to fetch client bookings');
+  return response.json();
+}
+
 export async function getNotifications(): Promise<NotificationData[]> {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/notifications`, { headers });

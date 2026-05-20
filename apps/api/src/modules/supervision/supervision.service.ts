@@ -169,6 +169,35 @@ export class SupervisionService {
     return this.prisma.supervision.delete({ where: { id } });
   }
 
+  async getClientBookings(supervisorId: string, page: number, limit: number) {
+    await this.requireSupervisorRole(supervisorId);
+
+    const supervisions = await this.prisma.supervision.findMany({
+      where: { supervisorId },
+      select: { clientId: true },
+    });
+    const clientIds = supervisions.map((s) => s.clientId);
+    if (clientIds.length === 0) return { data: [], meta: { total: 0, page, limit, totalPages: 0 } };
+
+    const [data, total] = await Promise.all([
+      this.prisma.booking.findMany({
+        where: { clientId: { in: clientIds } },
+        include: {
+          client: { include: { profile: true } },
+          companion: { include: { profile: true } },
+          service: true,
+          payment: true,
+        },
+        orderBy: { createdAt: 'desc' },
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      this.prisma.booking.count({ where: { clientId: { in: clientIds } } }),
+    ]);
+
+    return { data, meta: { total, page, limit, totalPages: Math.ceil(total / limit) } };
+  }
+
   private async requireSupervisorRole(userId: string) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
