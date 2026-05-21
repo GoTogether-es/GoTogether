@@ -1,10 +1,20 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { Injectable, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { IsInt, Min, Max, IsString, Matches } from 'class-validator';
 
-export interface AvailabilitySlotDto {
-  dayOfWeek: number;
-  startTime: string;
-  endTime: string;
+export class AvailabilitySlotDto {
+  @IsInt()
+  @Min(0)
+  @Max(6)
+  dayOfWeek!: number;
+
+  @IsString()
+  @Matches(/^([01]\d|2[0-3]):[0-5]\d$/)
+  startTime!: string;
+
+  @IsString()
+  @Matches(/^([01]\d|2[0-3]):[0-5]\d$/)
+  endTime!: string;
 }
 
 @Injectable()

@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsBoolean, MaxLength } from 'class-validator';
+import { IsString, IsOptional, IsBoolean, IsIn, MaxLength } from 'class-validator';
 
 export class UpsertProfileDto {
   @IsString()
@@ -67,4 +67,9 @@ export class UpsertProfileDto {
   @IsString()
   @IsOptional()
   sexualCertificate?: string;
+
+  @IsString()
+  @IsOptional()
+  @IsIn(['CLIENT', 'COMPANION', 'SUPERVISOR'])
+  role?: string;
 }

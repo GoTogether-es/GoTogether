@@ -129,8 +129,11 @@ El núcleo del marketplace está funcional. Pagos pendientes de activar. Segurid
 3. **Webhook de Stripe no procesa eventos** — El endpoint recibe y verifica la firma pero descarta el evento.
 4. **`STRIPE_PLATFORM_FEE_PERCENT` no se usa** — La variable está en `.env` pero no se lee en el código.
 5. **Emails transaccionales limitados** — ✅ Corregido.
-6. **No hay reconexión automática en el chat** — ✅ Corregido.
-7. **Tests rotos (pre-existente)** — Varios tests fallan por `@testing-library/jest-dom` no tipado y mocks ESM.
+6. **Disponibilidad de acompañante rota** — ✅ Corregido: `SetAvailabilityDto` sin decoradores era eliminado por `ValidationPipe({ whitelist: true })`.
+7. **Registro de supervisor asignaba rol CLIENT** — ✅ Corregido: `ProfilesService.upsertProfile` ahora acepta y persiste `role: 'SUPERVISOR'`.
+8. **Página `/supervision` inaccesible para supervisores** — ✅ Corregido: verificación de rol migrada de `user_metadata` (Supabase Auth) a API (`syncUser`).
+9. **Redirección post-login no distinguía roles** — ✅ Corregido: `AuthRedirectPage` redirige según rol (supervisor → `/supervision`, compañero → `/panel`).
+10. **Tests rotos (pre-existente)** — Varios tests fallan por `@testing-library/jest-dom` no tipado y mocks ESM.
 
 ---
 

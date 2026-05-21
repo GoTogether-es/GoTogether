@@ -42,6 +42,7 @@ function PerfilContent() {
       preferences: '',
       isCompanion: false,
       specialties: '',
+      role: roleParam === 'supervisor' ? 'SUPERVISOR' : undefined,
     },
   });
 

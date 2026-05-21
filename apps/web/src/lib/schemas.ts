@@ -43,6 +43,7 @@ export const perfilSchema = z.object({
   preferences: z.string().optional(),
   isCompanion: z.boolean().optional(),
   specialties: z.string().optional(),
+  role: z.string().optional(),
 });
 
 export type PerfilFormData = z.infer<typeof perfilSchema>;

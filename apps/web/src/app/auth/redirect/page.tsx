@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
 import { getProfile, syncUser } from '@/services/api';
 import { Loader2 } from 'lucide-react';
 
@@ -14,28 +13,34 @@ export default function AuthRedirectPage() {
     let cancelled = false;
 
     async function decide() {
-      const supabase = createClient();
-      const { data: { session } } = await supabase.auth.getSession();
-
-      if (!session) {
-        router.push('/auth/login');
-        return;
-      }
-
       try {
-        await syncUser();
+        const user = await syncUser();
+        if (cancelled) return;
+
         const profile = await getProfile();
         if (cancelled) return;
 
+        const role = user.role;
+
         if (profile) {
-          router.push('/perfil');
+          if (role === 'SUPERVISOR') {
+            router.push('/supervision');
+          } else if (role === 'COMPANION') {
+            router.push('/panel');
+          } else {
+            router.push('/perfil');
+          }
         } else {
-          router.push('/onboarding');
+          if (role === 'SUPERVISOR') {
+            router.push('/perfil?onboarding=true&role=supervisor');
+          } else {
+            router.push('/onboarding');
+          }
         }
       } catch {
         if (!cancelled) {
           setStatus('Error al verificar tu cuenta. Redirigiendo...');
-          setTimeout(() => router.push('/onboarding'), 1500);
+          setTimeout(() => router.push('/auth/login'), 1500);
         }
       }
     }

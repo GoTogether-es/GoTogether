@@ -167,3 +167,11 @@ tags: [project, changelog, history]
 - 🏅 Niveles de acompañante: bronce, plata, oro según servicios completados, badge visible en tarjetas
 - 💬 Testimonios: sección con 6 historias reales en homepage y `/info`
 - ✉️ Email de bienvenida automático al registrarse
+
+### Fixes (Mayo 2026)
+
+- 🐛 **Disponibilidad rota**: `SetAvailabilityDto.slots` no tenía decoradores de validación → `whitelist: true` del `ValidationPipe` lo eliminaba → error 500 al guardar disponibilidad. Convertido `AvailabilitySlotDto` de `interface` a `class` con `@IsInt/@Min/@Max/@Matches` y añadido `@IsArray/@ValidateNested/@Type` a `SetAvailabilityDto`.
+- 🐛 **Calendario de disponibilidad**: cambiado de 3 bloques (Mañana/Tarde/Noche) a 12 franjas horarias de 1h (08:00–20:00) en el panel de acompañante.
+- 🐛 **Registro de supervisor roto**: `ProfilesService.upsertProfile` no aceptaba rol `SUPERVISOR` y el `else` forzaba `CLIENT`. Añadido campo `role` al DTO y rama `else if (requestedRole === 'SUPERVISOR')` en el servicio.
+- 🐛 **Página `/supervision` inaccesible**: verificaba el rol desde `user.user_metadata?.role` (nunca seteado) en vez de la DB. Ahora usa `syncUser()` que retorna `{ id, email, role }` desde la API.
+- 🐛 **Redirección post-login sin distinguir rol**: `GET /auth/me` ahora retorna el rol del usuario. `AuthRedirectPage` redirige supervisores → `/supervision`, acompañantes → `/panel`, clientes → `/perfil`. Supervisores sin perfil van a `/perfil?onboarding=true&role=supervisor`.

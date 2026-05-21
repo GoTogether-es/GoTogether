@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic';
 import { toast } from 'sonner';
 import { Card, Container, Section } from '@gotogether/ui';
 import { Users, UserPlus, Trash2, Loader2, Search, CalendarDays, MapPin, ShieldX } from 'lucide-react';
-import { createClient } from '@/lib/supabase/client';
+import { syncUser } from '@/services/api';
 import {
   useMyClients, useMySupervisor, useCreateSupervision, useRemoveSupervision,
   useSearchUsers, usePendingInvites, useCancelInvitation, useSupervisorBookings,
@@ -22,7 +22,6 @@ type Tab = 'clients' | 'bookings' | 'location';
 
 export default function SupervisionPage() {
   const router = useRouter();
-  const supabase = createClient();
   const [authorized, setAuthorized] = useState<boolean | null>(null);
   const [tab, setTab] = useState<Tab>('clients');
   const [searchQuery, setSearchQuery] = useState('');
@@ -33,12 +32,15 @@ export default function SupervisionPage() {
 
   useEffect(() => {
     (async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { router.push('/auth/login'); return; }
-      const role = user.user_metadata?.role || user.app_metadata?.role;
-      setAuthorized(role === 'SUPERVISOR');
+      try {
+        const user = await syncUser();
+        if (!user) { router.push('/auth/login'); return; }
+        setAuthorized(user.role === 'SUPERVISOR');
+      } catch {
+        router.push('/auth/login');
+      }
     })();
-  }, [supabase.auth, router]);
+  }, [router]);
 
   const { data: clients = [], isLoading, refetch } = useMyClients();
   const { data: supervisor } = useMySupervisor();

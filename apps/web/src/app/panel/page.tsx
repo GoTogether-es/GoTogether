@@ -9,11 +9,13 @@ import type { BookingData, AvailabilitySlotData } from '@/types';
 import { toast } from 'sonner';
 
 const DAY_NAMES = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
-const TIME_SLOTS = [
-  { label: 'Mañana', start: '08:00', end: '12:00' },
-  { label: 'Tarde', start: '12:00', end: '17:00' },
-  { label: 'Noche', start: '17:00', end: '21:00' },
-];
+const TIME_SLOTS = Array.from({ length: 12 }, (_, i) => {
+  const hour = i + 8;
+  const start = `${String(hour).padStart(2, '0')}:00`;
+  const end = `${String(hour + 1).padStart(2, '0')}:00`;
+  const label = `${start}-${end}`;
+  return { label, start, end };
+});
 
 export default function PanelPage() {
   const [myBookings, setMyBookings] = useState<BookingData[]>([]);
@@ -179,7 +181,7 @@ export default function PanelPage() {
                 Marca las franjas horarias en las que estás disponible. Los clientes solo podrán solicitarte en estos horarios.
               </p>
               <div className="overflow-x-auto">
-                <div className="grid grid-cols-[80px_repeat(7,1fr)] gap-1 min-w-[500px]">
+                <div className="grid grid-cols-[100px_repeat(7,1fr)] gap-1 min-w-[500px]">
                   <div className="p-2"></div>
                   {DAY_NAMES.map((day) => (
                     <div key={day} className="p-2 text-center text-xs font-bold text-gray-500">{day}</div>

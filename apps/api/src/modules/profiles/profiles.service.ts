@@ -17,6 +17,7 @@ export class ProfilesService {
       sexualCheck,
       penalCertificate,
       sexualCertificate,
+      role: requestedRole,
       ...profileData
     } = dto;
 
@@ -35,10 +36,14 @@ export class ProfilesService {
         create: { profileId: profile.id, specialties, backgroundCheck, sexualCheck, penalCertificate, sexualCertificate },
       });
 
-      // Update user role to COMPANION
       await this.prisma.user.update({
         where: { id: userId },
         data: { role: UserRole.COMPANION },
+      });
+    } else if (requestedRole === 'SUPERVISOR') {
+      await this.prisma.user.update({
+        where: { id: userId },
+        data: { role: UserRole.SUPERVISOR },
       });
     } else {
       const user = await this.prisma.user.findUnique({ where: { id: userId } });

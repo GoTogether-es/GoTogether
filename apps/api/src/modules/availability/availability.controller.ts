@@ -1,8 +1,14 @@
 import { Controller, Get, Put, Body, UseGuards, Request, Param } from '@nestjs/common';
 import { AvailabilityService, AvailabilitySlotDto } from './availability.service';
 import { SupabaseAuthGuard } from '../auth/supabase-auth.guard';
+import { IsArray, ValidateNested, ArrayMinSize } from 'class-validator';
+import { Type } from 'class-transformer';
 
 class SetAvailabilityDto {
+  @IsArray()
+  @ArrayMinSize(0)
+  @ValidateNested({ each: true })
+  @Type(() => AvailabilitySlotDto)
   slots!: AvailabilitySlotDto[];
 }
 
