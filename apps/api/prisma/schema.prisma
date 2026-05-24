@@ -144,9 +144,11 @@ model AvailabilitySlot {
   startTime    String
   endTime      String
   createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   companion    CompanionProfile @relation(fields: [companionId], references: [id])
 
+  @@index([companionId, dayOfWeek])
   @@map("AvailabilitySlot")
 }
 

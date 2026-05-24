@@ -9338,6 +9338,7 @@ export namespace Prisma {
     startTime: string | null
     endTime: string | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type AvailabilitySlotMaxAggregateOutputType = {
@@ -9347,6 +9348,7 @@ export namespace Prisma {
     startTime: string | null
     endTime: string | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type AvailabilitySlotCountAggregateOutputType = {
@@ -9356,6 +9358,7 @@ export namespace Prisma {
     startTime: number
     endTime: number
     createdAt: number
+    updatedAt: number
     _all: number
   }
 
@@ -9375,6 +9378,7 @@ export namespace Prisma {
     startTime?: true
     endTime?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type AvailabilitySlotMaxAggregateInputType = {
@@ -9384,6 +9388,7 @@ export namespace Prisma {
     startTime?: true
     endTime?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type AvailabilitySlotCountAggregateInputType = {
@@ -9393,6 +9398,7 @@ export namespace Prisma {
     startTime?: true
     endTime?: true
     createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -9489,6 +9495,7 @@ export namespace Prisma {
     startTime: string
     endTime: string
     createdAt: Date
+    updatedAt: Date
     _count: AvailabilitySlotCountAggregateOutputType | null
     _avg: AvailabilitySlotAvgAggregateOutputType | null
     _sum: AvailabilitySlotSumAggregateOutputType | null
@@ -9517,6 +9524,7 @@ export namespace Prisma {
     startTime?: boolean
     endTime?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     companion?: boolean | CompanionProfileDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["availabilitySlot"]>
 
@@ -9527,6 +9535,7 @@ export namespace Prisma {
     startTime?: boolean
     endTime?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     companion?: boolean | CompanionProfileDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["availabilitySlot"]>
 
@@ -9537,6 +9546,7 @@ export namespace Prisma {
     startTime?: boolean
     endTime?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }
 
   export type AvailabilitySlotInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9558,6 +9568,7 @@ export namespace Prisma {
       startTime: string
       endTime: string
       createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["availabilitySlot"]>
     composites: {}
   }
@@ -9958,6 +9969,7 @@ export namespace Prisma {
     readonly startTime: FieldRef<"AvailabilitySlot", 'String'>
     readonly endTime: FieldRef<"AvailabilitySlot", 'String'>
     readonly createdAt: FieldRef<"AvailabilitySlot", 'DateTime'>
+    readonly updatedAt: FieldRef<"AvailabilitySlot", 'DateTime'>
   }
     
 
@@ -16351,7 +16363,8 @@ export namespace Prisma {
     dayOfWeek: 'dayOfWeek',
     startTime: 'startTime',
     endTime: 'endTime',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type AvailabilitySlotScalarFieldEnum = (typeof AvailabilitySlotScalarFieldEnum)[keyof typeof AvailabilitySlotScalarFieldEnum]
@@ -17107,6 +17120,7 @@ export namespace Prisma {
     startTime?: StringFilter<"AvailabilitySlot"> | string
     endTime?: StringFilter<"AvailabilitySlot"> | string
     createdAt?: DateTimeFilter<"AvailabilitySlot"> | Date | string
+    updatedAt?: DateTimeFilter<"AvailabilitySlot"> | Date | string
     companion?: XOR<CompanionProfileRelationFilter, CompanionProfileWhereInput>
   }
 
@@ -17117,6 +17131,7 @@ export namespace Prisma {
     startTime?: SortOrder
     endTime?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     companion?: CompanionProfileOrderByWithRelationInput
   }
 
@@ -17130,6 +17145,7 @@ export namespace Prisma {
     startTime?: StringFilter<"AvailabilitySlot"> | string
     endTime?: StringFilter<"AvailabilitySlot"> | string
     createdAt?: DateTimeFilter<"AvailabilitySlot"> | Date | string
+    updatedAt?: DateTimeFilter<"AvailabilitySlot"> | Date | string
     companion?: XOR<CompanionProfileRelationFilter, CompanionProfileWhereInput>
   }, "id">
 
@@ -17140,6 +17156,7 @@ export namespace Prisma {
     startTime?: SortOrder
     endTime?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: AvailabilitySlotCountOrderByAggregateInput
     _avg?: AvailabilitySlotAvgOrderByAggregateInput
     _max?: AvailabilitySlotMaxOrderByAggregateInput
@@ -17157,6 +17174,7 @@ export namespace Prisma {
     startTime?: StringWithAggregatesFilter<"AvailabilitySlot"> | string
     endTime?: StringWithAggregatesFilter<"AvailabilitySlot"> | string
     createdAt?: DateTimeWithAggregatesFilter<"AvailabilitySlot"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"AvailabilitySlot"> | Date | string
   }
 
   export type BookingWhereInput = {
@@ -18183,6 +18201,7 @@ export namespace Prisma {
     startTime: string
     endTime: string
     createdAt?: Date | string
+    updatedAt?: Date | string
     companion: CompanionProfileCreateNestedOneWithoutAvailabilitySlotsInput
   }
 
@@ -18193,6 +18212,7 @@ export namespace Prisma {
     startTime: string
     endTime: string
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type AvailabilitySlotUpdateInput = {
@@ -18201,6 +18221,7 @@ export namespace Prisma {
     startTime?: StringFieldUpdateOperationsInput | string
     endTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companion?: CompanionProfileUpdateOneRequiredWithoutAvailabilitySlotsNestedInput
   }
 
@@ -18211,6 +18232,7 @@ export namespace Prisma {
     startTime?: StringFieldUpdateOperationsInput | string
     endTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type AvailabilitySlotCreateManyInput = {
@@ -18220,6 +18242,7 @@ export namespace Prisma {
     startTime: string
     endTime: string
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type AvailabilitySlotUpdateManyMutationInput = {
@@ -18228,6 +18251,7 @@ export namespace Prisma {
     startTime?: StringFieldUpdateOperationsInput | string
     endTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type AvailabilitySlotUncheckedUpdateManyInput = {
@@ -18237,6 +18261,7 @@ export namespace Prisma {
     startTime?: StringFieldUpdateOperationsInput | string
     endTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type BookingCreateInput = {
@@ -19244,6 +19269,7 @@ export namespace Prisma {
     startTime?: SortOrder
     endTime?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type AvailabilitySlotAvgOrderByAggregateInput = {
@@ -19257,6 +19283,7 @@ export namespace Prisma {
     startTime?: SortOrder
     endTime?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type AvailabilitySlotMinOrderByAggregateInput = {
@@ -19266,6 +19293,7 @@ export namespace Prisma {
     startTime?: SortOrder
     endTime?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type AvailabilitySlotSumOrderByAggregateInput = {
@@ -21599,6 +21627,7 @@ export namespace Prisma {
     startTime: string
     endTime: string
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type AvailabilitySlotUncheckedCreateWithoutCompanionInput = {
@@ -21607,6 +21636,7 @@ export namespace Prisma {
     startTime: string
     endTime: string
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type AvailabilitySlotCreateOrConnectWithoutCompanionInput = {
@@ -21706,6 +21736,7 @@ export namespace Prisma {
     startTime?: StringFilter<"AvailabilitySlot"> | string
     endTime?: StringFilter<"AvailabilitySlot"> | string
     createdAt?: DateTimeFilter<"AvailabilitySlot"> | Date | string
+    updatedAt?: DateTimeFilter<"AvailabilitySlot"> | Date | string
   }
 
   export type BookingCreateWithoutServiceInput = {
@@ -22866,6 +22897,7 @@ export namespace Prisma {
     startTime: string
     endTime: string
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type BookingUpdateWithoutCompanionInput = {
@@ -22925,6 +22957,7 @@ export namespace Prisma {
     startTime?: StringFieldUpdateOperationsInput | string
     endTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type AvailabilitySlotUncheckedUpdateWithoutCompanionInput = {
@@ -22933,6 +22966,7 @@ export namespace Prisma {
     startTime?: StringFieldUpdateOperationsInput | string
     endTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type AvailabilitySlotUncheckedUpdateManyWithoutCompanionInput = {
@@ -22941,6 +22975,7 @@ export namespace Prisma {
     startTime?: StringFieldUpdateOperationsInput | string
     endTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type BookingCreateManyServiceInput = {

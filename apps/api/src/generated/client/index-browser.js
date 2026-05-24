@@ -207,7 +207,8 @@ exports.Prisma.AvailabilitySlotScalarFieldEnum = {
   dayOfWeek: 'dayOfWeek',
   startTime: 'startTime',
   endTime: 'endTime',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.BookingScalarFieldEnum = {

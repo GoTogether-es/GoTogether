@@ -1,21 +1,6 @@
-import { Injectable, ForbiddenException } from '@nestjs/common';
+import { Injectable, ForbiddenException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { IsInt, Min, Max, IsString, Matches } from 'class-validator';
-
-export class AvailabilitySlotDto {
-  @IsInt()
-  @Min(0)
-  @Max(6)
-  dayOfWeek!: number;
-
-  @IsString()
-  @Matches(/^([01]\d|2[0-3]):[0-5]\d$/)
-  startTime!: string;
-
-  @IsString()
-  @Matches(/^([01]\d|2[0-3]):[0-5]\d$/)
-  endTime!: string;
-}
 
 @Injectable()
 export class AvailabilityService {
@@ -40,6 +25,19 @@ export class AvailabilityService {
 
     const companionId = profile.companion.id;
 
+    for (const slot of slots) {
+      if (slot.endTime <= slot.startTime) {
+        throw new BadRequestException(
+          `La hora de fin (${slot.endTime}) debe ser posterior a la hora de inicio (${slot.startTime})`,
+        );
+      }
+    }
+
+    const hasOverlap = this.detectOverlaps(slots);
+    if (hasOverlap) {
+      throw new BadRequestException('Los horarios no pueden solaparse entre sí');
+    }
+
     await this.prisma.availabilitySlot.deleteMany({ where: { companionId } });
 
     if (slots.length > 0) {
@@ -51,9 +49,22 @@ export class AvailabilityService {
     return this.getForCompanion(companionId);
   }
 
-  async isCompanionAvailable(companionId: string, scheduledAt: Date): Promise<boolean> {
-    const dayOfWeek = scheduledAt.getDay();
-    const timeStr = `${String(scheduledAt.getHours()).padStart(2, '0')}:${String(scheduledAt.getMinutes()).padStart(2, '0')}`;
+  async isCompanionAvailable(
+    companionId: string,
+    scheduledAt: Date,
+    localDayOfWeek?: number,
+    localTime?: string,
+  ): Promise<boolean> {
+    let dayOfWeek: number;
+    let timeStr: string;
+
+    if (localDayOfWeek !== undefined && localTime !== undefined) {
+      dayOfWeek = localDayOfWeek;
+      timeStr = localTime;
+    } else {
+      dayOfWeek = scheduledAt.getDay();
+      timeStr = `${String(scheduledAt.getHours()).padStart(2, '0')}:${String(scheduledAt.getMinutes()).padStart(2, '0')}`;
+    }
 
     const slot = await this.prisma.availabilitySlot.findFirst({
       where: {
@@ -66,4 +77,37 @@ export class AvailabilityService {
 
     return !!slot;
   }
+
+  private detectOverlaps(slots: AvailabilitySlotDto[]): boolean {
+    const byDay = new Map<number, AvailabilitySlotDto[]>();
+    for (const s of slots) {
+      const list = byDay.get(s.dayOfWeek) || [];
+      list.push(s);
+      byDay.set(s.dayOfWeek, list);
+    }
+    for (const daySlots of byDay.values()) {
+      daySlots.sort((a, b) => a.startTime.localeCompare(b.startTime));
+      for (let i = 1; i < daySlots.length; i++) {
+        if (daySlots[i].startTime < daySlots[i - 1].endTime) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+}
+
+export class AvailabilitySlotDto {
+  @IsInt()
+  @Min(0)
+  @Max(6)
+  dayOfWeek!: number;
+
+  @IsString()
+  @Matches(/^([01]\d|2[0-3]):[0-5]\d$/)
+  startTime!: string;
+
+  @IsString()
+  @Matches(/^([01]\d|2[0-3]):[0-5]\d$/)
+  endTime!: string;
 }

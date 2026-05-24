@@ -240,6 +240,8 @@ export async function createBooking(data: {
   disability?: string;
   companionId?: string;
   serviceId?: string;
+  localDayOfWeek?: number;
+  localTime?: string;
 }): Promise<BookingData> {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/bookings`, {

@@ -64,8 +64,18 @@ export class BookingsService {
     }
 
     const scheduledDate = new Date(dto.scheduledAt);
+
+    if (scheduledDate.getTime() <= Date.now()) {
+      throw new BadRequestException('La fecha y hora de la reserva debe ser futura');
+    }
+
     if (dto.companionId) {
-      const isAvailable = await this.availabilityService.isCompanionAvailable(dto.companionId, scheduledDate);
+      const isAvailable = await this.availabilityService.isCompanionAvailable(
+        dto.companionId,
+        scheduledDate,
+        dto.localDayOfWeek,
+        dto.localTime,
+      );
       if (!isAvailable) {
         throw new ConflictException('El acompañante no está disponible en ese horario');
       }
@@ -199,6 +209,15 @@ export class BookingsService {
       case BookingStatus.ACCEPTED:
         if (!isCompanion && !canClaim) throw new ForbiddenException('Solo el acompañante puede aceptar');
         if (canClaim) updateData.companionId = user.profile!.companion!.id;
+        if (booking.companionId ?? updateData.companionId) {
+          const isAvailable = await this.availabilityService.isCompanionAvailable(
+            booking.companionId ?? updateData.companionId,
+            booking.scheduledAt,
+          );
+          if (!isAvailable) {
+            throw new ConflictException('Ya no estás disponible en este horario. Actualiza tu disponibilidad.');
+          }
+        }
         await this.chatService.createRoomForBooking(bookingId);
         this.notifications.create({
           userId: booking.clientId,
@@ -222,6 +241,15 @@ export class BookingsService {
         break;
       case BookingStatus.IN_PROGRESS:
         if (!isCompanion) throw new ForbiddenException('Solo el acompañante puede iniciar el servicio');
+        if (booking.companionId) {
+          const isAvailable = await this.availabilityService.isCompanionAvailable(
+            booking.companionId,
+            booking.scheduledAt,
+          );
+          if (!isAvailable) {
+            throw new ConflictException('Ya no estás disponible en este horario. Actualiza tu disponibilidad.');
+          }
+        }
         break;
       case BookingStatus.COMPLETED:
         if (!isCompanion && !isClient) throw new ForbiddenException('Solo participantes pueden completar');

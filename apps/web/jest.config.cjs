@@ -9,6 +9,7 @@ const customJestConfig = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.tsx'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
+    '^zod/v4/core$': '<rootDir>/node_modules/zod/v4/core/index.cjs',
   },
   testPathIgnorePatterns: ['/node_modules/', '/.next/'],
 };

@@ -39,13 +39,18 @@ function SolicitudForm() {
     }
 
     try {
-      const scheduledAt = new Date(`${data.date}T${data.time}:00`).toISOString();
+      const localDate = new Date(`${data.date}T${data.time}:00`);
+      const scheduledAt = localDate.toISOString();
+      const localDayOfWeek = localDate.getDay();
+      const localTime = `${String(localDate.getHours()).padStart(2, '0')}:${String(localDate.getMinutes()).padStart(2, '0')}`;
       const service = services.find((s) => s.id === data.serviceId);
       const booking = await createBooking({
         serviceType: service?.name || 'Servicio',
         serviceId: data.serviceId,
         address: data.address,
         scheduledAt,
+        localDayOfWeek,
+        localTime,
         summary: data.notes || undefined,
         disability: data.disability !== 'Ninguna / Otra' && data.disability ? data.disability : undefined,
         companionId: companionId || undefined,
