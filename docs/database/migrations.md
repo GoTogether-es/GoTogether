@@ -96,3 +96,13 @@ ALTER PUBLICATION supabase_realtime ADD TABLE "Notification";
 - **MIME types:** `image/png`, `image/jpeg`, `image/jpg`, `image/webp`
 - **RLS:** SELECT público, INSERT/UPDATE/DELETE authenticated
 - **Uso:** fotos de perfil de usuario
+
+### 4. `add_availability_updated_at_and_index`
+**Fecha:** Mayo 2026
+
+Añade columna `updatedAt` e índice compuesto al modelo `AvailabilitySlot`:
+
+```sql
+ALTER TABLE "AvailabilitySlot" ADD COLUMN "updatedAt" TIMESTAMP NOT NULL DEFAULT now();
+CREATE INDEX "AvailabilitySlot_companionId_dayOfWeek_idx" ON "AvailabilitySlot" ("companionId", "dayOfWeek");
+```

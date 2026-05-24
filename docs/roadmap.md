@@ -91,12 +91,12 @@ El núcleo del marketplace está funcional. Pagos pendientes de activar. Segurid
 - [ ] Banner de cookies
 - [ ] Política de privacidad detallada
 
-## ⬜ Fase 7 — Producción (prioridad media-baja)
+## ⬜ Fase 7 — Producción (prioridad media-baja) (parcial)
 
 - [ ] Migrar API de Vercel serverless a Fly.io / Railway (WebSocket nativo)
 - [ ] Restaurar Socket.IO para chat si se requiere mayor escala
 - [ ] Plan Pro de Supabase (más almacenamiento, backups, sin pausa)
-- [ ] Tests automatizados (Jest para backend, Testing Library para frontend)
+- [x] Tests automatizados (Jest: 164 backend + 124 frontend = 288 tests)
 - [ ] CI/CD con tests pre-merge
 - [ ] Monitorización y alertas (Sentry, Vercel Analytics)
 - [ ] Plan de Disaster Recovery (backups de BD, rollback)
@@ -124,16 +124,8 @@ El núcleo del marketplace está funcional. Pagos pendientes de activar. Segurid
 
 ## Bugs conocidos
 
-1. **`@Roles()` y `RolesAuthGuard` no funcionales** — ~~`req.user.role` es undefined.~~ ✅ Corregido.
-2. **Redis configurado pero no usado** — ✅ Corregido: eliminado.
-3. **Webhook de Stripe no procesa eventos** — El endpoint recibe y verifica la firma pero descarta el evento.
-4. **`STRIPE_PLATFORM_FEE_PERCENT` no se usa** — La variable está en `.env` pero no se lee en el código.
-5. **Emails transaccionales limitados** — ✅ Corregido.
-6. **Disponibilidad de acompañante rota** — ✅ Corregido: `SetAvailabilityDto` sin decoradores era eliminado por `ValidationPipe({ whitelist: true })`.
-7. **Registro de supervisor asignaba rol CLIENT** — ✅ Corregido: `ProfilesService.upsertProfile` ahora acepta y persiste `role: 'SUPERVISOR'`.
-8. **Página `/supervision` inaccesible para supervisores** — ✅ Corregido: verificación de rol migrada de `user_metadata` (Supabase Auth) a API (`syncUser`).
-9. **Redirección post-login no distinguía roles** — ✅ Corregido: `AuthRedirectPage` redirige según rol (supervisor → `/supervision`, compañero → `/panel`).
-10. **Tests rotos (pre-existente)** — Varios tests fallan por `@testing-library/jest-dom` no tipado y mocks ESM.
+1. **Webhook de Stripe no procesa eventos** — El endpoint recibe y verifica la firma pero descarta el evento.
+2. **`STRIPE_PLATFORM_FEE_PERCENT` no se usa** — La variable está en `.env` pero no se lee en el código.
 
 ---
 

@@ -175,3 +175,34 @@ tags: [project, changelog, history]
 - 🐛 **Registro de supervisor roto**: `ProfilesService.upsertProfile` no aceptaba rol `SUPERVISOR` y el `else` forzaba `CLIENT`. Añadido campo `role` al DTO y rama `else if (requestedRole === 'SUPERVISOR')` en el servicio.
 - 🐛 **Página `/supervision` inaccesible**: verificaba el rol desde `user.user_metadata?.role` (nunca seteado) en vez de la DB. Ahora usa `syncUser()` que retorna `{ id, email, role }` desde la API.
 - 🐛 **Redirección post-login sin distinguir rol**: `GET /auth/me` ahora retorna el rol del usuario. `AuthRedirectPage` redirige supervisores → `/supervision`, acompañantes → `/panel`, clientes → `/perfil`. Supervisores sin perfil van a `/perfil?onboarding=true&role=supervisor`.
+
+---
+
+## v0.1.0-alpha.29 — Mayo 2026 (Tests, disponibilidad, docs)
+
+### Tests
+- 🧪 **288 tests**: 164 backend (18 suites) + 124 frontend (28 suites)
+- 🏗️ Infraestructura de test: mock de PrismaService, 8 factories, mocks de servicios NestJS
+- 📋 Backend: todos los servicios (15), guards, strategy, exception filter, mail
+- 🎨 Frontend: componentes, hooks, lib utilities, pages, middleware, availability grid
+
+### Disponibilidad
+- 🎨 **AvailabilityGrid**: grid pintable estilo When2Meet (drag para seleccionar, 30 min, click en cabecera togglea día entero)
+- 💾 Debounced auto-save (1.5s), feedback visual instantáneo (optimista)
+- 📌 Disponibilidad ahora **orientativa**: clientes pueden solicitar aunque el acompañante no tenga horario marcado
+- 🕐 Timezone fix: frontend envía `localDayOfWeek` + `localTime` calculados en zona horaria del navegador
+- ✅ Validación `endTime > startTime` en servidor
+- 🗑️ Eliminada detección de solapamiento (innecesaria con grid pintable)
+- 📊 Schema: `AvailabilitySlot` con `updatedAt` y `@@index([companionId, dayOfWeek])`
+
+### Auth & Build
+- 🔧 `jwks-rsa` downgradeado a v3.2.2 para compatibilidad CJS en Vercel Node.js 20.x (soluciona `ERR_REQUIRE_ESM`)
+- 🔒 `SupabaseJwtStrategy.validate()` consulta BD para rol (funcional desde v0.1.1-alpha, documentado)
+- 🏗️ Build corregido: `tsconfig.build.json` excluye `__mocks__/` y `test-utils/`
+
+### UX
+- 🔓 Fix: diálogo de confirmación de logout se cerraba tras confirmar
+- 🔗 Botón "Ir al Panel" en `/perfil` para acompañantes
+
+### Documentación
+- 📚 Docs actualizadas: roadmap (tests ✓), auth (roles funcionales), modules (16), components (AvailabilityGrid), schema (AvailabilitySlot), deployment (jwks-rsa)

@@ -64,6 +64,7 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 - **Sin WebSockets:** el chat usa Supabase Realtime en vez de Socket.IO
 - **Sin estado:** no hay memoria compartida entre invocaciones
 - **Tamaño de payload:** 4.5 MB (body)
+- **Node.js 20.x:** no soporta `require()` de módulos ESM → `jwks-rsa` fijado a v3.2.2 (CJS compatible)
 
 > [!warning] Para producción con WebSockets nativos, migrar la API a Fly.io, Railway o Render. Ver [[roadmap]] para detalles.
 
@@ -100,8 +101,8 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 
 El despliegue es automático desde GitHub:
 - Push a `main` → Vercel despliega ambos proyectos
-- No hay tests automáticos en CI
-- No hay staging environment separado
+- 288 tests (164 API + 124 Web) disponibles con `pnpm test`
+- CI pipeline configurada en `.github/workflows/ci.yml` (lint → test → build para api y web)
 
 ## Estructura de archivos de deploy
 

@@ -182,6 +182,8 @@ Lista de reservas del usuario con:
 
 Dashboard con:
 - Banner de estado de verificación
+- [[frontend/components#availabilitygrid|AvailabilityGrid]]: grid pintable de disponibilidad semanal (30 min, arrastrar para seleccionar)
+- Guardado automático con debounce de 1.5s
 - Stats: pendientes, activas, completadas
 - Sección "Solicitudes abiertas": reservas REQUESTED sin compañero → botones Aceptar/Rechazar
 - Sección "Mis servicios": reservas asignadas → botones Chat/Iniciar/Completar

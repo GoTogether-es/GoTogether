@@ -203,13 +203,6 @@ Tablas con replicación activada para Realtime:
 - `Notification` — notificaciones push instantáneas
 - `ClientLocation` — ubicación en tiempo real de clientes
 
-La replicación se activó con:
-```sql
-ALTER PUBLICATION supabase_realtime ADD TABLE "ChatMessage";
-ALTER PUBLICATION supabase_realtime ADD TABLE "Notification";
-ALTER PUBLICATION supabase_realtime ADD TABLE "ClientLocation";
-```
-
 ## Modelos nuevos
 
 ### Service
@@ -228,12 +221,17 @@ model Service {
 ### AvailabilitySlot
 ```prisma
 model AvailabilitySlot {
-  id           String @id @default(uuid())
+  id           String   @id @default(uuid())
   companionId  String
   dayOfWeek    Int
   startTime    String
   endTime      String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
   companion    CompanionProfile @relation(fields: [companionId], references: [id])
+
+  @@index([companionId, dayOfWeek])
+  @@map("AvailabilitySlot")
 }
 ```
 
@@ -252,7 +250,7 @@ model ClientLocation {
 
 ## RLS actualizado
 
-RLS activado en **13 tablas** (todas). Políticas definidas en:
+RLS activado en **13 tablas** (todas). Políticas directas en:
 - `ChatMessage` — solo participantes de la sala
 - `Notification` — solo el destinatario
 - `ClientLocation` — dueño + supervisor

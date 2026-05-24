@@ -233,6 +233,29 @@ Placeholders de carga para estados loading:
 
 Wrapper de `next/link` que renderiza un `Button` de `@gotogether/ui`.
 
+## AvailabilityGrid
+
+**Archivo:** `availability-grid.tsx`
+**Props:**
+```typescript
+{
+  slots: AvailabilitySlotData[];
+  onChange: (newSlots: { dayOfWeek: number; startTime: string; endTime: string }[]) => void;
+  disabled?: boolean;
+}
+```
+
+Grid de disponibilidad semanal estilo When2Meet:
+- 7 columnas (Dom-Sáb) × 24 filas (08:00-19:30, granularidad 30 minutos)
+- **Drag para pintar**: pointerdown inicia selección, pointermove extiende, pointerup consolida
+- Click en cabecera de día → togglea el día completo
+- Indicador visual: celda azul (activa), gris claro (inactiva), azul claro (arrastrando)
+- **Optimista**: cambios visuales instantáneos vía `useRef`, `onChange` se llama solo al soltar
+- Doble clic en cabecera → selecciona/deselecciona todas las celdas del día
+- Cabeceras de día muestran: azul sólido (día completo), azul claro (parcial), gris (vacío)
+
+**Usado en:** `panel/page.tsx`
+
 ## Paquete `@gotogether/ui`
 
 **Archivo:** `packages/ui/src/index.tsx`

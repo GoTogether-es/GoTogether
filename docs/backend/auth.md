@@ -70,10 +70,10 @@ El backend valida los JWT de Supabase usando:
 
 El resultado se almacena en `req.user` como:
 ```typescript
-{ userId: string, email: string }
+{ userId: string, email: string, role: UserRole | null }
 ```
 
-> [!warning] Actualmente `req.user` **no incluye `role`**. Los guards de roles (`RolesGuard`, `RolesAuthGuard`) están definidos pero no funcionan porque `req.user.role` es `undefined`. Para habilitar RBAC, hay que modificar `SupabaseJwtStrategy.validate()` para consultar la BD y añadir el `role` al objeto de retorno.
+> [!note] Desde v0.1.1-alpha, `SupabaseJwtStrategy.validate()` consulta la BD para incluir `role` en `req.user`. El rol está disponible en todos los endpoints protegidos con JWT.
 
 ## Guards disponibles
 
@@ -89,16 +89,17 @@ El resultado se almacena en `req.user` como:
 - **Uso:** `@UseGuards(AdminGuard)`
 - **Aplicado en:** todos los endpoints de `/admin`
 
-### RolesGuard (no aplicado)
+### RolesGuard
 - **Archivo:** `roles.guard.ts`
 - **Función:** Verifica `req.user.role` contra los roles requeridos
 - **Uso:** `@Roles(UserRole.ADMIN)` + `@UseGuards(RolesGuard)`
-- **Estado:** Definido pero no funcional (ver nota arriba)
+- **Estado:** Funcional desde v0.1.1-alpha
 
-### RolesAuthGuard (no aplicado)
+### RolesAuthGuard
 - **Archivo:** `roles-auth.guard.ts`
 - **Función:** Combina autenticación JWT + verificación de roles
-- **Estado:** Definido pero no funcional
+- **Uso:** `@Roles(UserRole.SUPERVISOR)` + `@UseGuards(RolesAuthGuard)`
+- **Estado:** Funcional desde v0.1.1-alpha
 
 ## Middleware de Next.js
 

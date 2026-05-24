@@ -4,7 +4,7 @@ tags: [backend, nestjs, modules]
 
 # Módulos del Backend
 
-El backend está organizado en 13 módulos NestJS bajo `apps/api/src/modules/`. Cada módulo sigue el patrón: `controller.ts` (rutas), `service.ts` (lógica), `module.ts` (registro DI), y opcionalmente `dto/` (validación).
+El backend está organizado en 16 módulos NestJS bajo `apps/api/src/modules/`. Cada módulo sigue el patrón: `controller.ts` (rutas), `service.ts` (lógica), `module.ts` (registro DI), y opcionalmente `dto/` (validación).
 
 ## Mapa de módulos
 
@@ -24,6 +24,8 @@ AppModule
 ├── SupervisionModule (supervisores y clientes)
 ├── PaymentsModule (Stripe, deshabilitado en alpha)
 ├── AdminModule (panel de administración)
+├── ServicesModule (catálogo de servicios)
+├── AvailabilityModule (disponibilidad semanal de acompañantes)
 └── NotificationsModule (notificaciones)
 ```
 
@@ -40,7 +42,7 @@ AppModule
 - `roles-auth.guard.ts` — guard combinado JWT + roles
 - `mail.templates.ts` — plantillas HTML para emails (magic link, invitación supervisión)
 
-> [!note] `@Roles()` y `RolesAuthGuard` están definidos pero no se aplican en ningún endpoint. Se usará en el futuro para endpoints de admin y supervisor.
+> [!note] `@Roles()` y `RolesAuthGuard` son funcionales desde v0.1.1-alpha. `SupabaseJwtStrategy.validate()` consulta la BD para incluir `role` en `req.user`. Los guards se aplican en endpoints de supervisor y otros que requieren RBAC.
 
 ### Flujo de autenticación
 
@@ -198,6 +200,30 @@ Protegido por `AdminGuard` (header `x-admin-key`).
 - `PUT /admin/companions/:id/reject` — Rechazar acompañante
 - `PUT /admin/profiles/:id/verify` — Verificar cliente
 - `PUT /admin/profiles/:id/reject` — Rechazar cliente
+
+## ServicesModule
+
+**Archivos:** `services/`
+
+- `GET /services` — Listar servicios activos
+- `GET /services/all` — Todos los servicios (incluye inactivos, JWT)
+- `POST /services` — Crear servicio
+- `PUT /services/:id` — Actualizar servicio
+
+## AvailabilityModule
+
+**Archivos:** `availability/`
+
+- `GET /companions/:id/availability` — Disponibilidad semanal de un acompañante
+- `PUT /availability` — Guardar disponibilidad (borra todos los slots existentes y crea los nuevos)
+
+**Validaciones:**
+- `endTime > startTime` — rechaza slots con hora de fin anterior a inicio
+- Solo acompañantes pueden configurar disponibilidad (`ForbiddenException` si no tiene `CompanionProfile`)
+
+**Disponibilidad orientativa:** desde Mayo 2026, la disponibilidad es puramente orientativa. Los clientes pueden solicitar servicios aunque el acompañante no tenga disponibilidad marcada. Ya no se lanza `ConflictException` al crear reservas fuera de horario.
+
+**Tests:** 6 tests cubriendo `getForCompanion`, `setForCompanion` (validación de rol, endTime>startTime, slots vacíos) e `isCompanionAvailable` (con y sin timezone local).
 
 ## PrismaModule
 
