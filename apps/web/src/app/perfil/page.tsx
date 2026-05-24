@@ -193,6 +193,30 @@ function PerfilContent() {
                       {profile.companion.specialties.split(',').map((s, i) => (
                         <span key={i} className="gt-tag">{s.trim()}</span>
                       ))}
+                    </div>
+                  </div>
+                )}
+                <div className="flex items-center gap-3 text-sm text-gray-500">
+                  {profile.companion?.verified ? (
+                    <span className="gt-tag flex items-center gap-1">
+                      <UserCircle className="w-3.5 h-3.5 text-emerald-500" />
+                      Verificado
+                    </span>
+                  ) : (
+                    <span className="gt-tag flex items-center gap-1 bg-amber-50 text-amber-700">
+                      <UserCircle className="w-3.5 h-3.5 text-amber-500" />
+                      Pendiente de verificación
+                    </span>
+                  )}
+                  <span className="gt-tag flex items-center gap-1">
+                    <Star className="w-3.5 h-3.5 fill-amber-400 stroke-amber-400" />
+                    {profile.companion?.rating?.toFixed(1) || '—'}
+                  </span>
+                </div>
+              </div>
+            </Card>
+          )}
+
           {/* Location Sharing */}
           {!isCompanion && <LocationSharingCard />}
 
@@ -212,21 +236,6 @@ function PerfilContent() {
           )}
 
         </div>
-                  </div>
-                )}
-                <div className="flex items-center gap-3 text-sm text-gray-500">
-                  {profile.companion?.verified ? (
-                    <span className="gt-tag flex items-center gap-1">
-                      <UserCircle className="w-3.5 h-3.5 text-emerald-500" />
-                      Verificado
-                    </span>
-                  ) : (
-                    <span className="gt-tag flex items-center gap-1 bg-amber-50 text-amber-700">
-                      <UserCircle className="w-3.5 h-3.5 text-amber-500" />
-                      Pendiente de verificación
-                    </span>
-                  )}
-                  <span className="gt-tag flex items-center gap-1">
                     {profile.companion?.yearsOnPlatform ?? 0} años en la plataforma
                   </span>
                 </div>

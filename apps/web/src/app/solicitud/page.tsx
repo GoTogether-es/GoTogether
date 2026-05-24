@@ -1,6 +1,7 @@
 'use client';
 
 import { Suspense } from 'react';
+import { SkeletonForm } from '@/components/skeleton';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -174,7 +175,7 @@ function SolicitudForm() {
             <Button variant="primary" className="h-12 px-8" type="submit" disabled={isSubmitting}>
               {isSubmitting ? 'Publicando...' : 'Publicar solicitud'}
             </Button>
-            <Button variant="ghost" className="h-12 px-8" type="button" onClick={() => router.push('/')}>
+            <Button variant="ghost" className="h-12 px-8" type="button" onClick={() => router.push(companionId ? `/explorar/${companionId}` : '/explorar')}>
               Cancelar
             </Button>
           </div>
@@ -189,7 +190,13 @@ export default function SolicitudPage() {
     <Section>
       <Container>
         <div className="max-w-4xl mx-auto">
-          <Suspense fallback={null}>
+          <Suspense fallback={
+            <div className="max-w-4xl mx-auto py-10">
+              <div className="h-8 w-64 bg-gray-200 rounded-lg animate-pulse mb-2" />
+              <div className="h-5 w-96 bg-gray-200 rounded-lg animate-pulse mb-10" />
+              <SkeletonForm />
+            </div>
+          }>
             <SolicitudForm />
           </Suspense>
         </div>

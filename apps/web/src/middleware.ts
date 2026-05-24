@@ -12,7 +12,11 @@ const PROTECTED_ROUTES = [
   '/supervision',
   '/panel',
   '/historial',
+  '/admin',
 ]
+
+const COMPANION_ROUTES = ['/panel']
+const SUPERVISOR_ROUTES = ['/supervision']
 
 const PUBLIC_ROUTES = [
   '/',
@@ -65,6 +69,14 @@ export async function middleware(request: NextRequest) {
           const loginUrl = new URL('/auth/login', request.url)
           loginUrl.searchParams.set('redirect', pathname)
           return NextResponse.redirect(loginUrl)
+        }
+
+        const userRole = user.user_metadata?.role || user.app_metadata?.role
+        if (COMPANION_ROUTES.some((r) => pathname.startsWith(r)) && userRole !== 'COMPANION') {
+          return NextResponse.redirect(new URL('/perfil', request.url))
+        }
+        if (SUPERVISOR_ROUTES.some((r) => pathname.startsWith(r)) && userRole !== 'SUPERVISOR') {
+          return NextResponse.redirect(new URL('/perfil', request.url))
         }
       }
     }

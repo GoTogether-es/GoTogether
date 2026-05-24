@@ -186,7 +186,10 @@ export default function CompanionRegistrationPage() {
               </div>
             </Card>
 
-            <div className="flex justify-end gap-4">
+            <div className="flex justify-between gap-4">
+              <Button variant="ghost" className="h-14 px-8" type="button" onClick={() => router.push('/onboarding')}>
+                Volver
+              </Button>
               <Button variant="primary" className="h-14 px-12 text-lg shadow-blue-600/20" disabled={isSubmitting} type="submit">
                 {isSubmitting ? <><Loader2 className="w-5 h-5 animate-spin mr-2" /> Guardando...</> : 'Finalizar Registro'}
               </Button>

@@ -14,9 +14,18 @@ function LoginForm() {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [isSuccess, setIsSuccess] = useState(false)
+  const [emailError, setEmailError] = useState('')
+
+  const validateEmail = (value: string) => {
+    if (!value) { setEmailError(''); return true }
+    const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+    setEmailError(valid ? '' : 'Introduce un email válido')
+    return valid
+  }
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!validateEmail(email)) return
     setLoading(true)
     setMessage('')
     setIsSuccess(false)
@@ -26,10 +35,15 @@ function LoginForm() {
         document.cookie = `gotogether-auth-redirect=${encodeURIComponent(redirect)}; path=/; max-age=600; SameSite=Lax`
       }
       await requestMagicLink(email)
-      setMessage('¡Enlace enviado! Revisa tu bandeja de entrada.')
+      setMessage('¡Enlace enviado! Revisa tu bandeja de entrada (y la carpeta de spam). El enlace caduca en 1 hora.')
       setIsSuccess(true)
     } catch (error: unknown) {
-      setMessage('No se pudo enviar el enlace. Inténtalo de nuevo.')
+      const err = error as any
+      if (err?.message?.includes('network') || err?.message?.includes('fetch')) {
+        setMessage('Error de conexión. Revisa tu internet e inténtalo de nuevo.')
+      } else {
+        setMessage(err?.message || 'No se pudo enviar el enlace. Inténtalo de nuevo.')
+      }
       setIsSuccess(false)
     }
     setLoading(false)
@@ -60,10 +74,13 @@ function LoginForm() {
               type="email"
               placeholder="nombre@ejemplo.com"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => { setEmail(e.target.value); setEmailError(''); }}
+              onBlur={() => validateEmail(email)}
               className="gt-input h-14"
               required
+              aria-describedby={emailError ? "email-error" : undefined}
             />
+            {emailError && <p id="email-error" className="text-red-500 text-xs mt-1" role="alert">{emailError}</p>}
           </div>
           <button
             type="submit"

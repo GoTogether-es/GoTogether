@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button, Card, Container, Section } from '@gotogether/ui';
-import { Star, MessageCircle, Info, Send, CheckCircle } from 'lucide-react';
-import { getBooking, getReportByBooking, createReport } from '@/services/api';
+import { Star, MessageCircle, Info, Send, CheckCircle, Loader2 } from 'lucide-react';
+import { SkeletonForm } from '@/components/skeleton';
 
 export default function ValoracionPage() {
   const params = useParams();
@@ -35,6 +35,65 @@ export default function ValoracionPage() {
           setSummary(reportData.summary || '');
           setSuccess(true);
         }
+      } catch (err: any) {
+        setError(err.message || 'Error al cargar los datos');
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, [bookingId]);
+
+  const handleSubmit = async () => {
+    if (rating < 1) {
+      setError('Selecciona una puntuación de estrellas');
+      return;
+    }
+    setSubmitting(true);
+    setError('');
+    try {
+      await createReport(bookingId, { rating, summary: summary || undefined });
+      setSuccess(true);
+      const reportData = await getReportByBooking(bookingId);
+      setExistingReport(reportData);
+    } catch (err: any) {
+      setError(err.message || 'Error al enviar la valoración');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <Section>
+        <Container>
+          <div className="max-w-4xl mx-auto py-20">
+            <div className="h-8 w-48 bg-gray-200 rounded-lg animate-pulse mb-2" />
+            <div className="h-5 w-64 bg-gray-200 rounded-lg animate-pulse mb-10" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="p-8 rounded-2xl bg-white border border-gray-100 shadow-sm animate-pulse">
+                <div className="h-6 w-40 bg-gray-200 rounded mb-6" />
+                <div className="space-y-4">
+                  <div className="h-4 w-32 bg-gray-200 rounded" />
+                  <div className="h-5 w-48 bg-gray-200 rounded" />
+                  <div className="h-4 w-32 bg-gray-200 rounded mt-4" />
+                  <div className="h-5 w-36 bg-gray-200 rounded" />
+                </div>
+              </div>
+              <div className="p-8 rounded-2xl bg-white border border-gray-100 shadow-sm animate-pulse">
+                <div className="h-6 w-40 bg-gray-200 rounded mb-6" />
+                <div className="flex gap-1 mb-6">
+                  {[1,2,3,4,5].map(i => <div key={i} className="w-10 h-10 bg-gray-200 rounded" />)}
+                </div>
+                <div className="h-4 w-24 bg-gray-200 rounded mb-2" />
+                <div className="h-24 w-full bg-gray-200 rounded-xl" />
+              </div>
+            </div>
+          </div>
+        </Container>
+      </Section>
+    );
+  }
       } catch (err: any) {
         setError(err.message || 'Error al cargar los datos');
       } finally {

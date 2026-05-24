@@ -28,7 +28,7 @@ const STATUS_COLORS: Record<string, string> = {
 
 export default function HistorialPage() {
   const [page, setPage] = useState(1);
-  const { data: history, isLoading } = useBookingHistory({ page, limit: 10 });
+  const { data: history, isLoading, isError, refetch } = useBookingHistory({ page, limit: 10 });
   const { data: stats, isLoading: statsLoading } = useBookingStats();
 
   return (
@@ -40,8 +40,17 @@ export default function HistorialPage() {
             Consulta todos tus servicios completados y tus estadísticas.
           </p>
 
-          {!statsLoading && stats && (
+          {statsLoading ? (
             <div className="grid grid-cols-3 gap-4 mb-8">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <Card key={i} className="p-5 bg-gray-50 border-gray-100 text-center animate-pulse">
+                  <div className="w-5 h-5 mx-auto mb-1 bg-gray-200 rounded" />
+                  <div className="h-8 w-12 bg-gray-200 rounded mx-auto mb-1" />
+                  <div className="h-3 w-20 bg-gray-200 rounded mx-auto" />
+                </Card>
+              ))}
+            </div>
+          ) : stats && (
               <Card className="p-5 bg-emerald-50 border-emerald-100 text-center">
                 <Award className="w-5 h-5 mx-auto mb-1 text-emerald-600" />
                 <p className="text-2xl font-extrabold text-emerald-700">{stats.completed}</p>
@@ -71,6 +80,11 @@ export default function HistorialPage() {
                 </Card>
               ))}
             </div>
+          ) : isError ? (
+            <Card className="p-12 text-center">
+              <p className="text-red-500 text-lg mb-4">Error al cargar el historial</p>
+              <Button variant="primary" onClick={() => refetch()}>Reintentar</Button>
+            </Card>
           ) : !history || history.data.length === 0 ? (
             <Card className="p-12 text-center">
               <p className="text-gray-500 text-lg mb-4">No tienes servicios en el historial.</p>
@@ -130,7 +144,7 @@ export default function HistorialPage() {
                         {booking.report && (
                           <div className="mt-3 pt-3 border-t flex items-center gap-2 text-sm">
                             <Star className="w-4 h-4 fill-amber-400 stroke-amber-400" />
-                            <span className="font-bold">{booking.report.id}</span>
+                            <span className="font-bold">{booking.report.rating}/5</span>
                             <Link href={`/valoracion/${booking.id}`} className="text-blue-600 hover:underline text-xs">
                               Ver valoración
                             </Link>

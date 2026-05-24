@@ -57,6 +57,54 @@ export default function CoordinacionPage() {
   useEffect(() => {
     let cancelled = false;
 
+    async function initRealtime() {
+      const supabase = supabaseRef.current;
+      const roomId = roomIdRef.current;
+      if (!roomId) return;
+
+      const channel = supabase
+        .channel(`room-${roomId}`)
+        .on(
+          'postgres_changes',
+          {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'ChatMessage',
+            filter: `roomId=eq.${roomId}`,
+          },
+          (payload: any) => {
+            const msg = payload.new as ChatMessage;
+            setMessages((prev) => {
+              if (prev.some((m) => m.id === msg.id)) return prev;
+              return [...prev, msg];
+            });
+            scrollToBottom();
+          },
+        )
+        .subscribe((status: string) => {
+          switch (status) {
+            case 'SUBSCRIBED':
+              setConnectionStatus('connected');
+              break;
+            case 'CHANNEL_ERROR':
+            case 'TIMED_OUT':
+            case 'CLOSED':
+              setConnectionStatus('disconnected');
+              setTimeout(() => {
+                if (channelRef.current) {
+                  supabase.removeChannel(channelRef.current);
+                }
+                initRealtime();
+              }, 3000);
+              break;
+            default:
+              setConnectionStatus('reconnecting');
+          }
+        });
+
+      channelRef.current = channel;
+    }
+
     async function init() {
       try {
         const supabase = supabaseRef.current;
@@ -87,41 +135,7 @@ export default function CoordinacionPage() {
         const companion = bookingData.companion?.profile?.fullName || '';
         setCompanionName(companion || clientName);
 
-        const channel = supabase
-          .channel(`room-${chatData.room.id}`)
-          .on(
-            'postgres_changes',
-            {
-              event: 'INSERT',
-              schema: 'public',
-              table: 'ChatMessage',
-              filter: `roomId=eq.${chatData.room.id}`,
-            },
-            (payload: any) => {
-              const msg = payload.new as ChatMessage;
-              setMessages((prev) => {
-                if (prev.some((m) => m.id === msg.id)) return prev;
-                return [...prev, msg];
-              });
-              scrollToBottom();
-            },
-          )
-          .subscribe((status: string) => {
-            switch (status) {
-              case 'SUBSCRIBED':
-                setConnectionStatus('connected');
-                break;
-              case 'CHANNEL_ERROR':
-              case 'TIMED_OUT':
-              case 'CLOSED':
-                setConnectionStatus('disconnected');
-                break;
-              default:
-                setConnectionStatus('reconnecting');
-            }
-          });
-
-        channelRef.current = channel;
+        initRealtime();
 
         setTimeout(() => scrollToBottom(), 100);
       } catch (err: any) {

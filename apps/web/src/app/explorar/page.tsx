@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Container, Section } from '@gotogether/ui';
 import { Search, SlidersHorizontal } from 'lucide-react';
 import { CompanionCard } from '@/components/companion-card';
@@ -16,13 +17,30 @@ const DISABILITY_OPTIONS = [
 ];
 
 export default function ExplorarPage() {
-  const [search, setSearch] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [disabilityType, setDisabilityType] = useState('');
-  const [verifiedOnly, setVerifiedOnly] = useState(false);
-  const [page, setPage] = useState(1);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const [search, setSearch] = useState(searchParams.get('q') || '');
+  const [debouncedSearch, setDebouncedSearch] = useState(searchParams.get('q') || '');
+  const [disabilityType, setDisabilityType] = useState(searchParams.get('d') || '');
+  const [verifiedOnly, setVerifiedOnly] = useState(searchParams.get('v') === '1');
+  const [page, setPage] = useState(parseInt(searchParams.get('p') || '1', 10));
   const [showFilters, setShowFilters] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+
+  const syncUrl = useCallback(() => {
+    const params = new URLSearchParams();
+    if (debouncedSearch) params.set('q', debouncedSearch);
+    if (disabilityType) params.set('d', disabilityType);
+    if (verifiedOnly) params.set('v', '1');
+    if (page > 1) params.set('p', String(page));
+    const qs = params.toString();
+    router.replace(`/explorar${qs ? `?${qs}` : ''}`, { scroll: false });
+  }, [debouncedSearch, disabilityType, verifiedOnly, page, router]);
+
+  useEffect(() => {
+    syncUrl();
+  }, [syncUrl]);
 
   useEffect(() => {
     debounceRef.current = setTimeout(() => {

@@ -1,10 +1,10 @@
 import { Card, Container, Section } from '@gotogether/ui';
-import { Mail, Phone } from 'lucide-react';
+import { Mail, Phone, Send } from 'lucide-react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Contactar',
-  description: 'Contacta con GoTogether. Escríbenos a info@gotogether.es o llámanos al 643 415 190. Resolvemos tus dudas.',
+  description: 'Contacta con GoTogether. Escríbenos a info@gotogether.es o llámanos al +34 643 415 190.',
   openGraph: { title: 'Contactar - GoTogether' },
 };
 
@@ -28,7 +28,7 @@ export default function ContactoPage() {
         <Container>
           <div className="max-w-3xl mx-auto">
             <Card className="p-10 border-0 shadow-xl shadow-blue-900/5">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
                 <div>
                   <div className="flex items-center gap-3 mb-6">
                     <div className="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600">
@@ -58,13 +58,70 @@ export default function ContactoPage() {
                     </div>
                   </div>
                   <a
-                    href="tel:643415190"
+                    href="tel:+34643415190"
                     className="text-blue-600 font-medium hover:underline text-lg"
                   >
-                    643 415 190
+                    +34 643 415 190
                   </a>
                 </div>
               </div>
+
+              <hr className="mb-8 border-gray-100" />
+
+              <h2 className="text-lg font-bold mb-4">Envíanos un mensaje</h2>
+              <form
+                action={`mailto:info@gotogether.es`}
+                method="POST"
+                encType="text/plain"
+                className="space-y-4"
+              >
+                <div>
+                  <label htmlFor="contact-name" className="block text-sm font-bold text-gray-700 mb-2">
+                    Tu nombre
+                  </label>
+                  <input
+                    id="contact-name"
+                    name="name"
+                    type="text"
+                    className="gt-input h-12"
+                    placeholder="Tu nombre completo"
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="contact-email" className="block text-sm font-bold text-gray-700 mb-2">
+                    Tu email
+                  </label>
+                  <input
+                    id="contact-email"
+                    name="email"
+                    type="email"
+                    className="gt-input h-12"
+                    placeholder="nombre@ejemplo.com"
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="contact-message" className="block text-sm font-bold text-gray-700 mb-2">
+                    Mensaje
+                  </label>
+                  <textarea
+                    id="contact-message"
+                    name="body"
+                    className="gt-input"
+                    rows={5}
+                    placeholder="Escribe tu mensaje aquí..."
+                    required
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="gt-button gt-button--primary h-12 px-8 inline-flex items-center gap-2"
+                >
+                  <Send className="w-4 h-4" />
+                  Enviar mensaje
+                </button>
+              </form>
 
               <hr className="my-8 border-gray-100" />
 
