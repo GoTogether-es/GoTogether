@@ -1,21 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { Button, Card, Container, Section } from '@gotogether/ui';
 import { getMyBookings, getOpenBookings, updateBookingStatus, getProfile, getCompanionAvailability, setMyAvailability, requestCompletion } from '@/services/api';
 import { Loader2, CalendarDays, ClipboardList, CheckCircle, XCircle, Clock, MessageCircle, ShieldCheck, ShieldAlert } from 'lucide-react';
 import type { BookingData, AvailabilitySlotData } from '@/types';
 import { toast } from 'sonner';
+import { AvailabilityGrid } from '@/components/availability-grid';
 
 const DAY_NAMES = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
-const TIME_SLOTS = Array.from({ length: 12 }, (_, i) => {
-  const hour = i + 8;
-  const start = `${String(hour).padStart(2, '0')}:00`;
-  const end = `${String(hour + 1).padStart(2, '0')}:00`;
-  const label = `${start}-${end}`;
-  return { label, start, end };
-});
 
 export default function PanelPage() {
   const [myBookings, setMyBookings] = useState<BookingData[]>([]);
@@ -25,6 +19,25 @@ export default function PanelPage() {
   const [verified, setVerified] = useState<boolean | null>(null);
   const [availabilitySlots, setAvailabilitySlots] = useState<AvailabilitySlotData[]>([]);
   const [savingAvailability, setSavingAvailability] = useState(false);
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout>>();
+
+  const debouncedSave = useCallback(
+    (newSlots: { dayOfWeek: number; startTime: string; endTime: string }[]) => {
+      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+      saveTimerRef.current = setTimeout(async () => {
+        setSavingAvailability(true);
+        try {
+          const result = await setMyAvailability(newSlots);
+          setAvailabilitySlots(result);
+        } catch {
+          toast.error('Error al guardar disponibilidad');
+        } finally {
+          setSavingAvailability(false);
+        }
+      }, 1500);
+    },
+    [],
+  );
 
   useEffect(() => {
     loadData();
@@ -65,40 +78,19 @@ export default function PanelPage() {
     }
   };
 
-  const toggleAvailability = async (dayOfWeek: number, slot: { start: string; end: string }) => {
-    const exists = availabilitySlots.some(
-      (s) => s.dayOfWeek === dayOfWeek && s.startTime === slot.start && s.endTime === slot.end,
-    );
+  const handleAvailabilityChange = useCallback(
+    (newSlots: { dayOfWeek: number; startTime: string; endTime: string }[]) => {
+      setAvailabilitySlots(newSlots as AvailabilitySlotData[]);
+      debouncedSave(newSlots);
+    },
+    [debouncedSave],
+  );
 
-    let newSlots: { dayOfWeek: number; startTime: string; endTime: string }[];
-    if (exists) {
-      newSlots = availabilitySlots
-        .filter((s) => !(s.dayOfWeek === dayOfWeek && s.startTime === slot.start && s.endTime === slot.end))
-        .map((s) => ({ dayOfWeek: s.dayOfWeek, startTime: s.startTime, endTime: s.endTime }));
-    } else {
-      newSlots = [
-        ...availabilitySlots.map((s) => ({ dayOfWeek: s.dayOfWeek, startTime: s.startTime, endTime: s.endTime })),
-        { dayOfWeek, startTime: slot.start, endTime: slot.end },
-      ];
-    }
-
-    setSavingAvailability(true);
-    try {
-      const result = await setMyAvailability(newSlots);
-      setAvailabilitySlots(result);
-      toast.success('Disponibilidad actualizada');
-    } catch {
-      toast.error('Error al actualizar disponibilidad');
-    } finally {
-      setSavingAvailability(false);
-    }
-  };
-
-  const isSlotActive = (dayOfWeek: number, slot: { start: string; end: string }) => {
-    return availabilitySlots.some(
-      (s) => s.dayOfWeek === dayOfWeek && s.startTime === slot.start && s.endTime === slot.end,
-    );
-  };
+  useEffect(() => {
+    return () => {
+      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    };
+  }, []);
 
   const pendingCount = myBookings.filter((b) => b.status === 'REQUESTED').length;
   const activeCount = myBookings.filter((b) => b.status === 'ACCEPTED' || b.status === 'IN_PROGRESS').length;
@@ -173,43 +165,28 @@ export default function PanelPage() {
           {/* Availability */}
           {verified !== null && (
             <Card className="p-6 mb-6">
-              <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+              <h2 className="text-lg font-bold mb-1 flex items-center gap-2">
                 <CalendarDays className="w-5 h-5 text-blue-600" />
                 Mi disponibilidad semanal
               </h2>
               <p className="text-sm text-gray-500 mb-4">
-                Marca las franjas horarias en las que estás disponible. Los clientes solo podrán solicitarte en estos horarios.
+                Selecciona tus franjas arrastrando el ratón. Los clientes verán esto como referencia, pero podrán solicitarte en cualquier horario.
+                {savingAvailability && (
+                  <span className="ml-2 inline-flex items-center gap-1 text-blue-600">
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                    guardando...
+                  </span>
+                )}
               </p>
-              <div className="overflow-x-auto">
-                <div className="grid grid-cols-[100px_repeat(7,1fr)] gap-1 min-w-[500px]">
-                  <div className="p-2"></div>
-                  {DAY_NAMES.map((day) => (
-                    <div key={day} className="p-2 text-center text-xs font-bold text-gray-500">{day}</div>
-                  ))}
-                  {TIME_SLOTS.map((slot) => (
-                    <>
-                      <div key={`label-${slot.start}`} className="p-2 text-xs text-gray-400 flex items-center">{slot.label}</div>
-                      {Array.from({ length: 7 }).map((_, dayIdx) => (
-                        <button
-                          key={`${dayIdx}-${slot.start}`}
-                          type="button"
-                          onClick={() => toggleAvailability(dayIdx, { start: slot.start, end: slot.end })}
-                          disabled={savingAvailability}
-                          className={`p-2 rounded-lg text-xs font-medium transition-colors border ${
-                            isSlotActive(dayIdx, slot)
-                              ? 'bg-blue-600 text-white border-blue-600'
-                              : 'bg-gray-50 text-gray-400 border-gray-100 hover:border-blue-200 hover:bg-blue-50'
-                          } ${savingAvailability ? 'opacity-50 cursor-wait' : ''}`}
-                        >
-                          {slot.label.substring(0, 2)}
-                        </button>
-                      ))}
-                    </>
-                  ))}
-                </div>
-              </div>
-              {availabilitySlots.length === 0 && (
-                <p className="text-sm text-gray-400 mt-3 text-center">No has configurado tu disponibilidad.</p>
+              <AvailabilityGrid
+                slots={availabilitySlots}
+                onChange={handleAvailabilityChange}
+                disabled={false}
+              />
+              {availabilitySlots.length === 0 && !savingAvailability && (
+                <p className="text-sm text-gray-400 mt-3 text-center">
+                  No has configurado tu disponibilidad. Arrastra sobre la cuadrícula para empezar.
+                </p>
               )}
             </Card>
           )}

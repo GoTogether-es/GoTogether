@@ -13,7 +13,6 @@ import {
   NotFoundException,
   ForbiddenException,
   BadRequestException,
-  ConflictException,
 } from '@nestjs/common';
 
 describe('BookingsService', () => {
@@ -93,13 +92,14 @@ describe('BookingsService', () => {
       ).rejects.toThrow(BadRequestException);
     });
 
-    it('throws ConflictException when companion is not available', async () => {
+    it('still creates booking when companion is not available (orientative)', async () => {
       prisma.user.findUnique.mockResolvedValue(mockUser({ role: UserRole.CLIENT }));
       availabilityService.isCompanionAvailable.mockResolvedValue(false);
+      prisma.booking.create.mockResolvedValue(mockBooking({ id: 'booking-new' }));
 
-      await expect(
-        service.create('user-1', { ...createDto, companionId: 'companion-1' } as any),
-      ).rejects.toThrow(ConflictException);
+      const result = await service.create('user-1', { ...createDto, companionId: 'companion-1' } as any);
+
+      expect(result).toHaveProperty('id', 'booking-new');
     });
 
     it('resolves serviceType from service when serviceId is provided', async () => {
