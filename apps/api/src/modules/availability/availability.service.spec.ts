@@ -72,20 +72,7 @@ describe('AvailabilityService', () => {
       await expect(service.setForCompanion('user-1', slots as any)).rejects.toThrow(BadRequestException);
     });
 
-    it('throws BadRequestException when slots overlap on the same day', async () => {
-      prisma.profile.findUnique.mockResolvedValue(
-        mockProfile({ companion: mockCompanionProfile({ id: 'comp-1' }) }),
-      );
-
-      const slots = [
-        { dayOfWeek: 1, startTime: '09:00', endTime: '12:00' },
-        { dayOfWeek: 1, startTime: '11:00', endTime: '14:00' },
-      ];
-
-      await expect(service.setForCompanion('user-1', slots as any)).rejects.toThrow(BadRequestException);
-    });
-
-    it('allows non-overlapping slots on the same day', async () => {
+    it('allows any slots now that overlap detection is removed', async () => {
       prisma.profile.findUnique.mockResolvedValue(
         mockProfile({ companion: mockCompanionProfile({ id: 'comp-1' }) }),
       );
@@ -95,7 +82,7 @@ describe('AvailabilityService', () => {
 
       const slots = [
         { dayOfWeek: 1, startTime: '09:00', endTime: '12:00' },
-        { dayOfWeek: 1, startTime: '14:00', endTime: '18:00' },
+        { dayOfWeek: 1, startTime: '11:00', endTime: '14:00' },
       ];
 
       await expect(service.setForCompanion('user-1', slots as any)).resolves.toBeDefined();

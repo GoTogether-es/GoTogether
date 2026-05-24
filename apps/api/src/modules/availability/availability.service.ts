@@ -33,13 +33,6 @@ export class AvailabilityService {
       }
     }
 
-    const hasOverlap = this.detectOverlaps(slots);
-    if (hasOverlap) {
-      throw new BadRequestException(
-        'Los horarios no pueden solaparse entre sí',
-      );
-    }
-
     await this.prisma.availabilitySlot.deleteMany({ where: { companionId } });
 
     if (slots.length > 0) {
@@ -78,24 +71,6 @@ export class AvailabilityService {
     });
 
     return !!slot;
-  }
-
-  private detectOverlaps(slots: AvailabilitySlotDto[]): boolean {
-    const byDay = new Map<number, AvailabilitySlotDto[]>();
-    for (const s of slots) {
-      const list = byDay.get(s.dayOfWeek) || [];
-      list.push(s);
-      byDay.set(s.dayOfWeek, list);
-    }
-    for (const daySlots of byDay.values()) {
-      daySlots.sort((a, b) => a.startTime.localeCompare(b.startTime));
-      for (let i = 1; i < daySlots.length; i++) {
-        if (daySlots[i].startTime < daySlots[i - 1].endTime) {
-          return true;
-        }
-      }
-    }
-    return false;
   }
 }
 
