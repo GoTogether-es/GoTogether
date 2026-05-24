@@ -110,6 +110,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     setLoggingOut(true);
     try {
       await apiLogout();
+      setShowLogoutConfirm(false);
       router.push('/');
     } catch {
       setLoggingOut(false);
