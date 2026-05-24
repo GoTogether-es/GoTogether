@@ -738,7 +738,8 @@ export async function setMyAvailability(slots: { dayOfWeek: number; startTime: s
   });
   if (!response.ok) {
     const body = await response.json().catch(() => ({}));
-    const msg = body.message?.[0] || body.message || 'Error al guardar disponibilidad';
+    const raw = body.message;
+    const msg = Array.isArray(raw) ? raw[0] : (raw || 'Error al guardar disponibilidad');
     if (response.status === 403) throw new Error('Solo los acompañantes pueden configurar disponibilidad');
     throw new Error(msg);
   }
