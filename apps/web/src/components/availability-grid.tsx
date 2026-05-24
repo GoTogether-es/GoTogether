@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import type { AvailabilitySlotData } from '@/types';
 
 const DAY_NAMES = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
@@ -21,6 +21,12 @@ function generateHalfHourSlots(): { start: string; end: string; label: string }[
 
 const HALF_HOUR_SLOTS = generateHalfHourSlots();
 
+type SlotEntry = { dayOfWeek: number; startTime: string; endTime: string };
+
+function cloneSlots(slots: AvailabilitySlotData[]): SlotEntry[] {
+  return slots.map((s) => ({ dayOfWeek: s.dayOfWeek, startTime: s.startTime, endTime: s.endTime }));
+}
+
 interface AvailabilityGridProps {
   slots: AvailabilitySlotData[];
   onChange: (newSlots: { dayOfWeek: number; startTime: string; endTime: string }[]) => void;
@@ -28,54 +34,59 @@ interface AvailabilityGridProps {
 }
 
 export function AvailabilityGrid({ slots, onChange, disabled }: AvailabilityGridProps) {
+  const [renderVer, setRenderVer] = useState(0);
+  const slotsRef = useRef<SlotEntry[]>(cloneSlots(slots));
   const [isDragging, setIsDragging] = useState(false);
   const [dragMode, setDragMode] = useState<'add' | 'remove' | null>(null);
-  const [dragCells, setDragCells] = useState<Set<string>>(new Set());
+  const touchedRef = useRef<Set<string>>(new Set());
   const gridRef = useRef<HTMLDivElement>(null);
+  const onChangeRef = useRef(onChange);
+  onChangeRef.current = onChange;
+
+  useEffect(() => {
+    slotsRef.current = cloneSlots(slots);
+    setRenderVer((v) => v + 1);
+  }, [slots]);
 
   const isActive = useCallback(
     (dayOfWeek: number, startTime: string, endTime: string) =>
-      slots.some((s) => s.dayOfWeek === dayOfWeek && s.startTime === startTime && s.endTime === endTime),
-    [slots],
+      slotsRef.current.some(
+        (s) => s.dayOfWeek === dayOfWeek && s.startTime === startTime && s.endTime === endTime,
+      ),
+    // renderVer makes this rebuild when ref changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [renderVer],
   );
 
-  const toggleCell = useCallback(
-    (dayOfWeek: number, slot: { start: string; end: string }, forcedMode?: 'add' | 'remove') => {
-      const active = isActive(dayOfWeek, slot.start, slot.end);
-      const mode = forcedMode ?? (active ? 'remove' : 'add');
-
-      let newSlots: { dayOfWeek: number; startTime: string; endTime: string }[];
-      if (mode === 'remove') {
-        newSlots = slots
-          .filter((s) => !(s.dayOfWeek === dayOfWeek && s.startTime === slot.start && s.endTime === slot.end))
-          .map((s) => ({ dayOfWeek: s.dayOfWeek, startTime: s.startTime, endTime: s.endTime }));
-      } else {
-        newSlots = [
-          ...slots.map((s) => ({ dayOfWeek: s.dayOfWeek, startTime: s.startTime, endTime: s.endTime })),
-          { dayOfWeek, startTime: slot.start, endTime: slot.end },
-        ];
-      }
-      onChange(newSlots);
-      return mode;
-    },
-    [slots, onChange, isActive],
-  );
-
-  const getCellKey = (day: number, slot: { start: string; end: string }) =>
-    `${day}-${slot.start}-${slot.end}`;
+  const getCellKey = (day: number, start: string, end: string) => `${day}-${start}-${end}`;
 
   const handlePointerDown = useCallback(
     (dayOfWeek: number, slot: { start: string; end: string }) => {
       if (disabled) return;
-      const mode = toggleCell(dayOfWeek, slot) as 'add' | 'remove';
-      setIsDragging(true);
+
+      const active = isActive(dayOfWeek, slot.start, slot.end);
+      const mode: 'add' | 'remove' = active ? 'remove' : 'add';
       setDragMode(mode);
-      setDragCells(new Set([getCellKey(dayOfWeek, slot)]));
+      setIsDragging(true);
+      touchedRef.current = new Set([getCellKey(dayOfWeek, slot.start, slot.end)]);
+
+      if (mode === 'remove') {
+        slotsRef.current = slotsRef.current.filter(
+          (s) => !(s.dayOfWeek === dayOfWeek && s.startTime === slot.start && s.endTime === slot.end),
+        );
+      } else {
+        slotsRef.current = [
+          ...slotsRef.current,
+          { dayOfWeek, startTime: slot.start, endTime: slot.end },
+        ];
+      }
+      setRenderVer((v) => v + 1);
 
       const handleUp = () => {
         setIsDragging(false);
         setDragMode(null);
-        setDragCells(new Set());
+        touchedRef.current = new Set();
+        onChangeRef.current(slotsRef.current);
         document.removeEventListener('pointerup', handleUp);
         document.removeEventListener('pointermove', handleMove);
       };
@@ -90,41 +101,56 @@ export function AvailabilityGrid({ slots, onChange, disabled }: AvailabilityGrid
         const ce = cell.dataset.end;
         if (cd === undefined || !cs || !ce) return;
         const cellDay = parseInt(cd, 10);
-        const cellSlot = { start: cs, end: ce };
-        const key = getCellKey(cellDay, cellSlot);
+        const cellStart = cs;
+        const cellEnd = ce;
+        const key = getCellKey(cellDay, cellStart, cellEnd);
 
-        if (!dragCells.has(key)) {
-          toggleCell(cellDay, cellSlot, mode);
-          setDragCells((prev) => new Set(prev).add(key));
+        if (touchedRef.current.has(key)) return;
+        touchedRef.current.add(key);
+
+        const currentlyActive = isActive(cellDay, cellStart, cellEnd);
+
+        if (mode === 'remove' && currentlyActive) {
+          slotsRef.current = slotsRef.current.filter(
+            (s) => !(s.dayOfWeek === cellDay && s.startTime === cellStart && s.endTime === cellEnd),
+          );
+        } else if (mode === 'add' && !currentlyActive) {
+          slotsRef.current = [
+            ...slotsRef.current,
+            { dayOfWeek: cellDay, startTime: cellStart, endTime: cellEnd },
+          ];
+        } else {
+          return;
         }
+        setRenderVer((v) => v + 1);
       };
 
       document.addEventListener('pointerup', handleUp);
       document.addEventListener('pointermove', handleMove);
     },
-    [disabled, toggleCell, dragCells, getCellKey],
+    [disabled, isActive],
   );
 
   const toggleDay = useCallback(
     (dayOfWeek: number) => {
       if (disabled) return;
-      const daySlots = HALF_HOUR_SLOTS;
-      const allActive = daySlots.every((s) => isActive(dayOfWeek, s.start, s.end));
+      const names = HALF_HOUR_SLOTS;
+      const allActive = names.every((s) => isActive(dayOfWeek, s.start, s.end));
 
-      const others = slots
-        .filter((s) => s.dayOfWeek !== dayOfWeek)
-        .map((s) => ({ dayOfWeek: s.dayOfWeek, startTime: s.startTime, endTime: s.endTime }));
+      const others = slotsRef.current.filter((s) => s.dayOfWeek !== dayOfWeek);
 
       if (allActive) {
-        onChange(others);
+        slotsRef.current = others;
       } else {
-        const toAdd = daySlots
+        const toAdd = names
           .filter((s) => !isActive(dayOfWeek, s.start, s.end))
           .map((s) => ({ dayOfWeek, startTime: s.start, endTime: s.end }));
-        onChange([...others, ...toAdd]);
+        slotsRef.current = [...others, ...toAdd];
       }
+      setRenderVer((v) => v + 1);
+      onChangeRef.current(slotsRef.current);
     },
-    [disabled, slots, onChange, isActive],
+    [disabled, isActive],
   );
 
   const isDayFull = useCallback(
@@ -151,7 +177,6 @@ export function AvailabilityGrid({ slots, onChange, disabled }: AvailabilityGrid
             key={day}
             type="button"
             onClick={() => toggleDay(i)}
-            onDoubleClick={(e) => { e.preventDefault(); toggleDay(i); }}
             className={`p-2 text-center text-xs font-bold rounded-t-lg transition-colors cursor-pointer border-b-2 ${
               isDayFull(i)
                 ? 'bg-blue-50 text-blue-700 border-blue-500'
@@ -164,7 +189,7 @@ export function AvailabilityGrid({ slots, onChange, disabled }: AvailabilityGrid
           </button>
         ))}
 
-        {HALF_HOUR_SLOTS.map((slot, slotIdx) => (
+        {HALF_HOUR_SLOTS.map((slot) => (
           <div key={slot.start} className="contents">
             <div className={`p-1.5 text-[10px] text-gray-400 flex items-center justify-end pr-2 ${
               slot.start.endsWith(':00') ? 'font-semibold text-gray-500' : ''
@@ -173,8 +198,8 @@ export function AvailabilityGrid({ slots, onChange, disabled }: AvailabilityGrid
             </div>
             {Array.from({ length: 7 }).map((_, dayIdx) => {
               const active = isActive(dayIdx, slot.start, slot.end);
-              const cellKey = getCellKey(dayIdx, slot);
-              const isDraggingThis = isDragging && dragCells.has(cellKey);
+              const cellKey = getCellKey(dayIdx, slot.start, slot.end);
+              const isDraggingThis = isDragging && touchedRef.current.has(cellKey);
 
               return (
                 <div
