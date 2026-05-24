@@ -29,8 +29,8 @@ export default function PanelPage() {
         try {
           const result = await setMyAvailability(newSlots);
           setAvailabilitySlots(result);
-        } catch {
-          toast.error('Error al guardar disponibilidad');
+        } catch (err: any) {
+          toast.error(err.message || 'Error al guardar disponibilidad');
         } finally {
           setSavingAvailability(false);
         }

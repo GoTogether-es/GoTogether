@@ -35,7 +35,9 @@ export class AvailabilityService {
 
     const hasOverlap = this.detectOverlaps(slots);
     if (hasOverlap) {
-      throw new BadRequestException('Los horarios no pueden solaparse entre sí');
+      throw new BadRequestException(
+        'Los horarios no pueden solaparse entre sí',
+      );
     }
 
     await this.prisma.availabilitySlot.deleteMany({ where: { companionId } });
