@@ -141,8 +141,11 @@ export default function AdminPage() {
         ))}
       </div>
 
+      {tab === 'dashboard' && !stats && <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-blue-600" /></div>}
       {tab === 'dashboard' && stats && <DashboardTab stats={stats} />}
-      {tab === 'users' && <UsersTab users={users} />}
+      {tab === 'users' && !users.length && <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-blue-600" /></div>}
+      {tab === 'users' && users.length > 0 && <UsersTab users={users} />}
+      {tab === 'pending' && !pending && <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-blue-600" /></div>}
       {tab === 'pending' && pending && <PendingTab pending={pending} adminKey={key!} onReload={loadDashboard} />}
       {tab === 'bookings' && <BookingsTab bookings={bookings} meta={bookingsMeta} detail={bookingDetail} filter={bookingStatusFilter} onFilter={setBookingStatusFilter} onLoad={loadBookings} onDetail={async (id: string) => { try { setBookingDetail(await adminGetBooking(key!, id)); } catch { toast.error('Error al cargar detalle'); } }} onCloseDetail={() => setBookingDetail(null)} onUpdateStatus={async (id: string, status: string) => { await adminUpdateBookingStatus(key!, id, status); toast.success('Estado actualizado'); loadBookings(); }} />}
       {tab === 'services' && <ServicesTab services={services} modal={showServiceModal} edit={editingService} onOpenModal={() => { setEditingService(null); setShowServiceModal(true); }} onEdit={(s: ServiceData) => { setEditingService(s); setShowServiceModal(true); }} onCloseModal={() => setShowServiceModal(false)} onSave={async (data: { name: string; description?: string; price: number; category?: string }) => { if (editingService) { await adminUpdateService(key!, editingService.id, data); } else { await adminCreateService(key!, data); } toast.success('Servicio guardado'); setShowServiceModal(false); loadServices(); }} onToggle={async (id: string) => { await adminToggleService(key!, id); loadServices(); }} />}
@@ -195,18 +198,9 @@ function PendingTab({ pending, adminKey, onReload }: { pending: AdminPending; ad
               </div>
               <div className="flex gap-2 shrink-0">
                 <PendingButton icon={CheckCircle} label="Aprobar" onClick={async () => { await adminVerifyCompanion(adminKey, c.id); toast.success('Aprobado'); onReload(); }} />
-                <PendingButton icon={XCircle} label="Rechazar" danger onClick={async () => { await adminRejectCompanion(adminKey, c.id); toast.success('Rechazado'); onReload(); }} />
-              </div>
-            </div></div>))}</div>}</div>
-      <div><h2 className="text-lg font-bold mb-4 flex items-center gap-2"><FileText className="w-5 h-5 text-blue-600" />Clientes ({pending.clients.length})</h2>
-        {pending.clients.length === 0 ? <p className="text-gray-400 py-4">Sin pendientes</p> :
-          <div className="space-y-4">{pending.clients.map(c => (
-            <div key={c.id} className="gt-card p-6"><div className="flex items-start justify-between gap-4 flex-wrap">
-              <div className="flex-1 min-w-[200px]"><p className="font-bold text-lg">{c.fullName}</p><p className="text-gray-500 text-sm">{c.user.email}</p>{c.disabilityType && <span className="gt-tag text-xs mt-2 inline-block">{c.disabilityType}</span>}</div>
-              <div className="flex flex-col gap-2">{c.disabilityDocument && <a href={c.disabilityDocument} target="_blank" rel="noopener noreferrer" className="gt-button gt-button--ghost text-sm flex items-center gap-1"><ExternalLink className="w-3 h-3" />Certificado</a>}</div>
-              <div className="flex gap-2 shrink-0">
-                <PendingButton icon={CheckCircle} label="Aprobar" onClick={async () => { await adminVerifyProfile(adminKey, c.id); toast.success('Aprobado'); onReload(); }} />
-                <PendingButton icon={XCircle} label="Rechazar" danger onClick={async () => { await adminRejectProfile(adminKey, c.id); toast.success('Rechazado'); onReload(); }} />
+                <PendingButton icon={XCircle} label="Rechazar" danger onClick={async () => { if (!window.confirm('¿Rechazar a este acompañante? Esta acción no se puede deshacer.')) return; await adminRejectCompanion(adminKey, c.id); toast.success('Rechazado'); onReload(); }} />
+
+                <PendingButton icon={XCircle} label="Rechazar" danger onClick={async () => { if (!window.confirm('¿Rechazar a este cliente? Esta acción no se puede deshacer.')) return; await adminRejectProfile(adminKey, c.id); toast.success('Rechazado'); onReload(); }} />
               </div>
             </div></div>))}</div>}</div>
     </div>
@@ -287,7 +281,11 @@ function ServicesTab({ services, modal, edit, onOpenModal, onEdit, onCloseModal,
               <input className="gt-input" placeholder="Categoría" value={form.category} onChange={e => setForm({ ...form, category: e.target.value })} />
             </div>
             <div className="flex gap-3 mt-6">
-              <button onClick={() => onSave({ name: form.name, description: form.description || undefined, price: Math.round(form.price * 100), category: form.category || undefined })} className="gt-button gt-button--primary flex-1">Guardar</button>
+              <button onClick={() => {
+                if (!form.name.trim()) { toast.error('El nombre es requerido'); return; }
+                if (form.price <= 0) { toast.error('El precio debe ser mayor que 0'); return; }
+                onSave({ name: form.name.trim(), description: form.description?.trim() || undefined, price: Math.round(form.price * 100), category: form.category?.trim() || undefined });
+              }} className="gt-button gt-button--primary flex-1">Guardar</button>
               <button onClick={onCloseModal} className="gt-button gt-button--ghost flex-1">Cancelar</button>
             </div>
           </div>

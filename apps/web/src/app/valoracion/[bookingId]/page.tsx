@@ -255,7 +255,16 @@ export default function ValoracionPage() {
                     <label className="block text-sm font-bold text-gray-700 mb-3">
                       ¿Qué puntuación le das al servicio?
                     </label>
-                    <div className="flex items-center gap-1" role="radiogroup" aria-label="Puntuación del servicio">
+                    <div className="flex items-center gap-1" role="radiogroup" aria-label="Puntuación del servicio" onKeyDown={(e) => {
+                      const current = rating || 1;
+                      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        setRating(Math.min(5, current + 1));
+                      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        setRating(Math.max(1, current - 1));
+                      }
+                    }}>
                       {[1, 2, 3, 4, 5].map((star) => (
                         <button
                           key={star}
@@ -263,6 +272,7 @@ export default function ValoracionPage() {
                           onClick={() => setRating(star)}
                           onMouseEnter={() => setHoverRating(star)}
                           onMouseLeave={() => setHoverRating(0)}
+                          tabIndex={star === 1 ? 0 : -1}
                           className="p-0.5 transition-transform hover:scale-110"
                           aria-label={`${star} estrella${star !== 1 ? 's' : ''}`}
                           role="radio"

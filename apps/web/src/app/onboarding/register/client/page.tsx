@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -12,6 +12,9 @@ import { FileUpload } from '@/components/file-upload';
 import { StepIndicator } from '@/components/step-indicator';
 import { clientRegistrationSchema, type ClientRegistrationFormData } from '@/lib/schemas';
 
+const STORAGE_KEY = 'gotogether-client-registration';
+const DOC_STORAGE_KEY = 'gotogether-client-doc';
+
 const DISABILITY_OPTIONS = [
   'Movilidad reducida',
   'Discapacidad visual',
@@ -21,15 +24,37 @@ const DISABILITY_OPTIONS = [
 
 export default function ClientRegistrationPage() {
   const router = useRouter();
-  const [disabilityDocument, setDisabilityDocument] = useState('');
+  const [disabilityDocument, setDisabilityDocument] = useState(() => {
+    try { return sessionStorage.getItem(DOC_STORAGE_KEY) || ''; } catch { return ''; }
+  });
+
+  const saved = (() => { try { return sessionStorage.getItem(STORAGE_KEY); } catch { return null; } })();
+  const initialData = saved ? JSON.parse(saved) : {};
 
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<ClientRegistrationFormData>({
     resolver: zodResolver(clientRegistrationSchema),
+    defaultValues: initialData,
   });
+
+  useEffect(() => {
+    const sub = watch((data) => {
+      try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch {}
+    });
+    return () => sub.unsubscribe();
+  }, [watch]);
+
+  useEffect(() => {
+    try { sessionStorage.setItem(DOC_STORAGE_KEY, disabilityDocument); } catch {}
+  }, [disabilityDocument]);
+
+  useEffect(() => {
+    if (saved) toast('Formulario restaurado', { description: 'Tus datos anteriores se han recuperado.' });
+  }, []);
 
   const onSubmit = async (data: ClientRegistrationFormData) => {
     try {
@@ -38,6 +63,7 @@ export default function ClientRegistrationPage() {
         isCompanion: false,
         disabilityDocument: disabilityDocument || undefined,
       });
+      try { sessionStorage.removeItem(STORAGE_KEY); sessionStorage.removeItem(DOC_STORAGE_KEY); } catch {}
       toast.success('¡Perfil creado! Bienvenido a GoTogether.');
       setTimeout(() => router.push('/explorar'), 1500);
     } catch {

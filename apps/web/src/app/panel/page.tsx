@@ -201,7 +201,7 @@ export default function PanelPage() {
           {/* Open Marketplace - Pending Bookings */}
           <div className="mb-10">
             <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-              <ClipboardList className="w-5 h-5 text-blue-600" />
+              <ClipboardList className="w-5 h-5 text-amber-600" />
               Solicitudes abiertas ({openBookings.length})
             </h2>
             {openBookings.length === 0 ? (
@@ -212,7 +212,7 @@ export default function PanelPage() {
             ) : (
               <div className="space-y-4">
                 {openBookings.map((b) => (
-                  <Card key={b.id} className="p-6">
+                  <Card key={b.id} className="p-6 border-l-4 border-l-amber-400">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
@@ -226,6 +226,9 @@ export default function PanelPage() {
                           {b.disability && <span className="gt-tag text-xs">{b.disability}</span>}
                         </div>
                         {b.summary && <p className="text-gray-500 text-sm mt-2">{b.summary}</p>}
+                        <Link href={`/explorar/${b.companionId || b.clientId}`} className="inline-flex items-center gap-1 text-xs text-blue-600 hover:underline mt-2">
+                          Ver detalle →
+                        </Link>
                       </div>
                       <div className="flex gap-2 shrink-0">
                         <Button
@@ -255,8 +258,8 @@ export default function PanelPage() {
 
           {/* My Assigned Bookings */}
           <div>
-            <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-              <CalendarDays className="w-5 h-5 text-blue-600" />
+              <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+              <CalendarDays className="w-5 h-5 text-emerald-600" />
               Mis servicios ({myBookings.length})
             </h2>
             {myBookings.length === 0 ? (
@@ -267,7 +270,7 @@ export default function PanelPage() {
             ) : (
               <div className="space-y-4">
                 {myBookings.map((b) => (
-                  <Card key={b.id} className="p-6">
+                  <Card key={b.id} className="p-6 border-l-4 border-l-emerald-400">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">

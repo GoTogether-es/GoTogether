@@ -151,6 +151,16 @@ export default function CompanionRegistrationPage() {
                   placeholder="Ej: Enfermería, cocina, idiomas, coche propio, acompañamiento médico..."
                   {...register('specialties')}
                 />
+                <p className="text-xs text-gray-400 mt-1">Separa cada especialidad con una coma</p>
+                {formValues.specialties && (
+                  <div className="flex flex-wrap gap-1.5 mt-2">
+                    {formValues.specialties.split(',').filter(Boolean).map((s, i) => (
+                      <span key={i} className="inline-flex items-center gap-1 px-2.5 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-full">
+                        {s.trim()}
+                      </span>
+                    ))}
+                  </div>
+                )}
                 {errors.specialties && <p className="text-red-500 text-xs mt-1" role="alert">{errors.specialties.message}</p>}
               </div>
             </Card>

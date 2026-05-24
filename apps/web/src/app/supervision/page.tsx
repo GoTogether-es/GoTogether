@@ -46,7 +46,7 @@ export default function SupervisionPage() {
   const { data: supervisor } = useMySupervisor();
   const { data: searchResults = [], isLoading: searching } = useSearchUsers(debouncedSearch);
   const { data: pendingInvites = [], refetch: refetchInvites } = usePendingInvites();
-  const { data: bookingsData } = useSupervisorBookings(bookingPage);
+  const { data: bookingsData, isLoading: bookingsLoading } = useSupervisorBookings(bookingPage);
   const createMutation = useCreateSupervision();
   const removeMutation = useRemoveSupervision();
   const cancelInviteMutation = useCancelInvitation();
@@ -193,7 +193,13 @@ export default function SupervisionPage() {
 
           {tab === 'bookings' && (
             <div>
-              {bookings.length === 0 ? (
+              {bookingsLoading ? (
+                <div className="space-y-2 py-4">
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <div key={i} className="h-10 bg-gray-100 rounded-lg animate-pulse" />
+                  ))}
+                </div>
+              ) : bookings.length === 0 ? (
                 <p className="text-gray-400 py-8 text-center">No hay reservas de tus clientes.</p>
               ) : (
                 <div className="overflow-x-auto">
