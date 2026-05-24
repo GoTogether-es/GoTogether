@@ -9,6 +9,7 @@ import { Button, Card, Container, Section } from '@gotogether/ui';
 import { getProfile, upsertProfile } from '@/services/api';
 import { Loader2, Pencil, X, UserCircle, Briefcase, Heart, Phone, FileText, MapPin } from 'lucide-react';
 import { AvatarUpload } from '@/components/avatar-upload';
+import { LinkButton } from '@/components/link-button';
 import { perfilSchema, type PerfilFormData } from '@/lib/schemas';
 import { useLocationSharing } from '@/hooks/use-location-sharing';
 import type { UserProfile } from '@/types';
@@ -194,6 +195,21 @@ function PerfilContent() {
                       ))}
           {/* Location Sharing */}
           {!isCompanion && <LocationSharingCard />}
+
+          {/* Panel link for companions */}
+          {isCompanion && (
+            <Card className="p-6 border-0 shadow-xl shadow-blue-900/5 mt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-bold text-gray-900">Panel de acompañante</h3>
+                  <p className="text-sm text-gray-500">Gestiona tus servicios, disponibilidad y solicitudes.</p>
+                </div>
+                <LinkButton href="/panel" variant="primary">
+                  Ir al Panel
+                </LinkButton>
+              </div>
+            </Card>
+          )}
 
         </div>
                   </div>
