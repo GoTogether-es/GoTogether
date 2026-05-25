@@ -1,8 +1,18 @@
 import bundleAnalyzer from '@next/bundle-analyzer';
+import { createRequire } from 'module';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from 'fs';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const require = createRequire(import.meta.url);
+
+function findZodV4Core() {
+  const zodPkg = path.dirname(require.resolve('zod/package.json'));
+  const cjsPath = path.join(zodPkg, 'v4', 'core', 'index.cjs');
+  if (fs.existsSync(cjsPath)) return cjsPath;
+  const jsPath = path.join(zodPkg, 'v4', 'core', 'index.js');
+  if (fs.existsSync(jsPath)) return jsPath;
+  return cjsPath;
+}
 
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
@@ -12,12 +22,11 @@ const withBundleAnalyzer = bundleAnalyzer({
 const nextConfig = withBundleAnalyzer({
   reactStrictMode: true,
   poweredByHeader: false,
-  transpilePackages: ['@gotogether/ui', '@gotogether/shared', '@hookform/resolvers'],
+  transpilePackages: ['@gotogether/ui', '@gotogether/shared'],
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
-      'zod/v4/core': path.resolve(__dirname, 'node_modules/zod/v4/core/index.cjs'),
-      '@hookform/resolvers/zod$': path.resolve(__dirname, 'node_modules/@hookform/resolvers/zod/dist/zod.js'),
+      'zod/v4/core': findZodV4Core(),
     };
     return config;
   },
