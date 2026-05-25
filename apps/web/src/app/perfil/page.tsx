@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import { Button, Card, Container, Section } from '@gotogether/ui';
 import { getProfile, upsertProfile } from '@/services/api';
-import { Loader2, Pencil, X, UserCircle, Briefcase, Heart, Phone, FileText, MapPin } from 'lucide-react';
+import { Loader2, Pencil, X, UserCircle, Briefcase, Heart, Phone, FileText, MapPin, Star } from 'lucide-react';
 import { AvatarUpload } from '@/components/avatar-upload';
 import { LinkButton } from '@/components/link-button';
 import { perfilSchema, type PerfilFormData } from '@/lib/schemas';
@@ -231,14 +231,6 @@ function PerfilContent() {
                 <LinkButton href="/panel" variant="primary">
                   Ir al Panel
                 </LinkButton>
-              </div>
-            </Card>
-          )}
-
-        </div>
-                    {profile.companion?.yearsOnPlatform ?? 0} años en la plataforma
-                  </span>
-                </div>
               </div>
             </Card>
           )}

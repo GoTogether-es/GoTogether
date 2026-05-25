@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button, Card, Container, Section } from '@gotogether/ui';
 import { Star, MessageCircle, Info, Send, CheckCircle, Loader2 } from 'lucide-react';
+import { getBooking, getReportByBooking, createReport } from '@/services/api';
 import { SkeletonForm } from '@/components/skeleton';
 
 export default function ValoracionPage() {
@@ -89,45 +90,6 @@ export default function ValoracionPage() {
                 <div className="h-24 w-full bg-gray-200 rounded-xl" />
               </div>
             </div>
-          </div>
-        </Container>
-      </Section>
-    );
-  }
-      } catch (err: any) {
-        setError(err.message || 'Error al cargar los datos');
-      } finally {
-        setLoading(false);
-      }
-    }
-    load();
-  }, [bookingId]);
-
-  const handleSubmit = async () => {
-    if (rating < 1) {
-      setError('Selecciona una puntuación de estrellas');
-      return;
-    }
-    setSubmitting(true);
-    setError('');
-    try {
-      await createReport(bookingId, { rating, summary: summary || undefined });
-      setSuccess(true);
-      const reportData = await getReportByBooking(bookingId);
-      setExistingReport(reportData);
-    } catch (err: any) {
-      setError(err.message || 'Error al enviar la valoración');
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  if (loading) {
-    return (
-      <Section>
-        <Container>
-          <div className="max-w-4xl mx-auto text-center py-20">
-            <p className="text-gray-500">Cargando...</p>
           </div>
         </Container>
       </Section>

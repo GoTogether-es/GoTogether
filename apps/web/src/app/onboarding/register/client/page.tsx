@@ -54,7 +54,7 @@ export default function ClientRegistrationPage() {
 
   useEffect(() => {
     if (saved) toast('Formulario restaurado', { description: 'Tus datos anteriores se han recuperado.' });
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onSubmit = async (data: ClientRegistrationFormData) => {
     try {

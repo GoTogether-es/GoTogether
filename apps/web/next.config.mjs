@@ -1,4 +1,8 @@
 import bundleAnalyzer from '@next/bundle-analyzer';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
@@ -9,6 +13,13 @@ const nextConfig = withBundleAnalyzer({
   reactStrictMode: true,
   poweredByHeader: false,
   transpilePackages: ['@gotogether/ui', '@gotogether/shared'],
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'zod/v4/core$': path.resolve(__dirname, 'node_modules/zod/v4/core/index.cjs'),
+    };
+    return config;
+  },
   images: {
     remotePatterns: [
       {

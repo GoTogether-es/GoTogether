@@ -86,7 +86,7 @@ export type BookingData = {
   service?: ServiceData | null;
   payment?: PaymentData | null;
   chatRoom?: { id: string } | null;
-  report?: { id: string } | null;
+  report?: { id: string; rating?: number | null; summary?: string | null } | null;
 };
 
 export type PaymentData = {

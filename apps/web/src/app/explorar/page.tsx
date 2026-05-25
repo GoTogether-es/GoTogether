@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Container, Section } from '@gotogether/ui';
 import { Search, SlidersHorizontal } from 'lucide-react';
@@ -17,6 +17,26 @@ const DISABILITY_OPTIONS = [
 ];
 
 export default function ExplorarPage() {
+  return (
+    <Suspense fallback={
+      <Section>
+        <Container>
+          <div className="max-w-6xl mx-auto py-20">
+            <div className="h-8 w-64 bg-gray-200 rounded-lg animate-pulse mb-2" />
+            <div className="h-5 w-96 bg-gray-200 rounded-lg animate-pulse mb-8" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
+            </div>
+          </div>
+        </Container>
+      </Section>
+    }>
+      <ExplorarContent />
+    </Suspense>
+  );
+}
+
+function ExplorarContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 

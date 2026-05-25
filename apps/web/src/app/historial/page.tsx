@@ -51,6 +51,7 @@ export default function HistorialPage() {
               ))}
             </div>
           ) : stats && (
+            <div className="grid grid-cols-3 gap-4 mb-8">
               <Card className="p-5 bg-emerald-50 border-emerald-100 text-center">
                 <Award className="w-5 h-5 mx-auto mb-1 text-emerald-600" />
                 <p className="text-2xl font-extrabold text-emerald-700">{stats.completed}</p>
@@ -144,7 +145,7 @@ export default function HistorialPage() {
                         {booking.report && (
                           <div className="mt-3 pt-3 border-t flex items-center gap-2 text-sm">
                             <Star className="w-4 h-4 fill-amber-400 stroke-amber-400" />
-                            <span className="font-bold">{booking.report.rating}/5</span>
+                            <span className="font-bold">{`${booking.report.rating ?? '—'} / 5`}</span>
                             <Link href={`/valoracion/${booking.id}`} className="text-blue-600 hover:underline text-xs">
                               Ver valoración
                             </Link>
