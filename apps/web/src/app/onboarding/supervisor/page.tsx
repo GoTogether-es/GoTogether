@@ -5,16 +5,17 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Button, Card, Container, Section } from '@gotogether/ui';
 import { LinkButton } from '@/components/link-button';
-import { ShieldCheck, Search, User, Mail, Send, CheckCircle, Loader2, ArrowRight } from 'lucide-react';
+import { Search, User, Mail, Send, CheckCircle, Loader2, ArrowRight } from 'lucide-react';
 import { inviteSupervision, searchUsers } from '@/services/api';
+import type { UserSearchResult } from '@/types';
 
 export default function SupervisorOnboardingPage() {
   const router = useRouter();
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchResults, setSearchResults] = useState<UserSearchResult[]>([]);
   const [searching, setSearching] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [selectedUser, setSelectedUser] = useState<UserSearchResult | null>(null);
   const [showNoAccount, setShowNoAccount] = useState(false);
   const [manualName, setManualName] = useState('');
   const [manualEmail, setManualEmail] = useState('');
@@ -36,7 +37,7 @@ export default function SupervisorOnboardingPage() {
     }, 350);
   }, []);
 
-  const handleSelectUser = (user: any) => {
+  const handleSelectUser = (user: UserSearchResult) => {
     setSelectedUser(user);
     setSearchQuery(user.profile?.fullName || user.email);
     setSearchResults([]);
@@ -54,8 +55,9 @@ export default function SupervisorOnboardingPage() {
         setSentName(selectedUser.profile?.fullName || selectedUser.email);
         setSent(true);
         toast.success('Invitación enviada');
-      } catch (err: any) {
-        toast.error(err.message || 'Error al enviar invitación');
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : 'Error al enviar invitación';
+        toast.error(message);
       } finally {
         setSending(false);
       }
@@ -69,8 +71,9 @@ export default function SupervisorOnboardingPage() {
         setSentName(manualName);
         setSent(true);
         toast.success('Invitación enviada');
-      } catch (err: any) {
-        toast.error(err.message || 'Error al enviar invitación');
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : 'Error al enviar invitación';
+        toast.error(message);
       } finally {
         setSending(false);
       }
@@ -143,7 +146,7 @@ export default function SupervisorOnboardingPage() {
 
             {!searching && searchResults.length > 0 && !selectedUser && (
               <div className="border border-gray-200 rounded-xl overflow-hidden mb-4">
-                {searchResults.slice(0, 5).map((user: any) => (
+                {searchResults.slice(0, 5).map((user: UserSearchResult) => (
                   <button
                     key={user.id}
                     type="button"

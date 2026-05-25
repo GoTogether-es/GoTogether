@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Button, Card, Container, Section } from '@gotogether/ui';
 import { useBookingHistory, useBookingStats } from '@/services/queries';
 import { Briefcase, Calendar, Clock, MapPin, Star, ChevronLeft, ChevronRight, TrendingUp, Award } from 'lucide-react';
+import { LOCALE } from '@/lib/constants';
 
 const STATUS_LABELS: Record<string, string> = {
   DRAFT: 'Borrador',
@@ -121,7 +122,7 @@ export default function HistorialPage() {
                             <div>
                               <span className="text-xs font-bold uppercase tracking-wider text-gray-400">Fecha</span>
                               <p className="font-semibold text-gray-800">
-                                {new Date(booking.scheduledAt).toLocaleDateString('es-ES', { dateStyle: 'long' })}
+                                {new Date(booking.scheduledAt).toLocaleDateString(LOCALE, { dateStyle: 'long' })}
                               </p>
                             </div>
                           </div>
@@ -130,7 +131,7 @@ export default function HistorialPage() {
                             <div>
                               <span className="text-xs font-bold uppercase tracking-wider text-gray-400">Hora</span>
                               <p className="font-semibold text-gray-800">
-                                {new Date(booking.scheduledAt).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
+                                {new Date(booking.scheduledAt).toLocaleTimeString(LOCALE, { hour: '2-digit', minute: '2-digit' })}
                               </p>
                             </div>
                           </div>
@@ -156,7 +157,7 @@ export default function HistorialPage() {
                         <div className="text-right shrink-0">
                           <span className="text-xs font-bold uppercase tracking-wider text-gray-400 block">Precio orientativo</span>
                           <p className="text-lg font-bold text-blue-600">
-                            {new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(booking.service.price / 100)}/h
+                            {new Intl.NumberFormat(LOCALE, { style: 'currency', currency: 'EUR' }).format(booking.service.price / 100)}/h
                           </p>
                         </div>
                       )}

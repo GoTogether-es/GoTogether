@@ -57,9 +57,10 @@ export function FileUpload({ onUploaded, accept, label, helper, uploadedUrl }: F
 
       onUploaded(urlData.publicUrl);
       setDone(true);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Upload failed:', err);
-      setError(err.message || 'Error al subir el archivo');
+      const message = err instanceof Error ? err.message : 'Error al subir el archivo';
+      setError(message);
       setFileName(null);
     } finally {
       setUploading(false);

@@ -2,8 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect } from 'react';
 import type { AvailabilitySlotData } from '@/types';
-
-const DAY_NAMES = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+import { DAY_NAMES } from '@/lib/constants';
 
 function generateHalfHourSlots(): { start: string; end: string; label: string }[] {
   const slots: { start: string; end: string; label: string }[] = [];
@@ -53,8 +52,6 @@ export function AvailabilityGrid({ slots, onChange, disabled }: AvailabilityGrid
       slotsRef.current.some(
         (s) => s.dayOfWeek === dayOfWeek && s.startTime === startTime && s.endTime === endTime,
       ),
-    // renderVer makes this rebuild when ref changes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [renderVer],
   );
 

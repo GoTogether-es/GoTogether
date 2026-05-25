@@ -9,11 +9,12 @@ import { Loader2, CalendarDays, ClipboardList, CheckCircle, XCircle, Clock, Mess
 import type { BookingData, AvailabilitySlotData } from '@/types';
 import { toast } from 'sonner';
 import { AvailabilityGrid } from '@/components/availability-grid';
-
-const DAY_NAMES = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+import { StatCard } from '@/components/StatCard';
+import { DAY_NAMES, LOCALE } from '@/lib/constants';
 
 export default function PanelPage() {
   const router = useRouter();
+  const mountedRef = useRef(true);
   const [myBookings, setMyBookings] = useState<BookingData[]>([]);
   const [openBookings, setOpenBookings] = useState<BookingData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -31,8 +32,9 @@ export default function PanelPage() {
         try {
           const result = await setMyAvailability(newSlots);
           setAvailabilitySlots(result);
-        } catch (err: any) {
-          toast.error(err.message || 'Error al guardar disponibilidad');
+        } catch (err: unknown) {
+          const message = err instanceof Error ? err.message : 'Error al guardar disponibilidad';
+          toast.error(message);
         } finally {
           setSavingAvailability(false);
         }
@@ -41,38 +43,44 @@ export default function PanelPage() {
     [],
   );
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       const [my, open, profile] = await Promise.all([
         getMyBookings(),
         getOpenBookings(),
         getProfile(),
       ]);
+      if (!mountedRef.current) return;
       if (!profile?.companion) {
         router.push('/perfil');
         return;
       }
 
+      if (!mountedRef.current) return;
       setMyBookings(my);
       setOpenBookings(open);
       setVerified(profile?.companion?.verified ?? null);
 
       if (profile?.companion) {
         const slots = await getCompanionAvailability(profile.companion.id);
+        if (!mountedRef.current) return;
         setAvailabilitySlots(slots);
       }
     } catch {
       toast.error('Error al cargar los datos');
     } finally {
+      if (!mountedRef.current) return;
       setLoading(false);
     }
-  };
+  }, [router]);
 
-  const handleAction = async (id: string, action: 'ACCEPTED' | 'DECLINED' | 'IN_PROGRESS' | 'COMPLETED') => {
+  useEffect(() => {
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+
+  const handleAction = useCallback(async (id: string, action: 'ACCEPTED' | 'DECLINED' | 'IN_PROGRESS' | 'COMPLETED') => {
     setActionLoading(id);
     try {
       await updateBookingStatus(id, action);
@@ -83,7 +91,11 @@ export default function PanelPage() {
     } finally {
       setActionLoading(null);
     }
-  };
+  }, [loadData]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   const handleAvailabilityChange = useCallback(
     (newSlots: { dayOfWeek: number; startTime: string; endTime: string }[]) => {
@@ -228,7 +240,7 @@ export default function PanelPage() {
                         </div>
                         <p className="text-gray-600 mb-2">{b.serviceType}</p>
                         <div className="flex flex-wrap gap-3 text-sm text-gray-500">
-                          <span>{new Date(b.scheduledAt).toLocaleString('es-ES', { dateStyle: 'long', timeStyle: 'short' })}</span>
+                          <span>{new Date(b.scheduledAt).toLocaleString(LOCALE, { dateStyle: 'long', timeStyle: 'short' })}</span>
                           <span>{b.address}</span>
                           {b.disability && <span className="gt-tag text-xs">{b.disability}</span>}
                         </div>
@@ -253,7 +265,7 @@ export default function PanelPage() {
                           onClick={() => handleAction(b.id, 'DECLINED')}
                           disabled={actionLoading === b.id}
                         >
-                          <XCircle className="w-4 h-4" />
+                          <XCircle className="w-4 h-4" aria-label="Rechazar" />
                         </Button>
                       </div>
                     </div>
@@ -286,7 +298,7 @@ export default function PanelPage() {
                         </div>
                         <p className="text-gray-600 mb-2">{b.serviceType}</p>
                         <div className="flex flex-wrap gap-3 text-sm text-gray-500">
-                          <span>{new Date(b.scheduledAt).toLocaleString('es-ES', { dateStyle: 'long', timeStyle: 'short' })}</span>
+                          <span>{new Date(b.scheduledAt).toLocaleString(LOCALE, { dateStyle: 'long', timeStyle: 'short' })}</span>
                           <span>{b.address}</span>
                           {b.disability && <span className="gt-tag text-xs">{b.disability}</span>}
                         </div>
@@ -294,7 +306,7 @@ export default function PanelPage() {
                       <div className="flex gap-2 shrink-0">
                         {b.status === 'ACCEPTED' && b.chatRoom && (
                           <Link href={`/coordinacion/${b.id}`}>
-                            <Button variant="primary" className="px-4 py-2 text-sm">
+                            <Button variant="primary" className="px-4 py-2 text-sm" aria-label="Iniciar chat">
                               <MessageCircle className="w-4 h-4 mr-1" />
                               Chat
                             </Button>
@@ -314,7 +326,7 @@ export default function PanelPage() {
                           <>
                             {b.chatRoom && (
                               <Link href={`/coordinacion/${b.id}`}>
-                                <Button variant="ghost" className="px-4 py-2 text-sm">
+                                <Button variant="ghost" className="px-4 py-2 text-sm" aria-label="Iniciar chat">
                                   <MessageCircle className="w-4 h-4 mr-1" />
                                   Chat
                                 </Button>
@@ -348,27 +360,5 @@ export default function PanelPage() {
         </div>
       </Container>
     </Section>
-  );
-}
-
-function StatCard({ label, value, icon: Icon, color }: { label: string; value: number; icon: React.ComponentType<{ className?: string }>; color?: 'amber' | 'blue' | 'emerald' }) {
-  const colorClass = color === 'amber'
-    ? 'bg-amber-50 border-amber-100'
-    : color === 'blue'
-      ? 'bg-blue-50 border-blue-100'
-      : 'bg-emerald-50 border-emerald-100';
-
-  const textClass = color === 'amber'
-    ? 'text-amber-700'
-    : color === 'blue'
-      ? 'text-blue-700'
-      : 'text-emerald-700';
-
-  return (
-    <Card className={`p-5 border ${colorClass} text-center`}>
-      <Icon className={`w-5 h-5 mx-auto mb-1 ${textClass}`} />
-      <p className={`text-2xl font-extrabold ${textClass}`}>{value}</p>
-      <p className="text-xs font-medium text-gray-500">{label}</p>
-    </Card>
   );
 }

@@ -14,7 +14,9 @@ export async function updateSession(request: NextRequest) {
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!supabaseUrl || !supabaseKey) {
-    console.warn('Middleware: Missing Supabase Environment Variables');
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('Middleware: Missing Supabase Environment Variables');
+    }
     return response;
   }
 

@@ -1,6 +1,12 @@
+import type { Metadata } from 'next';
 import { Container, Section, Card } from '@gotogether/ui';
 import { LinkButton } from '@/components/link-button';
 import { ShieldCheck } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: 'Términos y Condiciones — GoTogether',
+  description: 'Términos y condiciones de uso de la plataforma GoTogether.',
+};
 
 export default function TermsPage() {
   return (

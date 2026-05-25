@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { Card } from '@gotogether/ui';
 import { ShieldCheck, Star } from 'lucide-react';
 import Image from 'next/image';
@@ -10,7 +11,7 @@ import type { CompanionSummary } from '@/types';
 
 export type { CompanionSummary };
 
-export function CompanionCard({
+export const CompanionCard = memo(function CompanionCard({
   id,
   profile,
   specialties,
@@ -70,4 +71,4 @@ export function CompanionCard({
       </div>
     </Card>
   );
-}
+});

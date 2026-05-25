@@ -7,6 +7,7 @@ import type {
   CompanionDetail,
   BookingData,
   ChatRoomData,
+  ChatMessageData,
   ReportData,
   SupervisionData,
   SupervisorData,
@@ -66,7 +67,12 @@ async function getAuthHeaders(): Promise<Record<string, string>> {
 function validateResponse<T>(schema: z.ZodType<T>, data: unknown, label: string): T {
   const result = schema.safeParse(data);
   if (!result.success) {
-    console.warn(`[API] Schema validation failed for ${label}:`, result.error.flatten());
+    if (process.env.NODE_ENV === 'development') {
+      console.warn(`[API] Schema validation failed for ${label}:`, result.error.flatten());
+    }
+    if (typeof window !== 'undefined' && (window as any).__ZOD_VALIDATION_FAILS) {
+      (window as any).__ZOD_VALIDATION_FAILS.push({ label, errors: result.error.flatten() });
+    }
     return data as T;
   }
   return result.data;
@@ -385,7 +391,7 @@ export async function getChatRoom(bookingId: string, opts?: FetchOptions): Promi
   return validateResponse(chatRoomSchema, json, 'getChatRoom');
 }
 
-export async function sendChatMessage(bookingId: string, content: string): Promise<any> {
+export async function sendChatMessage(bookingId: string, content: string): Promise<ChatMessageData> {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/chat/room/${bookingId}/messages`, {
     method: 'POST',
@@ -410,7 +416,9 @@ export async function logout(): Promise<void> {
     method: 'POST',
     headers,
   }).catch(() => {
-    console.warn('Server logout failed, local signOut completed');
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('Server logout failed, local signOut completed');
+    }
   });
 }
 
@@ -504,7 +512,7 @@ export async function inviteSupervision(data: {
   clientName: string;
   clientEmail?: string;
   clientId?: string;
-}): Promise<any> {
+}): Promise<{ success: boolean; message?: string }> {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/supervision/invite`, {
     method: 'POST',
@@ -518,13 +526,13 @@ export async function inviteSupervision(data: {
   return response.json();
 }
 
-export async function acceptInvitation(token: string): Promise<any> {
+export async function acceptInvitation(token: string): Promise<{ success: boolean; needsAuth?: boolean; message?: string }> {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/supervision/accept?token=${encodeURIComponent(token)}`, { headers });
   return response.json();
 }
 
-export async function getPendingInvites(): Promise<any[]> {
+export async function getPendingInvites(): Promise<{ id: string; clientName: string }[]> {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/supervision/invites`, { headers });
   if (!response.ok) throw new Error('Failed to fetch pending invites');
@@ -670,7 +678,7 @@ export async function adminSendNotification(key: string, data: { title: string; 
   return res.json();
 }
 
-export async function cancelInvitation(id: string): Promise<any> {
+export async function cancelInvitation(id: string): Promise<{ success: boolean; message?: string }> {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/supervision/invite/${id}`, {
     method: 'DELETE',

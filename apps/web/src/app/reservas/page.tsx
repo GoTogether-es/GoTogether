@@ -41,8 +41,9 @@ export default function ReservasPage() {
       await completeByClient(bookingId);
       toast.success('Servicio finalizado');
       router.push(`/valoracion/${bookingId}`);
-    } catch (err: any) {
-      toast.error(err.message || 'Error al finalizar');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Error al finalizar';
+      toast.error(message);
     } finally {
       setCompleting(null);
     }

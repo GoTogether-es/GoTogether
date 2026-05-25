@@ -9,9 +9,11 @@ export function createClient() {
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!supabaseUrl || !supabaseKey) {
-    console.warn(
-      'Missing Supabase environment variables. Using placeholder — auth will not work until configured.'
-    );
+    if (process.env.NODE_ENV === 'development') {
+      console.warn(
+        'Missing Supabase environment variables. Using placeholder — auth will not work until configured.'
+      );
+    }
   }
 
   clientInstance = createBrowserClient(

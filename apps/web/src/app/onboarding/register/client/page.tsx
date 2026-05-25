@@ -11,24 +11,18 @@ import { upsertProfile } from '@/services/api';
 import { FileUpload } from '@/components/file-upload';
 import { StepIndicator } from '@/components/step-indicator';
 import { clientRegistrationSchema, type ClientRegistrationFormData } from '@/lib/schemas';
+import { DISABILITY_OPTIONS } from '@/lib/constants';
 
 const STORAGE_KEY = 'gotogether-client-registration';
 const DOC_STORAGE_KEY = 'gotogether-client-doc';
 
-const DISABILITY_OPTIONS = [
-  'Movilidad reducida',
-  'Discapacidad visual',
-  'Discapacidad auditiva',
-  'Discapacidad cognitiva',
-];
-
 export default function ClientRegistrationPage() {
   const router = useRouter();
   const [disabilityDocument, setDisabilityDocument] = useState(() => {
-    try { return sessionStorage.getItem(DOC_STORAGE_KEY) || ''; } catch { return ''; }
+    try { return sessionStorage.getItem(DOC_STORAGE_KEY) || ''; } catch (err: unknown) { if (process.env.NODE_ENV === 'development') console.error('sessionStorage read error:', err); return ''; }
   });
 
-  const saved = (() => { try { return sessionStorage.getItem(STORAGE_KEY); } catch { return null; } })();
+  const saved = (() => { try { return sessionStorage.getItem(STORAGE_KEY); } catch (err: unknown) { if (process.env.NODE_ENV === 'development') console.error('sessionStorage read error:', err); return null; } })();
   const initialData = saved ? JSON.parse(saved) : {};
 
   const {
@@ -43,18 +37,18 @@ export default function ClientRegistrationPage() {
 
   useEffect(() => {
     const sub = watch((data) => {
-      try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch {}
+      try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (err: unknown) { if (process.env.NODE_ENV === 'development') console.error('sessionStorage write error:', err); }
     });
     return () => sub.unsubscribe();
   }, [watch]);
 
   useEffect(() => {
-    try { sessionStorage.setItem(DOC_STORAGE_KEY, disabilityDocument); } catch {}
+    try { sessionStorage.setItem(DOC_STORAGE_KEY, disabilityDocument); } catch (err: unknown) { if (process.env.NODE_ENV === 'development') console.error('sessionStorage write error:', err); }
   }, [disabilityDocument]);
 
   useEffect(() => {
     if (saved) toast('Formulario restaurado', { description: 'Tus datos anteriores se han recuperado.' });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const onSubmit = async (data: ClientRegistrationFormData) => {
     try {
@@ -63,7 +57,7 @@ export default function ClientRegistrationPage() {
         isCompanion: false,
         disabilityDocument: disabilityDocument || undefined,
       });
-      try { sessionStorage.removeItem(STORAGE_KEY); sessionStorage.removeItem(DOC_STORAGE_KEY); } catch {}
+      try { sessionStorage.removeItem(STORAGE_KEY); sessionStorage.removeItem(DOC_STORAGE_KEY); } catch (err: unknown) { if (process.env.NODE_ENV === 'development') console.error('sessionStorage remove error:', err); }
       toast.success('¡Perfil creado! Bienvenido a GoTogether.');
       setTimeout(() => router.push('/explorar'), 1500);
     } catch {

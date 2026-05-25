@@ -10,6 +10,7 @@ export function useLocationSharing() {
   const [error, setError] = useState<string | null>(null);
   const [lastSent, setLastSent] = useState<Date | null>(null);
   const watchIdRef = useRef<number | null>(null);
+  const userIdRef = useRef<string | null>(null);
   const supabase = createClient();
 
   const stopSharing = () => {
@@ -18,7 +19,10 @@ export function useLocationSharing() {
       watchIdRef.current = null;
     }
     setSharing(false);
-    supabase.from('ClientLocation').delete().eq('clientId', (supabase.auth as any)?.session?.()?.user?.id).then(() => {}).catch(() => {});
+    if (userIdRef.current) {
+      supabase.from('ClientLocation').delete().eq('clientId', userIdRef.current).then(() => {}).catch((err: unknown) => { if (process.env.NODE_ENV === 'development') console.error('Location sharing error:', err); });
+      userIdRef.current = null;
+    }
   };
 
   const startSharing = async () => {
@@ -32,6 +36,8 @@ export function useLocationSharing() {
       setError('Debes iniciar sesión para compartir ubicación');
       return;
     }
+
+    userIdRef.current = session.user.id;
 
     setError(null);
 

@@ -11,7 +11,8 @@ import {
   useMyClients, useMySupervisor, useCreateSupervision, useRemoveSupervision,
   useSearchUsers, usePendingInvites, useCancelInvitation, useSupervisorBookings,
 } from '@/services/queries';
-import type { AdminBooking } from '@/types';
+import type { AdminBooking, UserSearchResult, SupervisionData } from '@/types';
+import { LOCALE } from '@/lib/constants';
 
 const ClientLocationMap = dynamic(
   () => import('@/components/client-location-map').then((mod) => mod.ClientLocationMap),
@@ -26,7 +27,7 @@ export default function SupervisionPage() {
   const [tab, setTab] = useState<Tab>('clients');
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [selectedUser, setSelectedUser] = useState<UserSearchResult | null>(null);
   const [bookingPage, setBookingPage] = useState(1);
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
@@ -64,17 +65,17 @@ export default function SupervisionPage() {
       await createMutation.mutateAsync(selectedUser.id);
       toast.success('Cliente vinculado');
       setSearchQuery(''); setSelectedUser(null); refetch();
-    } catch (err: any) { toast.error(err.message || 'Error al vincular'); }
+    } catch (err: unknown) { const message = err instanceof Error ? err.message : 'Error al vincular'; toast.error(message); }
   };
 
   const onRemove = async (id: string) => {
     try { await removeMutation.mutateAsync(id); toast.success('Vínculo eliminado'); refetch(); }
-    catch (err: any) { toast.error(err.message || 'Error al eliminar'); }
+    catch (err: unknown) { const message = err instanceof Error ? err.message : 'Error al eliminar'; toast.error(message); }
   };
 
   const onCancelInvite = async (inviteId: string) => {
     try { await cancelInviteMutation.mutateAsync(inviteId); toast.success('Invitación cancelada'); refetchInvites(); }
-    catch (err: any) { toast.error(err.message || 'Error al cancelar'); }
+    catch (err: unknown) { const message = err instanceof Error ? err.message : 'Error al cancelar'; toast.error(message); }
   };
 
   if (isLoading) {
@@ -100,7 +101,7 @@ export default function SupervisionPage() {
   const meta = bookingsData?.meta || { total: 0, page: 1, totalPages: 1 };
 
   const clientNames: Record<string, string> = {};
-  clients.forEach((s: any) => {
+  clients.forEach((s: SupervisionData) => {
     clientNames[s.clientId] = s.client?.profile?.fullName || s.client?.email || s.clientId;
   });
 
@@ -133,10 +134,10 @@ export default function SupervisionPage() {
                   <div className="mb-6">
                     <h4 className="text-sm font-bold uppercase tracking-wider text-gray-400 mb-3">Pendientes de aceptación</h4>
                     <div className="space-y-2">
-                      {pendingInvites.map((inv: any) => (
+                      {pendingInvites.map((inv: { id: string; clientName: string }) => (
                         <div key={inv.id} className="flex items-center justify-between p-3 bg-yellow-50 rounded-xl border border-yellow-100">
                           <div><p className="font-medium text-gray-800">{inv.clientName}</p><p className="text-xs text-yellow-600">Invitación enviada</p></div>
-                          <button onClick={() => onCancelInvite(inv.id)} className="p-2 text-gray-400 hover:text-red-500 transition-colors"><Trash2 className="w-4 h-4" /></button>
+                          <button onClick={() => onCancelInvite(inv.id)} className="p-2 text-gray-400 hover:text-red-500 transition-colors" aria-label="Eliminar invitación"><Trash2 className="w-4 h-4" /></button>
                         </div>
                       ))}
                     </div>
@@ -149,12 +150,12 @@ export default function SupervisionPage() {
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                       <input className="gt-input pl-9" placeholder="Buscar por nombre o email..." value={searchQuery} onChange={e => handleSearch(e.target.value)} />
                     </div>
-                    <button className="gt-button gt-button--primary shrink-0" onClick={onAdd} disabled={createMutation.isPending || !selectedUser}><UserPlus className="w-4 h-4" /></button>
+                    <button className="gt-button gt-button--primary shrink-0" onClick={onAdd} disabled={createMutation.isPending || !selectedUser} aria-label="Añadir supervisor"><UserPlus className="w-4 h-4" /></button>
                   </div>
                   {searching && <p className="text-sm text-gray-400 flex items-center gap-1"><Loader2 className="w-3 h-3 animate-spin" />Buscando...</p>}
                   {!searching && searchResults.length > 0 && !selectedUser && debouncedSearch && (
                     <div className="border border-gray-200 rounded-xl overflow-hidden mt-1">
-                      {searchResults.slice(0, 5).map((user: any) => (
+                      {searchResults.slice(0, 5).map((user: UserSearchResult) => (
                         <button key={user.id} type="button" className="w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors border-b last:border-b-0" onClick={() => { setSelectedUser(user); setSearchQuery(user.profile?.fullName || user.email); }}>
                           <p className="font-medium text-gray-800">{user.profile?.fullName || 'Sin nombre'}</p>
                           <p className="text-xs text-gray-400">{user.email}</p>
@@ -167,10 +168,10 @@ export default function SupervisionPage() {
                   <p className="text-gray-400 text-sm">No supervisas a nadie aún.</p>
                 ) : (
                   <div className="space-y-3">
-                    {clients.map((s: any) => (
+                    {clients.map((s: SupervisionData) => (
                       <div key={s.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
                         <div><p className="font-medium text-gray-800">{s.client?.profile?.fullName || s.client?.email}</p><p className="text-xs text-gray-400">{s.client?.email}</p></div>
-                        <button onClick={() => onRemove(s.id)} className="p-2 text-gray-400 hover:text-red-500 transition-colors"><Trash2 className="w-4 h-4" /></button>
+                        <button onClick={() => onRemove(s.id)} className="p-2 text-gray-400 hover:text-red-500 transition-colors" aria-label="Eliminar supervisor"><Trash2 className="w-4 h-4" /></button>
                       </div>
                     ))}
                   </div>
@@ -216,7 +217,7 @@ export default function SupervisionPage() {
                           <td className="py-3 px-3">{b.service?.name || b.serviceType}</td>
                           <td className="py-3 px-3"><span className={`gt-tag text-xs ${b.status === 'COMPLETED' ? 'bg-green-50 text-green-700' : b.status === 'CANCELLED' ? 'bg-red-50 text-red-700' : 'bg-blue-50 text-blue-700'}`}>{b.status}</span></td>
                           <td className="py-3 px-3">{b.payment ? `${(b.payment.amount / 100).toFixed(2)}€` : '—'}</td>
-                          <td className="py-3 px-3 text-gray-500">{new Date(b.scheduledAt).toLocaleDateString('es-ES')}</td>
+                          <td className="py-3 px-3 text-gray-500">{new Date(b.scheduledAt).toLocaleDateString(LOCALE)}</td>
                         </tr>
                       ))}
                     </tbody>

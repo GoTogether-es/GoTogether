@@ -8,13 +8,7 @@ import { CompanionCard } from '@/components/companion-card';
 import { useRecommendations } from '@/services/queries';
 import { SkeletonCard } from '@/components/skeleton';
 import type { CompanionSummary } from '@/types';
-
-const DISABILITY_OPTIONS = [
-  'Movilidad reducida',
-  'Discapacidad visual',
-  'Discapacidad auditiva',
-  'Discapacidad cognitiva',
-];
+import { DISABILITY_OPTIONS } from '@/lib/constants';
 
 export default function ExplorarPage() {
   return (
@@ -39,6 +33,7 @@ export default function ExplorarPage() {
 function ExplorarContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const mountedRef = useRef(true);
 
   const [search, setSearch] = useState(searchParams.get('q') || '');
   const [debouncedSearch, setDebouncedSearch] = useState(searchParams.get('q') || '');
@@ -59,8 +54,15 @@ function ExplorarContent() {
   }, [debouncedSearch, disabilityType, verifiedOnly, page, router]);
 
   useEffect(() => {
+    if (!mountedRef.current) return;
     syncUrl();
   }, [syncUrl]);
+
+  useEffect(() => {
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
 
   useEffect(() => {
     debounceRef.current = setTimeout(() => {

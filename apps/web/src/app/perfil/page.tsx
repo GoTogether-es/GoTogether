@@ -13,6 +13,7 @@ import { LinkButton } from '@/components/link-button';
 import { perfilSchema, type PerfilFormData } from '@/lib/schemas';
 import { useLocationSharing } from '@/hooks/use-location-sharing';
 import type { UserProfile } from '@/types';
+import { LOCALE } from '@/lib/constants';
 
 function PerfilContent() {
   const searchParams = useSearchParams();
@@ -451,7 +452,7 @@ function LocationSharingCard() {
             <p className="text-sm text-gray-500">
               {sharing
                 ? lastSent
-                  ? `Enviada a las ${lastSent.toLocaleTimeString('es-ES')}`
+                  ? `Enviada a las ${lastSent.toLocaleTimeString(LOCALE)}`
                   : 'Compartiendo en tiempo real'
                 : 'Permite que tu supervisor vea dónde estás'}
             </p>

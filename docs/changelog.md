@@ -1,6 +1,36 @@
 
 ---
 
+## v0.1.0-alpha.32 — Mayo 2026 (frontend quality pass)
+
+### Critical
+- 🎨 **CSS globals.css**: eliminadas definiciones duplicadas que rompían dark mode (5 selectores), unificadas con CSS variables
+- 🧹 **notification-bell.tsx**: arreglado memory leak — `onAuthStateChange` ahora limpia su suscripción en unmount
+
+### High
+- 🔒 **45 `any` types eliminados**: `catch(err:any)→catch(err:unknown)`, `useState<any>→tipos concretos`, props tipificadas, `Promise<any>→tipos propios`
+- 🗑️ **console.warn**: solo en development (5 sitios)
+- 📁 **admin/page.tsx** escindido: 9 componentes extraídos a `components/admin/*.tsx` + `StatCard` y `Pagination` como shared
+
+### Medium
+- 🔄 **Constantes duplicadas** (DAY_NAMES, DISABILITY_OPTIONS, 'es-ES', '112') → `lib/constants.ts`
+- 🧩 **StatCard duplicado**: panel y admin usan el mismo componente con variante
+- 📦 **Tipos duplicados**: ChatMessage/BookingData en coordinacion → importados de `@/types`
+- 📝 **loading.tsx** añadidos en panel, reservas, historial, supervision; **error.tsx** en las mismas rutas
+- ⚡ **CompanionCard** con `React.memo`; **loadData/handleAction** en panel con `useCallback`
+- 🛑 **Unmount guards** añadidos en panel, explorar, solicitud
+- ♿ **aria-labels**: 5 icon-only buttons en panel y supervision
+- 📋 **valoracionSchema** aplicado vía react-hook-form en vez de useState manual
+- 🔍 **Soft Zod**: errores de validación rastreables vía `window.__ZOD_VALIDATION_FAILS`
+- 🚨 **catch{}** silenciosos: sessionStorage y location-sharing ahora loguean en development
+
+### Low
+- 🧹 **Unused icon imports**: 9 eliminados en 4 archivos
+- 📑 **Metadata** añadida en legal/privacy y legal/terms
+- 🚫 **eslint-disable** eliminados en availability-grid y onboarding/register/client
+
+---
+
 ## v0.1.0-alpha.31 — Mayo 2026 (backend quality + UX polish)
 
 ### Backend quality — Round 1 (10 critical fixes)
@@ -27,6 +57,10 @@
 ### Build
 - 🔧 **zod/v4/core**: resolución robusta usando `require.resolve('zod/package.json')` + path filesystem, bypass del `exports` field
 - 🗑️ Eliminada función muerta `isPublicRoute` que referenciaba constante borrada
+
+---
+
+## v0.1.0-alpha.30 — Mayo 2026 (UX audit fixes, build stability)
 
 ### UX — Severidad alta (9 fixes)
 - ✉️ **Login**: validación client-side de email (regex + error inline), mensajes específicos (red vs API vs genérico), hint de carpeta spam

@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { Bell, Mail, CheckCircle2, XCircle, PartyPopper, Ban, Star } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import type { AuthChangeEvent, Session } from '@supabase/supabase-js';
 import { getNotifications, getUnreadCount, markNotificationRead, markAllNotificationsRead } from '@/services/api';
 import type { NotificationData } from '@/types';
 import { useRouter } from 'next/navigation';
@@ -44,14 +45,16 @@ export function NotificationBell() {
 
     load();
 
-    supabase.auth.onAuthStateChange((_event: any, session: any) => {
-      if (!session) {
-        setNotifications([]);
-        setUnreadCount(0);
-      } else {
-        load();
-      }
-    });
+    const { data: authSubscription } = supabase.auth.onAuthStateChange(
+      (_event: AuthChangeEvent, session: Session | null) => {
+        if (!session) {
+          setNotifications([]);
+          setUnreadCount(0);
+        } else {
+          load();
+        }
+      },
+    );
 
     const channel = supabase
       .channel('notifications-bell')
@@ -66,6 +69,7 @@ export function NotificationBell() {
 
     return () => {
       cancelled = true;
+      authSubscription.unsubscribe();
       channel.unsubscribe();
     };
   }, []);

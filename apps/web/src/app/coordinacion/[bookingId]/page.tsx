@@ -6,33 +6,18 @@ import { Button, Card, Container, Section } from '@gotogether/ui';
 import { Phone, MapPin, Clock, Send } from 'lucide-react';
 import { getChatRoom, getBooking } from '@/services/api';
 import { createClient } from '@/lib/supabase/client';
+import type { RealtimeChannel, RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import { SkeletonChat } from '@/components/skeleton';
 import { Breadcrumbs } from '@/components/breadcrumbs';
-
-interface ChatMessage {
-  id: string;
-  roomId: string;
-  senderId: string;
-  content: string;
-  createdAt: string;
-}
-
-interface BookingData {
-  id: string;
-  serviceType: string;
-  address: string;
-  scheduledAt: string;
-  status: string;
-  client?: { id?: string; profile?: { fullName: string } | null } | null;
-  companion?: { profile?: { fullName: string } | null } | null;
-}
+import { LOCALE, EMERGENCY_PHONE } from '@/lib/constants';
+import type { ChatMessageData, BookingData } from '@/types';
 
 export default function CoordinacionPage() {
   const params = useParams();
   const router = useRouter();
   const bookingId = params.bookingId as string;
 
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messages, setMessages] = useState<ChatMessageData[]>([]);
   const [booking, setBooking] = useState<BookingData | null>(null);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
@@ -44,7 +29,7 @@ export default function CoordinacionPage() {
   const [connectionStatus, setConnectionStatus] = useState<'connected' | 'reconnecting' | 'disconnected'>('connected');
 
   const supabaseRef = useRef(createClient());
-  const channelRef = useRef<any>(null);
+  const channelRef = useRef<RealtimeChannel | null>(null);
   const roomIdRef = useRef('');
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
@@ -72,8 +57,8 @@ export default function CoordinacionPage() {
             table: 'ChatMessage',
             filter: `roomId=eq.${roomId}`,
           },
-          (payload: any) => {
-            const msg = payload.new as ChatMessage;
+          (payload: RealtimePostgresChangesPayload<ChatMessageData>) => {
+            const msg = payload.new as ChatMessageData;
             setMessages((prev) => {
               if (prev.some((m) => m.id === msg.id)) return prev;
               return [...prev, msg];
@@ -138,8 +123,9 @@ export default function CoordinacionPage() {
         initRealtime();
 
         setTimeout(() => scrollToBottom(), 100);
-      } catch (err: any) {
-        if (!cancelled) setError(err.message || 'Error al cargar el chat');
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : 'Error al cargar el chat';
+        if (!cancelled) setError(message);
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -162,7 +148,7 @@ export default function CoordinacionPage() {
             getChatRoom(bookingId).then((chatData) => {
               setMessages(chatData.messages || []);
               scrollToBottom();
-            }).catch(() => {});
+            }).catch((err: unknown) => { if (process.env.NODE_ENV === 'development') console.error('Chat reload error:', err); });
           }
         });
       }
@@ -272,7 +258,7 @@ export default function CoordinacionPage() {
                   </div>
                 </div>
                 <a
-                  href="tel:112"
+                  href={`tel:${EMERGENCY_PHONE}`}
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold text-blue-600 border border-blue-200 hover:bg-blue-50 transition-colors"
                   title="Llamada de emergencia"
                 >
@@ -301,7 +287,7 @@ export default function CoordinacionPage() {
                         {msg.content}
                       </div>
                       <span className="text-xs text-gray-400 mt-1 px-1">
-                        {new Date(msg.createdAt).toLocaleTimeString('es-ES', {
+                        {new Date(msg.createdAt).toLocaleTimeString(LOCALE, {
                           hour: '2-digit',
                           minute: '2-digit',
                         })}
@@ -350,14 +336,14 @@ export default function CoordinacionPage() {
                       <div className="flex items-start gap-2 mt-1">
                         <Clock className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" />
                         <p className="font-medium">
-                          {new Date(booking.scheduledAt).toLocaleDateString('es-ES', {
+                          {new Date(booking.scheduledAt).toLocaleDateString(LOCALE, {
                             weekday: 'long',
                             year: 'numeric',
                             month: 'long',
                             day: 'numeric',
                           })}{' '}
                           -{' '}
-                          {new Date(booking.scheduledAt).toLocaleTimeString('es-ES', {
+                          {new Date(booking.scheduledAt).toLocaleTimeString(LOCALE, {
                             hour: '2-digit',
                             minute: '2-digit',
                           })}
@@ -378,7 +364,7 @@ export default function CoordinacionPage() {
                   Si necesitas ayuda urgente o quieres reportar una incidencia durante el servicio:
                 </p>
                 <a
-                  href="tel:112"
+                  href={`tel:${EMERGENCY_PHONE}`}
                   className="w-full inline-flex items-center justify-center gap-2 h-12 px-6 rounded-xl text-base font-bold bg-white text-blue-600 hover:bg-blue-50 transition-colors"
                 >
                   <Phone className="w-4 h-4" />

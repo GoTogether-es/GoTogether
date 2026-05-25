@@ -3,11 +3,13 @@
 import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { createClient } from '@/lib/supabase/client';
+import { LOCALE } from '@/lib/constants';
+import type { RealtimePostgresChangesFilter } from '@supabase/supabase-js';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 // Fix default Leaflet icon paths
-delete (L.Icon.Default.prototype as any)._getIconUrl;
+delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
   iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
@@ -46,11 +48,12 @@ export function ClientLocationMap({ clientNames }: { clientNames: Record<string,
     };
     loadLocations();
 
+    const changesFilter: RealtimePostgresChangesFilter<'*'> = { event: '*', schema: 'public', table: 'ClientLocation' };
     const channel = supabase
       .channel('client-location-changes')
       .on(
-        'postgres_changes' as any,
-        { event: '*', schema: 'public', table: 'ClientLocation' },
+        'postgres_changes',
+        changesFilter,
         async () => {
           const { data } = await supabase.from('ClientLocation').select('*');
           if (data) setLocations(data as ClientLocation[]);
@@ -90,7 +93,7 @@ export function ClientLocationMap({ clientNames }: { clientNames: Record<string,
               <div className="text-sm">
                 <p className="font-bold">{clientNames[loc.clientId] || 'Cliente'}</p>
                 <p className="text-gray-500 text-xs">
-                  {new Date(loc.timestamp).toLocaleTimeString('es-ES')}
+                  {new Date(loc.timestamp).toLocaleTimeString(LOCALE)}
                 </p>
                 {loc.accuracy && (
                   <p className="text-gray-400 text-xs">Precisión: ±{Math.round(loc.accuracy)}m</p>

@@ -57,8 +57,9 @@ export function AvatarUpload({ avatarUrl, onUploaded, readOnly }: AvatarUploadPr
 
       const { data: urlData } = supabase.storage.from('avatars').getPublicUrl(key);
       onUploaded(urlData.publicUrl);
-    } catch (err: any) {
-      setError(err.message || 'Error al subir la imagen');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Error al subir la imagen';
+      setError(message);
     } finally {
       setUploading(false);
       if (inputRef.current) inputRef.current.value = '';

@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense } from 'react';
+import { Suspense, useRef, useEffect } from 'react';
 import { SkeletonForm } from '@/components/skeleton';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -16,6 +16,13 @@ function SolicitudForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const companionId = searchParams.get('companionId');
+  const mountedRef = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
 
   const { data: services = [], isLoading: servicesLoading } = useServices();
 
@@ -56,11 +63,14 @@ function SolicitudForm() {
         disability: data.disability !== 'Ninguna / Otra' && data.disability ? data.disability : undefined,
         companionId: companionId || undefined,
       });
+      if (!mountedRef.current) return;
       await requestBooking(booking.id);
+      if (!mountedRef.current) return;
       toast.success('Solicitud publicada correctamente');
       router.push('/reservas');
-    } catch (err: any) {
-      toast.error(err.message || 'Error al crear la reserva');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Error al crear la reserva';
+      toast.error(message);
     }
   };
 

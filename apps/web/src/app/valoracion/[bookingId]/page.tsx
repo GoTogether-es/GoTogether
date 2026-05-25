@@ -2,25 +2,42 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { Button, Card, Container, Section } from '@gotogether/ui';
-import { Star, MessageCircle, Info, Send, CheckCircle, Loader2 } from 'lucide-react';
+import { Star, Info, Send, CheckCircle } from 'lucide-react';
 import { getBooking, getReportByBooking, createReport } from '@/services/api';
+import type { BookingData, ReportData } from '@/types';
 import { SkeletonForm } from '@/components/skeleton';
+import { valoracionSchema } from '@/lib/schemas';
 
 export default function ValoracionPage() {
   const params = useParams();
   const router = useRouter();
   const bookingId = params.bookingId as string;
 
-  const [booking, setBooking] = useState<any>(null);
-  const [existingReport, setExistingReport] = useState<any>(null);
-  const [rating, setRating] = useState(0);
+  const [booking, setBooking] = useState<BookingData | null>(null);
+  const [existingReport, setExistingReport] = useState<ReportData | null>(null);
   const [hoverRating, setHoverRating] = useState(0);
-  const [summary, setSummary] = useState('');
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    reset,
+    formState: { errors: formErrors },
+  } = useForm<z.infer<typeof valoracionSchema>>({
+    resolver: zodResolver(valoracionSchema),
+    defaultValues: { rating: 0, summary: '' },
+  });
+
+  const rating = watch('rating');
 
   useEffect(() => {
     async function load() {
@@ -32,12 +49,12 @@ export default function ValoracionPage() {
         setBooking(bookingData);
         setExistingReport(reportData);
         if (reportData) {
-          setRating(reportData.rating);
-          setSummary(reportData.summary || '');
+          reset({ rating: reportData.rating, summary: reportData.summary || '' });
           setSuccess(true);
         }
-      } catch (err: any) {
-        setError(err.message || 'Error al cargar los datos');
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : 'Error al cargar los datos';
+        setError(message);
       } finally {
         setLoading(false);
       }
@@ -45,20 +62,17 @@ export default function ValoracionPage() {
     load();
   }, [bookingId]);
 
-  const handleSubmit = async () => {
-    if (rating < 1) {
-      setError('Selecciona una puntuación de estrellas');
-      return;
-    }
+  const onSubmit = async (data: z.infer<typeof valoracionSchema>) => {
     setSubmitting(true);
     setError('');
     try {
-      await createReport(bookingId, { rating, summary: summary || undefined });
+      await createReport(bookingId, { rating: data.rating, summary: data.summary || undefined });
       setSuccess(true);
       const reportData = await getReportByBooking(bookingId);
       setExistingReport(reportData);
-    } catch (err: any) {
-      setError(err.message || 'Error al enviar la valoración');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Error al enviar la valoración';
+      setError(message);
     } finally {
       setSubmitting(false);
     }
@@ -212,7 +226,7 @@ export default function ValoracionPage() {
                   </Button>
                 </div>
               ) : (
-                <div className="space-y-6">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                   <div>
                     <label className="block text-sm font-bold text-gray-700 mb-3">
                       ¿Qué puntuación le das al servicio?
@@ -221,17 +235,17 @@ export default function ValoracionPage() {
                       const current = rating || 1;
                       if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
                         e.preventDefault();
-                        setRating(Math.min(5, current + 1));
+                        setValue('rating', Math.min(5, current + 1));
                       } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
                         e.preventDefault();
-                        setRating(Math.max(1, current - 1));
+                        setValue('rating', Math.max(1, current - 1));
                       }
                     }}>
                       {[1, 2, 3, 4, 5].map((star) => (
                         <button
                           key={star}
                           type="button"
-                          onClick={() => setRating(star)}
+                          onClick={() => setValue('rating', star)}
                           onMouseEnter={() => setHoverRating(star)}
                           onMouseLeave={() => setHoverRating(0)}
                           tabIndex={star === 1 ? 0 : -1}
@@ -251,6 +265,7 @@ export default function ValoracionPage() {
                         </button>
                       ))}
                     </div>
+                    {formErrors.rating && <p className="text-red-500 text-xs mt-1" role="alert">{formErrors.rating.message}</p>}
                     {rating > 0 && (
                       <p className="text-sm text-gray-500 mt-1 ml-1" aria-live="polite">
                         {rating === 5 && 'Excelente'}
@@ -271,8 +286,7 @@ export default function ValoracionPage() {
                       className="gt-input"
                       rows={4}
                       placeholder="Ej: Todo perfecto, muy amable y atenta..."
-                      value={summary}
-                      onChange={(e) => setSummary(e.target.value)}
+                      {...register('summary')}
                     />
                   </div>
 
@@ -285,13 +299,13 @@ export default function ValoracionPage() {
                   <Button
                     variant="primary"
                     className="w-full h-12 flex items-center justify-center gap-2"
-                    onClick={handleSubmit}
+                    type="submit"
                     disabled={submitting}
                   >
                     <Send className="w-4 h-4" />
                     {submitting ? 'Enviando...' : 'Enviar valoración'}
                   </Button>
-                </div>
+                </form>
               )}
             </Card>
           </div>

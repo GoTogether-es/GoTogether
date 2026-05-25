@@ -1,6 +1,6 @@
 import { Card, Container, Section } from '@gotogether/ui';
 import { AuthLink } from '@/components/auth-link';
-import { Search, FileText, MessageSquare, Star, CheckCircle2, ArrowRight, CalendarDays, UserCheck, ShieldCheck } from 'lucide-react';
+import { CheckCircle2, ArrowRight } from 'lucide-react';
 import { PrimerosPasosContent } from '@/components/primeros-pasos-content';
 import type { Metadata } from 'next';
 

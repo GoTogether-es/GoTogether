@@ -34,9 +34,10 @@ function AcceptContent() {
           setMessage(res.message || 'No se pudo aceptar la invitación.');
         }
       })
-      .catch((err: any) => {
+      .catch((err: unknown) => {
+        const message = err instanceof Error ? err.message : 'Error al aceptar la invitación.';
         setState('error');
-        setMessage(err.message || 'Error al aceptar la invitación.');
+        setMessage(message);
       });
   }, [token]);
 

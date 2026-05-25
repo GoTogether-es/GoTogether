@@ -1,6 +1,12 @@
+import type { Metadata } from 'next';
 import { Container, Section, Card } from '@gotogether/ui';
 import { LinkButton } from '@/components/link-button';
 import { ShieldCheck } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: 'Política de Privacidad — GoTogether',
+  description: 'Política de privacidad y protección de datos de GoTogether.',
+};
 
 export default function PrivacyPage() {
   return (
