@@ -215,15 +215,9 @@ Protegido por `AdminGuard` (header `x-admin-key`).
 **Archivos:** `availability/`
 
 - `GET /companions/:id/availability` — Disponibilidad semanal de un acompañante
-- `PUT /availability` — Guardar disponibilidad (borra todos los slots existentes y crea los nuevos)
+- `PUT /availability` — Guardar disponibilidad
 
-**Validaciones:**
-- `endTime > startTime` — rechaza slots con hora de fin anterior a inicio
-- Solo acompañantes pueden configurar disponibilidad (`ForbiddenException` si no tiene `CompanionProfile`)
-
-**Disponibilidad orientativa:** desde Mayo 2026, la disponibilidad es puramente orientativa. Los clientes pueden solicitar servicios aunque el acompañante no tenga disponibilidad marcada. Ya no se lanza `ConflictException` al crear reservas fuera de horario.
-
-**Tests:** 6 tests cubriendo `getForCompanion`, `setForCompanion` (validación de rol, endTime>startTime, slots vacíos) e `isCompanionAvailable` (con y sin timezone local).
+Documentación completa: [[backend/availability]]
 
 ## PrismaModule
 

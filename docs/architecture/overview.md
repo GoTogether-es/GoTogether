@@ -10,25 +10,40 @@ GoTogether es una plataforma que conecta personas mayores y personas con discapa
 
 ## Stack tecnológico
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    FRONTEND                              │
-│  Next.js 14 (App Router) + React 18 + Tailwind CSS      │
-│  Host: Vercel (serverless)                              │
-└────────────────────┬────────────────────────────────────┘
-                     │ REST + Realtime
-┌────────────────────▼────────────────────────────────────┐
-│                    BACKEND                               │
-│  NestJS 10 (serverless) + Prisma ORM                    │
-│  Host: Vercel (serverless functions)                    │
-│  Comunicación directa con Supabase para Realtime        │
-└────────────────────┬────────────────────────────────────┘
-                     │ Prisma Client / Supabase JS
-┌────────────────────▼────────────────────────────────────┐
-│                    SUPABASE                              │
-│  PostgreSQL + Auth (magic link) + Storage + Realtime    │
-│  Plan gratuito (2 proyectos, 500MB DB)                  │
-└─────────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+    subgraph "Frontend (Vercel fra1)"
+        NEXT[Next.js 14 App Router]
+        RQ[TanStack Query v5]
+        LEAF[Leaflet Maps]
+    end
+
+    subgraph "Backend (Vercel fra1)"
+        NEST[NestJS 10 Serverless]
+        PRISMA[Prisma ORM 5.x]
+    end
+
+    subgraph "Supabase (eu-west-1)"
+        PG[(PostgreSQL 16)]
+        AUTH[Supabase Auth]
+        STORAGE[Storage]
+        RT[Realtime]
+    end
+
+    subgraph "External"
+        RESEND[Resend Email]
+        STRIPE[Stripe Payments]
+    end
+
+    NEXT -->|REST API| NEST
+    NEXT -->|JWT Auth| AUTH
+    NEXT -->|Direct Upload| STORAGE
+    NEXT -->|Realtime Subs| RT
+    NEST --> PRISMA
+    PRISMA --> PG
+    NEST --> AUTH
+    NEST --> RESEND
+    NEST -.-> STRIPE
 ```
 
 ## Decisiones técnicas clave

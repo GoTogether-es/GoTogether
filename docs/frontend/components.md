@@ -254,7 +254,7 @@ Grid de disponibilidad semanal estilo When2Meet:
 - Doble clic en cabecera → selecciona/deselecciona todas las celdas del día
 - Cabeceras de día muestran: azul sólido (día completo), azul claro (parcial), gris (vacío)
 
-**Usado en:** `panel/page.tsx`
+**Usado en:** `panel/page.tsx`. Documentación backend: [[backend/availability]]
 
 ## Paquete `@gotogether/ui`
 
