@@ -1,4 +1,4 @@
-import type { HomeStep, CompanionSummary } from '@/types';
+import type { HomeStep } from '@/types';
 
 export const homeSteps: HomeStep[] = [
   {
@@ -130,21 +130,6 @@ export const faqData: FaqCategory[] = [
     ],
   },
 ];
-
-export const sampleCompanion: CompanionSummary = {
-  id: 'sample-1',
-  profile: {
-    fullName: 'Lucía Martínez',
-    bio: 'Especialista en acompañamiento cultural y médico',
-    avatarUrl:
-      'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80',
-  },
-  specialties: 'Cultura y salud',
-  rating: 4.9,
-  yearsOnPlatform: 2,
-  verified: true,
-  completedServices: 47,
-};
 
 export const testimonials = [
   {

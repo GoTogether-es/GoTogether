@@ -1,64 +1,35 @@
 import { Card, Container, Section } from '@gotogether/ui';
 import { LinkButton } from '@/components/link-button';
 import { AuthLink } from '@/components/auth-link';
-import { homeSteps, sampleCompanion, testimonials } from '@/lib/content';
+import { homeSteps } from '@/lib/content';
 import { routes } from '@/lib/routes';
-import { CheckCircle2, ArrowRight, Star, ShieldCheck, Users, MessageSquareQuote } from 'lucide-react';
-import Image from 'next/image';
+import { CheckCircle2, ArrowRight, ShieldCheck, ShieldAlert, Users, Lock, Headset, CreditCard, FileCheck, MapPin } from 'lucide-react';
 
 export default function HomePage() {
   return (
     <main>
       <section className="bg-gradient-to-br from-blue-600 to-blue-700 text-white overflow-hidden">
         <Container className="py-20 lg:py-32">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div className="space-y-8">
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/20 border border-blue-400/30 text-sm font-semibold backdrop-blur-sm">
-                <ShieldCheck className="w-4 h-4" />
-                Confianza y Seguridad Certificada
-              </span>
-              <h1 className="text-4xl lg:text-6xl font-extrabold tracking-tight leading-tight">
-                Acompañamiento humano para vivir con más autonomía
-              </h1>
-              <p className="text-xl text-blue-100 max-w-xl leading-relaxed">
-                Conecta con acompañantes empáticos y verificados para actividades cotidianas,
-                ocio o gestiones esenciales. Porque nadie debería sentirse solo.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                <LinkButton href={routes.login} className="h-14 px-8 text-lg">
-                  Empezar ahora
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </LinkButton>
-              </div>
-            </div>
-            <div className="relative">
-              <div className="absolute -inset-4 bg-blue-400/20 blur-3xl rounded-full" />
-              <Card className="relative p-6 border-0 shadow-2xl bg-white/5 backdrop-blur-sm ring-1 ring-white/10">
-                <div className="relative w-full h-[400px]">
-                  <Image
-                    src={sampleCompanion.profile.avatarUrl || ''}
-                    alt={`Foto de ${sampleCompanion.profile.fullName}`}
-                    fill
-                    className="object-cover rounded-2xl shadow-inner"
-                  />
-                </div>
-                <div className="mt-6 p-4 bg-white rounded-xl shadow-lg">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-900">{sampleCompanion.profile.fullName}</h3>
-                      <p className="text-gray-500 mt-1">{sampleCompanion.profile.bio}</p>
-                    </div>
-                    <div className="flex items-center gap-1 bg-yellow-50 text-yellow-700 px-2 py-1 rounded-lg text-sm font-bold">
-                      <Star className="w-4 h-4 fill-yellow-400 border-none" />
-                      {sampleCompanion.rating.toFixed(1)}
-                    </div>
-                  </div>
-                  <div className="flex gap-3 mt-4">
-                    <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-1 rounded">Verificado</span>
-                    <span className="text-xs font-bold uppercase tracking-wider text-green-600 bg-green-50 px-2 py-1 rounded">Disponible</span>
-                  </div>
-                </div>
-              </Card>
+          <div className="max-w-3xl mx-auto text-center space-y-8">
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/20 border border-blue-400/30 text-sm font-semibold backdrop-blur-sm">
+              <ShieldCheck className="w-4 h-4" />
+              Confianza y Seguridad Certificada
+            </span>
+            <h1 className="text-4xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+              Acompañamiento humano para vivir con más autonomía
+            </h1>
+            <p className="text-xl text-blue-100 max-w-2xl mx-auto leading-relaxed">
+              Conecta con acompañantes empáticos y verificados para actividades cotidianas,
+              ocio o gestiones esenciales. Porque nadie debería sentirse solo.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+              <LinkButton href={routes.login} className="h-14 px-8 text-lg">
+                Empezar ahora
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </LinkButton>
+              <LinkButton href={routes.explorar} variant="secondary" className="h-14 px-8 text-lg">
+                Explorar acompañantes
+              </LinkButton>
             </div>
           </div>
         </Container>
@@ -122,28 +93,48 @@ export default function HomePage() {
       <Section className="bg-white">
         <Container>
           <div className="text-center max-w-3xl mx-auto mb-12">
-            <h2 className="text-3xl font-bold mb-4">Lo que dicen nuestros usuarios</h2>
-            <p className="text-gray-500 text-lg">Historias reales de personas que ya confían en GoTogether</p>
+            <h2 className="text-3xl font-bold mb-4">Tu tranquilidad es nuestra prioridad</h2>
+            <p className="text-gray-500 text-lg">Cada detalle está pensado para que confíes plenamente en la plataforma</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {testimonials.map((t) => (
-              <Card key={t.name} className="p-6 border-gray-50 hover:shadow-lg transition-shadow">
-                <div className="flex items-center gap-1 mb-3">
-                  {Array.from({ length: t.rating }).map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-amber-400 stroke-amber-400" />
-                  ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { icon: ShieldAlert, title: 'Verificación de identidad', desc: 'Todos los acompañantes pasan un riguroso proceso de verificación documental y de antecedentes antes de ofrecer servicios.' },
+              { icon: CreditCard, title: 'Pago seguro vía Stripe', desc: 'Los pagos se procesan con Stripe, el estándar mundial en pagos online. Sin compartir datos bancarios entre usuarios.' },
+              { icon: Lock, title: 'Datos protegidos (RGPD)', desc: 'Tus datos personales se almacenan cifrados y se tratan conforme al Reglamento General de Protección de Datos europeo.' },
+              { icon: Headset, title: 'Soporte dedicado', desc: 'Estamos disponibles para ayudarte con cualquier incidencia antes, durante y después de cada acompañamiento.' },
+            ].map(({ icon: Icon, title, desc }) => (
+              <Card key={title} className="p-6 border-gray-50 hover:shadow-lg transition-shadow text-center">
+                <div className="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 mx-auto mb-4">
+                  <Icon className="w-6 h-6" />
                 </div>
-                <p className="text-gray-600 mb-4 leading-relaxed italic">&quot;{t.text}&quot;</p>
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold text-sm">
-                    {t.name[0]}
-                  </div>
-                  <div>
-                    <p className="font-medium text-sm text-gray-900">{t.name}</p>
-                    <p className="text-xs text-gray-400">{t.role}</p>
-                  </div>
-                </div>
+                <h3 className="font-bold mb-2">{title}</h3>
+                <p className="text-sm text-gray-500 leading-relaxed">{desc}</p>
               </Card>
+            ))}
+          </div>
+        </Container>
+      </Section>
+
+      <Section className="bg-blue-600 text-white">
+        <Container>
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <h2 className="text-3xl font-bold mb-4">Cómo trabajamos</h2>
+            <p className="text-blue-100 text-lg">Compromiso, transparencia y cercanía en cada paso del proceso</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { icon: FileCheck, value: 'Validación', label: 'Identidad y antecedentes verificados de cada acompañante' },
+              { icon: MapPin, value: 'Trazabilidad', label: 'Seguimiento en tiempo real de cada servicio activo' },
+              { icon: ShieldCheck, value: 'Garantía', label: 'Pago retenido hasta que el servicio se complete satisfactoriamente' },
+              { icon: CheckCircle2, value: 'Transparencia', label: 'Valoraciones mutuas públicas después de cada acompañamiento' },
+            ].map(({ icon: Icon, value, label }) => (
+              <div key={value} className="text-center">
+                <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
+                  <Icon className="w-7 h-7" />
+                </div>
+                <p className="text-2xl font-extrabold mb-1">{value}</p>
+                <p className="text-blue-100 text-sm leading-relaxed">{label}</p>
+              </div>
             ))}
           </div>
         </Container>
