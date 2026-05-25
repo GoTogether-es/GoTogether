@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Button, Card, Container, Section } from '@gotogether/ui';
 import { getMyBookings, getOpenBookings, updateBookingStatus, getProfile, getCompanionAvailability, setMyAvailability, requestCompletion } from '@/services/api';
 import { Loader2, CalendarDays, ClipboardList, CheckCircle, XCircle, Clock, MessageCircle, ShieldCheck, ShieldAlert } from 'lucide-react';
@@ -12,6 +13,7 @@ import { AvailabilityGrid } from '@/components/availability-grid';
 const DAY_NAMES = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 
 export default function PanelPage() {
+  const router = useRouter();
   const [myBookings, setMyBookings] = useState<BookingData[]>([]);
   const [openBookings, setOpenBookings] = useState<BookingData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -50,6 +52,11 @@ export default function PanelPage() {
         getOpenBookings(),
         getProfile(),
       ]);
+      if (!profile?.companion) {
+        router.push('/perfil');
+        return;
+      }
+
       setMyBookings(my);
       setOpenBookings(open);
       setVerified(profile?.companion?.verified ?? null);
