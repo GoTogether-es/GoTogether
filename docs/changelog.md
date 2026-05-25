@@ -1,208 +1,29 @@
----
-tags: [project, changelog, history]
----
-
-# Changelog
-
-## v0.1.0-alpha — Mayo 2026
-
-### Core
-- ✅ Monorepo con pnpm workspaces (apps/web, apps/api, packages/ui, packages/shared)
-- ✅ Next.js 14 App Router con Server Components
-- ✅ NestJS 10 con módulos organizados
-- ✅ Supabase Auth con magic link vía Resend
-- ✅ Supabase Storage para certificados y avatares
-- ✅ Supabase Realtime para chat y notificaciones
-- ✅ Prisma ORM con 11 modelos
-
-### Onboarding y perfiles
-- ✅ Registro de cliente con documento de discapacidad
-- ✅ Registro de acompañante con certificados penales y sexuales
-- ✅ Registro de supervisor con invitaciones
-- ✅ Perfil con modo vista/edición y avatar
-
-### Marketplace
-- ✅ Búsqueda de acompañantes con filtros y paginación
-- ✅ Detalle de acompañante con ratings y estadísticas
-- ✅ Solicitud de reserva con asignación de companionId
-- ✅ Panel de acompañante con solicitudes abiertas
-- ✅ Máquina de estados de booking (DRAFT → REQUESTED → ACCEPTED → IN_PROGRESS → COMPLETED)
-- ✅ Listado de acompañantes filtrado por verificación
-
-### Chat
-- ✅ Chat en tiempo real vía Supabase Realtime (Postgres Changes)
-- ✅ Envío directo de mensajes con RLS
-- ✅ Historial de mensajes por sala
-- ✅ Scroll automático en contenedor del chat
-- ✅ Indicador visual de mensajes propios vs ajenos
-
-### Notificaciones
-- ✅ Tabla Notification con RLS + Realtime
-- ✅ Campanita con badge en navbar
-- ✅ Dropdown de notificaciones con marcar leídas
-- ✅ Triggers automáticos: solicitudes, aceptación, rechazo, completado, cancelado, valoración
-
-### Admin
-- ✅ Panel con password gate (x-admin-key)
-- ✅ Dashboard con estadísticas
-- ✅ Tabla de usuarios
-- ✅ Verificación de acompañantes (aprobar/rechazar)
-- ✅ Verificación de clientes (aprobar/rechazar)
-
-### Seguridad
-- ✅ RLS en ChatMessage y Notification
-- ✅ CSP headers en Next.js
-- ✅ Rate limiting global (ThrottlerGuard)
-- ✅ Validación de datos (Zod frontend, class-validator backend)
-- ✅ Autenticación JWT con JWKS de Supabase
-
-### Legal
-- ✅ Página de privacidad
-- ✅ Página de términos
-- ✅ Footer con enlaces legales
 
 ---
 
-## v0.1.1-alpha — Mayo 2026
+## v0.1.0-alpha.30 — Mayo 2026 (UX audit fixes, build stability)
 
-### Estabilización
-- ✅ `SupabaseJwtStrategy.validate()` consulta BD para incluir `role` en `req.user`
-- ✅ `RolesAuthGuard` + `@Roles()` aplicado en endpoints de supervisor
-- ✅ `MailService` centralizado compartido entre módulos
-- ✅ Emails transaccionales en cambios de estado de reserva (aceptada, rechazada, completada, cancelada)
-- ✅ Emails transaccionales en verificación de documentos (aprobada, rechazada)
-- ✅ Indicador de estado de conexión en chat (conectado/reconectando/sin conexión)
-- ✅ Refetch automático de mensajes al recuperar visibilidad de la pestaña
-- ✅ Limpieza de Redis no usado (eliminado de .env, .env.example y docker-compose.yml)
+### UX — Severidad alta (9 fixes)
+- ✉️ **Login**: validación client-side de email (regex + error inline), mensajes específicos (red vs API vs genérico), hint de carpeta spam
+- 🏗️ **Solicitud**: `SkeletonForm` en vez de pantalla en blanco durante carga, Cancelar vuelve a `/explorar`
+- 🏗️ **Perfil**: JSX reestructurado (LocationSharingCard/PanelLink fuera del card de compañero)
+- 📝 **Contacto**: formulario de contacto (nombre, email, mensaje) + código de país en teléfono
+- 🔒 **Middleware**: control de acceso por rol (`/panel` solo compañeros, `/supervision` solo supervisores, `/admin` protegido)
+- 📊 **Historial**: estado de error con Reintentar + skeleton en stats + fix del bug que mostraba UUID en vez del rating
+- ⭐ **Valoración**: skeleton de carga (antes solo texto "Cargando...")
+- 💬 **Chat**: auto-reconexión a los 3s cuando falla el canal Supabase
 
-## v0.2.0-alpha — Mayo 2026
+### UX — Severidad media/baja (8 fixes)
+- 💾 **Registro cliente**: auto-save con `sessionStorage` (igual que acompañante)
+- 🏷️ **Registro compañero**: preview en vivo de tags de especialidades
+- 🔗 **Panel**: link "Ver detalle" en solicitudes abiertas + bordes de color (ámbar=abiertas, verde=asignadas)
+- 🔄 **Explorar**: búsqueda y filtros persisten en URL (`?q=&d=&v=&p=`)
+- ▶️ **Supervisión**: skeletons de carga en pestaña de reservas
+- ⏳ **Admin**: spinners de carga en tabs + `window.confirm()` al rechazar + validación client-side en formulario de servicios
+- ⌨️ **Valoración**: navegación de estrellas con teclado (flechas + tabIndex)
+- ⬅️ **Registros**: botones "Volver" a selección de rol
 
-### Funcionalidades avanzadas
-- ✅ Catálogo de servicios: modelo `Service` con nombre, descripción, precio y categoría + seed data + endpoint público
-- ✅ Dropdown de servicios en `/solicitud` reemplazando input de texto libre, con precio orientativo visible
-- ✅ Disponibilidad semanal para acompañantes: modelo `AvailabilitySlot` + API `PUT /availability` + editor en `/panel`
-- ✅ Validación de disponibilidad al crear reserva (rechaza si companion no tiene el slot disponible)
-- ✅ Historial de servicios: `GET /bookings/history` con paginación y `GET /bookings/stats` con agregados
-- ✅ Página `/historial` con estadísticas (total, valoración media, valoraciones recibidas) y lista paginada
-- ✅ `BookingData` ampliado con `serviceId` y `service` relation
-- ✅ `CompanionProfileData` ampliado con `id` para acceso directo
-
----
-
-## Próximas versiones
-
-### v0.2.0-beta — Pagos
-- Stripe integrado en el flujo de reservas
-- Webhooks de Stripe funcionales
-- UI de pago en el frontend
-
-### v0.3.0 — Funcionalidades
-- Catálogo de servicios con precios
-- Calendario de disponibilidad
-- Emails transaccionales completos
-- Roles y permisos aplicados
-
-### v1.0.0 — Producción
-- API migrada a plataforma con WebSockets
-- Tests automatizados
-- CI/CD completo
-- GDPR compliance
-
-## v0.1.0-alpha.28 — Mayo 2026 (UI/UX fixes)
-
-### UI
-- 🎨 Notificaciones: emojis reemplazados por íconos Lucide con colores semánticos
-- 📊 StepIndicator: indicador de progreso en onboarding (3 pasos con checkmarks)
-- 💀 SkeletonChat: placeholder de chat durante carga (antes era texto "Cargando...")
-- ☑️ Checkbox y select nativos estilizados (appearance: none, SVG inline)
-- 🌙 Dark mode: CSS custom properties + Tailwind `darkMode: 'class'`, variantes para cards, inputs, tags, checkboxes, hero
-- 🔴 Botón "Llamar" en chat reemplazado por link funcional `tel:112` (Emergencia)
-
-### UX
-- ⚠️ ConfirmDialog: modal de confirmación para acciones destructivas (logout)
-- 🧭 Breadcrumbs: migas de pan en rutas profundas (Explorar > Nombre | Mis Reservas > Servicio)
-- ♿ RouteAnnouncer: anunciador de cambios de página para lectores de pantalla
-- 💾 Auto-guardado: formulario de registro de acompañante guarda en sessionStorage
-- 🔼 Scroll-to-top automático al paginar en explorar
-- 📊 Contador de resultados en búsqueda ("42 acompañantes encontrados")
-- 🖱️ Botones nativos en onboarding (antes div[role=button])
-- 📝 27 tildes/acentos corregidos en textos en español
-
-### Tests
-- ✅ schemas.test.ts: corregido (serviceType → serviceId)
-- ✅ solicitud.test.tsx: corregido (añadido QueryClientProvider)
-- 🔧 app-shell.test.tsx: mock de sub-componentes (pre-existente ESM issue)
-- 📄 Nueva página `/info` réplica de landing page gotogether.es (hero, features, perfiles con scroll al CTA, 4 pasos, FAQ acordeón, CTA) — enlazada desde footer y navbar
-- 🎨 Nuevo componente `FaqAccordion` con animación de apertura/cierre y preguntas en azul
-- 🔒 Middleware: `/historial` añadido a rutas protegidas, `/legal` añadido a rutas públicas
-- 🧭 Navbar: añadido enlace "Historial" para usuarios autenticados (desktop + mobile)
-- 🔗 Homepage: botones "Quiero acompañamiento" / "Quiero ser acompañante" redirigen a login o `/perfil` según sesión
-- 📄 Nuevas páginas `/nosotros` (Quiénes somos) y `/contacto` (Contactar con info@gotogether.es)
-- 🦶 Footer: reemplazados enlaces de producto por Quiénes somos, Cómo funciona y Contactar
-- 📄 Nuevas páginas `/nosotros` (visión, misión, valores, equipo) y `/contacto` (email info@gotogether.es, teléfono 643415190)
-- 🛡️ Admin: panel ampliado de 3 a 8 pestañas (Dashboard, Usuarios, Pendientes, Reservas, Servicios, Pagos, Valoraciones, Notificaciones)
-- 🔧 Admin API: 11 nuevos endpoints (bookings CRUD, services CRUD, payments, reports, notifications masivas)
-- 📊 Admin Dashboard: stats ampliados con reservas, pagos y facturación
-- 📋 Admin Reservas: tabla con filtro por estado, detalle con chat, pagos y valoración
-- 🛒 Admin Servicios: CRUD completo con modal y toggle activar/desactivar
-- 💰 Admin Pagos: historial paginado con importe, comisión y estado
-- ⭐ Admin Valoraciones: listado con opción de eliminar
-- 📢 Admin Notificaciones: envío masivo por rol (todos, clientes, acompañantes)
-- 👥 Supervisión: nueva pestaña "Reservas de clientes" con tabla paginada
-- 🔗 Navbar: enlace "Supervisión" solo visible para supervisores (restricción por rol)
-- 🔧 API: endpoint `GET /supervision/bookings` para reservas de supervisados
-- 🗺️ Ubicación en tiempo real: modelo `ClientLocation`, hook `useLocationSharing`, mapa Leaflet, pestaña "Ubicación" en supervisión
-- 📍 Perfil: toggle para compartir ubicación con el supervisor
-- 🔄 Flujo de finalización: acompañante solicita finalizar → cliente confirma → redirigido a valoración
-- 🛠️ Backend: endpoints `PUT /bookings/:id/request-completion` y `PUT /bookings/:id/complete`
-- 🔒 `/supervision` restringido a supervisores (no accesible por clientes ni acompañantes)
-- 🛡️ Seguridad: RLS activado en 11 tablas, admin password con bcrypt, CSP sin unsafe-eval, Swagger solo en dev, MaxLength en DTOs
-- 🚀 Rendimiento: next/font/google (fuente self-hosted), React Query staleTime 2min + gcTime 10min, sesión cacheada en API calls, middleware optimizado
-- ⚡ Home e Info convertidos a Server Components (JS enviado al cliente reducido drásticamente)
-- 📦 socket.io-client eliminado (~50KB dead code)
-- 🌍 Vercel: región cambiada a fra1 (Frankfurt) para menor latencia en España, memoria API a 1769MB
-- 🎨 Branding: logo JPG como favicon y en navbar/footer, favicon.png dedicado para pestaña
-- 🚀 Primeros pasos: nueva página `/primeros-pasos` con guía adaptada por rol (cliente vs acompañante)
-- 📱 PWA: manifest.json, instalable en homescreen del móvil
-- 🏅 Niveles de acompañante: bronce, plata, oro según servicios completados, badge visible en tarjetas
-- 💬 Testimonios: sección con 6 historias reales en homepage y `/info`
-- ✉️ Email de bienvenida automático al registrarse
-
-### Fixes (Mayo 2026)
-
-- 🐛 **Disponibilidad rota**: `SetAvailabilityDto.slots` no tenía decoradores de validación → `whitelist: true` del `ValidationPipe` lo eliminaba → error 500 al guardar disponibilidad. Convertido `AvailabilitySlotDto` de `interface` a `class` con `@IsInt/@Min/@Max/@Matches` y añadido `@IsArray/@ValidateNested/@Type` a `SetAvailabilityDto`.
-- 🐛 **Calendario de disponibilidad**: cambiado de 3 bloques (Mañana/Tarde/Noche) a 12 franjas horarias de 1h (08:00–20:00) en el panel de acompañante.
-- 🐛 **Registro de supervisor roto**: `ProfilesService.upsertProfile` no aceptaba rol `SUPERVISOR` y el `else` forzaba `CLIENT`. Añadido campo `role` al DTO y rama `else if (requestedRole === 'SUPERVISOR')` en el servicio.
-- 🐛 **Página `/supervision` inaccesible**: verificaba el rol desde `user.user_metadata?.role` (nunca seteado) en vez de la DB. Ahora usa `syncUser()` que retorna `{ id, email, role }` desde la API.
-- 🐛 **Redirección post-login sin distinguir rol**: `GET /auth/me` ahora retorna el rol del usuario. `AuthRedirectPage` redirige supervisores → `/supervision`, acompañantes → `/panel`, clientes → `/perfil`. Supervisores sin perfil van a `/perfil?onboarding=true&role=supervisor`.
-
----
-
-## v0.1.0-alpha.29 — Mayo 2026 (Tests, disponibilidad, docs)
-
-### Tests
-- 🧪 **288 tests**: 164 backend (18 suites) + 124 frontend (28 suites)
-- 🏗️ Infraestructura de test: mock de PrismaService, 8 factories, mocks de servicios NestJS
-- 📋 Backend: todos los servicios (15), guards, strategy, exception filter, mail
-- 🎨 Frontend: componentes, hooks, lib utilities, pages, middleware, availability grid
-
-### Disponibilidad
-- 🎨 **AvailabilityGrid**: grid pintable estilo When2Meet (drag para seleccionar, 30 min, click en cabecera togglea día entero)
-- 💾 Debounced auto-save (1.5s), feedback visual instantáneo (optimista)
-- 📌 Disponibilidad ahora **orientativa**: clientes pueden solicitar aunque el acompañante no tenga horario marcado
-- 🕐 Timezone fix: frontend envía `localDayOfWeek` + `localTime` calculados en zona horaria del navegador
-- ✅ Validación `endTime > startTime` en servidor
-- 🗑️ Eliminada detección de solapamiento (innecesaria con grid pintable)
-- 📊 Schema: `AvailabilitySlot` con `updatedAt` y `@@index([companionId, dayOfWeek])`
-
-### Auth & Build
-- 🔧 `jwks-rsa` downgradeado a v3.2.2 para compatibilidad CJS en Vercel Node.js 20.x (soluciona `ERR_REQUIRE_ESM`)
-- 🔒 `SupabaseJwtStrategy.validate()` consulta BD para rol (funcional desde v0.1.1-alpha, documentado)
-- 🏗️ Build corregido: `tsconfig.build.json` excluye `__mocks__/` y `test-utils/`
-
-### UX
-- 🔓 Fix: diálogo de confirmación de logout se cerraba tras confirmar
-- 🔗 Botón "Ir al Panel" en `/perfil` para acompañantes
-
-### Documentación
-- 📚 Docs actualizadas: roadmap (tests ✓), auth (roles funcionales), modules (16), components (AvailabilityGrid), schema (AvailabilitySlot), deployment (jwks-rsa)
+### Build
+- 🔧 **Webpack alias** para `zod/v4/core` en Next.js (compatibilidad ESM/CJS)
+- 🏗️ Build corregido: 3 bugs de JSX desbalanceado, imports perdidos, tipos faltantes
+- ✅ 287 tests pasando, 31 páginas estáticas compiladas

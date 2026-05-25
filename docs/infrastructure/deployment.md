@@ -65,6 +65,7 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 - **Sin estado:** no hay memoria compartida entre invocaciones
 - **Tamaño de payload:** 4.5 MB (body)
 - **Node.js 20.x:** no soporta `require()` de módulos ESM → `jwks-rsa` fijado a v3.2.2 (CJS compatible)
+- **zod/v4/core ESM/CJS:** webpack alias en `next.config.mjs` resuelve `zod/v4/core` al `.cjs` file
 
 > [!warning] Para producción con WebSockets nativos, migrar la API a Fly.io, Railway o Render. Ver [[roadmap]] para detalles.
 

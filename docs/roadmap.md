@@ -51,7 +51,7 @@ El núcleo del marketplace está funcional. Pagos pendientes de activar. Segurid
 ## ✅ Fase 5 — Funcionalidades avanzadas + Admin + Supervisión + Perf + Seguridad (completada)
 
 - [x] Catálogo de servicios con precios
-- [x] Disponibilidad semanal para acompañantes
+- [x] Disponibilidad semanal para acompañantes (grid pintable 30min, orientativa)
 - [x] Historial de servicios
 - [x] Admin ampliado (8 pestañas)
 - [x] Supervisión: reservas de clientes + ubicación en tiempo real
@@ -110,11 +110,14 @@ El núcleo del marketplace está funcional. Pagos pendientes de activar. Segurid
 - [x] OG image, favicon, logo en navbar/footer
 - [x] next/font/google para fuente auto-hospedada
 
-## 🆕 Fase 9 — UX, conversión y retención
+## 🆕 Fase 9 — UX, conversión y retención (casi completa)
 
 - [x] Email de bienvenida automático
 - [x] Página `/primeros-pasos` adaptada por rol
 - [x] PWA (instalable en móvil)
+- [x] UX audit: 17 fixes aplicados (login, skeleton, formularios, accesibilidad, keyboard nav)
+- [x] Panel: grid de disponibilidad estilo When2Meet (30min, drag, debounced save)
+- [x] Disponibilidad orientativa (clientes pueden solicitar fuera de horario)
 - [ ] Tooltips de onboarding
 - [ ] Página de precios pública
 - [ ] Blog / recursos

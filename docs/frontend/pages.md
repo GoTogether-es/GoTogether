@@ -79,7 +79,7 @@ Página de contacto con email (info@gotogether.es), ubicación y enlaces a info 
 **Archivo:** `auth/login/page.tsx`
 **Auth:** Pública
 
-Formulario de email para recibir magic link. Usa `requestMagicLink()`.
+Formulario de email para recibir magic link. Usa `requestMagicLink()`. Validación client-side de email con regex. Mensajes de error específicos (red, API, genérico). Hint de carpeta spam en success. Suspense boundary con spinner.
 
 ### `/auth/verify` — Verificación
 **Archivo:** `auth/verify/page.tsx`
@@ -157,13 +157,14 @@ Perfil completo del acompañante con:
 **Archivo:** `solicitud/page.tsx`
 **Auth:** Protegida
 
-Formulario de reserva:
-- Tipo de servicio (texto libre)
-- Fecha y hora
+Suspense con `SkeletonForm` durante carga. Formulario de reserva:
+- Dropdown de servicios del catálogo con precio orientativo
+- Fecha y hora con validación client-side (`validateFutureDate`)
 - Dirección
 - Discapacidad (select, opcional)
 - Notas
 - Si se llega con `?companionId=X`, muestra banner y lo envía a la API
+- Cancelar vuelve a `/explorar/[id]` o `/explorar`
 - Al enviar: `createBooking()` + `requestBooking()` → redirige a `/reservas`
 
 ### `/reservas` — Mis reservas
@@ -200,6 +201,7 @@ Chat en tiempo real con:
 - Panel lateral con detalles de la reserva
 - Botón de emergencia (`tel:112`) en la cabecera del chat
 - Indicador de conexión (verde/amarillo/rojo)
+- Auto-reconexión a los 3s cuando falla el canal Supabase (`CHANNEL_ERROR`)
 - Scroll automático en el contenedor del chat
 - Recarga de mensajes al cambiar de pestaña (visibilitychange)
 
@@ -208,7 +210,7 @@ Chat en tiempo real con:
 **Auth:** Protegida
 
 Dos modos:
-- **Vista:** tarjetas con avatar, info personal, acompañante, discapacidad, preferencias. Botón lápiz para editar.
+- **Vista:** tarjetas con avatar, info personal, acompañante (especialidades, verificación, rating), discapacidad, preferencias. Botón lápiz para editar. Card de ubicación (clientes) o card "Ir al Panel" (acompañantes). Suspense con spinner.
 - **Edición:** formularios con inputs. Subida de avatar. Guardar/Cancelar.
 - **Onboarding** (`?onboarding=true`): arranca en modo edición sin botón cancelar.
 
