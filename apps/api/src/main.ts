@@ -38,7 +38,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.useGlobalFilters(new GlobalExceptionFilter());
   app.use('/payments/webhook', express.raw({ type: 'application/json' }));
-  await app.listen(4000);
+  await app.listen(process.env.PORT || 4000);
 }
 
 bootstrap();

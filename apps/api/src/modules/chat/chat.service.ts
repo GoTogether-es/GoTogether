@@ -12,15 +12,11 @@ export class ChatService {
   async getOrCreateRoom(bookingId: string, userId: string) {
     await this.validateParticipant(bookingId, userId);
 
-    let room = await this.prisma.chatRoom.findUnique({
+    const room = await this.prisma.chatRoom.upsert({
       where: { bookingId },
+      update: {},
+      create: { bookingId },
     });
-
-    if (!room) {
-      room = await this.prisma.chatRoom.create({
-        data: { bookingId },
-      });
-    }
 
     return room;
   }

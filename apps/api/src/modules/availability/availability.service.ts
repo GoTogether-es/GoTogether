@@ -33,13 +33,14 @@ export class AvailabilityService {
       }
     }
 
-    await this.prisma.availabilitySlot.deleteMany({ where: { companionId } });
-
-    if (slots.length > 0) {
-      await this.prisma.availabilitySlot.createMany({
-        data: slots.map((s) => ({ companionId, dayOfWeek: s.dayOfWeek, startTime: s.startTime, endTime: s.endTime })),
-      });
-    }
+    await this.prisma.$transaction([
+      this.prisma.availabilitySlot.deleteMany({ where: { companionId } }),
+      ...(slots.length > 0
+        ? [this.prisma.availabilitySlot.createMany({
+            data: slots.map((s) => ({ companionId, dayOfWeek: s.dayOfWeek, startTime: s.startTime, endTime: s.endTime })),
+          })]
+        : []),
+    ]);
 
     return this.getForCompanion(companionId);
   }

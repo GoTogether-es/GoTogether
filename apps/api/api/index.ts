@@ -5,7 +5,10 @@ import { AppModule } from '../src/modules/app/app.module';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import express from 'express';
 
-const VERSION = '0.1.0-alpha.14';
+let VERSION = '0.1.0-alpha';
+try {
+  VERSION = require('../package.json').version;
+} catch {}
 
 const allowedOrigins = [
   process.env.FRONTEND_URL,

@@ -66,6 +66,7 @@ model SupervisionInvite {
 
   supervisor User @relation(fields: [supervisorId], references: [id])
 
+  @@index([supervisorId, status])
   @@map("SupervisionInvite")
 }
 
@@ -174,6 +175,10 @@ model Booking {
   payment   Payment?
   report    Report?
   chatRoom  ChatRoom?
+
+  @@index([clientId, status])
+  @@index([companionId])
+  @@index([status])
 }
 
 model Payment {
@@ -208,6 +213,8 @@ model ChatMessage {
   createdAt DateTime @default(now())
 
   room ChatRoom @relation(fields: [roomId], references: [id])
+
+  @@index([roomId, createdAt])
 }
 
 model Report {
@@ -230,4 +237,6 @@ model Notification {
   bookingId String?
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
+
+  @@index([userId, read])
 }

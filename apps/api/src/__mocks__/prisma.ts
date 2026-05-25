@@ -85,6 +85,7 @@ const shape = {
   chatRoom: {
     findUnique: jest.fn,
     create: jest.fn,
+    upsert: jest.fn,
   },
   chatMessage: {
     create: jest.fn,

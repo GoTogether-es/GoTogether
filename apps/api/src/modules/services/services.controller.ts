@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Put, Body, Param, UseGuards } from '@nestjs/common';
 import { ServicesService } from './services.service';
 import { SupabaseAuthGuard } from '../auth/supabase-auth.guard';
+import { AdminGuard } from '../auth/admin.guard';
 
 @Controller('services')
 export class ServicesController {
@@ -17,13 +18,13 @@ export class ServicesController {
     return this.servicesService.listAll();
   }
 
-  @UseGuards(SupabaseAuthGuard)
+  @UseGuards(AdminGuard)
   @Post()
   create(@Body() body: { name: string; description?: string; price?: number; category?: string }) {
     return this.servicesService.create(body);
   }
 
-  @UseGuards(SupabaseAuthGuard)
+  @UseGuards(AdminGuard)
   @Put(':id')
   update(@Param('id') id: string, @Body() body: { name?: string; description?: string; price?: number; category?: string; active?: boolean }) {
     return this.servicesService.update(id, body);

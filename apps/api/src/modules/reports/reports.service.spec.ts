@@ -13,6 +13,10 @@ describe('ReportsService', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     prisma = createMockPrismaService();
+    prisma.$transaction = jest.fn((arg: any) => {
+      if (typeof arg === 'function') return arg(prisma);
+      return Promise.all(arg.map((q: any) => q));
+    });
     notifications = createMockNotificationsService();
     service = new ReportsService(prisma as any, notifications as any);
   });

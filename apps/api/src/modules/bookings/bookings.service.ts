@@ -3,7 +3,6 @@ import {
   NotFoundException,
   ForbiddenException,
   BadRequestException,
-  ConflictException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
@@ -111,8 +110,9 @@ export class BookingsService {
         where: { profile: { userId } },
         select: { id: true },
       });
+      if (!companion) return [];
       return this.prisma.booking.findMany({
-        where: { companionId: companion?.id || '__none__' },
+        where: { companionId: companion.id },
         include: { client: { include: { profile: true } }, payment: true, report: true, chatRoom: true },
         orderBy: { createdAt: 'desc' },
       });
@@ -218,7 +218,7 @@ export class BookingsService {
           title: 'Solicitud aceptada',
           body: `${user.profile?.fullName || 'Un acompañante'} ha aceptado tu solicitud`,
           bookingId,
-        });
+        }).catch(err => console.error('Failed to notify:', err));
         this.sendBookingEmail(booking, 'accepted', user.profile?.fullName);
         break;
       case BookingStatus.DECLINED:
@@ -229,7 +229,7 @@ export class BookingsService {
           title: 'Solicitud rechazada',
           body: `${user.profile?.fullName || 'Un acompañante'} ha rechazado tu solicitud`,
           bookingId,
-        });
+        }).catch(err => console.error('Failed to notify:', err));
         this.sendBookingEmail(booking, 'declined', user.profile?.fullName);
         break;
       case BookingStatus.IN_PROGRESS:
@@ -244,7 +244,7 @@ export class BookingsService {
             title: 'Servicio completado',
             body: `${user.profile.fullName} ha marcado el servicio como completado. ¡Valóralo!`,
             bookingId,
-          });
+          }).catch(err => console.error('Failed to notify:', err));
           this.sendBookingEmail(booking, 'completed', user.profile.fullName);
         }
         break;
@@ -296,7 +296,8 @@ export class BookingsService {
         where: { profile: { userId } },
         select: { id: true },
       });
-      where.companionId = companion?.id || '__none__';
+      if (!companion) return { data: [], meta: { total: 0, page, limit, totalPages: 0 } };
+      where.companionId = companion.id;
     } else {
       where.clientId = userId;
     }
@@ -339,7 +340,8 @@ export class BookingsService {
         where: { profile: { userId } },
         select: { id: true },
       });
-      where.companionId = companion?.id || '__none__';
+      if (!companion) return { completed: 0, withRating: 0, averageRating: null };
+      where.companionId = companion.id;
     } else {
       where.clientId = userId;
     }

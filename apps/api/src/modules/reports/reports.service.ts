@@ -78,30 +78,30 @@ export class ReportsService {
       throw new ForbiddenException('Solo el cliente puede valorar el servicio');
     }
 
-    const report = await this.prisma.report.create({
-      data: {
-        bookingId,
-        rating: dto.rating,
-        summary: dto.summary,
-      },
-    });
-
-    if (booking.companionId) {
-      await this.recalculateCompanionRating(booking.companionId);
-      const companion = await this.prisma.companionProfile.findUnique({
-        where: { id: booking.companionId },
-        include: { profile: true },
+    const report = await this.prisma.$transaction(async (tx) => {
+      const r = await tx.report.create({
+        data: { bookingId, rating: dto.rating, summary: dto.summary },
       });
-      if (companion?.profile) {
-        this.notifications.create({
-          userId: companion.profile.userId,
-          type: 'rating_received',
-          title: 'Nueva valoracion',
-          body: `Has recibido una valoracion de ${dto.rating} estrellas`,
-          bookingId,
+
+      if (booking.companionId) {
+        await this.recalculateCompanionRatingWithTx(tx, booking.companionId);
+        const companion = await tx.companionProfile.findUnique({
+          where: { id: booking.companionId },
+          include: { profile: true },
         });
+        if (companion?.profile) {
+          this.notifications.create({
+            userId: companion.profile.userId,
+            type: 'rating_received',
+            title: 'Nueva valoración',
+            body: `Has recibido una valoración de ${dto.rating} estrellas`,
+            bookingId,
+          }).catch(err => console.error('Failed to notify:', err));
+        }
       }
-    }
+
+      return r;
+    });
 
     return report;
   }
@@ -136,25 +136,32 @@ export class ReportsService {
   }
 
   private async recalculateCompanionRating(companionId: string) {
-    const bookings = await this.prisma.booking.findMany({
+    return this.recalculateCompanionRatingWithTx(this.prisma, companionId);
+  }
+
+  private async recalculateCompanionRatingWithTx(
+    tx: any,
+    companionId: string,
+  ) {
+    const bookings = await tx.booking.findMany({
       where: { companionId, status: BookingStatus.COMPLETED },
       include: { report: { select: { rating: true } } },
     });
 
-    const ratings = bookings
+    const ratings = (bookings as any[])
       .map((b) => b.report?.rating)
       .filter((r): r is number => r !== null && r !== undefined);
 
     const average =
       ratings.length > 0
-        ? Math.round((ratings.reduce((a, b) => a + b, 0) / ratings.length) * 10) / 10
+        ? Math.round((ratings.reduce((a: number, b: number) => a + b, 0) / ratings.length) * 10) / 10
         : 0;
 
-    const completedDates = bookings.map((b) => b.createdAt.getTime());
+    const completedDates = (bookings as any[]).map((b: any) => b.createdAt.getTime());
     const firstCompleted = completedDates.length > 0 ? Math.min(...completedDates) : Date.now();
     const yearsOnPlatform = Math.floor((Date.now() - firstCompleted) / (365 * 24 * 60 * 60 * 1000));
 
-    await this.prisma.companionProfile.update({
+    await tx.companionProfile.update({
       where: { id: companionId },
       data: { rating: average, yearsOnPlatform },
     });

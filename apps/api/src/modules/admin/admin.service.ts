@@ -23,7 +23,7 @@ export class AdminService {
       this.prisma.profile.count({ where: { verified: false } }),
       this.prisma.profile.count({ where: { verified: true } }),
       this.prisma.booking.count(),
-      this.prisma.booking.count({ where: { status: { in: ['REQUESTED', 'ACCEPTED', 'IN_PROGRESS'] } } }),
+      this.prisma.booking.count({ where: { status: { in: [BookingStatus.REQUESTED, BookingStatus.ACCEPTED, BookingStatus.IN_PROGRESS] } } }),
       this.prisma.booking.count({ where: { status: 'COMPLETED' } }),
       this.prisma.payment.count(),
       this.prisma.payment.aggregate({ _sum: { amount: true } }),

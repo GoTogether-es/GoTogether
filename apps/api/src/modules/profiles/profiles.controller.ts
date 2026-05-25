@@ -19,11 +19,13 @@ export class ProfilesController {
     return this.profilesService.upsertProfile(req.user.userId, dto);
   }
 
+  @UseGuards(SupabaseAuthGuard)
   @Get('companions')
   listCompanions() {
     return this.profilesService.listCompanions();
   }
 
+  @UseGuards(SupabaseAuthGuard)
   @Get('companions/:id')
   getCompanion(@Param('id') id: string) {
     return this.profilesService.getCompanionById(id);

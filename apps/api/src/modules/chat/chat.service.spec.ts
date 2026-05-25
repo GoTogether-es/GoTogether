@@ -15,7 +15,7 @@ describe('ChatService', () => {
   describe('getOrCreateRoom', () => {
     it('returns existing room', async () => {
       prisma.booking.findUnique.mockResolvedValue(mockBooking({ clientId: 'client-1' }));
-      prisma.chatRoom.findUnique.mockResolvedValue({ id: 'room-1', bookingId: 'booking-1' });
+      prisma.chatRoom.upsert.mockResolvedValue({ id: 'room-1', bookingId: 'booking-1' });
 
       const result = await service.getOrCreateRoom('booking-1', 'client-1');
       expect(result).toHaveProperty('id', 'room-1');
@@ -23,12 +23,11 @@ describe('ChatService', () => {
 
     it('creates room if none exists', async () => {
       prisma.booking.findUnique.mockResolvedValue(mockBooking({ clientId: 'client-1' }));
-      prisma.chatRoom.findUnique.mockResolvedValue(null);
-      prisma.chatRoom.create.mockResolvedValue({ id: 'room-new', bookingId: 'booking-1' });
+      prisma.chatRoom.upsert.mockResolvedValue({ id: 'room-new', bookingId: 'booking-1' });
 
       const result = await service.getOrCreateRoom('booking-1', 'client-1');
       expect(result).toHaveProperty('id', 'room-new');
-      expect(prisma.chatRoom.create).toHaveBeenCalled();
+      expect(prisma.chatRoom.upsert).toHaveBeenCalled();
     });
 
     it('throws ForbiddenException for non-participant', async () => {
@@ -41,7 +40,7 @@ describe('ChatService', () => {
     it('allows supervisor to access', async () => {
       prisma.booking.findUnique.mockResolvedValue(mockBooking({ clientId: 'client-1' }));
       prisma.supervision.findFirst.mockResolvedValue(mockSupervision({ supervisorId: 'supervisor-1', clientId: 'client-1' }));
-      prisma.chatRoom.findUnique.mockResolvedValue({ id: 'room-1', bookingId: 'booking-1' });
+      prisma.chatRoom.upsert.mockResolvedValue({ id: 'room-1', bookingId: 'booking-1' });
 
       const result = await service.getOrCreateRoom('booking-1', 'supervisor-1');
       expect(result).toHaveProperty('id', 'room-1');

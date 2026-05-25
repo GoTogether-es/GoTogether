@@ -50,9 +50,8 @@ export class AuthService {
       if (!this.configService.get('RESEND_FROM')) missing.push('RESEND_FROM');
       if (!this.configService.get('NEXT_PUBLIC_APP_URL')) missing.push('NEXT_PUBLIC_APP_URL');
       
-      const errorMsg = `Configuración incompleta: faltan [${missing.join(', ')}]`;
-      console.error(errorMsg);
-      throw new InternalServerErrorException(errorMsg);
+      console.error(`Configuración incompleta: faltan [${missing.join(', ')}]`);
+      throw new InternalServerErrorException('Servicio no disponible en este momento');
     }
 
     try {
@@ -114,29 +113,7 @@ export class AuthService {
     return user;
   }
 
-  async logout(token: string) {
-    if (!this.supabaseAdmin) {
-      this.initializeClients();
-    }
-
-    if (!this.supabaseAdmin) {
-      throw new InternalServerErrorException('Supabase no configurado');
-    }
-
-    try {
-      const { error } = await this.supabaseAdmin.auth.admin.signOut(
-        token.replace('Bearer ', ''),
-      );
-      if (error) throw error;
-      return { success: true };
-    } catch (error: any) {
-      if (error?.__isAuthError) {
-        return { success: true };
-      }
-      console.error('Error in logout:', error);
-      throw new InternalServerErrorException(
-        `No se pudo cerrar sesión: ${error.message || 'Error desconocido'}`,
-      );
-    }
+  async logout(_token: string) {
+    return { success: true };
   }
 }

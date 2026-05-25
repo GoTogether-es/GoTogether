@@ -115,13 +115,15 @@ export class SupervisionService {
     const existingSupervision = await this.prisma.supervision.findUnique({ where: { clientId: userId } });
     if (existingSupervision) throw new ConflictException('Ya tienes un supervisor asignado');
 
-    await this.prisma.supervision.create({
-      data: { supervisorId: invite.supervisorId, clientId: userId },
-    });
-    await this.prisma.supervisionInvite.update({
-      where: { id: invite.id },
-      data: { status: 'ACCEPTED', clientId: userId },
-    });
+    await this.prisma.$transaction([
+      this.prisma.supervision.create({
+        data: { supervisorId: invite.supervisorId, clientId: userId },
+      }),
+      this.prisma.supervisionInvite.update({
+        where: { id: invite.id },
+        data: { status: 'ACCEPTED', clientId: userId },
+      }),
+    ]);
 
     return { success: true, message: 'Supervisión aceptada correctamente' };
   }

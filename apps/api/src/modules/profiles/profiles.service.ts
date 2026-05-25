@@ -28,18 +28,19 @@ export class ProfilesService {
       create: { ...profileData, userId },
     });
 
-    // 2. Handle companion profile
+    // 2. Handle companion profile and role in a transaction
     if (isCompanion) {
-      await this.prisma.companionProfile.upsert({
-        where: { profileId: profile.id },
-        update: { specialties, backgroundCheck, sexualCheck, penalCertificate, sexualCertificate },
-        create: { profileId: profile.id, specialties, backgroundCheck, sexualCheck, penalCertificate, sexualCertificate },
-      });
-
-      await this.prisma.user.update({
-        where: { id: userId },
-        data: { role: UserRole.COMPANION },
-      });
+      await this.prisma.$transaction([
+        this.prisma.companionProfile.upsert({
+          where: { profileId: profile.id },
+          update: { specialties, backgroundCheck, sexualCheck, penalCertificate, sexualCertificate },
+          create: { profileId: profile.id, specialties, backgroundCheck, sexualCheck, penalCertificate, sexualCertificate },
+        }),
+        this.prisma.user.update({
+          where: { id: userId },
+          data: { role: UserRole.COMPANION },
+        }),
+      ]);
     } else if (requestedRole === 'SUPERVISOR') {
       await this.prisma.user.update({
         where: { id: userId },
@@ -71,7 +72,7 @@ export class ProfilesService {
       include: {
         profile: {
           include: {
-            user: true
+            user: { select: { id: true } }
           }
         },
         _count: { select: { bookings: true } }
