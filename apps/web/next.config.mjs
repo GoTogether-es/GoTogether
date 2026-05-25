@@ -12,11 +12,12 @@ const withBundleAnalyzer = bundleAnalyzer({
 const nextConfig = withBundleAnalyzer({
   reactStrictMode: true,
   poweredByHeader: false,
-  transpilePackages: ['@gotogether/ui', '@gotogether/shared'],
+  transpilePackages: ['@gotogether/ui', '@gotogether/shared', '@hookform/resolvers'],
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
-      'zod/v4/core$': path.resolve(__dirname, 'node_modules/zod/v4/core/index.cjs'),
+      'zod/v4/core': path.resolve(__dirname, 'node_modules/zod/v4/core/index.cjs'),
+      '@hookform/resolvers/zod$': path.resolve(__dirname, 'node_modules/@hookform/resolvers/zod/dist/zod.js'),
     };
     return config;
   },
