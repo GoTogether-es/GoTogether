@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from '../src/modules/app/app.module';
+import { GlobalExceptionFilter } from '../src/modules/app/global-exception.filter';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import express from 'express';
 
@@ -42,6 +43,7 @@ async function bootstrap() {
     );
 
     nestApp.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+    nestApp.useGlobalFilters(new GlobalExceptionFilter());
 
     await nestApp.init();
     cachedExpressApp = expressApp;

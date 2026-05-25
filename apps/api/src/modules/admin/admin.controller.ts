@@ -1,6 +1,13 @@
 import { Controller, Get, Post, Put, Delete, Param, Query, Body, UseGuards } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { AdminGuard } from '../auth/admin.guard';
+import { BookingStatus } from '../../generated/client';
+import { IsEnum } from 'class-validator';
+
+class UpdateBookingStatusDto {
+  @IsEnum(BookingStatus)
+  status!: BookingStatus;
+}
 
 @Controller('admin')
 @UseGuards(AdminGuard)
@@ -61,8 +68,8 @@ export class AdminController {
   }
 
   @Put('bookings/:id/status')
-  updateBookingStatus(@Param('id') id: string, @Body('status') status: string) {
-    return this.adminService.updateBookingStatus(id, status as any);
+  updateBookingStatus(@Param('id') id: string, @Body() dto: UpdateBookingStatusDto) {
+    return this.adminService.updateBookingStatus(id, dto.status);
   }
 
   // --- Services ---

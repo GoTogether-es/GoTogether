@@ -41,6 +41,8 @@ model User {
   bookedBookings    Booking[]           @relation("BookedBookings")
   sentInvites       SupervisionInvite[]
   location          ClientLocation?
+
+  @@index([role])
 }
 
 model Supervision {
@@ -51,6 +53,8 @@ model Supervision {
 
   supervisor User @relation("SupervisorOf", fields: [supervisorId], references: [id])
   client     User @relation("SupervisedBy", fields: [clientId], references: [id])
+
+  @@index([supervisorId])
 }
 
 model SupervisionInvite {
@@ -121,6 +125,8 @@ model CompanionProfile {
   profile           Profile            @relation(fields: [profileId], references: [id])
   bookings          Booking[]          @relation("CompanionBookings")
   availabilitySlots AvailabilitySlot[]
+
+  @@index([verified])
 }
 
 model Service {

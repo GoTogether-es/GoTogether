@@ -28,48 +28,24 @@ export class MatchingService {
       where.verified = true;
     }
 
-    if (search || disabilityType) {
-      const profileConditions: Prisma.ProfileWhereInput[] = [];
-
-      if (search) {
-        const term = `%${search}%`;
-        profileConditions.push({
-          OR: [
-            { fullName: { contains: search, mode: 'insensitive' } },
-            { headline: { contains: search, mode: 'insensitive' } },
-            { bio: { contains: search, mode: 'insensitive' } },
-          ],
-        });
-      }
-
-      if (disabilityType) {
-        profileConditions.push({ disabilityType: { equals: disabilityType, mode: 'insensitive' } });
-      }
-
-      if (profileConditions.length > 0) {
-        where.profile = { AND: profileConditions };
-      }
-    }
+    const profileConditions: Prisma.ProfileWhereInput[] = [];
 
     if (search) {
-      const term = `%${search}%`;
-      if (!where.profile) {
-        where.profile = {};
-      }
-      const existingAND = (where.profile as any).AND || [];
-      (where.profile as any).OR = [
-        { fullName: { contains: search, mode: 'insensitive' } },
-        { headline: { contains: search, mode: 'insensitive' } },
-        { bio: { contains: search, mode: 'insensitive' } },
-      ];
-      if (disabilityType) {
-        (where.profile as any).AND = [
-          ...(Array.isArray(existingAND) ? existingAND : [existingAND]),
-          { disabilityType: { equals: disabilityType, mode: 'insensitive' } },
-        ];
-      }
-    } else if (disabilityType && !where.profile) {
-      where.profile = { disabilityType: { equals: disabilityType, mode: 'insensitive' } };
+      profileConditions.push({
+        OR: [
+          { fullName: { contains: search, mode: 'insensitive' } },
+          { headline: { contains: search, mode: 'insensitive' } },
+          { bio: { contains: search, mode: 'insensitive' } },
+        ],
+      });
+    }
+
+    if (disabilityType) {
+      profileConditions.push({ disabilityType: { equals: disabilityType, mode: 'insensitive' } });
+    }
+
+    if (profileConditions.length > 0) {
+      where.profile = { AND: profileConditions };
     }
 
     const skip = (page - 1) * limit;
@@ -79,7 +55,7 @@ export class MatchingService {
         where,
         include: {
           profile: {
-            include: { user: { select: { id: true, email: true } } },
+            include: { user: { select: { id: true } } },
           },
         },
         orderBy: [{ rating: 'desc' }, { yearsOnPlatform: 'desc' }],

@@ -3,39 +3,23 @@ import {
   NotFoundException,
   ConflictException,
   ForbiddenException,
-  InternalServerErrorException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
+import { MailService } from '../auth/mail.service';
 import { CreateSupervisionDto } from './dto/create-supervision.dto';
 import { InviteSupervisionDto } from './dto/invite-supervision.dto';
 import { UserRole } from '../../generated/client';
 import { randomUUID } from 'crypto';
-import { Resend } from 'resend';
 import { getSupervisionInviteTemplate } from '../auth/mail.templates';
 
 @Injectable()
 export class SupervisionService {
-  private resend: Resend | null = null;
-
   constructor(
     private readonly prisma: PrismaService,
     private readonly configService: ConfigService,
-  ) {
-    const resendApiKey = this.configService.get<string>('RESEND_API_KEY');
-    if (resendApiKey) {
-      this.resend = new Resend(resendApiKey);
-    }
-  }
-
-  private getResend(): Resend {
-    if (!this.resend) {
-      const key = this.configService.get<string>('RESEND_API_KEY');
-      if (key) this.resend = new Resend(key);
-    }
-    if (!this.resend) throw new InternalServerErrorException('Resend no configurado');
-    return this.resend;
-  }
+    private readonly mailService: MailService,
+  ) {}
 
   async createSupervision(supervisorId: string, dto: CreateSupervisionDto) {
     await this.requireSupervisorRole(supervisorId);
@@ -84,18 +68,17 @@ export class SupervisionService {
     const supervisorName = supervisorProfile?.fullName || supervisor.email;
 
     const targetEmail = dto.clientEmail || '';
-    if (targetEmail && this.configService.get<string>('RESEND_API_KEY')) {
+    if (targetEmail) {
       try {
-        await this.getResend().emails.send({
-          from: this.configService.get<string>('RESEND_FROM')!,
-          to: [targetEmail],
-          subject: `${supervisorName} te invita a conectar en GoTogether`,
-          html: getSupervisionInviteTemplate({
+        await this.mailService.sendEmail(
+          targetEmail,
+          `${supervisorName} te invita a conectar en GoTogether`,
+          getSupervisionInviteTemplate({
             supervisorName,
             clientName: dto.clientName,
             acceptUrl: `${appUrl}/supervision/accept?token=${token}`,
           }),
-        });
+        );
       } catch (err) {
         console.error('Failed to send supervision invite email:', err);
       }

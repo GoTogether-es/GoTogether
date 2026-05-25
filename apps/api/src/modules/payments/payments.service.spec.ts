@@ -1,7 +1,8 @@
 import { PaymentsService } from './payments.service';
+import { createMockConfigService } from '../../test-utils/services';
 
 jest.mock('stripe', () => {
-  return jest.fn().mockImplementation(() => ({
+  const mockStripe = jest.fn().mockImplementation(() => ({
     paymentIntents: {
       create: jest.fn().mockResolvedValue({ id: 'pi_123', status: 'requires_capture' }),
       capture: jest.fn().mockResolvedValue({ id: 'pi_123', status: 'succeeded' }),
@@ -11,15 +12,20 @@ jest.mock('stripe', () => {
       constructEvent: jest.fn().mockReturnValue({ type: 'payment_intent.succeeded' }),
     },
   }));
+  return { __esModule: true, default: mockStripe };
 });
 
 describe('PaymentsService', () => {
   let service: PaymentsService;
+  let configService: ReturnType<typeof createMockConfigService>;
 
   beforeEach(() => {
-    process.env.STRIPE_SECRET_KEY = 'sk_test_123';
-    process.env.STRIPE_WEBHOOK_SECRET = 'whsec_test';
-    service = new PaymentsService();
+    jest.clearAllMocks();
+    configService = createMockConfigService({
+      STRIPE_SECRET_KEY: 'sk_test_123',
+      STRIPE_WEBHOOK_SECRET: 'whsec_test',
+    });
+    service = new PaymentsService(configService as any);
   });
 
   it('creates a payment hold', async () => {
@@ -45,8 +51,8 @@ describe('PaymentsService', () => {
   });
 
   it('throws when STRIPE_WEBHOOK_SECRET is not set', () => {
-    delete process.env.STRIPE_WEBHOOK_SECRET;
-    const svc = new PaymentsService();
+    configService = createMockConfigService({ STRIPE_WEBHOOK_SECRET: '' });
+    const svc = new PaymentsService(configService as any);
     expect(() => svc.constructWebhookEvent(Buffer.from('test'), 'sig')).toThrow(
       'STRIPE_WEBHOOK_SECRET no configurado',
     );

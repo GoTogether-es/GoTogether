@@ -156,28 +156,29 @@ export class BookingsService {
       throw new BadRequestException('Solo se pueden solicitar reservas en borrador');
     }
 
-    return this.prisma.booking.update({
+    const result = await this.prisma.booking.update({
       where: { id: bookingId },
       data: { status: BookingStatus.REQUESTED },
       include: { payment: true },
-    }).then(async (result) => {
-      if (booking.companionId) {
-        const companion = await this.prisma.companionProfile.findUnique({
-          where: { id: booking.companionId },
-          include: { profile: true },
-        });
-        if (companion?.profile) {
-          await this.notifications.create({
-            userId: companion.profile.userId,
-            type: 'booking_requested',
-            title: 'Nueva solicitud',
-            body: `${booking.client?.profile?.fullName || 'Un cliente'} te ha solicitado un servicio`,
-            bookingId,
-          });
-        }
-      }
-      return result;
     });
+
+    if (booking.companionId) {
+      const companion = await this.prisma.companionProfile.findUnique({
+        where: { id: booking.companionId },
+        include: { profile: true },
+      });
+      if (companion?.profile) {
+        await this.notifications.create({
+          userId: companion.profile.userId,
+          type: 'booking_requested',
+          title: 'Nueva solicitud',
+          body: `${booking.client?.profile?.fullName || 'Un cliente'} te ha solicitado un servicio`,
+          bookingId,
+        });
+      }
+    }
+
+    return result;
   }
 
   async updateStatus(bookingId: string, dto: UpdateBookingStatusDto, userId: string) {

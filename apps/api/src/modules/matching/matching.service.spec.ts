@@ -28,7 +28,7 @@ describe('MatchingService', () => {
     await service.recommendCompanions({ search: 'María' });
 
     const call = prisma.companionProfile.findMany.mock.calls[0][0];
-    expect(call.where.profile.OR).toBeDefined();
+    expect(call.where.profile.AND[0].OR).toBeDefined();
   });
 
   it('filters by disabilityType', async () => {
@@ -38,7 +38,7 @@ describe('MatchingService', () => {
     await service.recommendCompanions({ disabilityType: 'Movilidad reducida' });
 
     const call = prisma.companionProfile.findMany.mock.calls[0][0];
-    expect(call.where).toBeDefined();
+    expect(call.where.profile.AND).toBeDefined();
   });
 
   it('filters by minRating', async () => {

@@ -3,6 +3,12 @@ import { AuthGuard } from '@nestjs/passport';
 import { Reflector } from '@nestjs/core';
 import { UserRole } from '../../generated/client';
 
+// NOTE: RolesAuthGuard and Roles are available for use with @UseGuards(RolesAuthGuard)
+// and @Roles(UserRole.xxx) decorators. Currently, role enforcement happens at the
+// service layer (e.g., requireSupervisorRole in supervision.service.ts).
+// To enable guard-based RBAC: apply @Roles() decorator on controller methods and
+// add @UseGuards(RolesAuthGuard) instead of @UseGuards(SupabaseAuthGuard).
+
 export const ROLES_KEY = 'roles';
 
 export const Roles = (...roles: UserRole[]) => {
