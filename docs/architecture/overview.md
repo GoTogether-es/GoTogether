@@ -81,7 +81,7 @@ GoTogether/
 │   │   └── src/
 │   │       ├── main.ts              # Entry point desarrollo local
 │   │       ├── generated/client/    # Prisma Client autogenerado
-│   │       └── modules/             # 13 módulos NestJS
+│   │       └── modules/             # 16 módulos NestJS
 │   └── web/                         # Next.js frontend
 │       └── src/
 │           ├── app/                 # App Router (28+ rutas)

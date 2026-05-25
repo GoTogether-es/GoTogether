@@ -61,11 +61,10 @@ GET /matching/recommendations?search=&disabilityType=&minRating=&verified=&page=
    - Si minRating != null → where.rating = { gte: minRating }
    - Si verified == true → where.verified = true
 
-2. Si hay search o disabilityType
-   a. Si search → añadir OR en profile: fullName contains, headline contains, bio contains
-   b. Si disabilityType → añadir AND: disabilityType equals
-   c. Si ambos → profile.AND = [search OR conditions, disabilityType condition]
-       También se genera profile.OR para el search en un path alternativo
+2. Construir profileConditions array
+   a. Si hay search → añadir OR: fullName, headline, bio contains search
+   b. Si hay disabilityType → añadir AND: disabilityType equals
+   c. Si profileConditions no está vacío → where.profile = { AND: profileConditions }
 
 3. Paginación: skip = (page - 1) * limit, take = limit
 
@@ -73,8 +72,6 @@ GET /matching/recommendations?search=&disabilityType=&minRating=&verified=&page=
 
 5. Ejecutar findMany + count en paralelo (Promise.all)
 ```
-
-> [!warning] El algoritmo tiene dos branches de construcción de `where` que se solapan parcialmente. Revisar si hay condiciones que se pisan entre el bloque `if (search || disabilityType)` y el bloque `if (search)` posterior.
 
 ## Frontend: ExplorarPage
 

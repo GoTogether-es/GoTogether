@@ -102,7 +102,7 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 
 El despliegue es automático desde GitHub:
 - Push a `main` → Vercel despliega ambos proyectos
-- 288 tests (164 API + 124 Web) disponibles con `pnpm test`
+- 287 tests (163 API + 124 Web) disponibles con `pnpm test`
 - CI pipeline configurada en `.github/workflows/ci.yml` (lint → test → build para api y web)
 
 ## Estructura de archivos de deploy

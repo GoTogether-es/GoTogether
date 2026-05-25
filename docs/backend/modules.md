@@ -142,10 +142,12 @@ Al aceptar (`canClaim`), se asigna automáticamente `companionId` al booking y s
 - `GET /matching/recommendations` — Búsqueda paginada de acompañantes
 
 Filtros disponibles:
-- `search`: busca en nombre, headline, bio, specialties, disabilityType
+- `search`: busca en nombre, headline, bio (case insensitive)
 - `disabilityType`: filtra por tipo de discapacidad
 - `minRating`: rating mínimo
 - `verified`: solo verificados (default: true en el frontend)
+
+Lógica de filtro refactorizada (Mayo 2026): condiciones de búsqueda y discapacidad se acumulan en `profileConditions[]` con `AND`, eliminando el bloque duplicado que sobreescribía resultados. Documentación completa: [[backend/matching]].
 
 Ordenado por: rating DESC, yearsOnPlatform DESC.
 
@@ -182,7 +184,7 @@ Al crear/editar: recalcula automáticamente `CompanionProfile.rating` y `yearsOn
 - `POST /payments/:id/release` — Liberar autorización
 - `POST /payments/webhook` — Webhook de Stripe (recibe pero no procesa)
 
-> [!warning] **Pagos deshabilitados en alpha.** `BookingsModule` no usa `PaymentsModule`. Las reservas se crean sin Payment record. Cuando se reactive Stripe, hay que:
+> [!warning] **Pagos deshabilitados en alpha.** `BookingsModule` no usa `PaymentsModule`. Las reservas se crean sin Payment record. `PaymentsService` usa `ConfigService` para `STRIPE_SECRET_KEY` y `STRIPE_WEBHOOK_SECRET`. Cuando se reactive Stripe, hay que:
 > 1. Configurar `STRIPE_SECRET_KEY` real en Vercel
 > 2. Inyectar `PaymentsService` en `BookingsService`
 > 3. Crear PaymentIntent al aceptar, capturar al completar, liberar al cancelar

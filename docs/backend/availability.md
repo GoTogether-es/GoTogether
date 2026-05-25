@@ -133,10 +133,11 @@ Backend:
 El grid usa half-hour slots (08:00-19:30). Ver [[frontend/components#availabilitygrid|documentación del componente]].
 
 ### Interacción
-1. **Drag para pintar:** pointerdown inicia, pointermove extiende, pointerup consolida
+1. **Drag para pintar:** pointerdown inicia, pointermove extiende (usando `slotsRef` y `touchedRef` Set para acumular cambios), pointerup consolida y llama `onChange` una sola vez
 2. **Click en cabecera:** togglea todas las celdas del día
-3. **Optimista:** cambios visuales instantáneos vía `useRef`, `onChange` solo al soltar
+3. **Optimista:** cambios visuales instantáneos vía `useRef`; `onChange` solo al soltar
 4. **Debounced save:** 1.5s de inactividad → `PUT /availability`
+5. **Orientativo:** la disponibilidad es solo referencia. Los clientes pueden solicitar servicios aunque el acompañante no tenga disponibilidad marcada
 
 ## Migraciones
 

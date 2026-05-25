@@ -6,7 +6,7 @@ tags: [project, roadmap, planning]
 
 ## Estado actual: Alpha (v0.1.0)
 
-El núcleo del marketplace está funcional. Pagos pendientes de activar. Seguridad reforzada (RLS, bcrypt admin, CSP). Rendimiento optimizado (Server Components, next/font, session cache, Vercel EU).
+El núcleo del marketplace está funcional. Pagos pendientes de activar. Seguridad reforzada (RLS, bcrypt admin, CSP). Rendimiento optimizado (Server Components, next/font, session cache, Vercel EU). 287 tests (163 API + 124 Web). Backend auditado (38 issues → 6 remaining de bajo impacto).
 
 ---
 
@@ -129,6 +129,10 @@ El núcleo del marketplace está funcional. Pagos pendientes de activar. Segurid
 
 1. **Webhook de Stripe no procesa eventos** — El endpoint recibe y verifica la firma pero descarta el evento.
 2. **`STRIPE_PLATFORM_FEE_PERCENT` no se usa** — La variable está en `.env` pero no se lee en el código.
+3. **`ensureUser` crea usuarios placeholder** — `profiles.service.ts:121` genera emails `uuid@placeholder.gotogether` si el usuario no existe en DB.
+4. **`isSupervisorOf` duplicado** — El mismo método privado existe en `BookingsService` y `ReportsService`.
+5. **`UsersService.list()` sin paginación** — Retorna todos los usuarios sin límite.
+6. **`RolesAuthGuard` y `RolesGuard` no aplicados** — Definidos y exportados pero sin usar en ningún endpoint (el control de rol se hace en capa de servicio).
 
 ---
 

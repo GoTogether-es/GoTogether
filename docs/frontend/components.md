@@ -250,9 +250,11 @@ Grid de disponibilidad semanal estilo When2Meet:
 - **Drag para pintar**: pointerdown inicia selección, pointermove extiende, pointerup consolida
 - Click en cabecera de día → togglea el día completo
 - Indicador visual: celda azul (activa), gris claro (inactiva), azul claro (arrastrando)
-- **Optimista**: cambios visuales instantáneos vía `useRef`, `onChange` se llama solo al soltar
+- **Optimista**: cambios visuales instantáneos vía `slotsRef` (useRef), `onChange` se llama solo al `pointerup` con `touchedRef` Set evitando celdas duplicadas
+- **Modo toggle:** `dragMode` ('add' | 'remove') determinado en pointerdown según si la celda inicial está activa o no
 - Doble clic en cabecera → selecciona/deselecciona todas las celdas del día
 - Cabeceras de día muestran: azul sólido (día completo), azul claro (parcial), gris (vacío)
+- **Orientativo:** la disponibilidad es solo referencia — los clientes pueden solicitar fuera de horario
 
 **Usado en:** `panel/page.tsx`. Documentación backend: [[backend/availability]]
 

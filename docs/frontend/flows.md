@@ -97,6 +97,10 @@ Recibir mensaje:
   → callback postgres_changes (INSERT)
   → añadir al estado local (dedup por id)
   → scroll al final del contenedor del chat
+
+Reconexión automática:
+  → si el canal Supabase emite `CHANNEL_ERROR`, `TIMED_OUT` o `CLOSED`
+  → se elimina el canal anterior y se recrea (`initRealtime()`) tras 3 segundos
 ```
 
 ## 6. Completar y valorar
@@ -137,7 +141,9 @@ Cliente:
 
 ```
 Supervisor:
-  /supervision → "Invitar cliente"
+  /supervision → (client-side) syncUser() → verifica user.role === 'SUPERVISOR'
+  → si no es SUPERVISOR → redirige a /perfil
+  → "Invitar cliente"
   → busca usuario existente o introduce email
   → POST /supervision/invite → envía email con token
   → cliente recibe email → click link

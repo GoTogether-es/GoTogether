@@ -73,7 +73,11 @@ Página corporativa con visión, misión, valores (empatía, confianza, comunida
 **Archivo:** `contacto/page.tsx`
 **Auth:** Pública
 
-Página de contacto con email (info@gotogether.es), ubicación y enlaces a info y legal.
+Página de contacto con:
+- Email (info@gotogether.es) y teléfono (+34 643 415 190)
+- Formulario de contacto: nombre, email, mensaje (textarea)
+- Envío vía `mailto:` con `enctype="text/plain"`
+- Enlaces a info y legal
 
 ### `/auth/login` — Login
 **Archivo:** `auth/login/page.tsx`
@@ -211,8 +215,9 @@ Chat en tiempo real con:
 
 Dos modos:
 - **Vista:** tarjetas con avatar, info personal, acompañante (especialidades, verificación, rating), discapacidad, preferencias. Botón lápiz para editar. Card de ubicación (clientes) o card "Ir al Panel" (acompañantes). Suspense con spinner.
-- **Edición:** formularios con inputs. Subida de avatar. Guardar/Cancelar.
+- **Edición:** formularios con inputs. Subida de avatar. Especialidades (solo acompañantes). Discapacidad (solo clientes, oculta para acompañantes). Guardar/Cancelar.
 - **Onboarding** (`?onboarding=true`): arranca en modo edición sin botón cancelar.
+- **JSX reestructurado:** `LocationSharingCard` y `PanelLink` fuera del card de compañero (antes estaban anidados incorrectamente).
 
 ### `/valoracion/[bookingId]` — Valorar
 **Archivo:** `valoracion/[bookingId]/page.tsx`

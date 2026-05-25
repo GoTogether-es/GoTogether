@@ -125,5 +125,5 @@ model ClientLocation {
 2. **Reservas de clientes:** tabla paginada con todas las reservas de los supervisados (agregadas de todos los clientes).
 3. **Ubicación:** mapa Leaflet con marcadores coloreados por cliente. Popups con nombre, timestamp, precisión.
 
-### Middleware RBAC
-El middleware de Next.js redirige a `/perfil` si un usuario sin rol `SUPERVISOR` intenta acceder a `/supervision`.
+### Control de acceso
+El middleware solo verifica autenticación (JWT válido). El control de rol se hace en el componente `SupervisionPage`: al montar, llama a `syncUser()` y comprueba `user.role === 'SUPERVISOR'`. Si no lo es, redirige a `/perfil`.

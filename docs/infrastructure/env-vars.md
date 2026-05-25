@@ -42,7 +42,7 @@ tags: [infrastructure, env, configuration]
 | `STRIPE_WEBHOOK_SECRET` | Vercel api | Secreto para verificar webhooks |
 | `STRIPE_PLATFORM_FEE_PERCENT` | Vercel api | Comisión de plataforma (12%) |
 
-> [!warning] `STRIPE_PLATFORM_FEE_PERCENT` está configurado pero **no se usa en el código**. La comisión está hardcodeada en `bookings.service.ts` (eliminada al deshabilitar pagos).
+> [!note] `STRIPE_SECRET_KEY` y `STRIPE_WEBHOOK_SECRET` se consumen vía `ConfigService` en `PaymentsService`. `STRIPE_PLATFORM_FEE_PERCENT` está configurado pero **no se usa en el código** (la comisión requiere integración pendiente).
 
 ### Email (Resend)
 

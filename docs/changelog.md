@@ -1,7 +1,32 @@
 
 ---
 
-## v0.1.0-alpha.30 — Mayo 2026 (UX audit fixes, build stability)
+## v0.1.0-alpha.31 — Mayo 2026 (backend quality + UX polish)
+
+### Backend quality — Round 1 (10 critical fixes)
+- 🔒 **Transactions** añadidas en 4 servicios: `availability` (deleteMany+createMany), `supervision` (create+update), `profiles` (upsert+role), `reports` (create+recalculateRating)
+- 🔐 **Auth leaks** corregidos: servicios CRUD protegidos con `AdminGuard`, `GET /companions` ahora requiere JWT, emails ocultos en listado público
+- 🏃 **Race condition** en `getOrCreateRoom` — `upsert` reemplaza check-then-act
+- 📤 **Logout** simplificado: frontend maneja client-side signout, backend no llama a API deprecada
+- 🔑 `AdminGuard` registrado explícitamente en `AuthModule.providers/exports`
+
+### Backend quality — Round 2 (12 fixes)
+- 🧹 **Matching filter** refactorizado: eliminado bloque duplicado que sobreescribía condiciones, lógica unificada en `profileConditions[]` con `AND`
+- 🛡️ **Admin controller**: `UpdateBookingStatusDto` con `@IsEnum(BookingStatus)` en vez de `as any`
+- 💳 **PaymentsService**: `ConfigService` reemplaza acceso directo a `process.env`
+- 📧 **SupervisionService**: usa `MailService` compartido en vez de inicializar su propio `Resend`
+- 🌐 **Vercel handler**: `GlobalExceptionFilter` aplicado en `api/index.ts` (antes solo en `main.ts`)
+- 🔍 **3 índices DB** nuevos: `User(role)`, `Supervision(supervisorId)`, `CompanionProfile(verified)`
+- 🔗 **Bookings**: `.then()` + `await` convertido a async/await puro
+
+### UX
+- 🎨 **Perfil**: sección de Discapacidad oculta para acompañantes en modo edición
+- 🔗 **Panel guard**: redirige a `/perfil` si el usuario no es acompañante
+- 🔧 **Middleware RBAC** eliminado (leía `user_metadata.role` que siempre era undefined — el rol está en la DB, no en Supabase Auth)
+
+### Build
+- 🔧 **zod/v4/core**: resolución robusta usando `require.resolve('zod/package.json')` + path filesystem, bypass del `exports` field
+- 🗑️ Eliminada función muerta `isPublicRoute` que referenciaba constante borrada
 
 ### UX — Severidad alta (9 fixes)
 - ✉️ **Login**: validación client-side de email (regex + error inline), mensajes específicos (red vs API vs genérico), hint de carpeta spam
