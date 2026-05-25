@@ -359,8 +359,9 @@ function PerfilContent() {
             </Card>
           )}
 
-          {/* Disability Section */}
-          <Card className="p-8 border-0 shadow-xl shadow-blue-900/5">
+          {/* Disability Section — solo clientes */}
+          {!isCompanion && (
+            <Card className="p-8 border-0 shadow-xl shadow-blue-900/5">
             <div className="flex items-center gap-3 mb-6 border-b pb-4">
               <Heart className="w-5 h-5 text-blue-600" />
               <h3 className="text-lg font-bold">Discapacidad</h3>
@@ -397,6 +398,7 @@ function PerfilContent() {
               </div>
             </div>
           </Card>
+          )}
 
           {/* Actions */}
           <div className="flex flex-col md:flex-row items-center justify-end gap-4 pt-2">
