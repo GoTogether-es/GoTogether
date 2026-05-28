@@ -34,8 +34,8 @@ function LoginForm() {
       if (redirect) {
         document.cookie = `gotogether-auth-redirect=${encodeURIComponent(redirect)}; path=/; max-age=600; SameSite=Lax`
       }
-      await requestMagicLink(email)
-      setMessage('¡Enlace enviado! Revisa tu bandeja de entrada (y la carpeta de spam). El enlace caduca en 1 hora.')
+      await requestMagicLink(email, redirect || undefined)
+      setMessage('Te hemos enviado un enlace de acceso. Revisa tu bandeja de entrada.')
       setIsSuccess(true)
     } catch (error: unknown) {
       const err = error as any
@@ -61,8 +61,8 @@ function LoginForm() {
           <Mail className="w-8 h-8" />
         </div>
 
-        <h1 className="text-3xl font-extrabold text-gray-900 mb-2">Entrar en GoTogether</h1>
-        <p className="text-gray-500 mb-8">Te enviaremos un enlace mágico a tu email para acceder sin contraseña.</p>
+        <h1 className="text-3xl font-extrabold text-gray-900 mb-2">Crea o accede a tu cuenta</h1>
+        <p className="text-gray-500 mb-8">Te enviaremos un enlace de acceso a tu correo para entrar de forma segura.</p>
 
         <form onSubmit={handleLogin} className="space-y-6 text-left">
           <div>
@@ -92,7 +92,7 @@ function LoginForm() {
                 <Loader2 className="w-5 h-5 animate-spin mr-2" />
                 Enviando...
               </>
-            ) : isSuccess ? 'Enviado correctamente' : 'Enviar enlace mágico'}
+            ) : isSuccess ? 'Enviado correctamente' : 'Enviar enlace de acceso'}
           </button>
         </form>
 

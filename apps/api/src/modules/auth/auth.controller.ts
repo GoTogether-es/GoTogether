@@ -1,11 +1,15 @@
 import { Controller, Get, Post, Body, UseGuards, Request, Headers } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SupabaseAuthGuard } from './supabase-auth.guard';
-import { IsEmail } from 'class-validator';
+import { IsEmail, IsOptional, IsString } from 'class-validator';
 
 class MagicLinkDto {
   @IsEmail()
   email!: string;
+
+  @IsOptional()
+  @IsString()
+  next?: string;
 }
 
 @Controller('auth')
@@ -14,7 +18,7 @@ export class AuthController {
 
   @Post('magic-link')
   requestMagicLink(@Body() body: MagicLinkDto) {
-    return this.authService.sendMagicLink(body.email);
+    return this.authService.sendMagicLink(body.email, body.next);
   }
 
   @UseGuards(SupabaseAuthGuard)

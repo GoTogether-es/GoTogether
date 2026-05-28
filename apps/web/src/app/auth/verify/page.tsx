@@ -9,6 +9,7 @@ export default function VerifyPage() {
   const [status, setStatus] = useState('Verificando tu enlace...');
   const [details, setDetails] = useState<string | null>(null);
   const handledRef = useRef(false);
+  const nextRef = useRef<string>('/auth/redirect');
 
   useEffect(() => {
     if (handledRef.current) return;
@@ -18,6 +19,12 @@ export default function VerifyPage() {
     let timeout: ReturnType<typeof setTimeout> | undefined;
 
     async function handleAuth() {
+      const query = new URLSearchParams(window.location.search);
+      const next = query.get('next');
+      if (next && next.startsWith('/')) {
+        nextRef.current = next;
+      }
+
       const hash = window.location.hash.substring(1);
       const params = new URLSearchParams(hash);
       const accessToken = params.get('access_token');
@@ -31,7 +38,7 @@ export default function VerifyPage() {
         });
 
         if (!error) {
-          router.push('/auth/redirect');
+          router.push(nextRef.current);
           return;
         } else {
           console.error('Error de sesión:', error);
@@ -44,7 +51,7 @@ export default function VerifyPage() {
 
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        router.push('/auth/redirect');
+        router.push(nextRef.current);
         return;
       }
 
@@ -55,7 +62,7 @@ export default function VerifyPage() {
           setStatus('No se ha detectado sesión.');
           timeout = setTimeout(() => router.push('/auth/login?error=timeout'), 2000);
         } else {
-          router.push('/auth/redirect');
+          router.push(nextRef.current);
         }
       }, 3000);
     }

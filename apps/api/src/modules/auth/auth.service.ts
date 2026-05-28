@@ -36,7 +36,7 @@ export class AuthService {
     }
   }
 
-  async sendMagicLink(email: string) {
+  async sendMagicLink(email: string, next?: string) {
     // Re-check clients in case env vars were loaded late or differently
     if (!this.supabaseAdmin || !this.resend) {
       this.initializeClients();
@@ -55,12 +55,14 @@ export class AuthService {
     }
 
     try {
+      const appUrl = this.configService.get<string>('NEXT_PUBLIC_APP_URL') || 'http://localhost:3000';
+      const safeNext = next && next.startsWith('/') ? next : '/auth/redirect';
       // 1. Generar el enlace de autenticación usando Supabase Admin
       const { data, error } = await this.supabaseAdmin.auth.admin.generateLink({
         type: 'magiclink',
         email,
         options: {
-          redirectTo: `${this.configService.get<string>('NEXT_PUBLIC_APP_URL')}/auth/verify`,
+          redirectTo: `${appUrl}/auth/verify?next=${encodeURIComponent(safeNext)}`,
         },
       });
 

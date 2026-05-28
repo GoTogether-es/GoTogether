@@ -212,11 +212,11 @@ const reportSchema = z.object({
 
 const healthSchema = z.object({ status: z.string() });
 
-export async function requestMagicLink(email: string): Promise<void> {
+export async function requestMagicLink(email: string, next?: string): Promise<void> {
   const response = await fetch(`${API_URL}/auth/magic-link`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email }),
+    body: JSON.stringify({ email, next }),
   });
   if (!response.ok) throw new Error('Failed to request magic link');
 }
