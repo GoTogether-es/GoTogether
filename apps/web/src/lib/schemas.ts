@@ -7,10 +7,7 @@ export const solicitudSchema = z.object({
   time: z.string().min(1, 'Selecciona una hora'),
   disability: z.string().optional(),
   notes: z.string().optional(),
-  estimatedHours: z.preprocess(
-    (val) => Number(val),
-    z.number().min(1, 'La duración mínima es 1 hora')
-  ),
+  estimatedHours: z.number().min(1, 'La duración mínima es 1 hora'),
 });
 
 export type SolicitudFormData = z.infer<typeof solicitudSchema>;

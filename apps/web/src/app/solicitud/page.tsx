@@ -162,7 +162,7 @@ function SolicitudForm() {
               <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="estimatedHours">
                 Duración estimada
               </label>
-              <select id="estimatedHours" className="gt-input" {...register('estimatedHours')}>
+              <select id="estimatedHours" className="gt-input" {...register('estimatedHours', { valueAsNumber: true })}>
                 <option value="1">1 hora</option>
                 <option value="1.5">1.5 horas</option>
                 <option value="2">2 horas</option>
