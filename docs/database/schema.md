@@ -6,12 +6,13 @@ tags: [database, prisma, postgresql, rls, realtime]
 
 El esquema está definido en `apps/api/prisma/schema.prisma` y se sincroniza con PostgreSQL en Supabase. El ORM es Prisma 5.x.
 
-## Resumen de modelos (14 tablas)
+## Resumen de modelos (15 tablas)
 
 | Modelo | Tabla | Propósito |
 |--------|-------|-----------|
 | `User` | User | Usuarios del sistema (auth vía Supabase) |
-| `Profile` | Profile | Perfil personal (nombre, bio, avatar, discapacidad) |
+| `Profile` | Profile | Perfil personal público (nombre, bio, avatar, discapacidad, ciudad) |
+| `UserLocation` | UserLocation | Ubicación privada del usuario (dirección + coordenadas) |
 | `CompanionProfile` | CompanionProfile | Perfil de acompañante (especialidades, certificados, verificación) |
 | `Booking` | Booking | Reservas de servicios (máquina de estados) |
 | `Payment` | Payment | Pagos (Stripe, deshabilitado en alpha) |
@@ -64,6 +65,7 @@ model Profile {
   id                   String   @id @default(uuid())
   userId               String   @unique
   fullName             String
+  city                 String
   headline             String?
   bio                  String?
   phone                String?
@@ -81,6 +83,26 @@ model Profile {
 - `verified`: admin marca como verificado tras revisar `disabilityDocument`
 - `avatarUrl`: URL pública de Supabase Storage (bucket `avatars`)
 - `disabilityDocument`: URL pública de Supabase Storage (bucket `certificates`)
+- `city`: ciudad pública visible en perfil, cards y matching
+
+## Modelo UserLocation
+
+```prisma
+model UserLocation {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  city        String
+  fullAddress String
+  latitude    Float?
+  longitude   Float?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+```
+
+- `fullAddress`: dirección completa privada, no se expone en UI pública
+- `latitude` / `longitude`: coordenadas geocodificadas con Nominatim
+- `city`: redundante con `Profile.city` para fallback y consistencia
 
 ## Modelo CompanionProfile
 
@@ -251,6 +273,13 @@ model ClientLocation {
   client    User     @relation(fields: [clientId], references: [id])
 }
 ```
+
+## Matching y ubicación
+
+- `GET /matching/recommendations` calcula un score compuesto.
+- El score usa distancia, rating, verificación, ciudad y experiencia.
+- La paginación se aplica después del ranking.
+- Si faltan coordenadas, el sistema degrada a ciudad.
 
 ## RLS actualizado
 

@@ -118,7 +118,21 @@ export default function CompanionRegistrationPage() {
                     Nombre y apellidos
                   </label>
                   <input id="fullName" className="gt-input" placeholder="Ej: María López" {...register('fullName')} />
-                  {errors.fullName && <p className="text-red-500 text-xs mt-1" role="alert">{errors.fullName.message}</p>}
+                    {errors.fullName && <p className="text-red-500 text-xs mt-1" role="alert">{errors.fullName.message}</p>}
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="city">
+                    Ciudad pública
+                  </label>
+                  <input id="city" className="gt-input" placeholder="Ej: Málaga" {...register('city')} />
+                  {errors.city && <p className="text-red-500 text-xs mt-1" role="alert">{errors.city.message}</p>}
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="fullAddress">
+                    Dirección completa
+                  </label>
+                  <input id="fullAddress" className="gt-input" placeholder="Calle, número, piso..." {...register('fullAddress')} />
+                  {errors.fullAddress && <p className="text-red-500 text-xs mt-1" role="alert">{errors.fullAddress.message}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="phone">

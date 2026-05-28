@@ -3,20 +3,25 @@ import { UserRole } from '../../generated/client';
 import { createMockPrismaService } from '../../__mocks__/prisma';
 import { mockUser, mockProfile, mockCompanionProfile } from '../../test-utils/factories';
 import { NotFoundException } from '@nestjs/common';
+import { GeocodingService } from '../location/geocoding.service';
 
 describe('ProfilesService', () => {
   let service: ProfilesService;
   let prisma: ReturnType<typeof createMockPrismaService>;
+  let geocodingService: { geocode: jest.Mock };
 
   beforeEach(() => {
     jest.clearAllMocks();
     prisma = createMockPrismaService();
-    service = new ProfilesService(prisma as any);
+    geocodingService = { geocode: jest.fn().mockResolvedValue({ latitude: 36.7213, longitude: -4.4214 }) };
+    service = new ProfilesService(prisma as any, geocodingService as unknown as GeocodingService);
   });
 
   describe('upsertProfile', () => {
     const baseDto = {
       fullName: 'Juan Perez',
+      city: 'Málaga',
+      fullAddress: 'Calle Larios 1',
       headline: 'Jubilado',
       bio: 'Me gusta pasear',
       phone: '+34 600 000 000',
@@ -30,6 +35,7 @@ describe('ProfilesService', () => {
       prisma.profile.findUnique.mockResolvedValue(
         mockProfile({ companion: mockCompanionProfile() }),
       );
+      prisma.userLocation.upsert.mockResolvedValue({});
 
       await service.upsertProfile('user-1', {
         ...baseDto,
@@ -47,6 +53,7 @@ describe('ProfilesService', () => {
       prisma.profile.upsert.mockResolvedValue(mockProfile());
       prisma.user.update.mockResolvedValue(mockUser({ role: UserRole.SUPERVISOR }));
       prisma.profile.findUnique.mockResolvedValue(mockProfile());
+      prisma.userLocation.upsert.mockResolvedValue({});
 
       await service.upsertProfile('user-1', {
         ...baseDto,
@@ -62,6 +69,7 @@ describe('ProfilesService', () => {
       prisma.profile.upsert.mockResolvedValue(mockProfile());
       prisma.user.findUnique.mockResolvedValue(mockUser({ role: UserRole.SUPERVISOR }));
       prisma.profile.findUnique.mockResolvedValue(mockProfile());
+      prisma.userLocation.upsert.mockResolvedValue({});
 
       await service.upsertProfile('user-1', baseDto as any);
 
@@ -74,6 +82,7 @@ describe('ProfilesService', () => {
       prisma.profile.upsert.mockResolvedValue(mockProfile());
       prisma.user.findUnique.mockResolvedValue(mockUser({ role: UserRole.ADMIN }));
       prisma.profile.findUnique.mockResolvedValue(mockProfile());
+      prisma.userLocation.upsert.mockResolvedValue({});
 
       await service.upsertProfile('user-1', baseDto as any);
 
@@ -87,6 +96,7 @@ describe('ProfilesService', () => {
       prisma.user.findUnique.mockResolvedValue(mockUser({ role: UserRole.CLIENT }));
       prisma.user.update.mockResolvedValue(mockUser());
       prisma.profile.findUnique.mockResolvedValue(mockProfile());
+      prisma.userLocation.upsert.mockResolvedValue({});
 
       await service.upsertProfile('user-1', baseDto as any);
 
@@ -99,6 +109,7 @@ describe('ProfilesService', () => {
       prisma.profile.upsert.mockResolvedValue(mockProfile());
       prisma.user.findUnique.mockResolvedValue(mockUser());
       prisma.profile.findUnique.mockResolvedValue(mockProfile());
+      prisma.userLocation.upsert.mockResolvedValue({});
 
       await service.upsertProfile('user-1', baseDto as any);
 

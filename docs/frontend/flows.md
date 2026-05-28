@@ -11,11 +11,13 @@ tags: [frontend, flows, ux]
   → /auth/verify (callback Supabase)
   → /auth/redirect (sin perfil → /onboarding)
   → /onboarding (click "Cliente")
-  → /onboarding/register/client
-     ├─ Nombre, teléfono, bio
-     ├─ Tipo de discapacidad (select)
-     ├─ Descripción
-     └─ Subir documento acreditativo (FileUpload → Supabase Storage)
+   → /onboarding/register/client
+      ├─ Nombre, teléfono, bio
+      ├─ Ciudad pública
+      ├─ Dirección completa privada
+      ├─ Tipo de discapacidad (select)
+      ├─ Descripción
+      └─ Subir documento acreditativo (FileUpload → Supabase Storage)
   → upsertProfile({ isCompanion: false, ... })
   → /explorar
 ```
@@ -27,11 +29,13 @@ tags: [frontend, flows, ux]
   → /auth/verify
   → /auth/redirect → /onboarding
   → /onboarding (click "Acompañante")
-  → /onboarding/register/companion
-     ├─ Nombre, teléfono, bio
-     ├─ Especialidades
-     ├─ Subir certificado penal (FileUpload)
-     └─ Subir certificado delitos sexuales (FileUpload)
+   → /onboarding/register/companion
+      ├─ Nombre, teléfono, bio
+      ├─ Ciudad pública
+      ├─ Dirección completa privada
+      ├─ Especialidades
+      ├─ Subir certificado penal (FileUpload)
+      └─ Subir certificado delitos sexuales (FileUpload)
   → upsertProfile({ isCompanion: true, ... })
   → /panel (dashboard, verificación pendiente)
 ```
@@ -54,6 +58,25 @@ tags: [frontend, flows, ux]
   → requestBooking(id) → REQUESTED
   → notifica al acompañante
   → /reservas (el cliente ve su reserva como REQUESTED)
+```
+
+### Ubicación y recomendados
+
+```
+/perfil y onboarding
+  → usuario introduce ciudad pública + dirección completa
+  → backend guarda Profile.city + UserLocation.fullAddress
+  → geocodificación gratuita con Nominatim
+  → latitude/longitude se guardan en UserLocation
+
+/explorar
+  → si hay coordenadas, el backend ordena por score compuesto
+     ├─ distancia
+     ├─ rating
+     ├─ verificación
+     ├─ ciudad
+     └─ experiencia
+  → si no hay coordenadas, usa city como fallback
 ```
 
 ## 4. Aceptación de reserva (acompañante)

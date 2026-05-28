@@ -10,6 +10,7 @@ export type CompanionSummary = {
     headline?: string | null;
     bio?: string | null;
     avatarUrl?: string | null;
+    city?: string | null;
   };
   specialties: string | null;
   rating: number;
@@ -27,6 +28,7 @@ export type CompanionDetail = {
     bio: string | null;
     phone: string | null;
     avatarUrl: string | null;
+    city: string | null;
     disabilityType: string | null;
     preferences: string | null;
   };
@@ -43,6 +45,8 @@ export type CompanionDetail = {
 export type UserProfile = {
   id: string;
   fullName: string | null;
+  city: string | null;
+  fullAddress?: string | null;
   headline: string | null;
   bio: string | null;
   phone: string | null;
@@ -51,6 +55,12 @@ export type UserProfile = {
   disabilityDescription: string | null;
   disabilityDocument: string | null;
   preferences: string | null;
+  location?: {
+    city: string;
+    fullAddress: string;
+    latitude?: number | null;
+    longitude?: number | null;
+  } | null;
   companion?: CompanionProfileData | null;
 };
 
@@ -63,6 +73,15 @@ export type CompanionProfileData = {
   sexualCertificate: string | null;
   rating: number;
   yearsOnPlatform: number;
+};
+
+export type UserLocationData = {
+  id: string;
+  userId: string;
+  city: string;
+  fullAddress?: string;
+  latitude?: number | null;
+  longitude?: number | null;
 };
 
 export type BookingStatus = 'DRAFT' | 'REQUESTED' | 'ACCEPTED' | 'DECLINED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';

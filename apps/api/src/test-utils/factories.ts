@@ -16,6 +16,7 @@ export function mockProfile(overrides: Record<string, unknown> = {}) {
     id: 'profile-1',
     userId: 'user-1',
     fullName: 'Test User',
+    city: 'Madrid',
     headline: 'Test Headline',
     bio: 'Test bio',
     phone: '+34 600 000 000',

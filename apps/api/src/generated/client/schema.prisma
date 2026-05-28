@@ -41,6 +41,7 @@ model User {
   bookedBookings    Booking[]           @relation("BookedBookings")
   sentInvites       SupervisionInvite[]
   location          ClientLocation?
+  privateLocation   UserLocation?
 
   @@index([role])
 }
@@ -92,6 +93,7 @@ model Profile {
   id                    String   @id @default(uuid())
   userId                String   @unique
   fullName              String
+  city                  String
   headline              String?
   bio                   String?
   phone                 String?
@@ -106,6 +108,8 @@ model Profile {
 
   user      User              @relation(fields: [userId], references: [id])
   companion CompanionProfile?
+
+  @@index([city])
 }
 
 model CompanionProfile {
@@ -128,6 +132,22 @@ model CompanionProfile {
   availabilitySlots AvailabilitySlot[]
 
   @@index([verified])
+}
+
+model UserLocation {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  city        String
+  fullAddress String
+  latitude    Float?
+  longitude   Float?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([city])
+  @@map("UserLocation")
 }
 
 model Service {

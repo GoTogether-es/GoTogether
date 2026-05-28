@@ -81,6 +81,8 @@ function validateResponse<T>(schema: z.ZodType<T>, data: unknown, label: string)
 const profileSchema = z.object({
   id: z.string(),
   fullName: z.string().nullable(),
+  city: z.string().nullable(),
+  fullAddress: z.string().nullable().optional(),
   headline: z.string().nullable(),
   bio: z.string().nullable(),
   phone: z.string().nullable(),
@@ -89,6 +91,12 @@ const profileSchema = z.object({
   disabilityDescription: z.string().nullable(),
   disabilityDocument: z.string().nullable(),
   preferences: z.string().nullable(),
+  location: z.object({
+    city: z.string(),
+    fullAddress: z.string(),
+    latitude: z.number().nullable().optional(),
+    longitude: z.number().nullable().optional(),
+  }).nullable().optional(),
   companion: z.object({
     id: z.string(),
     specialties: z.string().nullable(),
@@ -108,6 +116,7 @@ const companionSummarySchema = z.object({
     headline: z.string().nullable().optional(),
     bio: z.string().nullable().optional(),
     avatarUrl: z.string().nullable().optional(),
+    city: z.string().nullable().optional(),
   }),
   specialties: z.string().nullable(),
   rating: z.number(),
@@ -123,6 +132,8 @@ const companionDetailSchema = z.object({
     bio: z.string().nullable(),
     phone: z.string().nullable(),
     avatarUrl: z.string().nullable(),
+    city: z.string().nullable(),
+    fullAddress: z.string().nullable().optional(),
     disabilityType: z.string().nullable(),
     preferences: z.string().nullable(),
   }),
@@ -367,6 +378,9 @@ export async function getRecommendations(params: {
   disabilityType?: string;
   minRating?: number;
   verified?: boolean;
+  city?: string;
+  latitude?: number;
+  longitude?: number;
   page?: number;
   limit?: number;
 } = {}, opts?: FetchOptions): Promise<PaginatedResponse<CompanionSummary>> {
@@ -375,6 +389,9 @@ export async function getRecommendations(params: {
   if (params.disabilityType) query.set('disabilityType', params.disabilityType);
   if (params.minRating !== undefined) query.set('minRating', String(params.minRating));
   if (params.verified !== undefined) query.set('verified', String(params.verified));
+  if (params.city) query.set('city', params.city);
+  if (params.latitude !== undefined) query.set('latitude', String(params.latitude));
+  if (params.longitude !== undefined) query.set('longitude', String(params.longitude));
   if (params.page) query.set('page', String(params.page));
   if (params.limit) query.set('limit', String(params.limit));
 

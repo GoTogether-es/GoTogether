@@ -1,6 +1,20 @@
 
 ---
 
+## v0.1.0-alpha.33 — Mayo 2026 (ubicación y recomendados)
+
+### High
+- 📍 **Ubicación obligatoria** para clientes y acompañantes: `city` pública + `fullAddress` privada
+- 🌍 **Geocodificación gratuita** con Nominatim al guardar perfil, persistiendo `latitude`/`longitude`
+- 🧠 **Recomendados**: score compuesto sin recencia, con distancia, rating, verificación, ciudad y experiencia
+- 🔒 **Privacidad**: la dirección completa no se expone en cards, listados ni perfil público
+
+### Medium
+- 🗺️ **Explorar** usa la ubicación guardada del usuario para priorizar acompañantes cercanos
+- 🧪 **Tests** actualizados para matching, perfiles y ranking por ciudad/distancia
+
+---
+
 ## v0.1.0-alpha.32 — Mayo 2026 (frontend quality pass)
 
 ### Critical

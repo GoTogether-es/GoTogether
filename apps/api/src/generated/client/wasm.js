@@ -162,6 +162,7 @@ exports.Prisma.ProfileScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   fullName: 'fullName',
+  city: 'city',
   headline: 'headline',
   bio: 'bio',
   phone: 'phone',
@@ -187,6 +188,17 @@ exports.Prisma.CompanionProfileScalarFieldEnum = {
   sexualCertificate: 'sexualCertificate',
   rating: 'rating',
   yearsOnPlatform: 'yearsOnPlatform',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.UserLocationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  city: 'city',
+  fullAddress: 'fullAddress',
+  latitude: 'latitude',
+  longitude: 'longitude',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -316,6 +328,7 @@ exports.Prisma.ModelName = {
   ClientLocation: 'ClientLocation',
   Profile: 'Profile',
   CompanionProfile: 'CompanionProfile',
+  UserLocation: 'UserLocation',
   Service: 'Service',
   AvailabilitySlot: 'AvailabilitySlot',
   Booking: 'Booking',

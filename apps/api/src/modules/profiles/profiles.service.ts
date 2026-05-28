@@ -2,10 +2,14 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpsertProfileDto } from './dto/upsert-profile.dto';
 import { UserRole } from '../../generated/client';
+import { GeocodingService } from '../location/geocoding.service';
 
 @Injectable()
 export class ProfilesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly geocodingService: GeocodingService,
+  ) {}
 
   async upsertProfile(userId: string, dto: UpsertProfileDto) {
     await this.ensureUser(userId);
@@ -18,14 +22,35 @@ export class ProfilesService {
       penalCertificate,
       sexualCertificate,
       role: requestedRole,
+      city,
+      fullAddress,
       ...profileData
     } = dto;
 
     // 1. Upsert base profile
     const profile = await this.prisma.profile.upsert({
       where: { userId },
-      update: { ...profileData },
-      create: { ...profileData, userId },
+      update: { ...profileData, city },
+      create: { ...profileData, userId, city },
+    });
+
+    const coords = await this.geocodingService.geocode(city, fullAddress);
+
+    await this.prisma.userLocation.upsert({
+      where: { userId },
+      update: {
+        city,
+        fullAddress,
+        latitude: coords?.latitude ?? null,
+        longitude: coords?.longitude ?? null,
+      },
+      create: {
+        userId,
+        city,
+        fullAddress,
+        latitude: coords?.latitude ?? null,
+        longitude: coords?.longitude ?? null,
+      },
     });
 
     // 2. Handle companion profile and role in a transaction
@@ -60,10 +85,24 @@ export class ProfilesService {
   }
 
   async getProfileByUserId(userId: string) {
-    return this.prisma.profile.findUnique({
+    const profile = await this.prisma.profile.findUnique({
       where: { userId },
-      include: { companion: true },
+      include: { companion: true, user: { include: { privateLocation: true } } },
     });
+
+    if (!profile) return null;
+
+    return {
+      ...profile,
+      location: profile.user?.privateLocation
+        ? {
+            city: profile.user.privateLocation.city,
+            fullAddress: profile.user.privateLocation.fullAddress,
+            latitude: profile.user.privateLocation.latitude,
+            longitude: profile.user.privateLocation.longitude,
+          }
+        : null,
+    };
   }
 
   async listCompanions() {

@@ -23,7 +23,7 @@ Bienvenido a la documentación técnica de GoTogether. Esta carpeta contiene tod
 - [[backend/auth]] — Sistema de autenticación y autorización
 - [[backend/booking-state-machine]] — Máquina de estados de reservas (7 estados, 9 transiciones)
 - [[backend/availability]] — Sistema de disponibilidad semanal (grid pintable, timezone, orientativo)
-- [[backend/matching]] — Motor de búsqueda de acompañantes
+- [[backend/matching]] — Motor de búsqueda, ubicación y score de recomendados
 - [[backend/supervision]] — Supervisores, invitaciones, ubicación en tiempo real
 - [[backend/notifications]] — Notificaciones in-app con Realtime
 
@@ -40,7 +40,7 @@ Bienvenido a la documentación técnica de GoTogether. Esta carpeta contiene tod
 
 ### Proyecto
 - [[roadmap]] — Estado actual, fases completadas y pendientes
-- [[changelog]] — Registro de cambios por versión (hasta v0.1.0-alpha.30)
+- [[changelog]] — Registro de cambios por versión (hasta v0.1.0-alpha.33)
 - [[testing]] — 287 tests (163 API + 124 Web), infraestructura, convenciones
 
 ---

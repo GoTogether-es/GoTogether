@@ -52,6 +52,9 @@ export const CompanionCard = memo(function CompanionCard({
         <p className="gt-helper flex-1">
           {profile.headline || profile.bio || 'Acompañante en GoTogether'}
         </p>
+        {profile.city && (
+          <p className="text-xs text-gray-500 mt-2">{profile.city}</p>
+        )}
         <div className="flex flex-wrap gap-2 mt-3">
           <span className="gt-tag" title={`${services} servicios completados`}>
             {level.emoji} {level.name}

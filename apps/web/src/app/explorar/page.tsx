@@ -6,6 +6,7 @@ import { Container, Section } from '@gotogether/ui';
 import { Search, SlidersHorizontal } from 'lucide-react';
 import { CompanionCard } from '@/components/companion-card';
 import { useRecommendations } from '@/services/queries';
+import { useProfile } from '@/services/queries';
 import { SkeletonCard } from '@/components/skeleton';
 import type { CompanionSummary } from '@/types';
 import { DISABILITY_OPTIONS } from '@/lib/constants';
@@ -39,6 +40,7 @@ function ExplorarContent() {
   const [debouncedSearch, setDebouncedSearch] = useState(searchParams.get('q') || '');
   const [disabilityType, setDisabilityType] = useState(searchParams.get('d') || '');
   const [verifiedOnly, setVerifiedOnly] = useState(searchParams.get('v') === '1');
+  const [city, setCity] = useState(searchParams.get('city') || '');
   const [page, setPage] = useState(parseInt(searchParams.get('p') || '1', 10));
   const [showFilters, setShowFilters] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout>>();
@@ -48,10 +50,11 @@ function ExplorarContent() {
     if (debouncedSearch) params.set('q', debouncedSearch);
     if (disabilityType) params.set('d', disabilityType);
     if (verifiedOnly) params.set('v', '1');
+    if (city) params.set('city', city);
     if (page > 1) params.set('p', String(page));
     const qs = params.toString();
     router.replace(`/explorar${qs ? `?${qs}` : ''}`, { scroll: false });
-  }, [debouncedSearch, disabilityType, verifiedOnly, page, router]);
+  }, [debouncedSearch, disabilityType, verifiedOnly, city, page, router]);
 
   useEffect(() => {
     if (!mountedRef.current) return;
@@ -73,13 +76,21 @@ function ExplorarContent() {
     };
   }, [search]);
 
+  const { data: profile } = useProfile();
   const { data, isLoading, isError, refetch, isPlaceholderData } = useRecommendations({
     search: debouncedSearch || undefined,
     disabilityType: disabilityType || undefined,
     verified: verifiedOnly || undefined,
+    city: city || undefined,
+    latitude: profile?.location?.latitude ?? undefined,
+    longitude: profile?.location?.longitude ?? undefined,
     page,
     limit: 9,
   });
+
+  useEffect(() => {
+    if (!city && profile?.city) setCity(profile.city);
+  }, [city, profile?.city]);
 
   const companions: CompanionSummary[] = data?.data ?? [];
   const totalPages = data?.meta?.totalPages ?? 1;
@@ -140,6 +151,18 @@ function ExplorarContent() {
                     <option key={d} value={d}>{d}</option>
                   ))}
                 </select>
+              </div>
+              <div>
+                <label className="block text-xs font-bold uppercase text-gray-400 mb-1" htmlFor="city-filter">
+                  Ciudad
+                </label>
+                <input
+                  id="city-filter"
+                  value={city}
+                  onChange={(e) => { setCity(e.target.value); setPage(1); }}
+                  className="gt-input"
+                  placeholder="Málaga"
+                />
               </div>
               <div className="flex items-end pb-1">
                 <label className="flex items-center gap-2 cursor-pointer">

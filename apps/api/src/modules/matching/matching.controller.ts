@@ -11,6 +11,9 @@ export class MatchingController {
     @Query('disabilityType') disabilityType?: string,
     @Query('minRating') minRating?: string,
     @Query('verified') verified?: string,
+    @Query('city') city?: string,
+    @Query('latitude') latitude?: string,
+    @Query('longitude') longitude?: string,
     @Query('page') page?: string,
     @Query('limit') limit?: string,
   ) {
@@ -19,6 +22,9 @@ export class MatchingController {
       disabilityType,
       minRating: minRating ? Number(minRating) : undefined,
       verified: verified === 'true' ? true : verified === 'false' ? false : undefined,
+      city,
+      latitude: latitude ? Number(latitude) : undefined,
+      longitude: longitude ? Number(longitude) : undefined,
       page: page ? Number(page) : undefined,
       limit: limit ? Number(limit) : undefined,
     });

@@ -6,16 +6,16 @@ tags: [backend, matching, search]
 
 **Archivo principal:** `apps/api/src/modules/matching/matching.service.ts`
 **Endpoint:** `GET /matching/recommendations`
-**Tests:** `matching.service.spec.ts` (7 tests)
+**Tests:** `matching.service.spec.ts` (9 tests)
 
 ## Descripción
 
-El sistema de matching permite a los clientes buscar acompañantes verificados. Soporta búsqueda por texto, filtrado por tipo de discapacidad, rating mínimo, verificación, y paginación.
+El sistema de matching permite a los clientes buscar acompañantes verificados. Soporta búsqueda por texto, filtrado por tipo de discapacidad, rating mínimo, verificación, ciudad, cercanía y paginación.
 
 ## Endpoint
 
 ```
-GET /matching/recommendations?search=&disabilityType=&minRating=&verified=&page=&limit=
+GET /matching/recommendations?search=&disabilityType=&minRating=&verified=&city=&latitude=&longitude=&page=&limit=
 ```
 
 **Auth:** Pública (sin JWT)
@@ -28,6 +28,9 @@ GET /matching/recommendations?search=&disabilityType=&minRating=&verified=&page=
 | `disabilityType` | string | — | Filtra por tipo de discapacidad (exacto, case insensitive) |
 | `minRating` | number | — | Rating mínimo (≥) |
 | `verified` | boolean | — | Solo verificados (true) |
+| `city` | string | — | Ciudad pública para priorizar cercanía |
+| `latitude` | number | — | Latitud del usuario para score por distancia |
+| `longitude` | number | — | Longitud del usuario para score por distancia |
 | `page` | number | 1 | Página actual |
 | `limit` | number | 9 | Resultados por página |
 
@@ -36,14 +39,14 @@ GET /matching/recommendations?search=&disabilityType=&minRating=&verified=&page=
 ```json
 {
   "data": [
-    {
-      "id": "comp-123",
-      "profile": { "fullName": "María", "headline": "Acompañante senior", ... },
-      "specialties": "Enfermería, cocina",
-      "rating": 4.8,
-      "yearsOnPlatform": 5,
-      "verified": true
-    }
+      {
+        "id": "comp-123",
+        "profile": { "fullName": "María", "headline": "Acompañante senior", "city": "Málaga", ... },
+        "specialties": "Enfermería, cocina",
+        "rating": 4.8,
+        "yearsOnPlatform": 5,
+        "verified": true
+      }
   ],
   "meta": {
     "total": 42,
@@ -64,13 +67,19 @@ GET /matching/recommendations?search=&disabilityType=&minRating=&verified=&page=
 2. Construir profileConditions array
    a. Si hay search → añadir OR: fullName, headline, bio contains search
    b. Si hay disabilityType → añadir AND: disabilityType equals
-   c. Si profileConditions no está vacío → where.profile = { AND: profileConditions }
+   c. Si hay city → añadir ciudad exacta case insensitive
+   d. Si profileConditions no está vacío → where.profile = { AND: profileConditions }
 
-3. Paginación: skip = (page - 1) * limit, take = limit
+3. Ejecutar findMany + count en paralelo (Promise.all) con `profile.user.privateLocation`
 
-4. Ordenar por: rating DESC, yearsOnPlatform DESC
+4. Calcular score compuesto por acompañante
+   - Distancia con Haversine si hay lat/lng del usuario
+   - Rating
+   - Verificación
+   - Coincidencia de ciudad
+   - Experiencia (`yearsOnPlatform`)
 
-5. Ejecutar findMany + count en paralelo (Promise.all)
+5. Ordenar por score descendente y aplicar paginación después del ranking
 ```
 
 ## Frontend: ExplorarPage
@@ -88,7 +97,7 @@ GET /matching/recommendations?search=&disabilityType=&minRating=&verified=&page=
 
 ### React Query
 ```typescript
-useRecommendations({ search, disabilityType, verified, page, limit })
+useRecommendations({ search, disabilityType, verified, city, latitude, longitude, page, limit })
 ```
 - `staleTime`: 2 minutos
 - `gcTime`: 10 minutos
@@ -103,3 +112,11 @@ El frontend muestra un dropdown con 4 opciones:
 - Discapacidad cognitiva
 
 El backend consulta `disabilityType` directamente en el `Profile` del acompañante.
+
+### Ubicación y recomendados
+
+- `city` es público y aparece en listados y perfil.
+- `fullAddress` se guarda solo en la ubicación privada del usuario.
+- `latitude`/`longitude` se obtienen con Nominatim al guardar el perfil.
+- `/explorar` usa la ubicación del usuario para ordenar por distancia cuando existe.
+- Si no hay coordenadas, el sistema usa `city` como fallback de priorización.

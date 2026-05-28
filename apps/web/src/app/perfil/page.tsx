@@ -34,11 +34,13 @@ function PerfilContent() {
     formState: { errors },
   } = useForm<PerfilFormData>({
     resolver: zodResolver(perfilSchema),
-    defaultValues: {
-      fullName: '',
-      headline: '',
-      bio: '',
-      phone: '',
+      defaultValues: {
+        fullName: '',
+        city: '',
+        fullAddress: '',
+        headline: '',
+        bio: '',
+        phone: '',
       avatarUrl: '',
       disabilityType: '',
       preferences: '',
@@ -56,6 +58,8 @@ function PerfilContent() {
           setAvatarUrl(data.avatarUrl);
           reset({
             fullName: data.fullName || '',
+            city: data.city || '',
+            fullAddress: '',
             headline: data.headline || '',
             bio: data.bio || '',
             phone: data.phone || '',
@@ -102,6 +106,8 @@ function PerfilContent() {
     if (profile) {
       reset({
         fullName: profile.fullName || '',
+        city: profile.city || '',
+        fullAddress: '',
         headline: profile.headline || '',
         bio: profile.bio || '',
         phone: profile.phone || '',
@@ -165,6 +171,12 @@ function PerfilContent() {
                 <h2 className="text-2xl font-bold">{profile.fullName || 'Tu nombre'}</h2>
                 {profile.headline && (
                   <p className="text-gray-500 mt-1">{profile.headline}</p>
+                )}
+                {profile.city && (
+                  <p className="text-gray-400 text-sm mt-2 flex items-center justify-center md:justify-start gap-1.5">
+                    <MapPin className="w-3.5 h-3.5" />
+                    {profile.city}
+                  </p>
                 )}
                 {profile.phone && (
                   <p className="text-gray-400 text-sm mt-2 flex items-center justify-center md:justify-start gap-1.5">
@@ -282,21 +294,47 @@ function PerfilContent() {
               <AvatarUpload avatarUrl={avatarUrl} onUploaded={setAvatarUrl} />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="md:col-span-2">
-                <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="fullName">
-                  Nombre y apellidos *
-                </label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="fullName">
+                    Nombre y apellidos *
+                  </label>
                 <input
                   id="fullName"
                   className="gt-input"
                   placeholder="Ej: Juan Perez"
                   {...register('fullName')}
                 />
-                {errors.fullName && (
-                  <p className="text-red-500 text-xs mt-1">{errors.fullName.message}</p>
-                )}
-              </div>
+                  {errors.fullName && (
+                    <p className="text-red-500 text-xs mt-1">{errors.fullName.message}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="city">
+                    Ciudad pública *
+                  </label>
+                  <input
+                    id="city"
+                    className="gt-input"
+                    placeholder="Ej: Málaga"
+                    {...register('city')}
+                  />
+                  {errors.city && <p className="text-red-500 text-xs mt-1">{errors.city.message}</p>}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="fullAddress">
+                    Dirección completa *
+                  </label>
+                  <input
+                    id="fullAddress"
+                    className="gt-input"
+                    placeholder="Calle, número, piso..."
+                    {...register('fullAddress')}
+                  />
+                  {errors.fullAddress && <p className="text-red-500 text-xs mt-1">{errors.fullAddress.message}</p>}
+                </div>
 
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="headline">

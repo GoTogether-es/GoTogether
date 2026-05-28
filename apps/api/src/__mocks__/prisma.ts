@@ -27,6 +27,13 @@ const shape = {
     update: jest.fn,
     count: jest.fn,
   },
+  userLocation: {
+    findUnique: jest.fn,
+    upsert: jest.fn,
+    update: jest.fn,
+    findMany: jest.fn,
+    delete: jest.fn,
+  },
   companionProfile: {
     findUnique: jest.fn,
     findFirst: jest.fn,

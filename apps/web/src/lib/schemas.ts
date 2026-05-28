@@ -14,6 +14,8 @@ export type SolicitudFormData = z.infer<typeof solicitudSchema>;
 
 export const clientRegistrationSchema = z.object({
   fullName: z.string().min(1, 'El nombre es obligatorio'),
+  city: z.string().min(1, 'La ciudad es obligatoria'),
+  fullAddress: z.string().min(3, 'La dirección completa es obligatoria'),
   phone: z.string().optional(),
   bio: z.string().optional(),
   disabilityType: z.string().min(1, 'Selecciona un tipo de discapacidad'),
@@ -25,6 +27,8 @@ export type ClientRegistrationFormData = z.infer<typeof clientRegistrationSchema
 
 export const companionRegistrationSchema = z.object({
   fullName: z.string().min(1, 'El nombre es obligatorio'),
+  city: z.string().min(1, 'La ciudad es obligatoria'),
+  fullAddress: z.string().min(3, 'La dirección completa es obligatoria'),
   phone: z.string().optional(),
   bio: z.string().optional(),
   specialties: z.string().min(1, 'Indica al menos una especialidad'),
@@ -36,6 +40,8 @@ export type CompanionRegistrationFormData = z.infer<typeof companionRegistration
 
 export const perfilSchema = z.object({
   fullName: z.string().min(1, 'El nombre es obligatorio'),
+  city: z.string().min(1, 'La ciudad es obligatoria'),
+  fullAddress: z.string().min(3, 'La dirección completa es obligatoria'),
   headline: z.string().optional(),
   bio: z.string().optional(),
   phone: z.string().optional(),

@@ -37,6 +37,9 @@ export function useRecommendations(params: {
   search?: string;
   disabilityType?: string;
   verified?: boolean;
+  city?: string;
+  latitude?: number;
+  longitude?: number;
   page?: number;
   limit?: number;
 }) {

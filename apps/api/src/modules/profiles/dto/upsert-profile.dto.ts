@@ -6,6 +6,14 @@ export class UpsertProfileDto {
   fullName!: string;
 
   @IsString()
+  @MaxLength(120)
+  city!: string;
+
+  @IsString()
+  @MaxLength(500)
+  fullAddress!: string;
+
+  @IsString()
   @IsOptional()
   @MaxLength(200)
   headline?: string;
