@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsDateString, IsInt, Min, Max, Matches, MaxLength } from 'class-validator';
+import { IsString, IsOptional, IsDateString, IsInt, Min, Max, Matches, MaxLength, IsNumber } from 'class-validator';
 
 export class CreateBookingDto {
   @IsString()
@@ -40,4 +40,10 @@ export class CreateBookingDto {
   @Matches(/^([01]\d|2[0-3]):[0-5]\d$/)
   @IsOptional()
   localTime?: string;
+
+  @IsNumber()
+  @Min(1)
+  @IsOptional()
+  estimatedHours?: number;
 }
+

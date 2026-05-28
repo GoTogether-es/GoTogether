@@ -81,6 +81,8 @@ const shape = {
     findMany: jest.fn,
     aggregate: jest.fn,
     count: jest.fn,
+    create: jest.fn,
+    update: jest.fn,
   },
   chatRoom: {
     findUnique: jest.fn,

@@ -111,6 +111,7 @@ model Profile {
 model CompanionProfile {
   id                String   @id @default(uuid())
   profileId         String   @unique
+  stripeAccountId   String?
   specialties       String?
   verified          Boolean  @default(false)
   backgroundCheck   String?
@@ -160,19 +161,22 @@ model AvailabilitySlot {
 }
 
 model Booking {
-  id          String        @id @default(uuid())
-  clientId    String
-  companionId String?
-  bookedById  String?
-  serviceId   String?
-  status      BookingStatus @default(DRAFT)
-  serviceType String
-  summary     String?
-  address     String
-  scheduledAt DateTime
-  disability  String?
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id             String        @id @default(uuid())
+  clientId       String
+  companionId    String?
+  bookedById     String?
+  serviceId      String?
+  status         BookingStatus @default(DRAFT)
+  serviceType    String
+  summary        String?
+  address        String
+  scheduledAt    DateTime
+  disability     String?
+  startedAt      DateTime?
+  completedAt    DateTime?
+  estimatedHours Float?        @default(1.0)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 
   client    User              @relation("ClientBookings", fields: [clientId], references: [id])
   companion CompanionProfile? @relation("CompanionBookings", fields: [companionId], references: [id])

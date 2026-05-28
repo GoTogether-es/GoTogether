@@ -148,6 +148,9 @@ const bookingSchema = z.object({
   address: z.string(),
   scheduledAt: z.string(),
   disability: z.string().nullable(),
+  startedAt: z.string().nullable().optional(),
+  completedAt: z.string().nullable().optional(),
+  estimatedHours: z.number().nullable().optional(),
   createdAt: z.string(),
   updatedAt: z.string(),
   client: z.object({
@@ -248,6 +251,7 @@ export async function createBooking(data: {
   serviceId?: string;
   localDayOfWeek?: number;
   localTime?: string;
+  estimatedHours?: number;
 }): Promise<BookingData> {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/bookings`, {

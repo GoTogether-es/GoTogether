@@ -13,6 +13,7 @@ import { ChatService } from '../chat/chat.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { MailService } from '../auth/mail.service';
 import { AvailabilityService } from '../availability/availability.service';
+import { PaymentsService } from '../payments/payments.service';
 import {
   getBookingAcceptedTemplate,
   getBookingDeclinedTemplate,
@@ -39,6 +40,7 @@ export class BookingsService {
     private readonly mailService: MailService,
     private readonly configService: ConfigService,
     private readonly availabilityService: AvailabilityService,
+    private readonly paymentsService: PaymentsService,
   ) {}
 
   async create(userId: string, dto: CreateBookingDto) {
@@ -93,6 +95,7 @@ export class BookingsService {
         scheduledAt: scheduledDate,
         summary: dto.summary,
         disability: dto.disability,
+        estimatedHours: dto.estimatedHours || 1.0,
       },
       include: { payment: true, service: true },
     });
@@ -209,9 +212,34 @@ export class BookingsService {
       case BookingStatus.REQUESTED:
         if (!isClient && !isSupervisedClient) throw new ForbiddenException('Solo el cliente puede solicitar');
         break;
-      case BookingStatus.ACCEPTED:
+      case BookingStatus.ACCEPTED: {
         if (!isCompanion && !canClaim) throw new ForbiddenException('Solo el acompañante puede aceptar');
         if (canClaim) updateData.companionId = user.profile!.companion!.id;
+        
+        const companionStripeId = canClaim
+          ? user.profile?.companion?.stripeAccountId
+          : booking.companion?.stripeAccountId;
+        const companionStripeAccountId = companionStripeId || `acct_mock_${canClaim ? user.profile?.companion?.id : booking.companionId}`;
+
+        const estHours = booking.estimatedHours || 1.0;
+        const holdAmount = Math.round(estHours * 13 * 100);
+        
+        try {
+          const holdIntent = await this.paymentsService.createHold(holdAmount, companionStripeAccountId);
+          await this.prisma.payment.create({
+            data: {
+              bookingId,
+              stripePaymentId: holdIntent.id,
+              amount: holdIntent.amount,
+              fee: Math.round(estHours * 2 * 100),
+              status: 'HOLD',
+              currency: 'EUR',
+            },
+          });
+        } catch (paymentErr) {
+          console.error('Failed to create payment hold during booking acceptance:', paymentErr);
+        }
+
         await this.chatService.createRoomForBooking(bookingId);
         this.notifications.create({
           userId: booking.clientId,
@@ -222,6 +250,7 @@ export class BookingsService {
         }).catch(err => console.error('Failed to notify:', err));
         this.sendBookingEmail(booking, 'accepted', user.profile?.fullName);
         break;
+      }
       case BookingStatus.DECLINED:
         if (!isCompanion && !canClaim) throw new ForbiddenException('Solo el acompañante puede rechazar');
         this.notifications.create({
@@ -235,9 +264,12 @@ export class BookingsService {
         break;
       case BookingStatus.IN_PROGRESS:
         if (!isCompanion) throw new ForbiddenException('Solo el acompañante puede iniciar el servicio');
+        updateData.startedAt = new Date();
         break;
-      case BookingStatus.COMPLETED:
+      case BookingStatus.COMPLETED: {
         if (!isCompanion && !isClient) throw new ForbiddenException('Solo participantes pueden completar');
+        updateData.completedAt = new Date();
+        
         if (booking.companionId && user.profile?.companion) {
           this.notifications.create({
             userId: booking.clientId,
@@ -249,6 +281,7 @@ export class BookingsService {
           this.sendBookingEmail(booking, 'completed', user.profile.fullName);
         }
         break;
+      }
       case BookingStatus.CANCELLED:
         if (!isClient && !isCompanion && !isSupervisedClient) {
           throw new ForbiddenException('No tienes permiso para cancelar');
@@ -263,13 +296,69 @@ export class BookingsService {
           });
           this.sendBookingEmail(booking, 'cancelled', user.profile?.fullName);
         }
+        if (booking.payment && booking.payment.status === 'HOLD') {
+          if (booking.payment.stripePaymentId) {
+            try {
+              await this.paymentsService.releasePayment(booking.payment.stripePaymentId);
+            } catch (err) {
+              console.error('Failed to release payment hold:', err);
+            }
+          }
+          await this.prisma.payment.update({
+            where: { id: booking.payment.id },
+            data: { status: 'CANCELLED' },
+          });
+        }
         break;
     }
 
-    return this.prisma.booking.update({
+    const result = await this.prisma.booking.update({
       where: { id: bookingId },
       data: updateData,
       include: { payment: true },
+    });
+
+    if (dto.status === BookingStatus.COMPLETED && updateData.completedAt) {
+      await this.processPaymentCapture(bookingId, updateData.completedAt);
+    }
+
+    return result;
+  }
+
+  private async processPaymentCapture(bookingId: string, completedAt: Date) {
+    const booking = await this.prisma.booking.findUnique({
+      where: { id: bookingId },
+      include: { payment: true },
+    });
+    if (!booking || !booking.payment || booking.payment.status !== 'HOLD') return;
+
+    const start = booking.startedAt || booking.scheduledAt || new Date();
+    const end = completedAt;
+    const minutes = Math.max(0, (end.getTime() - start.getTime()) / (1000 * 60));
+    const roundedHours = Math.max(1, Math.round(minutes / 30) * 0.5);
+
+    const totalAmount = Math.round(roundedHours * 13 * 100);
+    const platformFee = Math.round(roundedHours * 2 * 100);
+
+    if (booking.payment.stripePaymentId) {
+      try {
+        await this.paymentsService.capturePayment(
+          booking.payment.stripePaymentId,
+          totalAmount,
+          platformFee,
+        );
+      } catch (err) {
+        console.error('Failed to capture Stripe payment:', err);
+      }
+    }
+
+    await this.prisma.payment.update({
+      where: { id: booking.payment.id },
+      data: {
+        amount: totalAmount,
+        fee: platformFee,
+        status: 'CONFIRMED',
+      },
     });
   }
 
@@ -459,11 +548,14 @@ export class BookingsService {
         })
       : null;
 
+    const completedAt = new Date();
     const result = await this.prisma.booking.update({
       where: { id: bookingId },
-      data: { status: BookingStatus.COMPLETED },
+      data: { status: BookingStatus.COMPLETED, completedAt },
       include: { payment: true },
     });
+
+    await this.processPaymentCapture(bookingId, completedAt);
 
     if (companion) {
       await this.notifications.create({

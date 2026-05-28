@@ -178,6 +178,7 @@ exports.Prisma.ProfileScalarFieldEnum = {
 exports.Prisma.CompanionProfileScalarFieldEnum = {
   id: 'id',
   profileId: 'profileId',
+  stripeAccountId: 'stripeAccountId',
   specialties: 'specialties',
   verified: 'verified',
   backgroundCheck: 'backgroundCheck',
@@ -223,6 +224,9 @@ exports.Prisma.BookingScalarFieldEnum = {
   address: 'address',
   scheduledAt: 'scheduledAt',
   disability: 'disability',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  estimatedHours: 'estimatedHours',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

@@ -16,14 +16,25 @@ export class PaymentsController {
 
   @UseGuards(SupabaseAuthGuard)
   @Post('hold')
-  hold(@Body() body: { amount: number }) {
-    return this.paymentsService.createHold(body.amount);
+  hold(@Body() body: { amount: number; companionStripeAccountId: string }) {
+    return this.paymentsService.createHold(body.amount, body.companionStripeAccountId);
   }
 
   @UseGuards(SupabaseAuthGuard)
   @Post(':paymentIntentId/capture')
-  capture(@Body() params: { paymentIntentId: string }) {
-    return this.paymentsService.capturePayment(params.paymentIntentId);
+  capture(
+    @Body()
+    params: {
+      paymentIntentId: string;
+      captureAmount: number;
+      applicationFeeAmount: number;
+    },
+  ) {
+    return this.paymentsService.capturePayment(
+      params.paymentIntentId,
+      params.captureAmount,
+      params.applicationFeeAmount,
+    );
   }
 
   @UseGuards(SupabaseAuthGuard)

@@ -37,16 +37,16 @@ El núcleo del marketplace está funcional. Pagos pendientes de activar. Segurid
 - [x] Emails transaccionales
 - [x] Manejo de reconexión en chat
 
-## ⬜ Fase 4 — Pagos (prioridad alta)
+## 🟨 Fase 4 — Pagos (prioridad alta - Lógica y simulación completadas)
 
 - [ ] Configurar `STRIPE_SECRET_KEY` real en Vercel
-- [ ] Integrar PaymentsService en BookingsService
-- [ ] Crear PaymentIntent al aceptar reserva
-- [ ] Capturar pago al completar servicio
-- [ ] Liberar retención al cancelar
-- [ ] Procesar webhooks de Stripe para sincronización
-- [ ] Aplicar `STRIPE_PLATFORM_FEE_PERCENT` (12%)
-- [ ] UI de pago en el frontend (Stripe Elements o Checkout)
+- [x] Integrar PaymentsService en BookingsService
+- [x] Crear PaymentIntent al aceptar reserva (Simulado)
+- [x] Capturar pago al completar servicio (Simulado, aplicando redondeos de tiempo real)
+- [x] Liberar retención al cancelar (Simulado)
+- [ ] Procesar webhooks de Stripe para sincronización (Webhook básico estructurado, pendiente procesamiento asíncrono real)
+- [x] Aplicar tarifas y comisiones (Fijado en 13€/h cliente, 11€/h acompañante y 2€/h plataforma)
+- [ ] UI de pago en el frontend (Stripe Elements o Checkout - Formulario de solicitud actualizado con duración estimada y desglose de precio en vivo)
 
 ## ✅ Fase 5 — Funcionalidades avanzadas + Admin + Supervisión + Perf + Seguridad (completada)
 

@@ -5,9 +5,10 @@ import { ChatModule } from '../chat/chat.module';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { AuthModule } from '../auth/auth.module';
 import { AvailabilityModule } from '../availability/availability.module';
+import { PaymentsModule } from '../payments/payments.module';
 
 @Module({
-  imports: [ChatModule, NotificationsModule, AuthModule, AvailabilityModule],
+  imports: [ChatModule, NotificationsModule, AuthModule, AvailabilityModule, PaymentsModule],
   providers: [BookingsService],
   controllers: [BookingsController],
 })

@@ -158,6 +158,32 @@ export default function ReservasPage() {
                             <p className="font-semibold text-gray-800">{booking.address}</p>
                           </div>
                         </div>
+                        {booking.estimatedHours && (
+                          <div className="flex gap-3">
+                            <Clock className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" aria-hidden="true" />
+                            <div>
+                              <span className="text-xs font-bold uppercase tracking-wider text-gray-400">Duración Estimada</span>
+                              <p className="font-semibold text-gray-800">{booking.estimatedHours} {booking.estimatedHours === 1 ? 'hora' : 'horas'}</p>
+                            </div>
+                          </div>
+                        )}
+                        {booking.startedAt && booking.completedAt && (
+                          <div className="flex gap-3">
+                            <Clock className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" aria-hidden="true" />
+                            <div>
+                              <span className="text-xs font-bold uppercase tracking-wider text-emerald-600">Duración Real</span>
+                              <p className="font-semibold text-emerald-800">
+                                {(() => {
+                                  const start = new Date(booking.startedAt!);
+                                  const end = new Date(booking.completedAt!);
+                                  const minutes = Math.max(0, (end.getTime() - start.getTime()) / (1000 * 60));
+                                  const roundedHours = Math.max(1, Math.round(minutes / 30) * 0.5);
+                                  return `${roundedHours} ${roundedHours === 1 ? 'hora' : 'horas'} (${Math.round(minutes)} min)`;
+                                })()}
+                              </p>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
 
@@ -167,8 +193,10 @@ export default function ReservasPage() {
                         <p className="text-2xl font-black text-blue-600">
                           {new Intl.NumberFormat('es-ES', { style: 'currency', currency: booking.payment.currency }).format(booking.payment.amount / 100)}
                         </p>
-                        <span className="text-xs text-gray-400">
-                          {booking.payment.status}
+                        <span className={`text-xs px-2 py-0.5 rounded-md font-semibold ${
+                          booking.payment.status === 'HOLD' ? 'bg-amber-100 text-amber-800' : 'bg-green-100 text-green-800'
+                        }`}>
+                          {booking.payment.status === 'HOLD' ? 'Retenido (Hold)' : 'Cobrado'}
                         </span>
                       </div>
                     )}

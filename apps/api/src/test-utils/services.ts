@@ -3,6 +3,7 @@ import { NotificationsService } from '../modules/notifications/notifications.ser
 import { MailService } from '../modules/auth/mail.service';
 import { ChatService } from '../modules/chat/chat.service';
 import { AvailabilityService } from '../modules/availability/availability.service';
+import { PaymentsService } from '../modules/payments/payments.service';
 
 export function createMockConfigService(overrides: Record<string, string> = {}) {
   const defaults: Record<string, string> = {
@@ -51,3 +52,13 @@ export function createMockAvailabilityService() {
     setForCompanion: jest.fn().mockResolvedValue([]),
   } as unknown as AvailabilityService;
 }
+
+export function createMockPaymentsService() {
+  return {
+    createHold: jest.fn().mockResolvedValue({ id: 'pi_mock_123', amount: 1300 }),
+    capturePayment: jest.fn().mockResolvedValue({ id: 'pi_mock_123', status: 'succeeded' }),
+    releasePayment: jest.fn().mockResolvedValue({ id: 'pi_mock_123', status: 'canceled' }),
+    constructWebhookEvent: jest.fn(),
+  } as unknown as PaymentsService;
+}
+

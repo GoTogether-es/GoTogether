@@ -7213,6 +7213,7 @@ export namespace Prisma {
   export type CompanionProfileMinAggregateOutputType = {
     id: string | null
     profileId: string | null
+    stripeAccountId: string | null
     specialties: string | null
     verified: boolean | null
     backgroundCheck: string | null
@@ -7228,6 +7229,7 @@ export namespace Prisma {
   export type CompanionProfileMaxAggregateOutputType = {
     id: string | null
     profileId: string | null
+    stripeAccountId: string | null
     specialties: string | null
     verified: boolean | null
     backgroundCheck: string | null
@@ -7243,6 +7245,7 @@ export namespace Prisma {
   export type CompanionProfileCountAggregateOutputType = {
     id: number
     profileId: number
+    stripeAccountId: number
     specialties: number
     verified: number
     backgroundCheck: number
@@ -7270,6 +7273,7 @@ export namespace Prisma {
   export type CompanionProfileMinAggregateInputType = {
     id?: true
     profileId?: true
+    stripeAccountId?: true
     specialties?: true
     verified?: true
     backgroundCheck?: true
@@ -7285,6 +7289,7 @@ export namespace Prisma {
   export type CompanionProfileMaxAggregateInputType = {
     id?: true
     profileId?: true
+    stripeAccountId?: true
     specialties?: true
     verified?: true
     backgroundCheck?: true
@@ -7300,6 +7305,7 @@ export namespace Prisma {
   export type CompanionProfileCountAggregateInputType = {
     id?: true
     profileId?: true
+    stripeAccountId?: true
     specialties?: true
     verified?: true
     backgroundCheck?: true
@@ -7402,6 +7408,7 @@ export namespace Prisma {
   export type CompanionProfileGroupByOutputType = {
     id: string
     profileId: string
+    stripeAccountId: string | null
     specialties: string | null
     verified: boolean
     backgroundCheck: string | null
@@ -7436,6 +7443,7 @@ export namespace Prisma {
   export type CompanionProfileSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     profileId?: boolean
+    stripeAccountId?: boolean
     specialties?: boolean
     verified?: boolean
     backgroundCheck?: boolean
@@ -7455,6 +7463,7 @@ export namespace Prisma {
   export type CompanionProfileSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     profileId?: boolean
+    stripeAccountId?: boolean
     specialties?: boolean
     verified?: boolean
     backgroundCheck?: boolean
@@ -7471,6 +7480,7 @@ export namespace Prisma {
   export type CompanionProfileSelectScalar = {
     id?: boolean
     profileId?: boolean
+    stripeAccountId?: boolean
     specialties?: boolean
     verified?: boolean
     backgroundCheck?: boolean
@@ -7503,6 +7513,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       profileId: string
+      stripeAccountId: string | null
       specialties: string | null
       verified: boolean
       backgroundCheck: string | null
@@ -7911,6 +7922,7 @@ export namespace Prisma {
   interface CompanionProfileFieldRefs {
     readonly id: FieldRef<"CompanionProfile", 'String'>
     readonly profileId: FieldRef<"CompanionProfile", 'String'>
+    readonly stripeAccountId: FieldRef<"CompanionProfile", 'String'>
     readonly specialties: FieldRef<"CompanionProfile", 'String'>
     readonly verified: FieldRef<"CompanionProfile", 'Boolean'>
     readonly backgroundCheck: FieldRef<"CompanionProfile", 'String'>
@@ -10308,8 +10320,18 @@ export namespace Prisma {
 
   export type AggregateBooking = {
     _count: BookingCountAggregateOutputType | null
+    _avg: BookingAvgAggregateOutputType | null
+    _sum: BookingSumAggregateOutputType | null
     _min: BookingMinAggregateOutputType | null
     _max: BookingMaxAggregateOutputType | null
+  }
+
+  export type BookingAvgAggregateOutputType = {
+    estimatedHours: number | null
+  }
+
+  export type BookingSumAggregateOutputType = {
+    estimatedHours: number | null
   }
 
   export type BookingMinAggregateOutputType = {
@@ -10324,6 +10346,9 @@ export namespace Prisma {
     address: string | null
     scheduledAt: Date | null
     disability: string | null
+    startedAt: Date | null
+    completedAt: Date | null
+    estimatedHours: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -10340,6 +10365,9 @@ export namespace Prisma {
     address: string | null
     scheduledAt: Date | null
     disability: string | null
+    startedAt: Date | null
+    completedAt: Date | null
+    estimatedHours: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -10356,11 +10384,22 @@ export namespace Prisma {
     address: number
     scheduledAt: number
     disability: number
+    startedAt: number
+    completedAt: number
+    estimatedHours: number
     createdAt: number
     updatedAt: number
     _all: number
   }
 
+
+  export type BookingAvgAggregateInputType = {
+    estimatedHours?: true
+  }
+
+  export type BookingSumAggregateInputType = {
+    estimatedHours?: true
+  }
 
   export type BookingMinAggregateInputType = {
     id?: true
@@ -10374,6 +10413,9 @@ export namespace Prisma {
     address?: true
     scheduledAt?: true
     disability?: true
+    startedAt?: true
+    completedAt?: true
+    estimatedHours?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -10390,6 +10432,9 @@ export namespace Prisma {
     address?: true
     scheduledAt?: true
     disability?: true
+    startedAt?: true
+    completedAt?: true
+    estimatedHours?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -10406,6 +10451,9 @@ export namespace Prisma {
     address?: true
     scheduledAt?: true
     disability?: true
+    startedAt?: true
+    completedAt?: true
+    estimatedHours?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -10449,6 +10497,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: BookingAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: BookingSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: BookingMinAggregateInputType
@@ -10479,6 +10539,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: BookingCountAggregateInputType | true
+    _avg?: BookingAvgAggregateInputType
+    _sum?: BookingSumAggregateInputType
     _min?: BookingMinAggregateInputType
     _max?: BookingMaxAggregateInputType
   }
@@ -10495,9 +10557,14 @@ export namespace Prisma {
     address: string
     scheduledAt: Date
     disability: string | null
+    startedAt: Date | null
+    completedAt: Date | null
+    estimatedHours: number | null
     createdAt: Date
     updatedAt: Date
     _count: BookingCountAggregateOutputType | null
+    _avg: BookingAvgAggregateOutputType | null
+    _sum: BookingSumAggregateOutputType | null
     _min: BookingMinAggregateOutputType | null
     _max: BookingMaxAggregateOutputType | null
   }
@@ -10528,6 +10595,9 @@ export namespace Prisma {
     address?: boolean
     scheduledAt?: boolean
     disability?: boolean
+    startedAt?: boolean
+    completedAt?: boolean
+    estimatedHours?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     client?: boolean | UserDefaultArgs<ExtArgs>
@@ -10551,6 +10621,9 @@ export namespace Prisma {
     address?: boolean
     scheduledAt?: boolean
     disability?: boolean
+    startedAt?: boolean
+    completedAt?: boolean
+    estimatedHours?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     client?: boolean | UserDefaultArgs<ExtArgs>
@@ -10571,6 +10644,9 @@ export namespace Prisma {
     address?: boolean
     scheduledAt?: boolean
     disability?: boolean
+    startedAt?: boolean
+    completedAt?: boolean
+    estimatedHours?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
@@ -10614,6 +10690,9 @@ export namespace Prisma {
       address: string
       scheduledAt: Date
       disability: string | null
+      startedAt: Date | null
+      completedAt: Date | null
+      estimatedHours: number | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["booking"]>
@@ -11027,6 +11106,9 @@ export namespace Prisma {
     readonly address: FieldRef<"Booking", 'String'>
     readonly scheduledAt: FieldRef<"Booking", 'DateTime'>
     readonly disability: FieldRef<"Booking", 'String'>
+    readonly startedAt: FieldRef<"Booking", 'DateTime'>
+    readonly completedAt: FieldRef<"Booking", 'DateTime'>
+    readonly estimatedHours: FieldRef<"Booking", 'Float'>
     readonly createdAt: FieldRef<"Booking", 'DateTime'>
     readonly updatedAt: FieldRef<"Booking", 'DateTime'>
   }
@@ -16328,6 +16410,7 @@ export namespace Prisma {
   export const CompanionProfileScalarFieldEnum: {
     id: 'id',
     profileId: 'profileId',
+    stripeAccountId: 'stripeAccountId',
     specialties: 'specialties',
     verified: 'verified',
     backgroundCheck: 'backgroundCheck',
@@ -16382,6 +16465,9 @@ export namespace Prisma {
     address: 'address',
     scheduledAt: 'scheduledAt',
     disability: 'disability',
+    startedAt: 'startedAt',
+    completedAt: 'completedAt',
+    estimatedHours: 'estimatedHours',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -16946,6 +17032,7 @@ export namespace Prisma {
     NOT?: CompanionProfileWhereInput | CompanionProfileWhereInput[]
     id?: StringFilter<"CompanionProfile"> | string
     profileId?: StringFilter<"CompanionProfile"> | string
+    stripeAccountId?: StringNullableFilter<"CompanionProfile"> | string | null
     specialties?: StringNullableFilter<"CompanionProfile"> | string | null
     verified?: BoolFilter<"CompanionProfile"> | boolean
     backgroundCheck?: StringNullableFilter<"CompanionProfile"> | string | null
@@ -16964,6 +17051,7 @@ export namespace Prisma {
   export type CompanionProfileOrderByWithRelationInput = {
     id?: SortOrder
     profileId?: SortOrder
+    stripeAccountId?: SortOrderInput | SortOrder
     specialties?: SortOrderInput | SortOrder
     verified?: SortOrder
     backgroundCheck?: SortOrderInput | SortOrder
@@ -16985,6 +17073,7 @@ export namespace Prisma {
     AND?: CompanionProfileWhereInput | CompanionProfileWhereInput[]
     OR?: CompanionProfileWhereInput[]
     NOT?: CompanionProfileWhereInput | CompanionProfileWhereInput[]
+    stripeAccountId?: StringNullableFilter<"CompanionProfile"> | string | null
     specialties?: StringNullableFilter<"CompanionProfile"> | string | null
     verified?: BoolFilter<"CompanionProfile"> | boolean
     backgroundCheck?: StringNullableFilter<"CompanionProfile"> | string | null
@@ -17003,6 +17092,7 @@ export namespace Prisma {
   export type CompanionProfileOrderByWithAggregationInput = {
     id?: SortOrder
     profileId?: SortOrder
+    stripeAccountId?: SortOrderInput | SortOrder
     specialties?: SortOrderInput | SortOrder
     verified?: SortOrder
     backgroundCheck?: SortOrderInput | SortOrder
@@ -17026,6 +17116,7 @@ export namespace Prisma {
     NOT?: CompanionProfileScalarWhereWithAggregatesInput | CompanionProfileScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"CompanionProfile"> | string
     profileId?: StringWithAggregatesFilter<"CompanionProfile"> | string
+    stripeAccountId?: StringNullableWithAggregatesFilter<"CompanionProfile"> | string | null
     specialties?: StringNullableWithAggregatesFilter<"CompanionProfile"> | string | null
     verified?: BoolWithAggregatesFilter<"CompanionProfile"> | boolean
     backgroundCheck?: StringNullableWithAggregatesFilter<"CompanionProfile"> | string | null
@@ -17192,6 +17283,9 @@ export namespace Prisma {
     address?: StringFilter<"Booking"> | string
     scheduledAt?: DateTimeFilter<"Booking"> | Date | string
     disability?: StringNullableFilter<"Booking"> | string | null
+    startedAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
+    estimatedHours?: FloatNullableFilter<"Booking"> | number | null
     createdAt?: DateTimeFilter<"Booking"> | Date | string
     updatedAt?: DateTimeFilter<"Booking"> | Date | string
     client?: XOR<UserRelationFilter, UserWhereInput>
@@ -17215,6 +17309,9 @@ export namespace Prisma {
     address?: SortOrder
     scheduledAt?: SortOrder
     disability?: SortOrderInput | SortOrder
+    startedAt?: SortOrderInput | SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    estimatedHours?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     client?: UserOrderByWithRelationInput
@@ -17241,6 +17338,9 @@ export namespace Prisma {
     address?: StringFilter<"Booking"> | string
     scheduledAt?: DateTimeFilter<"Booking"> | Date | string
     disability?: StringNullableFilter<"Booking"> | string | null
+    startedAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
+    estimatedHours?: FloatNullableFilter<"Booking"> | number | null
     createdAt?: DateTimeFilter<"Booking"> | Date | string
     updatedAt?: DateTimeFilter<"Booking"> | Date | string
     client?: XOR<UserRelationFilter, UserWhereInput>
@@ -17264,11 +17364,16 @@ export namespace Prisma {
     address?: SortOrder
     scheduledAt?: SortOrder
     disability?: SortOrderInput | SortOrder
+    startedAt?: SortOrderInput | SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    estimatedHours?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: BookingCountOrderByAggregateInput
+    _avg?: BookingAvgOrderByAggregateInput
     _max?: BookingMaxOrderByAggregateInput
     _min?: BookingMinOrderByAggregateInput
+    _sum?: BookingSumOrderByAggregateInput
   }
 
   export type BookingScalarWhereWithAggregatesInput = {
@@ -17286,6 +17391,9 @@ export namespace Prisma {
     address?: StringWithAggregatesFilter<"Booking"> | string
     scheduledAt?: DateTimeWithAggregatesFilter<"Booking"> | Date | string
     disability?: StringNullableWithAggregatesFilter<"Booking"> | string | null
+    startedAt?: DateTimeNullableWithAggregatesFilter<"Booking"> | Date | string | null
+    completedAt?: DateTimeNullableWithAggregatesFilter<"Booking"> | Date | string | null
+    estimatedHours?: FloatNullableWithAggregatesFilter<"Booking"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"Booking"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Booking"> | Date | string
   }
@@ -18004,6 +18112,7 @@ export namespace Prisma {
 
   export type CompanionProfileCreateInput = {
     id?: string
+    stripeAccountId?: string | null
     specialties?: string | null
     verified?: boolean
     backgroundCheck?: string | null
@@ -18022,6 +18131,7 @@ export namespace Prisma {
   export type CompanionProfileUncheckedCreateInput = {
     id?: string
     profileId: string
+    stripeAccountId?: string | null
     specialties?: string | null
     verified?: boolean
     backgroundCheck?: string | null
@@ -18038,6 +18148,7 @@ export namespace Prisma {
 
   export type CompanionProfileUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     specialties?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     backgroundCheck?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18056,6 +18167,7 @@ export namespace Prisma {
   export type CompanionProfileUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     profileId?: StringFieldUpdateOperationsInput | string
+    stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     specialties?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     backgroundCheck?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18073,6 +18185,7 @@ export namespace Prisma {
   export type CompanionProfileCreateManyInput = {
     id?: string
     profileId: string
+    stripeAccountId?: string | null
     specialties?: string | null
     verified?: boolean
     backgroundCheck?: string | null
@@ -18087,6 +18200,7 @@ export namespace Prisma {
 
   export type CompanionProfileUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     specialties?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     backgroundCheck?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18102,6 +18216,7 @@ export namespace Prisma {
   export type CompanionProfileUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     profileId?: StringFieldUpdateOperationsInput | string
+    stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     specialties?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     backgroundCheck?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18272,6 +18387,9 @@ export namespace Prisma {
     address: string
     scheduledAt: Date | string
     disability?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    estimatedHours?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     client: UserCreateNestedOneWithoutBookingsInput
@@ -18295,6 +18413,9 @@ export namespace Prisma {
     address: string
     scheduledAt: Date | string
     disability?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    estimatedHours?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     payment?: PaymentUncheckedCreateNestedOneWithoutBookingInput
@@ -18310,6 +18431,9 @@ export namespace Prisma {
     address?: StringFieldUpdateOperationsInput | string
     scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
     disability?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     client?: UserUpdateOneRequiredWithoutBookingsNestedInput
@@ -18333,6 +18457,9 @@ export namespace Prisma {
     address?: StringFieldUpdateOperationsInput | string
     scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
     disability?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     payment?: PaymentUncheckedUpdateOneWithoutBookingNestedInput
@@ -18352,6 +18479,9 @@ export namespace Prisma {
     address: string
     scheduledAt: Date | string
     disability?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    estimatedHours?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -18364,6 +18494,9 @@ export namespace Prisma {
     address?: StringFieldUpdateOperationsInput | string
     scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
     disability?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -18380,6 +18513,9 @@ export namespace Prisma {
     address?: StringFieldUpdateOperationsInput | string
     scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
     disability?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -19148,6 +19284,7 @@ export namespace Prisma {
   export type CompanionProfileCountOrderByAggregateInput = {
     id?: SortOrder
     profileId?: SortOrder
+    stripeAccountId?: SortOrder
     specialties?: SortOrder
     verified?: SortOrder
     backgroundCheck?: SortOrder
@@ -19168,6 +19305,7 @@ export namespace Prisma {
   export type CompanionProfileMaxOrderByAggregateInput = {
     id?: SortOrder
     profileId?: SortOrder
+    stripeAccountId?: SortOrder
     specialties?: SortOrder
     verified?: SortOrder
     backgroundCheck?: SortOrder
@@ -19183,6 +19321,7 @@ export namespace Prisma {
   export type CompanionProfileMinOrderByAggregateInput = {
     id?: SortOrder
     profileId?: SortOrder
+    stripeAccountId?: SortOrder
     specialties?: SortOrder
     verified?: SortOrder
     backgroundCheck?: SortOrder
@@ -19307,6 +19446,17 @@ export namespace Prisma {
     not?: NestedEnumBookingStatusFilter<$PrismaModel> | $Enums.BookingStatus
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type UserNullableRelationFilter = {
     is?: UserWhereInput | null
     isNot?: UserWhereInput | null
@@ -19344,8 +19494,15 @@ export namespace Prisma {
     address?: SortOrder
     scheduledAt?: SortOrder
     disability?: SortOrder
+    startedAt?: SortOrder
+    completedAt?: SortOrder
+    estimatedHours?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type BookingAvgOrderByAggregateInput = {
+    estimatedHours?: SortOrder
   }
 
   export type BookingMaxOrderByAggregateInput = {
@@ -19360,6 +19517,9 @@ export namespace Prisma {
     address?: SortOrder
     scheduledAt?: SortOrder
     disability?: SortOrder
+    startedAt?: SortOrder
+    completedAt?: SortOrder
+    estimatedHours?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -19376,8 +19536,15 @@ export namespace Prisma {
     address?: SortOrder
     scheduledAt?: SortOrder
     disability?: SortOrder
+    startedAt?: SortOrder
+    completedAt?: SortOrder
+    estimatedHours?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type BookingSumOrderByAggregateInput = {
+    estimatedHours?: SortOrder
   }
 
   export type EnumBookingStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -19388,6 +19555,20 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumBookingStatusFilter<$PrismaModel>
     _max?: NestedEnumBookingStatusFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type BookingRelationFilter = {
@@ -20224,6 +20405,10 @@ export namespace Prisma {
     set?: $Enums.BookingStatus
   }
 
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
   export type UserUpdateOneRequiredWithoutBookingsNestedInput = {
     create?: XOR<UserCreateWithoutBookingsInput, UserUncheckedCreateWithoutBookingsInput>
     connectOrCreate?: UserCreateOrConnectWithoutBookingsInput
@@ -20644,6 +20829,17 @@ export namespace Prisma {
     not?: NestedEnumBookingStatusFilter<$PrismaModel> | $Enums.BookingStatus
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type NestedEnumBookingStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.BookingStatus | EnumBookingStatusFieldRefInput<$PrismaModel>
     in?: $Enums.BookingStatus[] | ListEnumBookingStatusFieldRefInput<$PrismaModel>
@@ -20652,6 +20848,20 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumBookingStatusFilter<$PrismaModel>
     _max?: NestedEnumBookingStatusFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -20717,6 +20927,9 @@ export namespace Prisma {
     address: string
     scheduledAt: Date | string
     disability?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    estimatedHours?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     companion?: CompanionProfileCreateNestedOneWithoutBookingsInput
@@ -20738,6 +20951,9 @@ export namespace Prisma {
     address: string
     scheduledAt: Date | string
     disability?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    estimatedHours?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     payment?: PaymentUncheckedCreateNestedOneWithoutBookingInput
@@ -20802,6 +21018,9 @@ export namespace Prisma {
     address: string
     scheduledAt: Date | string
     disability?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    estimatedHours?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     client: UserCreateNestedOneWithoutBookingsInput
@@ -20823,6 +21042,9 @@ export namespace Prisma {
     address: string
     scheduledAt: Date | string
     disability?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    estimatedHours?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     payment?: PaymentUncheckedCreateNestedOneWithoutBookingInput
@@ -20969,6 +21191,9 @@ export namespace Prisma {
     address?: StringFilter<"Booking"> | string
     scheduledAt?: DateTimeFilter<"Booking"> | Date | string
     disability?: StringNullableFilter<"Booking"> | string | null
+    startedAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
+    estimatedHours?: FloatNullableFilter<"Booking"> | number | null
     createdAt?: DateTimeFilter<"Booking"> | Date | string
     updatedAt?: DateTimeFilter<"Booking"> | Date | string
   }
@@ -21419,6 +21644,7 @@ export namespace Prisma {
 
   export type CompanionProfileCreateWithoutProfileInput = {
     id?: string
+    stripeAccountId?: string | null
     specialties?: string | null
     verified?: boolean
     backgroundCheck?: string | null
@@ -21435,6 +21661,7 @@ export namespace Prisma {
 
   export type CompanionProfileUncheckedCreateWithoutProfileInput = {
     id?: string
+    stripeAccountId?: string | null
     specialties?: string | null
     verified?: boolean
     backgroundCheck?: string | null
@@ -21506,6 +21733,7 @@ export namespace Prisma {
 
   export type CompanionProfileUpdateWithoutProfileInput = {
     id?: StringFieldUpdateOperationsInput | string
+    stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     specialties?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     backgroundCheck?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21522,6 +21750,7 @@ export namespace Prisma {
 
   export type CompanionProfileUncheckedUpdateWithoutProfileInput = {
     id?: StringFieldUpdateOperationsInput | string
+    stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     specialties?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     backgroundCheck?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21583,6 +21812,9 @@ export namespace Prisma {
     address: string
     scheduledAt: Date | string
     disability?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    estimatedHours?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     client: UserCreateNestedOneWithoutBookingsInput
@@ -21604,6 +21836,9 @@ export namespace Prisma {
     address: string
     scheduledAt: Date | string
     disability?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    estimatedHours?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     payment?: PaymentUncheckedCreateNestedOneWithoutBookingInput
@@ -21747,6 +21982,9 @@ export namespace Prisma {
     address: string
     scheduledAt: Date | string
     disability?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    estimatedHours?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     client: UserCreateNestedOneWithoutBookingsInput
@@ -21768,6 +22006,9 @@ export namespace Prisma {
     address: string
     scheduledAt: Date | string
     disability?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    estimatedHours?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     payment?: PaymentUncheckedCreateNestedOneWithoutBookingInput
@@ -21803,6 +22044,7 @@ export namespace Prisma {
 
   export type CompanionProfileCreateWithoutAvailabilitySlotsInput = {
     id?: string
+    stripeAccountId?: string | null
     specialties?: string | null
     verified?: boolean
     backgroundCheck?: string | null
@@ -21820,6 +22062,7 @@ export namespace Prisma {
   export type CompanionProfileUncheckedCreateWithoutAvailabilitySlotsInput = {
     id?: string
     profileId: string
+    stripeAccountId?: string | null
     specialties?: string | null
     verified?: boolean
     backgroundCheck?: string | null
@@ -21851,6 +22094,7 @@ export namespace Prisma {
 
   export type CompanionProfileUpdateWithoutAvailabilitySlotsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     specialties?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     backgroundCheck?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21868,6 +22112,7 @@ export namespace Prisma {
   export type CompanionProfileUncheckedUpdateWithoutAvailabilitySlotsInput = {
     id?: StringFieldUpdateOperationsInput | string
     profileId?: StringFieldUpdateOperationsInput | string
+    stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     specialties?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     backgroundCheck?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21916,6 +22161,7 @@ export namespace Prisma {
 
   export type CompanionProfileCreateWithoutBookingsInput = {
     id?: string
+    stripeAccountId?: string | null
     specialties?: string | null
     verified?: boolean
     backgroundCheck?: string | null
@@ -21933,6 +22179,7 @@ export namespace Prisma {
   export type CompanionProfileUncheckedCreateWithoutBookingsInput = {
     id?: string
     profileId: string
+    stripeAccountId?: string | null
     specialties?: string | null
     verified?: boolean
     backgroundCheck?: string | null
@@ -22130,6 +22377,7 @@ export namespace Prisma {
 
   export type CompanionProfileUpdateWithoutBookingsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     specialties?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     backgroundCheck?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22147,6 +22395,7 @@ export namespace Prisma {
   export type CompanionProfileUncheckedUpdateWithoutBookingsInput = {
     id?: StringFieldUpdateOperationsInput | string
     profileId?: StringFieldUpdateOperationsInput | string
+    stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     specialties?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     backgroundCheck?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22325,6 +22574,9 @@ export namespace Prisma {
     address: string
     scheduledAt: Date | string
     disability?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    estimatedHours?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     client: UserCreateNestedOneWithoutBookingsInput
@@ -22347,6 +22599,9 @@ export namespace Prisma {
     address: string
     scheduledAt: Date | string
     disability?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    estimatedHours?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     report?: ReportUncheckedCreateNestedOneWithoutBookingInput
@@ -22377,6 +22632,9 @@ export namespace Prisma {
     address?: StringFieldUpdateOperationsInput | string
     scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
     disability?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     client?: UserUpdateOneRequiredWithoutBookingsNestedInput
@@ -22399,6 +22657,9 @@ export namespace Prisma {
     address?: StringFieldUpdateOperationsInput | string
     scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
     disability?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     report?: ReportUncheckedUpdateOneWithoutBookingNestedInput
@@ -22413,6 +22674,9 @@ export namespace Prisma {
     address: string
     scheduledAt: Date | string
     disability?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    estimatedHours?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     client: UserCreateNestedOneWithoutBookingsInput
@@ -22435,6 +22699,9 @@ export namespace Prisma {
     address: string
     scheduledAt: Date | string
     disability?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    estimatedHours?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     payment?: PaymentUncheckedCreateNestedOneWithoutBookingInput
@@ -22489,6 +22756,9 @@ export namespace Prisma {
     address?: StringFieldUpdateOperationsInput | string
     scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
     disability?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     client?: UserUpdateOneRequiredWithoutBookingsNestedInput
@@ -22511,6 +22781,9 @@ export namespace Prisma {
     address?: StringFieldUpdateOperationsInput | string
     scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
     disability?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     payment?: PaymentUncheckedUpdateOneWithoutBookingNestedInput
@@ -22596,6 +22869,9 @@ export namespace Prisma {
     address: string
     scheduledAt: Date | string
     disability?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    estimatedHours?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     client: UserCreateNestedOneWithoutBookingsInput
@@ -22618,6 +22894,9 @@ export namespace Prisma {
     address: string
     scheduledAt: Date | string
     disability?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    estimatedHours?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     payment?: PaymentUncheckedCreateNestedOneWithoutBookingInput
@@ -22648,6 +22927,9 @@ export namespace Prisma {
     address?: StringFieldUpdateOperationsInput | string
     scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
     disability?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     client?: UserUpdateOneRequiredWithoutBookingsNestedInput
@@ -22670,6 +22952,9 @@ export namespace Prisma {
     address?: StringFieldUpdateOperationsInput | string
     scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
     disability?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     payment?: PaymentUncheckedUpdateOneWithoutBookingNestedInput
@@ -22687,6 +22972,9 @@ export namespace Prisma {
     address: string
     scheduledAt: Date | string
     disability?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    estimatedHours?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -22708,6 +22996,9 @@ export namespace Prisma {
     address: string
     scheduledAt: Date | string
     disability?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    estimatedHours?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -22731,6 +23022,9 @@ export namespace Prisma {
     address?: StringFieldUpdateOperationsInput | string
     scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
     disability?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companion?: CompanionProfileUpdateOneWithoutBookingsNestedInput
@@ -22752,6 +23046,9 @@ export namespace Prisma {
     address?: StringFieldUpdateOperationsInput | string
     scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
     disability?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     payment?: PaymentUncheckedUpdateOneWithoutBookingNestedInput
@@ -22770,6 +23067,9 @@ export namespace Prisma {
     address?: StringFieldUpdateOperationsInput | string
     scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
     disability?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22800,6 +23100,9 @@ export namespace Prisma {
     address?: StringFieldUpdateOperationsInput | string
     scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
     disability?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     client?: UserUpdateOneRequiredWithoutBookingsNestedInput
@@ -22821,6 +23124,9 @@ export namespace Prisma {
     address?: StringFieldUpdateOperationsInput | string
     scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
     disability?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     payment?: PaymentUncheckedUpdateOneWithoutBookingNestedInput
@@ -22839,6 +23145,9 @@ export namespace Prisma {
     address?: StringFieldUpdateOperationsInput | string
     scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
     disability?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22887,6 +23196,9 @@ export namespace Prisma {
     address: string
     scheduledAt: Date | string
     disability?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    estimatedHours?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -22908,6 +23220,9 @@ export namespace Prisma {
     address?: StringFieldUpdateOperationsInput | string
     scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
     disability?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     client?: UserUpdateOneRequiredWithoutBookingsNestedInput
@@ -22929,6 +23244,9 @@ export namespace Prisma {
     address?: StringFieldUpdateOperationsInput | string
     scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
     disability?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     payment?: PaymentUncheckedUpdateOneWithoutBookingNestedInput
@@ -22947,6 +23265,9 @@ export namespace Prisma {
     address?: StringFieldUpdateOperationsInput | string
     scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
     disability?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22989,6 +23310,9 @@ export namespace Prisma {
     address: string
     scheduledAt: Date | string
     disability?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    estimatedHours?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -23001,6 +23325,9 @@ export namespace Prisma {
     address?: StringFieldUpdateOperationsInput | string
     scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
     disability?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     client?: UserUpdateOneRequiredWithoutBookingsNestedInput
@@ -23022,6 +23349,9 @@ export namespace Prisma {
     address?: StringFieldUpdateOperationsInput | string
     scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
     disability?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     payment?: PaymentUncheckedUpdateOneWithoutBookingNestedInput
@@ -23040,6 +23370,9 @@ export namespace Prisma {
     address?: StringFieldUpdateOperationsInput | string
     scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
     disability?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

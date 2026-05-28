@@ -7,6 +7,7 @@ import {
   createMockMailService,
   createMockChatService,
   createMockAvailabilityService,
+  createMockPaymentsService,
 } from '../../test-utils/services';
 import { mockUser, mockBooking, mockService, mockProfile, mockCompanionProfile } from '../../test-utils/factories';
 import {
@@ -23,6 +24,7 @@ describe('BookingsService', () => {
   let mailService: ReturnType<typeof createMockMailService>;
   let configService: ReturnType<typeof createMockConfigService>;
   let availabilityService: ReturnType<typeof createMockAvailabilityService>;
+  let paymentsService: ReturnType<typeof createMockPaymentsService>;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -32,6 +34,7 @@ describe('BookingsService', () => {
     mailService = createMockMailService();
     configService = createMockConfigService();
     availabilityService = createMockAvailabilityService();
+    paymentsService = createMockPaymentsService();
 
     service = new BookingsService(
       prisma as any,
@@ -40,6 +43,7 @@ describe('BookingsService', () => {
       mailService as any,
       configService as any,
       availabilityService as any,
+      paymentsService as any,
     );
   });
 
@@ -553,6 +557,134 @@ describe('BookingsService', () => {
       );
 
       await expect(service.completeByClient('b-1', 'other-user')).rejects.toThrow(ForbiddenException);
+    });
+  });
+
+  describe('billing and rounding rules on completeByClient', () => {
+    it('rounds 15 minutes to 1.0 hour (€13 total, €2 fee)', async () => {
+      const now = new Date();
+      const startedAt = new Date(now.getTime() - 15 * 60 * 1000); // 15 mins ago
+      const booking = mockBooking({
+        status: BookingStatus.IN_PROGRESS,
+        clientId: 'client-1',
+        companionId: 'comp-1',
+        serviceType: 'Médico',
+        startedAt,
+        payment: {
+          id: 'pay-1',
+          bookingId: 'b-1',
+          stripePaymentId: 'pi_test_123',
+          amount: 1300,
+          fee: 200,
+          status: 'HOLD',
+          currency: 'EUR',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      } as any);
+      prisma.booking.findUnique.mockResolvedValue(booking);
+      prisma.booking.update.mockResolvedValue(mockBooking({ status: BookingStatus.COMPLETED }));
+      prisma.user.findUnique.mockResolvedValue(mockUser({ id: 'client-1', email: 'client@test.com' }));
+
+      await service.completeByClient('b-1', 'client-1');
+
+      expect(paymentsService.capturePayment).toHaveBeenCalledWith(
+        'pi_test_123',
+        1300, // 1 hour * 13 euros * 100
+        200,  // 1 hour * 2 euros * 100
+      );
+      expect(prisma.payment.update).toHaveBeenCalledWith(expect.objectContaining({
+        where: { id: 'pay-1' },
+        data: {
+          amount: 1300,
+          fee: 200,
+          status: 'CONFIRMED',
+        },
+      }));
+    });
+
+    it('rounds 1 hour 33 minutes to 1.5 hours (€19.50 total, €3 fee)', async () => {
+      const now = new Date();
+      const startedAt = new Date(now.getTime() - 93 * 60 * 1000); // 93 mins ago
+      const booking = mockBooking({
+        status: BookingStatus.IN_PROGRESS,
+        clientId: 'client-1',
+        companionId: 'comp-1',
+        serviceType: 'Médico',
+        startedAt,
+        payment: {
+          id: 'pay-1',
+          bookingId: 'b-1',
+          stripePaymentId: 'pi_test_123',
+          amount: 1300,
+          fee: 200,
+          status: 'HOLD',
+          currency: 'EUR',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      } as any);
+      prisma.booking.findUnique.mockResolvedValue(booking);
+      prisma.booking.update.mockResolvedValue(mockBooking({ status: BookingStatus.COMPLETED }));
+      prisma.user.findUnique.mockResolvedValue(mockUser({ id: 'client-1', email: 'client@test.com' }));
+
+      await service.completeByClient('b-1', 'client-1');
+
+      expect(paymentsService.capturePayment).toHaveBeenCalledWith(
+        'pi_test_123',
+        1950, // 1.5 hours * 13 euros * 100
+        300,  // 1.5 hours * 2 euros * 100
+      );
+      expect(prisma.payment.update).toHaveBeenCalledWith(expect.objectContaining({
+        where: { id: 'pay-1' },
+        data: {
+          amount: 1950,
+          fee: 300,
+          status: 'CONFIRMED',
+        },
+      }));
+    });
+
+    it('rounds 1 hour 45 minutes to 2.0 hours (€26 total, €4 fee)', async () => {
+      const now = new Date();
+      const startedAt = new Date(now.getTime() - 105 * 60 * 1000); // 105 mins ago
+      const booking = mockBooking({
+        status: BookingStatus.IN_PROGRESS,
+        clientId: 'client-1',
+        companionId: 'comp-1',
+        serviceType: 'Médico',
+        startedAt,
+        payment: {
+          id: 'pay-1',
+          bookingId: 'b-1',
+          stripePaymentId: 'pi_test_123',
+          amount: 1300,
+          fee: 200,
+          status: 'HOLD',
+          currency: 'EUR',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      } as any);
+      prisma.booking.findUnique.mockResolvedValue(booking);
+      prisma.booking.update.mockResolvedValue(mockBooking({ status: BookingStatus.COMPLETED }));
+      prisma.user.findUnique.mockResolvedValue(mockUser({ id: 'client-1', email: 'client@test.com' }));
+
+      await service.completeByClient('b-1', 'client-1');
+
+      expect(paymentsService.capturePayment).toHaveBeenCalledWith(
+        'pi_test_123',
+        2600, // 2.0 hours * 13 euros * 100
+        400,  // 2.0 hours * 2 euros * 100
+      );
+      expect(prisma.payment.update).toHaveBeenCalledWith(expect.objectContaining({
+        where: { id: 'pay-1' },
+        data: {
+          amount: 2600,
+          fee: 400,
+          status: 'CONFIRMED',
+        },
+      }));
     });
   });
 });

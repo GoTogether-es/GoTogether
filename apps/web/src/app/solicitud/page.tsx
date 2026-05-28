@@ -34,10 +34,15 @@ function SolicitudForm() {
     setError,
   } = useForm<SolicitudFormData>({
     resolver: zodResolver(solicitudSchema),
+    defaultValues: {
+      estimatedHours: 1,
+    },
   });
 
   const selectedServiceId = watch('serviceId');
   const selectedService = services.find((s) => s.id === selectedServiceId);
+  const estimatedHoursValue = watch('estimatedHours') || 1;
+  const estimatedCost = Number(estimatedHoursValue) * 13;
 
   const onSubmit = async (data: SolicitudFormData) => {
     const dateError = validateFutureDate(data.date, data.time);
@@ -62,6 +67,7 @@ function SolicitudForm() {
         summary: data.notes || undefined,
         disability: data.disability !== 'Ninguna / Otra' && data.disability ? data.disability : undefined,
         companionId: companionId || undefined,
+        estimatedHours: Number(data.estimatedHours),
       });
       if (!mountedRef.current) return;
       await requestBooking(booking.id);
@@ -133,7 +139,7 @@ function SolicitudForm() {
               />
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
               <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="date">
                 Fecha prevista
@@ -152,6 +158,39 @@ function SolicitudForm() {
                 <p className="text-red-500 text-xs mt-1" role="alert">{errors.time.message}</p>
               )}
             </div>
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="estimatedHours">
+                Duración estimada
+              </label>
+              <select id="estimatedHours" className="gt-input" {...register('estimatedHours')}>
+                <option value="1">1 hora</option>
+                <option value="1.5">1.5 horas</option>
+                <option value="2">2 horas</option>
+                <option value="2.5">2.5 horas</option>
+                <option value="3">3 horas</option>
+                <option value="4">4 horas</option>
+                <option value="5">5 horas</option>
+                <option value="6">6 horas</option>
+                <option value="8">8 horas</option>
+              </select>
+              {errors.estimatedHours && (
+                <p className="text-red-500 text-xs mt-1" role="alert">{errors.estimatedHours.message}</p>
+              )}
+            </div>
+          </div>
+
+          <div className="p-4 bg-green-50 rounded-2xl border border-green-100 flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div>
+              <p className="text-sm font-semibold text-green-800">
+                Importe estimado: <span className="text-lg font-bold">{new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(estimatedCost)}</span>
+              </p>
+              <p className="text-xs text-green-600 mt-0.5">
+                Tarifa fija de 13,00 €/h (11,00 €/h para el acompañante y 2,00 €/h de gestión).
+              </p>
+            </div>
+            <p className="text-xs text-green-600 max-w-xs md:text-right">
+              *Se preautorizará este importe en tu tarjeta. El cobro final se ajustará al tiempo real (mínimo 1 hora, redondeado a la 1/2 hora más cercana).
+            </p>
           </div>
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="address">

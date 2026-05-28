@@ -88,6 +88,7 @@ model Profile {
 model CompanionProfile {
   id                String   @id @default(uuid())
   profileId         String   @unique
+  stripeAccountId   String?  // ID de cuenta conectada de Stripe
   specialties       String?
   verified          Boolean  @default(false)
   backgroundCheck   String?
@@ -120,6 +121,9 @@ model Booking {
   address       String
   scheduledAt   DateTime
   disability    String?
+  startedAt     DateTime?     // Hora de inicio real
+  completedAt   DateTime?     // Hora de finalización real
+  estimatedHours Float?       @default(1.0) // Duración estimada por el cliente
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 }

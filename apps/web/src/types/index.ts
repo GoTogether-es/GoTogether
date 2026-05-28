@@ -79,6 +79,9 @@ export type BookingData = {
   address: string;
   scheduledAt: string;
   disability: string | null;
+  startedAt?: string | null;
+  completedAt?: string | null;
+  estimatedHours?: number | null;
   createdAt: string;
   updatedAt: string;
   client?: { id: string; profile?: { fullName: string } | null } | null;
