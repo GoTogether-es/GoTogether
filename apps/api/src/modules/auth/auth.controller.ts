@@ -28,25 +28,36 @@ export class AuthController {
     }
 
     const token = auth.split(' ')[1];
-    const jwtSecret = process.env.SUPABASE_JWT_SECRET;
+    const tokenPreview = token.substring(0, 20) + '...';
 
+    // Decode header
+    let algo = 'unknown';
+    try {
+      const hdr = JSON.parse(Buffer.from(token.split('.')[0], 'base64').toString());
+      algo = hdr.alg || 'unknown';
+    } catch {}
+
+    console.log('[getMe] token algo:', algo, 'preview:', tokenPreview);
+
+    const jwtSecret = process.env.SUPABASE_JWT_SECRET;
     let userId: string | null = null;
     let email: string | null = null;
+    let step = '';
 
-    // Intentar HS256 local
     if (jwtSecret) {
       try {
         const jwt = require('jsonwebtoken');
         const decoded = jwt.verify(token, jwtSecret, { algorithms: ['HS256'] }) as any;
         userId = decoded?.sub ?? null;
         email = decoded?.email ?? null;
-        console.log('[getMe] HS256 OK sub:', userId, 'email:', email);
+        step = 'HS256 OK';
       } catch (e: any) {
-        console.log('[getMe] HS256 falló:', e.message);
+        step = 'HS256 FAIL: ' + (e?.message || String(e));
       }
+    } else {
+      step = 'No JWT secret configured';
     }
 
-    // Fallback getUser
     if (!userId || !email) {
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
       const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -58,26 +69,28 @@ export class AuthController {
           if (!error && data?.user) {
             userId = data.user.id;
             email = data.user.email;
-            console.log('[getMe] getUser OK sub:', userId);
+            step += ' | getUser OK';
           } else {
-            console.error('[getMe] getUser falló:', error?.message);
+            step += ' | getUser FAIL: ' + (error?.message || String(error));
           }
         } catch (e: any) {
-          console.error('[getMe] getUser exception:', e.message);
+          step += ' | getUser EXCEPTION: ' + (e?.message || String(e));
         }
+      } else {
+        step += ' | No supabase config';
       }
     }
 
+    console.log('[getMe] result:', step, 'userId:', userId);
+
     if (!userId || !email) {
-      throw new UnauthorizedException('Invalid or expired token');
+      throw new UnauthorizedException(step + ' | tokenPreview= ' + tokenPreview);
     }
 
     try {
       const user = await this.authService.validateAndSyncUser({ userId, email });
-      console.log('[getMe] success userId:', user?.id);
       return user ?? { id: userId, email, role: null };
     } catch (e: any) {
-      console.error('[getMe] validateAndSyncUser error:', e.message);
       return { id: userId, email, role: null };
     }
   }
