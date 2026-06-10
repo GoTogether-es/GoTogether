@@ -42,6 +42,6 @@ export class RolesAuthGuard extends SupabaseUserGuard implements CanActivate {
     if (!requiredRoles || requiredRoles.length === 0) return true;
 
     const request = context.switchToHttp().getRequest();
-    return requiredRoles.includes(request.user.role);
+    return requiredRoles.includes(request.user.role as UserRole);
   }
 }

@@ -221,7 +221,7 @@ export async function requestMagicLink(email: string, next?: string): Promise<vo
   if (!response.ok) throw new Error('Failed to request magic link');
 }
 
-export async function syncUser(): Promise<{ id: string; email: string; role: string }> {
+export async function syncUser(): Promise<{ id: string; email: string; role: string | null }> {
   const headers = await getAuthHeaders();
   if (!headers.Authorization) {
     throw new Error('Not authenticated');
