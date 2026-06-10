@@ -223,9 +223,16 @@ export async function requestMagicLink(email: string, next?: string): Promise<vo
 
 export async function syncUser(): Promise<{ id: string; email: string; role: string }> {
   const headers = await getAuthHeaders();
-  if (!headers.Authorization) throw new Error('Not authenticated');
+  if (!headers.Authorization) {
+    console.error('[syncUser] No hay token de autorización');
+    throw new Error('Not authenticated');
+  }
   const response = await fetch(`${API_URL}/auth/me`, { headers });
-  if (!response.ok) throw new Error('Failed to sync user');
+  if (!response.ok) {
+    const body = await response.text().catch(() => '');
+    console.error(`[syncUser] API error ${response.status}:`, body);
+    throw new Error('Failed to sync user');
+  }
   return response.json();
 }
 

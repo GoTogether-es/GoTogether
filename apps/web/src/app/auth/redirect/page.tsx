@@ -37,8 +37,9 @@ export default function AuthRedirectPage() {
             router.push('/onboarding');
           }
         }
-      } catch {
+      } catch (err) {
         if (!cancelled) {
+          console.error('[AuthRedirect] Error en verificación:', err);
           setStatus('Error al verificar tu cuenta. Redirigiendo...');
           setTimeout(() => router.push('/auth/login'), 1500);
         }

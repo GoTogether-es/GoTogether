@@ -41,7 +41,7 @@ export default function VerifyPage() {
           router.push(nextRef.current);
           return;
         } else {
-          console.error('Error de sesión:', error);
+          console.error('[AuthVerify] Error de sesión en setSession:', error?.message || error, error);
           setDetails('No se pudo validar el token de acceso.');
           setStatus('Error al validar el token.');
           timeout = setTimeout(() => router.push('/auth/login?error=invalid_token'), 4000);

@@ -2,6 +2,7 @@ import { Injectable, CanActivate, ExecutionContext, UnauthorizedException, Inter
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class SupabaseUserGuard implements CanActivate {
@@ -29,6 +30,21 @@ export class SupabaseUserGuard implements CanActivate {
     return this.supabaseAdmin;
   }
 
+  private extractUserId(token: string): { userId: string; email: string } | null {
+    try {
+      const jwtSecret = this.configService.get<string>('SUPABASE_JWT_SECRET');
+      if (!jwtSecret) return null;
+
+      const decoded = jwt.verify(token, jwtSecret, { algorithms: ['HS256'] }) as any;
+      if (decoded?.sub && decoded?.email) {
+        return { userId: decoded.sub, email: decoded.email };
+      }
+      return null;
+    } catch {
+      return null;
+    }
+  }
+
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const authHeader = request.headers.authorization;
@@ -39,6 +55,24 @@ export class SupabaseUserGuard implements CanActivate {
 
     const token = authHeader.split(' ')[1];
 
+    // Fast path: verify JWT locally with HS256 + SUPABASE_JWT_SECRET
+    const localUser = this.extractUserId(token);
+    if (localUser) {
+      const dbUser = await this.prisma.user.findUnique({
+        where: { id: localUser.userId },
+        select: { role: true },
+      });
+
+      request.user = {
+        userId: localUser.userId,
+        email: localUser.email,
+        role: dbUser?.role ?? null,
+      };
+
+      return true;
+    }
+
+    // Fallback: verify via Supabase Admin API (works with ES256/RS256 JWKs)
     const { data: { user }, error } = await this.getAdminClient().auth.getUser(token);
 
     if (error || !user) {
