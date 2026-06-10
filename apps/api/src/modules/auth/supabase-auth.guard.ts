@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { SupabaseUserGuard } from './supabase-user.guard';
 
 @Injectable()
-export class SupabaseAuthGuard extends AuthGuard('supabase') {}
+export class SupabaseAuthGuard extends SupabaseUserGuard {}

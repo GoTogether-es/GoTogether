@@ -1,7 +1,9 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { ConfigService } from '@nestjs/config';
 import { Reflector } from '@nestjs/core';
 import { UserRole } from '../../generated/client';
+import { SupabaseUserGuard } from './supabase-user.guard';
+import { PrismaService } from '../prisma/prisma.service';
 
 // NOTE: RolesAuthGuard and Roles are available for use with @UseGuards(RolesAuthGuard)
 // and @Roles(UserRole.xxx) decorators. Currently, role enforcement happens at the
@@ -19,9 +21,13 @@ export const Roles = (...roles: UserRole[]) => {
 };
 
 @Injectable()
-export class RolesAuthGuard extends AuthGuard('supabase') implements CanActivate {
-  constructor(private readonly rolesReflector: Reflector) {
-    super();
+export class RolesAuthGuard extends SupabaseUserGuard implements CanActivate {
+  constructor(
+    private readonly rolesReflector: Reflector,
+    configService: ConfigService,
+    prisma: PrismaService,
+  ) {
+    super(configService, prisma);
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
