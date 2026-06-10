@@ -224,42 +224,26 @@ export async function requestMagicLink(email: string, next?: string): Promise<vo
 export async function syncUser(): Promise<{ id: string; email: string; role: string }> {
   const headers = await getAuthHeaders();
   if (!headers.Authorization) {
-    console.error('[syncUser] No hay token de autorización');
     throw new Error('Not authenticated');
   }
 
-  const tokenPreview = headers.Authorization.substring(0, 30) + '...';
-  const url = `${API_URL}/auth/me`;
-
-  console.log('[syncUser] Llamando a:', url, 'token:', tokenPreview);
-
   let response: Response;
   try {
-    response = await fetch(url, { headers });
+    response = await fetch(`${API_URL}/auth/me`, { headers });
   } catch (fetchErr: any) {
-    console.error('[syncUser] fetch falló:', fetchErr?.message || fetchErr);
     throw new Error(`Network error: ${fetchErr?.message || fetchErr}`);
   }
-
-  const status = response.status;
-  const contentType = response.headers.get('content-type') || '';
-  const contentLength = response.headers.get('content-length') || '';
 
   const text = await response.text().catch(() => '');
 
   if (!response.ok) {
-    console.error(`[syncUser] API error ${status}:`, text);
-    throw new Error(`API error ${status}: ${text.substring(0, 200)}`);
-  }
-
-  if (!text || text.length === 0) {
-    throw new Error(`Empty response ${status} (${contentType}, length=${contentLength}). Token: ${tokenPreview}`);
+    throw new Error(`API error ${response.status}`);
   }
 
   try {
     return JSON.parse(text);
   } catch {
-    throw new Error(`Invalid JSON response ${status}: "${text.substring(0, 200)}"`);
+    throw new Error('Invalid response from server');
   }
 }
 

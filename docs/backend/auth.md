@@ -31,12 +31,13 @@ GoTogether usa **Supabase Auth** para autenticación y **guards de NestJS** para
      │ 6. GET /auth/me (Bearer JWT)  │                  │
      │──────────────→│──────────────→│                  │
      │               │               │ 7. validate JWT  │
-     │               │               │ (JWKS endpoint)  │
+     │               │               │ (local HS256 +   │
+     │               │               │  getUser fallback)│
      │               │               │─────────────────→│
      │               │               │←─────── ok ──────│
      │               │←─── user ─────│                  │
      │               │               │                  │
-     │ 8. Todas las│ peticiones incluyen Authorization: Bearer <jwt>
+     │ 8. Todas las peticiones incluyen Authorization: Bearer <jwt>
      │──────────────→│──────────────→│                  │
 ```
 
@@ -58,28 +59,25 @@ GoTogether usa **Supabase Auth** para autenticación y **guards de NestJS** para
 - `apps/api/src/modules/auth/auth.service.ts` — Lógica de validación
 - `apps/api/src/modules/auth/mail.templates.ts` — Plantillas HTML
 
-## Validación JWT en el backend (SupabaseJwtStrategy)
+## Validación JWT en el backend (SupabaseUserGuard)
 
-El backend valida los JWT de Supabase usando:
+Desde v0.1.1-alpha se usa `SupabaseUserGuard` que implementa:
 
-1. Obtiene la clave pública desde `/.well-known/jwks.json` de Supabase
-2. Extrae el `kid` del header del JWT
-3. Busca la clave correspondiente en el JWKS
-4. Verifica la firma con `RS256`
-5. Valida `iss` (issuer = Supabase URL) y `aud` (audience = 'authenticated')
+1. **Fast path**: Verifica el JWT localmente con `jsonwebtoken.verify(token, SUPABASE_JWT_SECRET, { algorithms: ['HS256'] })` — sin llamadas HTTP a Supabase
+2. **Fallback**: Si el JWT usa ES256/RS256, llama a `supabaseAdmin.auth.getUser(token)` para validar via la API de Supabase
 
 El resultado se almacena en `req.user` como:
 ```typescript
 { userId: string, email: string, role: UserRole | null }
 ```
 
-> [!note] Desde v0.1.1-alpha, `SupabaseJwtStrategy.validate()` consulta la BD para incluir `role` en `req.user`. El rol está disponible en todos los endpoints protegidos con JWT.
+> [!note] La verificación HS256 local usa el `SUPABASE_JWT_SECRET` definido en las variables de entorno. Este secreto debe coincidir con el configurado en el dashboard de Supabase (Project Settings → API → JWT Settings).
 
 ## Guards disponibles
 
 ### SupabaseAuthGuard
 - **Archivo:** `supabase-auth.guard.ts`
-- **Función:** Valida JWT de Supabase
+- **Función:** Valida JWT de Supabase (extiende SupabaseUserGuard)
 - **Uso:** `@UseGuards(SupabaseAuthGuard)`
 - **Aplicado en:** la mayoría de endpoints protegidos
 
@@ -100,6 +98,53 @@ El resultado se almacena en `req.user` como:
 - **Función:** Combina autenticación JWT + verificación de roles
 - **Uso:** `@Roles(UserRole.SUPERVISOR)` + `@UseGuards(RolesAuthGuard)`
 - **Estado:** Funcional desde v0.1.1-alpha
+
+## Troubleshooting
+
+### Error "Unexpected end of JSON input" al hacer login
+
+**Causa:** NestJS convierte automáticamente un `return null` del controlador en una respuesta `204 No Content` (body vacío). Si el frontend intenta `response.json()` sobre un 204, obtiene este error.
+
+**Solución:** En vez de devolver `null`, el controlador debe lanzar una excepción HTTP apropiada:
+
+```typescript
+// ❌ Incorrecto — NestJS devuelve 204 No Content
+@Get('me')
+getMe(@Request() req: any) {
+  return this.service.getData(req.user.userId); // devuelve null
+}
+
+// ✅ Correcto — NestJS devuelve 404 con JSON
+@Get('me')
+async getMe(@Request() req: any) {
+  const data = await this.service.getData(req.user.userId);
+  if (!data) throw new NotFoundException('Not found');
+  return data;
+}
+```
+
+> [!warning] Cualquier endpoint que pueda devolver `null` DEBE manejar ese caso explícitamente con una excepción HTTP. NestJS no diferencia entre "sin datos" y "respuesta vacía" cuando el valor de retorno es `null`.
+
+### Error ERR_REQUIRE_ESM con jose
+
+**Causa:** `jwks-rsa` intenta hacer `require()` de `jose` (módulo ESM) en el runtime CommonJS de Vercel.
+
+**Solución:** Se eliminó la dependencia `jwks-rsa` y se reemplazó por `SupabaseUserGuard` que usa `jsonwebtoken` (CJS nativo) y `supabaseAdmin.auth.getUser()` como fallback.
+
+### Variables de entorno faltantes en Vercel
+
+Si el API o el frontend no funcionan tras un deploy:
+
+```bash
+# Verificar que estas variables existen en Vercel Dashboard → Settings → Environment Variables:
+NEXT_PUBLIC_SUPABASE_URL=https://ifuqhagjfwybzlsxkqhp.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGci...
+SUPABASE_JWT_SECRET=WOpAYB...
+NEXT_PUBLIC_APP_URL=https://go-together-m2gp.vercel.app
+NEXT_PUBLIC_API_URL=https://go-together-api-tau.vercel.app
+RESEND_API_KEY=re_...
+RESEND_FROM=GoTogether <info@gotogether.es>
+```
 
 ## Middleware de Next.js
 

@@ -58,7 +58,6 @@ export class SupabaseUserGuard implements CanActivate {
     // Fast path: verify JWT locally with HS256 + SUPABASE_JWT_SECRET
     const localUser = this.extractUserId(token);
     if (localUser) {
-      console.log('[SupabaseUserGuard] JWT verificado localmente:', localUser.userId, localUser.email);
       const dbUser = await this.prisma.user.findUnique({
         where: { id: localUser.userId },
         select: { role: true },
@@ -73,11 +72,10 @@ export class SupabaseUserGuard implements CanActivate {
       return true;
     }
 
-    console.log('[SupabaseUserGuard] Fallback a getUser()');
+    // Fallback: verify via Supabase Admin API
     const { data: { user }, error } = await this.getAdminClient().auth.getUser(token);
 
     if (error || !user) {
-      console.error('[SupabaseUserGuard] getUser() falló:', error?.message || error);
       throw new UnauthorizedException('Invalid or expired token');
     }
 

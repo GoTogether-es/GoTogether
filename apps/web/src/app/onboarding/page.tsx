@@ -3,7 +3,6 @@
 import { useRouter } from 'next/navigation';
 import { Card, Container, Section } from '@gotogether/ui';
 import { User, UserPlus, ShieldCheck, ArrowRight } from 'lucide-react';
-import { LinkButton } from '@/components/link-button';
 import { StepIndicator } from '@/components/step-indicator';
 
 export default function OnboardingPage() {
@@ -86,12 +85,6 @@ export default function OnboardingPage() {
             })}
           </div>
 
-          <p className="mt-10 text-sm text-gray-400">
-            ¿Ya tienes cuenta?{' '}
-            <LinkButton href="/auth/login" variant="ghost" className="text-sm px-2 py-1">
-              Inicia sesión aquí
-            </LinkButton>
-          </p>
         </div>
       </Container>
     </Section>
