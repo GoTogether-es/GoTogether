@@ -1,4 +1,4 @@
-import { Controller, Get, Put, Body, UseGuards, Request, Param } from '@nestjs/common';
+import { Controller, Get, Put, Body, UseGuards, Request, Param, NotFoundException } from '@nestjs/common';
 import { ProfilesService } from './profiles.service';
 import { SupabaseAuthGuard } from '../auth/supabase-auth.guard';
 import { UpsertProfileDto } from './dto/upsert-profile.dto';
@@ -9,8 +9,10 @@ export class ProfilesController {
 
   @UseGuards(SupabaseAuthGuard)
   @Get('me')
-  getMe(@Request() req: any) {
-    return this.profilesService.getProfileByUserId(req.user.userId);
+  async getMe(@Request() req: any) {
+    const profile = await this.profilesService.getProfileByUserId(req.user.userId);
+    if (!profile) throw new NotFoundException('Profile not found');
+    return profile;
   }
 
   @UseGuards(SupabaseAuthGuard)
