@@ -12,13 +12,6 @@ jest.mock('bcryptjs', () => ({
   compare: jest.fn(),
 }));
 
-jest.mock('@nestjs/passport', () => ({
-  AuthGuard: jest.fn().mockImplementation((name: string) => {
-    return class {
-      canActivate = jest.fn().mockResolvedValue(true);
-    };
-  }),
-}));
 
 describe('AdminGuard', () => {
   let configService: ReturnType<typeof createMockConfigService>;
