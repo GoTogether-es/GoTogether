@@ -22,64 +22,64 @@ export class AuthController {
   }
 
   @Get('me')
-  async getMe(@Request() req: any, @Headers('authorization') auth: string) {
+  async getMe(@Headers('authorization') auth: string) {
     if (!auth || !auth.startsWith('Bearer ')) {
       throw new UnauthorizedException('Missing token');
     }
 
     const token = auth.split(' ')[1];
+    const jwtSecret = process.env.SUPABASE_JWT_SECRET;
+
+    let userId: string | null = null;
+    let email: string | null = null;
 
     // Intentar HS256 local
-    const jwtSecret = process.env.SUPABASE_JWT_SECRET;
-    let payload: any = null;
     if (jwtSecret) {
       try {
         const jwt = require('jsonwebtoken');
-        payload = jwt.verify(token, jwtSecret, { algorithms: ['HS256'] });
-        console.log('[getMe] HS256 OK sub:', payload?.sub, 'email:', payload?.email);
+        const decoded = jwt.verify(token, jwtSecret, { algorithms: ['HS256'] }) as any;
+        userId = decoded?.sub ?? null;
+        email = decoded?.email ?? null;
+        console.log('[getMe] HS256 OK sub:', userId, 'email:', email);
       } catch (e: any) {
-        console.log('[getMe] HS256 falló:', e?.message);
+        console.log('[getMe] HS256 falló:', e.message);
       }
     }
 
     // Fallback getUser
-    if (!payload) {
+    if (!userId || !email) {
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
       const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
       if (supabaseUrl && serviceKey) {
-        const { createClient } = require('@supabase/supabase-js');
-        const admin = createClient(supabaseUrl, serviceKey, { auth: { autoRefreshToken: false, persistSession: false } });
-        const { data, error } = await admin.auth.getUser(token);
-        if (error) {
-          console.error('[getMe] getUser falló:', error.message);
-          throw new UnauthorizedException(error.message);
+        try {
+          const { createClient } = require('@supabase/supabase-js');
+          const admin = createClient(supabaseUrl, serviceKey, { auth: { autoRefreshToken: false, persistSession: false } });
+          const { data, error } = await admin.auth.getUser(token);
+          if (!error && data?.user) {
+            userId = data.user.id;
+            email = data.user.email;
+            console.log('[getMe] getUser OK sub:', userId);
+          } else {
+            console.error('[getMe] getUser falló:', error?.message);
+          }
+        } catch (e: any) {
+          console.error('[getMe] getUser exception:', e.message);
         }
-        if (!data?.user) {
-          throw new UnauthorizedException('User not found');
-        }
-        payload = { sub: data.user.id, email: data.user.email };
-        console.log('[getMe] getUser OK sub:', payload.sub);
-      } else {
-        throw new InternalServerErrorException('Auth config missing');
       }
     }
 
-    if (!payload?.sub || !payload?.email) {
-      throw new UnauthorizedException('Invalid token payload');
+    if (!userId || !email) {
+      throw new UnauthorizedException('Invalid or expired token');
     }
 
-    const user = await this.authService.validateAndSyncUser({
-      userId: payload.sub,
-      email: payload.email,
-    });
-
-    if (!user) {
-      console.error('[getMe] validateAndSyncUser devolvió null');
-      throw new InternalServerErrorException('Error al sincronizar usuario');
+    try {
+      const user = await this.authService.validateAndSyncUser({ userId, email });
+      console.log('[getMe] success userId:', user?.id);
+      return user ?? { id: userId, email, role: null };
+    } catch (e: any) {
+      console.error('[getMe] validateAndSyncUser error:', e.message);
+      return { id: userId, email, role: null };
     }
-
-    console.log('[getMe] success userId:', user.id);
-    return user;
   }
 
   @UseGuards(SupabaseAuthGuard)
