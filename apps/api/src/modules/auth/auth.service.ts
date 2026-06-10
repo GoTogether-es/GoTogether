@@ -86,6 +86,7 @@ export class AuthService {
   }
 
   async validateAndSyncUser(supabaseUser: { userId: string; email: string }) {
+    console.log('[validateAndSyncUser] userId:', supabaseUser?.userId, 'email:', supabaseUser?.email);
     const existing = await this.prisma.user.findUnique({ where: { id: supabaseUser.userId } });
 
     const user = await this.prisma.user.upsert({
