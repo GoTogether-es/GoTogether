@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, UseGuards, Request, Headers } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards, Request, Headers, InternalServerErrorException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SupabaseAuthGuard } from './supabase-auth.guard';
 import { IsEmail, IsOptional, IsString } from 'class-validator';
@@ -24,7 +24,15 @@ export class AuthController {
   @UseGuards(SupabaseAuthGuard)
   @Get('me')
   async getMe(@Request() req: any) {
+    if (!req.user?.userId || !req.user?.email) {
+      console.error('[getMe] req.user inválido:', JSON.stringify(req.user));
+      throw new InternalServerErrorException('Usuario no válido en la petición');
+    }
     const user = await this.authService.validateAndSyncUser(req.user);
+    if (!user) {
+      console.error('[getMe] validateAndSyncUser devolvió null/undefined');
+      throw new InternalServerErrorException('Error al sincronizar usuario');
+    }
     return user;
   }
 
