@@ -58,7 +58,7 @@ export default function ClientRegistrationPage() {
         disabilityDocument: disabilityDocument || undefined,
       });
       try { sessionStorage.removeItem(STORAGE_KEY); sessionStorage.removeItem(DOC_STORAGE_KEY); } catch (err: unknown) { if (process.env.NODE_ENV === 'development') console.error('sessionStorage remove error:', err); }
-      toast.success('¡Perfil creado! Bienvenido a GoTogether.');
+      toast.success('¡Perfil creado! Bienvenido a AmiGo.');
       setTimeout(() => router.push('/explorar'), 1500);
     } catch {
       toast.error('Error al guardar tu perfil. Inténtalo de nuevo.');

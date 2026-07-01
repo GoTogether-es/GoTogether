@@ -4,8 +4,8 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Quiénes somos',
-  description: 'GoTogether es un equipo comprometido con devolver la autonomía, la compañía y la dignidad a quienes más lo necesitan. Conoce nuestra visión, misión y valores.',
-  openGraph: { title: 'Quiénes somos - GoTogether' },
+  description: 'AmiGo es un equipo comprometido con devolver la autonomía, la compañía y la dignidad a quienes más lo necesitan. Conoce nuestra visión, misión y valores.',
+  openGraph: { title: 'Quiénes somos - AmiGo' },
 };
 
 const values = [
@@ -106,7 +106,7 @@ export default function NosotrosPage() {
               <h2 className="text-2xl font-bold">El equipo</h2>
             </div>
             <p className="text-gray-600 leading-relaxed text-lg">
-              GoTogether nace de la experiencia personal de sus fundadores con familiares que necesitaban acompañamiento diario. Somos un equipo multidisciplinar con experiencia en tecnología, salud, atención social y economía colaborativa. Operamos desde España con la vocación de expandirnos a más países.
+              AmiGo nace de la experiencia personal de sus fundadores con familiares que necesitaban acompañamiento diario. Somos un equipo multidisciplinar con experiencia en tecnología, salud, atención social y economía colaborativa. Operamos desde España con la vocación de expandirnos a más países.
             </p>
           </div>
         </Container>

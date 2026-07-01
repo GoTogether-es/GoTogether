@@ -56,7 +56,7 @@ export default function AuthRedirectPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4 text-center">
       <Loader2 className="w-12 h-12 animate-spin text-blue-600 mb-6" />
-      <h1 className="text-2xl font-bold text-gray-900 mb-2">Bienvenido a GoTogether</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-2">Bienvenido a AmiGo</h1>
       <p className="text-gray-600">{status}</p>
     </div>
   );

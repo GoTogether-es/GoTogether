@@ -10,7 +10,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
             <Link href="/" className="mb-4 block">
-              <Image src="/sinfondo.png" alt="GoTogether" width={140} height={48} className="h-12 w-auto" />
+              <Image src="/sinfondo.png" alt="AmiGo" width={140} height={48} className="h-12 w-auto" />
             </Link>
             <p className="text-gray-500 max-w-sm mb-4">
               Acompañamiento humano y empoderamiento para vivir con más autonomía y seguridad.
@@ -36,7 +36,7 @@ export function Footer() {
           </div>
         </div>
         <div className="border-t border-gray-50 mt-12 pt-8 text-center text-sm text-gray-400">
-          © {new Date().getFullYear()} GoTogether Technologies S.L. Todos los derechos reservados.
+          © {new Date().getFullYear()} AmiGo Technologies S.L. Todos los derechos reservados.
         </div>
       </Container>
     </footer>

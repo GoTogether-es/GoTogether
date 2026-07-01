@@ -50,7 +50,7 @@ export default function OnboardingPage() {
           />
 
           <h1 className="text-3xl font-extrabold mb-3">
-            ¡Bienvenido a GoTogether!
+            ¡Bienvenido a AmiGo!
           </h1>
           <p className="text-gray-500 text-lg mb-10 max-w-xl mx-auto">
             Elige cómo quieres participar en la comunidad. Siempre podrás cambiar tu rol más adelante.

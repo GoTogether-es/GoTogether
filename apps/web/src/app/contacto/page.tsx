@@ -4,8 +4,8 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Contactar',
-  description: 'Contacta con GoTogether. Escríbenos a info@gotogether.es o llámanos al +34 643 415 190.',
-  openGraph: { title: 'Contactar - GoTogether' },
+  description: 'Contacta con AmiGo. Escríbenos a info@gotogether.es o llámanos al +34 643 415 190.',
+  openGraph: { title: 'Contactar - AmiGo' },
 };
 
 export default function ContactoPage() {
@@ -126,7 +126,7 @@ export default function ContactoPage() {
               <hr className="my-8 border-gray-100" />
 
               <p className="text-gray-500 leading-relaxed">
-                Si tienes preguntas sobre cómo funciona GoTogether, visita nuestra página de{' '}
+                Si tienes preguntas sobre cómo funciona AmiGo, visita nuestra página de{' '}
                 <a href="/info" className="text-blue-600 hover:underline font-medium">Cómo funciona</a>.
                 Para consultas sobre privacidad o términos legales, consulta nuestra{' '}
                 <a href="/legal/privacy" className="text-blue-600 hover:underline font-medium">Política de Privacidad</a>.

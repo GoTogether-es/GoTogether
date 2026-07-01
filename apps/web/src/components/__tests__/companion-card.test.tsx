@@ -63,7 +63,7 @@ describe('CompanionCard', () => {
     };
     render(<CompanionCard {...minimal} />);
 
-    expect(screen.getByText('Acompañante en GoTogether')).toBeInTheDocument();
+    expect(screen.getByText('Acompañante en AmiGo')).toBeInTheDocument();
     expect(screen.getByText('1 año')).toBeInTheDocument();
   });
 });

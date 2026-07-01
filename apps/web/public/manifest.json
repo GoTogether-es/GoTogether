@@ -1,6 +1,6 @@
 {
-  "name": "GoTogether",
-  "short_name": "GoTogether",
+  "name": "AmiGo",
+  "short_name": "AmiGo",
   "description": "Acompañamiento humano para vivir con más autonomía",
   "start_url": "/",
   "display": "standalone",

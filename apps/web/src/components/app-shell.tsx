@@ -133,7 +133,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div className="flex items-center justify-between h-20">
             <div className="flex items-center gap-12">
               <Link href="/" className="flex items-center">
-                <Image src="/sinfondo.png" alt="GoTogether" width={120} height={40} className="h-10 w-auto" priority />
+                <Image src="/sinfondo.png" alt="AmiGo" width={120} height={40} className="h-10 w-auto" priority />
               </Link>
 
               <nav className="hidden md:flex items-center gap-8" aria-label="Principal">

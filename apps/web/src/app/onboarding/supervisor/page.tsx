@@ -102,7 +102,7 @@ export default function SupervisorOnboardingPage() {
                 Ir a mi Supervisión
               </Button>
               <Button variant="ghost" className="h-12 px-8" onClick={() => router.push('/explorar')}>
-                Explorar GoTogether
+                Explorar AmiGo
               </Button>
             </div>
           </div>
