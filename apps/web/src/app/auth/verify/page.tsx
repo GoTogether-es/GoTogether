@@ -49,12 +49,34 @@ export default function VerifyPage() {
         }
       }
 
+      // 2. PKCE flow: auth code in query params (?code=...)
+      const queryParams = new URLSearchParams(window.location.search);
+      const code = queryParams.get('code');
+
+      if (code) {
+        setStatus('Sincronizando sesión...');
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+        if (!error) {
+          router.push('/auth/redirect');
+          return;
+        } else {
+          console.error('Error al intercambiar código:', error);
+          setDetails('No se pudo completar la autenticación.');
+          setStatus('Error al verificar tu cuenta.');
+          timeout = setTimeout(() => router.push('/auth/login?error=auth_code_error'), 4000);
+          return;
+        }
+      }
+
+      // 3. Check for existing session (from cookie, previous auth, etc.)
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
         router.push(nextRef.current);
         return;
       }
 
+      // 4. Wait a bit and check again (token may have arrived after page load)
       timeout = setTimeout(async () => {
         const { data: { session: finalSession } } = await supabase.auth.getSession();
         if (!finalSession) {
