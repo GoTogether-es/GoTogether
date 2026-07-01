@@ -377,7 +377,8 @@ export async function completeByClient(bookingId: string): Promise<BookingData> 
 }
 
 export async function getCompanions(opts?: FetchOptions): Promise<CompanionSummary[]> {
-  const response = await fetch(`${API_URL}/profiles/companions`, { signal: opts?.signal });
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/profiles/companions`, { headers, signal: opts?.signal });
   if (!response.ok) throw new Error('Failed to fetch companions');
   const data = await response.json();
   if (!Array.isArray(data)) return [];
@@ -385,7 +386,8 @@ export async function getCompanions(opts?: FetchOptions): Promise<CompanionSumma
 }
 
 export async function getCompanionById(id: string, opts?: FetchOptions): Promise<CompanionDetail> {
-  const response = await fetch(`${API_URL}/profiles/companions/${id}`, { signal: opts?.signal });
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/profiles/companions/${id}`, { headers, signal: opts?.signal });
   if (!response.ok) throw new Error('Failed to fetch companion');
   const json = await response.json();
   return validateResponse(companionDetailSchema, json, 'getCompanionById');
