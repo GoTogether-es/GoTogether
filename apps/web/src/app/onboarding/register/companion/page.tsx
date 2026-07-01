@@ -69,6 +69,8 @@ export default function CompanionRegistrationPage() {
     try {
       await upsertProfile({
         fullName: data.fullName,
+        city: data.city,
+        fullAddress: data.fullAddress,
         phone: data.phone,
         bio: data.bio,
         isCompanion: true,

@@ -14,8 +14,8 @@ export type SolicitudFormData = z.infer<typeof solicitudSchema>;
 
 export const clientRegistrationSchema = z.object({
   fullName: z.string().min(1, 'El nombre es obligatorio'),
-  city: z.string().min(1, 'La ciudad es obligatoria'),
-  fullAddress: z.string().min(3, 'La dirección completa es obligatoria'),
+  city: z.string().min(1, 'La ciudad es obligatoria').max(120, 'La ciudad no puede exceder 120 caracteres'),
+  fullAddress: z.string().min(3, 'La dirección completa es obligatoria').max(500, 'La dirección no puede exceder 500 caracteres'),
   phone: z.string().optional(),
   bio: z.string().optional(),
   disabilityType: z.string().min(1, 'Selecciona un tipo de discapacidad'),
@@ -27,8 +27,8 @@ export type ClientRegistrationFormData = z.infer<typeof clientRegistrationSchema
 
 export const companionRegistrationSchema = z.object({
   fullName: z.string().min(1, 'El nombre es obligatorio'),
-  city: z.string().min(1, 'La ciudad es obligatoria'),
-  fullAddress: z.string().min(3, 'La dirección completa es obligatoria'),
+  city: z.string().min(1, 'La ciudad es obligatoria').max(120, 'La ciudad no puede exceder 120 caracteres'),
+  fullAddress: z.string().min(3, 'La dirección completa es obligatoria').max(500, 'La dirección no puede exceder 500 caracteres'),
   phone: z.string().optional(),
   bio: z.string().optional(),
   specialties: z.string().min(1, 'Indica al menos una especialidad'),
