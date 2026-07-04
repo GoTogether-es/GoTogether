@@ -8,8 +8,8 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Cómo funciona',
-  description: 'Descubre cómo AmiGo conecta a personas mayores y con discapacidad con acompañantes verificados. Seguro, sencillo y humano.',
-  openGraph: { title: 'Cómo funciona AmiGo' },
+  description: 'Descubre cómo GoTogether conecta a personas mayores y con discapacidad con acompañantes verificados. Seguro, sencillo y humano.',
+  openGraph: { title: 'Cómo funciona GoTogether' },
 };
 
 const features = [
@@ -73,7 +73,7 @@ export default function InfoPage() {
         <Container>
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold mb-4">¿Qué es AmiGo?</h2>
+              <h2 className="text-3xl font-bold mb-4">¿Qué es GoTogether?</h2>
               <p className="text-gray-500 text-lg max-w-2xl mx-auto leading-relaxed">
                 Una plataforma que conecta a personas con discapacidad y mayores con acompañantes verificados para cualquier actividad
               </p>
@@ -177,7 +177,7 @@ export default function InfoPage() {
             <div className="text-center mb-16">
               <h2 className="text-3xl font-bold mb-4">Preguntas frecuentes</h2>
               <p className="text-gray-500 text-lg max-w-2xl mx-auto">
-                Resolvemos las dudas más comunes sobre AmiGo
+                Resolvemos las dudas más comunes sobre GoTogether
               </p>
             </div>
             <div className="space-y-12">
@@ -197,7 +197,7 @@ export default function InfoPage() {
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl font-bold mb-4">¿Listo para empezar?</h2>
             <p className="text-gray-500 text-lg mb-8 max-w-xl mx-auto leading-relaxed">
-              Únete a AmiGo y descubre una nueva forma de vivir con más autonomía y compañía.
+              Únete a GoTogether y descubre una nueva forma de vivir con más autonomía y compañía.
             </p>
             <AuthLink className="gt-button gt-button--primary h-14 px-10 text-lg inline-flex items-center">
               Empezar ahora

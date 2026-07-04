@@ -135,7 +135,7 @@ export default function AdminPage() {
   return (
     <Section><Container><div className="max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-8">
-        <div><h1 className="text-3xl font-extrabold">Admin</h1><p className="text-gray-500 mt-1">Panel de administración de AmiGo</p></div>
+        <div><h1 className="text-3xl font-extrabold">Admin</h1><p className="text-gray-500 mt-1">Panel de administración de GoTogether</p></div>
         <button onClick={handleLogout} className="gt-button gt-button--ghost flex items-center gap-2 text-sm"><LogOut className="w-4 h-4" />Salir</button>
       </div>
 

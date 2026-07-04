@@ -50,7 +50,7 @@ export const CompanionCard = memo(function CompanionCard({
           )}
         </div>
         <p className="gt-helper flex-1">
-          {profile.headline || profile.bio || 'Acompañante en AmiGo'}
+          {profile.headline || profile.bio || 'Acompañante en GoTogether'}
         </p>
         {profile.city && (
           <p className="text-xs text-gray-500 mt-2">{profile.city}</p>

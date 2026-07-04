@@ -6,7 +6,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Página no encontrada',
-  description: 'La página que buscas no existe. Vuelve al inicio de AmiGo.',
+  description: 'La página que buscas no existe. Vuelve al inicio de GoTogether.',
 };
 
 export default function NotFound() {
@@ -30,7 +30,7 @@ export default function NotFound() {
 
           <p className="text-lg text-gray-500 mb-10 leading-relaxed">
             La página que buscas no existe o ha sido movida. 
-            No te preocupes, en AmiGo siempre hay alguien dispuesto a acompañarte de vuelta.
+            No te preocupes, en GoTogether siempre hay alguien dispuesto a acompañarte de vuelta.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4" role="group">

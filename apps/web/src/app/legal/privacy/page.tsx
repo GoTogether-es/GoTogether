@@ -4,8 +4,8 @@ import { LinkButton } from '@/components/link-button';
 import { ShieldCheck } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Política de Privacidad — AmiGo',
-  description: 'Política de privacidad y protección de datos de AmiGo.',
+  title: 'Política de Privacidad — GoTogether',
+  description: 'Política de privacidad y protección de datos de GoTogether.',
 };
 
 export default function PrivacyPage() {
@@ -28,7 +28,7 @@ export default function PrivacyPage() {
 
               <h2 className="text-xl font-bold text-gray-900 mt-8">1. Responsable del Tratamiento</h2>
               <p>
-                AmiGo es el responsable del tratamiento de los datos personales recogidos a través de esta plataforma. Puedes contactarnos para cualquier cuestión relacionada con la protección de datos.
+                GoTogether es el responsable del tratamiento de los datos personales recogidos a través de esta plataforma. Puedes contactarnos para cualquier cuestión relacionada con la protección de datos.
               </p>
 
               <h2 className="text-xl font-bold text-gray-900 mt-8">2. Datos que Recopilamos</h2>

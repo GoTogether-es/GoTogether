@@ -473,7 +473,7 @@ export class BookingsService {
 
       switch (event) {
         case 'accepted':
-          subject = 'Reserva aceptada - AmiGo';
+          subject = 'Reserva aceptada - GoTogether';
           html = getBookingAcceptedTemplate({
             userName,
             companionName,
@@ -486,15 +486,15 @@ export class BookingsService {
           });
           break;
         case 'declined':
-          subject = 'Reserva rechazada - AmiGo';
+          subject = 'Reserva rechazada - GoTogether';
           html = getBookingDeclinedTemplate({ userName, companionName, serviceType, appUrl });
           break;
         case 'completed':
-          subject = 'Servicio completado - AmiGo';
+          subject = 'Servicio completado - GoTogether';
           html = getBookingCompletedTemplate({ userName, companionName, serviceType, appUrl });
           break;
         case 'cancelled':
-          subject = 'Reserva cancelada - AmiGo';
+          subject = 'Reserva cancelada - GoTogether';
           html = getBookingCancelledTemplate({ userName, cancelledBy: companionName, serviceType, appUrl });
           break;
       }
@@ -582,7 +582,7 @@ export class BookingsService {
           const appUrl = this.configService.get<string>('NEXT_PUBLIC_APP_URL') || 'http://localhost:3000';
           await this.mailService.sendEmail(
             clientUser.email,
-            'Servicio completado - AmiGo',
+            'Servicio completado - GoTogether',
             getBookingCompletedTemplate({
               userName: clientUser.email,
               companionName: companion.profile.fullName || 'Acompañante',

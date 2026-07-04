@@ -138,7 +138,7 @@ function PerfilContent() {
       <div className="mb-8 text-center md:text-left flex items-start justify-between">
         <div>
           <h1 className="text-3xl font-extrabold mb-2">
-            {isOnboarding ? 'Bienvenido a AmiGo!' : 'Mi Perfil'}
+            {isOnboarding ? 'Bienvenido a GoTogether!' : 'Mi Perfil'}
           </h1>
           <p className="text-gray-500 text-lg">
             {isOnboarding
@@ -368,7 +368,7 @@ function PerfilContent() {
                   id="bio"
                   className="gt-input"
                   rows={4}
-                  placeholder="Cuéntanos tus gustos, hobbies o qué buscas en AmiGo..."
+                  placeholder="Cuéntanos tus gustos, hobbies o qué buscas en GoTogether..."
                   {...register('bio')}
                 />
               </div>

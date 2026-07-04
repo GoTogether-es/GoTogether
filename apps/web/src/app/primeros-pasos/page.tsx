@@ -6,7 +6,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Primeros pasos',
-  description: 'Guía rápida para empezar a usar AmiGo. Crea tu perfil, busca acompañante y disfruta.',
+  description: 'Guía rápida para empezar a usar GoTogether. Crea tu perfil, busca acompañante y disfruta.',
 };
 
 export default function PrimerosPasosPage() {
@@ -16,7 +16,7 @@ export default function PrimerosPasosPage() {
         <Container className="py-16 lg:py-24">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight mb-6">
-              Tus primeros pasos en AmiGo
+              Tus primeros pasos en GoTogether
             </h1>
             <p className="text-xl text-blue-100 max-w-2xl mx-auto leading-relaxed">
               Bienvenido. En 5 pasos estarás disfrutando de la compañía que necesitas.

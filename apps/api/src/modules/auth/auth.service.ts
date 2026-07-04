@@ -72,7 +72,7 @@ export class AuthService {
       const { error: mailError } = await this.resend.emails.send({
         from: this.configService.get<string>('RESEND_FROM')!,
         to: [email],
-        subject: 'Tu enlace de acceso a AmiGo',
+        subject: 'Tu enlace de acceso a GoTogether',
         html: getMagicLinkTemplate(data.properties.action_link),
       });
 
@@ -104,7 +104,7 @@ export class AuthService {
         await this.resend.emails.send({
           from: this.configService.get<string>('RESEND_FROM')!,
           to: [supabaseUser.email],
-          subject: 'Bienvenido a AmiGo',
+          subject: 'Bienvenido a GoTogether',
           html: getWelcomeTemplate({ appUrl }),
         });
       } catch (err) {

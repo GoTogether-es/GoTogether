@@ -72,7 +72,7 @@ export class SupervisionService {
       try {
         await this.mailService.sendEmail(
           targetEmail,
-          `${supervisorName} te invita a conectar en AmiGo`,
+          `${supervisorName} te invita a conectar en GoTogether`,
           getSupervisionInviteTemplate({
             supervisorName,
             clientName: dto.clientName,

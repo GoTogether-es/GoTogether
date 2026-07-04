@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-const title = 'AmiGo | Acompañamiento humano';
+const title = 'GoTogether | Acompañamiento humano';
 const description =
   'Plataforma que conecta personas mayores y con discapacidad con acompañantes verificados para actividades cotidianas. Más autonomía, seguridad y compañía.';
 
@@ -8,7 +8,7 @@ export const baseMetadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://gotogether.es'),
   title: {
     default: title,
-    template: '%s | AmiGo',
+    template: '%s | GoTogether',
   },
   description,
   keywords: [
@@ -21,9 +21,9 @@ export const baseMetadata: Metadata = {
     'autonomía',
     'España',
   ],
-  authors: [{ name: 'AmiGo Technologies S.L.' }],
-  creator: 'AmiGo',
-  publisher: 'AmiGo Technologies S.L.',
+  authors: [{ name: 'GoTogether Technologies S.L.' }],
+  creator: 'GoTogether',
+  publisher: 'GoTogether Technologies S.L.',
   robots: {
     index: true,
     follow: true,
@@ -37,7 +37,7 @@ export const baseMetadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'es_ES',
-    siteName: 'AmiGo',
+    siteName: 'GoTogether',
     title,
     description,
     images: [
@@ -45,7 +45,7 @@ export const baseMetadata: Metadata = {
         url: '/sintexto.png',
         width: 512,
         height: 512,
-        alt: 'AmiGo',
+        alt: 'GoTogether',
       },
     ],
   },

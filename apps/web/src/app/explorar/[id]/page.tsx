@@ -125,7 +125,7 @@ export default function CompanionDetailPage() {
                     <Calendar className="w-5 h-5 text-blue-600" aria-hidden="true" />
                     <span className="font-bold">{yearsOnPlatform}</span>
                     <span className="text-sm text-gray-500">
-                      {yearsOnPlatform === 1 ? 'año en AmiGo' : 'años en AmiGo'}
+                      {yearsOnPlatform === 1 ? 'año en GoTogether' : 'años en GoTogether'}
                     </span>
                   </div>
                 </div>

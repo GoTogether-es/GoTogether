@@ -4,8 +4,8 @@ import { LinkButton } from '@/components/link-button';
 import { ShieldCheck } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Términos y Condiciones — AmiGo',
-  description: 'Términos y condiciones de uso de la plataforma AmiGo.',
+  title: 'Términos y Condiciones — GoTogether',
+  description: 'Términos y condiciones de uso de la plataforma GoTogether.',
 };
 
 export default function TermsPage() {
@@ -28,27 +28,27 @@ export default function TermsPage() {
 
               <h2 className="text-xl font-bold text-gray-900 mt-8">1. Aceptación de los Términos</h2>
               <p>
-                Al acceder y utilizar AmiGo, aceptas estar sujeto a estos Términos de Servicio. Si no estás de acuerdo con alguna parte de estos términos, no podrás utilizar nuestros servicios.
+                Al acceder y utilizar GoTogether, aceptas estar sujeto a estos Términos de Servicio. Si no estás de acuerdo con alguna parte de estos términos, no podrás utilizar nuestros servicios.
               </p>
 
               <h2 className="text-xl font-bold text-gray-900 mt-8">2. Descripción del Servicio</h2>
               <p>
-                AmiGo es una plataforma digital que conecta a personas mayores y personas con discapacidad con acompañantes verificados para actividades cotidianas. Actuamos como intermediarios tecnológicos, no como empleadores de los acompañantes.
+                GoTogether es una plataforma digital que conecta a personas mayores y personas con discapacidad con acompañantes verificados para actividades cotidianas. Actuamos como intermediarios tecnológicos, no como empleadores de los acompañantes.
               </p>
 
               <h2 className="text-xl font-bold text-gray-900 mt-8">3. Registro y Verificación</h2>
               <p>
-                Para utilizar AmiGo como acompañante, debes completar el proceso de verificación que incluye la presentación de documentación válida. Nos reservamos el derecho de rechazar o desactivar cualquier perfil que no cumpla con nuestros estándares de seguridad.
+                Para utilizar GoTogether como acompañante, debes completar el proceso de verificación que incluye la presentación de documentación válida. Nos reservamos el derecho de rechazar o desactivar cualquier perfil que no cumpla con nuestros estándares de seguridad.
               </p>
 
               <h2 className="text-xl font-bold text-gray-900 mt-8">4. Pagos y Tarifas</h2>
               <p>
-                Los pagos se procesan a través de Stripe. AmiGo retiene el pago hasta que el acompañante acepta la solicitud. Las tarifas de plataforma se descuentan automáticamente del pago al acompañante.
+                Los pagos se procesan a través de Stripe. GoTogether retiene el pago hasta que el acompañante acepta la solicitud. Las tarifas de plataforma se descuentan automáticamente del pago al acompañante.
               </p>
 
               <h2 className="text-xl font-bold text-gray-900 mt-8">5. Responsabilidades</h2>
               <p>
-                Los acompañantes son responsables de prestar el servicio acordado con profesionalidad y respeto. AmiGo no se hace responsable de incidencias durante el servicio, aunque facilitará la mediación en caso de conflicto.
+                Los acompañantes son responsables de prestar el servicio acordado con profesionalidad y respeto. GoTogether no se hace responsable de incidencias durante el servicio, aunque facilitará la mediación en caso de conflicto.
               </p>
 
               <h2 className="text-xl font-bold text-gray-900 mt-8">6. Cancelaciones</h2>

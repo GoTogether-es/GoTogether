@@ -233,7 +233,7 @@ export class AdminService {
       const appUrl = this.configService.get<string>('NEXT_PUBLIC_APP_URL') || 'http://localhost:3000';
       await this.mailService.sendEmail(
         companion.profile.user.email,
-        'Verificación aprobada - AmiGo',
+        'Verificación aprobada - GoTogether',
         getVerificationApprovedTemplate({
           userName: companion.profile.fullName || 'Usuario',
           appUrl,
@@ -260,7 +260,7 @@ export class AdminService {
       const appUrl = this.configService.get<string>('NEXT_PUBLIC_APP_URL') || 'http://localhost:3000';
       await this.mailService.sendEmail(
         companion.profile.user.email,
-        'Verificación rechazada - AmiGo',
+        'Verificación rechazada - GoTogether',
         getVerificationRejectedTemplate({
           userName: companion.profile.fullName || 'Usuario',
           appUrl,
@@ -287,7 +287,7 @@ export class AdminService {
       const appUrl = this.configService.get<string>('NEXT_PUBLIC_APP_URL') || 'http://localhost:3000';
       await this.mailService.sendEmail(
         profile.user.email,
-        'Verificación aprobada - AmiGo',
+        'Verificación aprobada - GoTogether',
         getVerificationApprovedTemplate({
           userName: profile.fullName || 'Usuario',
           appUrl,
@@ -314,7 +314,7 @@ export class AdminService {
       const appUrl = this.configService.get<string>('NEXT_PUBLIC_APP_URL') || 'http://localhost:3000';
       await this.mailService.sendEmail(
         profile.user.email,
-        'Verificación rechazada - AmiGo',
+        'Verificación rechazada - GoTogether',
         getVerificationRejectedTemplate({
           userName: profile.fullName || 'Usuario',
           appUrl,

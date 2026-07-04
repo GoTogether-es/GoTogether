@@ -49,12 +49,12 @@ export type FaqCategory = {
 
 export const faqData: FaqCategory[] = [
   {
-    category: 'Sobre AmiGo',
+    category: 'Sobre GoTogether',
     items: [
       {
-        question: '¿Qué es AmiGo?',
+        question: '¿Qué es GoTogether?',
         answer:
-          'AmiGo es una plataforma que conecta a personas mayores y personas con discapacidad con acompañantes verificados, para que puedan disfrutar de más autonomía, compañía y bienestar en su día a día.',
+          'GoTogether es una plataforma que conecta a personas mayores y personas con discapacidad con acompañantes verificados, para que puedan disfrutar de más autonomía, compañía y bienestar en su día a día.',
       },
       {
         question: '¿A quién está dirigido?',
