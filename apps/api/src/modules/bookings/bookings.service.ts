@@ -241,25 +241,25 @@ export class BookingsService {
         }
 
         await this.chatService.createRoomForBooking(bookingId);
-        this.notifications.create({
+        this.notifications.createSafe({
           userId: booking.clientId,
           type: 'booking_accepted',
           title: 'Solicitud aceptada',
           body: `${user.profile?.fullName || 'Un acompañante'} ha aceptado tu solicitud`,
           bookingId,
-        }).catch(err => console.error('Failed to notify:', err));
+        });
         this.sendBookingEmail(booking, 'accepted', user.profile?.fullName);
         break;
       }
       case BookingStatus.DECLINED:
         if (!isCompanion && !canClaim) throw new ForbiddenException('Solo el acompañante puede rechazar');
-        this.notifications.create({
+        this.notifications.createSafe({
           userId: booking.clientId,
           type: 'booking_declined',
           title: 'Solicitud rechazada',
           body: `${user.profile?.fullName || 'Un acompañante'} ha rechazado tu solicitud`,
           bookingId,
-        }).catch(err => console.error('Failed to notify:', err));
+        });
         this.sendBookingEmail(booking, 'declined', user.profile?.fullName);
         break;
       case BookingStatus.IN_PROGRESS:
@@ -271,13 +271,13 @@ export class BookingsService {
         updateData.completedAt = new Date();
         
         if (booking.companionId && user.profile?.companion) {
-          this.notifications.create({
+          this.notifications.createSafe({
             userId: booking.clientId,
             type: 'booking_completed',
             title: 'Servicio completado',
             body: `${user.profile.fullName} ha marcado el servicio como completado. ¡Valóralo!`,
             bookingId,
-          }).catch(err => console.error('Failed to notify:', err));
+          });
           this.sendBookingEmail(booking, 'completed', user.profile.fullName);
         }
         break;
@@ -287,7 +287,7 @@ export class BookingsService {
           throw new ForbiddenException('No tienes permiso para cancelar');
         }
         if (isCompanion && booking.clientId) {
-          this.notifications.create({
+          this.notifications.createSafe({
             userId: booking.clientId,
             type: 'booking_cancelled',
             title: 'Reserva cancelada',

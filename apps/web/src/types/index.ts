@@ -192,10 +192,6 @@ export type NotificationData = {
   createdAt: string;
 };
 
-export type HealthStatus = {
-  status: string;
-};
-
 export type AdminStats = {
   users: number;
   profiles: number;

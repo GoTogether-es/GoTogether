@@ -90,13 +90,13 @@ export class ReportsService {
           include: { profile: true },
         });
         if (companion?.profile) {
-          this.notifications.create({
+          this.notifications.createSafe({
             userId: companion.profile.userId,
             type: 'rating_received',
             title: 'Nueva valoración',
             body: `Has recibido una valoración de ${dto.rating} estrellas`,
             bookingId,
-          }).catch(err => console.error('Failed to notify:', err));
+          });
         }
       }
 

@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import { Button, Card, Container, Section } from '@gotogether/ui';
+import { Button, Card, Container, FieldError, Section } from '@gotogether/ui';
 import { createBooking, requestBooking } from '@/services/api';
 import { solicitudSchema, type SolicitudFormData, validateFutureDate } from '@/lib/schemas';
 import { useServices } from '@/services/queries';
@@ -115,9 +115,7 @@ function SolicitudForm() {
                   ))}
                 </select>
               )}
-              {errors.serviceId && (
-                <p className="text-red-500 text-xs mt-1" role="alert">{errors.serviceId.message}</p>
-              )}
+              <FieldError message={errors.serviceId?.message} />
               {selectedService && (
                 <div className="mt-2 p-3 bg-blue-50 rounded-xl border border-blue-100">
                   <p className="text-sm text-blue-800">{selectedService.description}</p>
@@ -145,18 +143,14 @@ function SolicitudForm() {
                 Fecha prevista
               </label>
               <input id="date" className="gt-input" type="date" {...register('date')} min={new Date().toISOString().split('T')[0]} />
-              {errors.date && (
-                <p className="text-red-500 text-xs mt-1" role="alert">{errors.date.message}</p>
-              )}
+              <FieldError message={errors.date?.message} />
             </div>
             <div>
               <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="time">
                 Hora de inicio
               </label>
               <input id="time" className="gt-input" type="time" {...register('time')} />
-              {errors.time && (
-                <p className="text-red-500 text-xs mt-1" role="alert">{errors.time.message}</p>
-              )}
+              <FieldError message={errors.time?.message} />
             </div>
             <div>
               <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="estimatedHours">
@@ -173,9 +167,7 @@ function SolicitudForm() {
                 <option value="6">6 horas</option>
                 <option value="8">8 horas</option>
               </select>
-              {errors.estimatedHours && (
-                <p className="text-red-500 text-xs mt-1" role="alert">{errors.estimatedHours.message}</p>
-              )}
+              <FieldError message={errors.estimatedHours?.message} />
             </div>
           </div>
 
@@ -202,9 +194,7 @@ function SolicitudForm() {
               placeholder="Ej: Calle Mayor 1, Madrid"
               {...register('address')}
             />
-            {errors.address && (
-              <p className="text-red-500 text-xs mt-1" role="alert">{errors.address.message}</p>
-            )}
+            <FieldError message={errors.address?.message} />
           </div>
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="disability">

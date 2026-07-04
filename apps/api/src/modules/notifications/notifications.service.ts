@@ -15,6 +15,20 @@ export class NotificationsService {
     return this.prisma.notification.create({ data });
   }
 
+  async createSafe(data: {
+    userId: string;
+    type: string;
+    title: string;
+    body: string;
+    bookingId?: string;
+  }): Promise<void> {
+    try {
+      await this.create(data);
+    } catch (err) {
+      console.error('Failed to notify:', err);
+    }
+  }
+
   async findByUser(userId: string) {
     return this.prisma.notification.findMany({
       where: { userId },

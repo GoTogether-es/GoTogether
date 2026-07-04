@@ -102,7 +102,7 @@ DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres
 NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=eyJhbGci...
 RESEND_API_KEY=re_...
-ADMIN_PASSWORD=admin
+ADMIN_PASSWORD_HASH=$2a$10$... # hash bcrypt, no la contraseña en claro
 ```
 
 ```bash

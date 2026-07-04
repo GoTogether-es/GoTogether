@@ -5,12 +5,13 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import { Button, Card, Container, Section } from '@gotogether/ui';
+import { Button, Card, Container, FieldError, Section } from '@gotogether/ui';
 import { Loader2, UserCircle, Briefcase, ShieldCheck } from 'lucide-react';
 import { upsertProfile } from '@/services/api';
 import { FileUpload } from '@/components/file-upload';
 import { StepIndicator } from '@/components/step-indicator';
 import { companionRegistrationSchema, type CompanionRegistrationFormData } from '@/lib/schemas';
+import { saveDraft, loadDraft, clearDraft } from '@/lib/form-draft-storage';
 
 const AUTO_SAVE_KEY = 'companion-registration';
 
@@ -35,32 +36,19 @@ export default function CompanionRegistrationPage() {
 
   // Restore saved data on mount
   useEffect(() => {
-    try {
-      const saved = sessionStorage.getItem(AUTO_SAVE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        reset(parsed);
-        if (parsed.penalCertificate) setPenalCertificate(parsed.penalCertificate);
-        if (parsed.sexualCertificate) setSexualCertificate(parsed.sexualCertificate);
-        toast.info('Formulario restaurado', { duration: 2000 });
-      }
-    } catch {
-      sessionStorage.removeItem(AUTO_SAVE_KEY);
+    const parsed = loadDraft<CompanionRegistrationFormData>(AUTO_SAVE_KEY);
+    if (parsed) {
+      reset(parsed);
+      if (parsed.penalCertificate) setPenalCertificate(parsed.penalCertificate);
+      if (parsed.sexualCertificate) setSexualCertificate(parsed.sexualCertificate);
+      toast.info('Formulario restaurado', { duration: 2000 });
     }
   }, [reset]);
 
   // Auto-save form data on change
   useEffect(() => {
     const timer = setTimeout(() => {
-      try {
-        sessionStorage.setItem(AUTO_SAVE_KEY, JSON.stringify({
-          ...formValues,
-          penalCertificate,
-          sexualCertificate,
-        }));
-      } catch {
-        // Storage full
-      }
+      saveDraft(AUTO_SAVE_KEY, { ...formValues, penalCertificate, sexualCertificate });
     }, 800);
     return () => clearTimeout(timer);
   }, [formValues, penalCertificate, sexualCertificate]);
@@ -79,7 +67,7 @@ export default function CompanionRegistrationPage() {
         sexualCertificate: sexualCertificate || undefined,
       });
       toast.success('¡Perfil creado! Nuestro equipo revisará tu documentación.');
-      sessionStorage.removeItem(AUTO_SAVE_KEY);
+      clearDraft(AUTO_SAVE_KEY);
       setTimeout(() => router.push('/panel'), 1500);
     } catch {
       toast.error('Error al guardar tu perfil. Inténtalo de nuevo.');
@@ -120,21 +108,21 @@ export default function CompanionRegistrationPage() {
                     Nombre y apellidos
                   </label>
                   <input id="fullName" className="gt-input" placeholder="Ej: María López" {...register('fullName')} />
-                    {errors.fullName && <p className="text-red-500 text-xs mt-1" role="alert">{errors.fullName.message}</p>}
+                    <FieldError message={errors.fullName?.message} />
                 </div>
                 <div>
                   <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="city">
                     Ciudad pública
                   </label>
                   <input id="city" className="gt-input" placeholder="Ej: Málaga" {...register('city')} />
-                  {errors.city && <p className="text-red-500 text-xs mt-1" role="alert">{errors.city.message}</p>}
+                  <FieldError message={errors.city?.message} />
                 </div>
                 <div>
                   <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="fullAddress">
                     Dirección completa
                   </label>
                   <input id="fullAddress" className="gt-input" placeholder="Calle, número, piso..." {...register('fullAddress')} />
-                  {errors.fullAddress && <p className="text-red-500 text-xs mt-1" role="alert">{errors.fullAddress.message}</p>}
+                  <FieldError message={errors.fullAddress?.message} />
                 </div>
                 <div>
                   <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="phone">
@@ -177,7 +165,7 @@ export default function CompanionRegistrationPage() {
                     ))}
                   </div>
                 )}
-                {errors.specialties && <p className="text-red-500 text-xs mt-1" role="alert">{errors.specialties.message}</p>}
+                <FieldError message={errors.specialties?.message} />
               </div>
             </Card>
 
@@ -194,7 +182,7 @@ export default function CompanionRegistrationPage() {
                   accept=".pdf,.jpg,.jpeg,.png"
                   onUploaded={(url) => { setPenalCertificate(url); setValue('penalCertificate', url); }}
                 />
-                {errors.penalCertificate && <p className="text-red-500 text-xs mt-1" role="alert">{errors.penalCertificate.message}</p>}
+                <FieldError message={errors.penalCertificate?.message} />
 
                 <FileUpload
                   label="Certificado de Delitos de Naturaleza Sexual"
@@ -202,7 +190,7 @@ export default function CompanionRegistrationPage() {
                   accept=".pdf,.jpg,.jpeg,.png"
                   onUploaded={(url) => { setSexualCertificate(url); setValue('sexualCertificate', url); }}
                 />
-                {errors.sexualCertificate && <p className="text-red-500 text-xs mt-1" role="alert">{errors.sexualCertificate.message}</p>}
+                <FieldError message={errors.sexualCertificate?.message} />
               </div>
 
               <div className="mt-6 p-4 bg-yellow-50 rounded-xl border border-yellow-100">

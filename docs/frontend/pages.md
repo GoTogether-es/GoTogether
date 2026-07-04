@@ -26,6 +26,7 @@ Todas las páginas están bajo `apps/web/src/app/` usando Next.js 14 App Router.
   /[id]                         Detalle de acompañante
 /solicitud?companionId=X        Crear solicitud de reserva
 /reservas                       Mis reservas (cliente y acompañante)
+/historial                      Historial de reservas completadas (paginado)
 /panel                          Dashboard de acompañante
 /coordinacion
   /                             Redirige a /reservas

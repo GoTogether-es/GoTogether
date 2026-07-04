@@ -32,7 +32,9 @@ tags: [infrastructure, env, configuration]
 |----------|-------|-------------|
 | `NEXT_PUBLIC_APP_URL` | Vercel web | URL del frontend |
 | `NEXT_PUBLIC_API_URL` | Vercel web | URL del backend |
-| `ADMIN_PASSWORD` | Vercel api, local | Contraseña del panel /admin |
+| `ADMIN_PASSWORD_HASH` | Vercel api, local | Hash bcrypt de la contraseña del panel /admin (no la contraseña en claro) |
+
+> [!note] `AdminGuard` compara el header `x-admin-key` contra `ADMIN_PASSWORD_HASH` con `bcrypt.compare()`. Para generar el valor: `node -e "console.log(require('bcryptjs').hashSync('tu-contraseña', 10))"` y usar el resultado (no la contraseña original) como valor de la variable.
 
 ### Stripe (deshabilitado en alpha)
 
@@ -74,7 +76,7 @@ Las variables se configuran en el dashboard de Vercel por proyecto:
 ### Diferencia entre web y api
 
 - **Web:** solo necesita `NEXT_PUBLIC_*` (las keys públicas de Supabase y URLs)
-- **API:** necesita todas las demás (DATABASE_URL, SERVICE_ROLE_KEY, JWT_SECRET, ADMIN_PASSWORD, RESEND, STRIPE)
+- **API:** necesita todas las demás (DATABASE_URL, SERVICE_ROLE_KEY, JWT_SECRET, ADMIN_PASSWORD_HASH, RESEND, STRIPE)
 
 ## Variables locales (desarrollo)
 

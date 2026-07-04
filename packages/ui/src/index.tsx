@@ -52,6 +52,15 @@ export function Button({
   );
 }
 
+export function FieldError({ message }: { message?: string }) {
+  if (!message) return null;
+  return (
+    <p className="text-red-500 text-xs mt-1" role="alert">
+      {message}
+    </p>
+  );
+}
+
 export function Card({
   children,
   className,

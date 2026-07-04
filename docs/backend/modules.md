@@ -26,7 +26,7 @@ AppModule
 ├── AdminModule (panel de administración)
 ├── ServicesModule (catálogo de servicios)
 ├── AvailabilityModule (disponibilidad semanal de acompañantes)
-└── NotificationsModule (notificaciones)
+└── LocationModule (geocodificación, sin controller)
 ```
 
 ## AuthModule
@@ -220,6 +220,16 @@ Protegido por `AdminGuard` (header `x-admin-key`).
 - `PUT /availability` — Guardar disponibilidad
 
 Documentación completa: [[backend/availability]]
+
+## LocationModule
+
+**Archivos:** `location/`
+
+Módulo interno sin controller ni endpoints propios — solo expone `GeocodingService`, usado por `ProfilesModule` al hacer upsert de perfil.
+
+- `GeocodingService.geocode(city, fullAddress)` — geocodifica una dirección a `{ latitude, longitude }` usando la API pública de Nominatim (OpenStreetMap), acotada a España (`countrycodes=es`)
+- Cachea resultados en memoria (`Map`) por `city|fullAddress` normalizado, para no repetir llamadas a Nominatim
+- Devuelve `null` si Nominatim no encuentra resultados o la petición falla (no lanza excepción)
 
 ## PrismaModule
 

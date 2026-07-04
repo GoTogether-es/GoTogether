@@ -165,10 +165,10 @@ Lista completa de todos los endpoints REST del backend NestJS.
 
 ## Totales
 
-- **Endpoints totales:** 49
-- **Protegidos (JWT):** 35
+- **Endpoints totales:** 64
+- **Protegidos (JWT):** 39
 - **Protegidos (admin key):** 18
-- **Públicos:** 8 (magic-link, companions, matching, services, supervision accept, webhook)
+- **Públicos:** 7 (magic-link, companions, companions/:id, matching, services, supervision accept, webhook)
 
 ## Formato de errores
 

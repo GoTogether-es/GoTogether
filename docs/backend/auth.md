@@ -83,7 +83,7 @@ El resultado se almacena en `req.user` como:
 
 ### AdminGuard
 - **Archivo:** `admin.guard.ts`
-- **Función:** Valida header `x-admin-key` contra env var `ADMIN_PASSWORD`
+- **Función:** Valida header `x-admin-key` contra `ADMIN_PASSWORD_HASH` con `bcrypt.compare()` (el valor de la env var es un hash bcrypt, no la contraseña en claro)
 - **Uso:** `@UseGuards(AdminGuard)`
 - **Aplicado en:** todos los endpoints de `/admin`
 
@@ -170,5 +170,5 @@ La página `/admin` no usa autenticación de Supabase. Tiene su propio sistema:
 4. Todas las peticiones admin incluyen `x-admin-key: <contraseña>`
 
 La contraseña se configura en:
-- **Local:** `apps/api/.env` → `ADMIN_PASSWORD=admin`
+- **Local:** `apps/api/.env` → `ADMIN_PASSWORD_HASH=<hash bcrypt de tu contraseña>`
 - **Producción:** Variable de entorno en Vercel dashboard

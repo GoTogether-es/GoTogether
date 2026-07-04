@@ -23,6 +23,7 @@ export function createMockConfigService(overrides: Record<string, string> = {}) 
 export function createMockNotificationsService() {
   return {
     create: jest.fn().mockResolvedValue({ id: 'notif-1' }),
+    createSafe: jest.fn().mockResolvedValue(undefined),
     findByUser: jest.fn().mockResolvedValue([]),
     countUnread: jest.fn().mockResolvedValue(0),
     markRead: jest.fn().mockResolvedValue(undefined),

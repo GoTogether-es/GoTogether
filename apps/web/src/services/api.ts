@@ -13,7 +13,6 @@ import type {
   SupervisorData,
   UserSearchResult,
   PaginatedResponse,
-  HealthStatus,
   AdminStats,
   AdminUser,
   AdminPending,
@@ -209,8 +208,6 @@ const reportSchema = z.object({
   rating: z.number(),
   summary: z.string().nullable(),
 });
-
-const healthSchema = z.object({ status: z.string() });
 
 export async function requestMagicLink(email: string, next?: string): Promise<void> {
   const response = await fetch(`${API_URL}/auth/magic-link`, {
@@ -492,12 +489,6 @@ export async function getReportByBooking(bookingId: string, opts?: FetchOptions)
   return validateResponse(reportSchema, json, 'getReportByBooking');
 }
 
-export async function getHealth(opts?: FetchOptions): Promise<HealthStatus> {
-  const response = await fetch(`${API_URL}/health`, { signal: opts?.signal });
-  if (!response.ok) throw new Error('API error');
-  const json = await response.json();
-  return validateResponse(healthSchema, json, 'getHealth');
-}
 
 export async function createSupervision(clientId: string): Promise<SupervisionData> {
   const headers = await getAuthHeaders();

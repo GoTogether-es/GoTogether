@@ -259,7 +259,7 @@ describe('BookingsService', () => {
       await service.updateStatus('b-1', { status: BookingStatus.ACCEPTED } as any, 'comp-user-1');
 
       expect(chatService.createRoomForBooking).toHaveBeenCalledWith('b-1');
-      expect(notifications.create).toHaveBeenCalledWith(
+      expect(notifications.createSafe).toHaveBeenCalledWith(
         expect.objectContaining({ type: 'booking_accepted' }),
       );
     });
@@ -309,7 +309,7 @@ describe('BookingsService', () => {
 
       await service.updateStatus('b-1', { status: BookingStatus.DECLINED } as any, 'comp-user-1');
 
-      expect(notifications.create).toHaveBeenCalledWith(
+      expect(notifications.createSafe).toHaveBeenCalledWith(
         expect.objectContaining({ type: 'booking_declined' }),
       );
     });
@@ -361,7 +361,7 @@ describe('BookingsService', () => {
 
       await service.updateStatus('b-1', { status: BookingStatus.COMPLETED } as any, 'comp-user-1');
 
-      expect(notifications.create).toHaveBeenCalledWith(
+      expect(notifications.createSafe).toHaveBeenCalledWith(
         expect.objectContaining({ type: 'booking_completed' }),
       );
     });
@@ -377,6 +377,27 @@ describe('BookingsService', () => {
 
       const updateCall = prisma.booking.update.mock.calls[0][0];
       expect(updateCall.data.status).toBe(BookingStatus.CANCELLED);
+    });
+
+    it('notifies client when COMPANION cancels', async () => {
+      const compProfile = mockCompanionProfile({ id: 'comp-1' });
+      baseBooking.status = BookingStatus.ACCEPTED;
+      baseBooking.companionId = 'comp-1';
+      baseBooking.clientId = 'client-1';
+      prisma.booking.findUnique.mockResolvedValue(baseBooking);
+      prisma.user.findUnique.mockResolvedValue(
+        mockUser({
+          id: 'comp-user-1',
+          role: UserRole.COMPANION,
+          profile: { ...mockProfile(), companion: compProfile, id: 'profile-comp', fullName: 'María' },
+        } as any),
+      );
+
+      await service.updateStatus('b-1', { status: BookingStatus.CANCELLED } as any, 'comp-user-1');
+
+      expect(notifications.createSafe).toHaveBeenCalledWith(
+        expect.objectContaining({ type: 'booking_cancelled', userId: 'client-1' }),
+      );
     });
 
     it('forbids unrelated user from cancelling', async () => {

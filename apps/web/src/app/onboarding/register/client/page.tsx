@@ -5,25 +5,24 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import { Button, Card, Container, Section } from '@gotogether/ui';
+import { Button, Card, Container, FieldError, Section } from '@gotogether/ui';
 import { Loader2, UserCircle, FileText, Heart } from 'lucide-react';
 import { upsertProfile } from '@/services/api';
 import { FileUpload } from '@/components/file-upload';
 import { StepIndicator } from '@/components/step-indicator';
 import { clientRegistrationSchema, type ClientRegistrationFormData } from '@/lib/schemas';
 import { DISABILITY_OPTIONS } from '@/lib/constants';
+import { saveDraft, loadDraft, clearDraft } from '@/lib/form-draft-storage';
 
 const STORAGE_KEY = 'gotogether-client-registration';
 const DOC_STORAGE_KEY = 'gotogether-client-doc';
 
 export default function ClientRegistrationPage() {
   const router = useRouter();
-  const [disabilityDocument, setDisabilityDocument] = useState(() => {
-    try { return sessionStorage.getItem(DOC_STORAGE_KEY) || ''; } catch (err: unknown) { if (process.env.NODE_ENV === 'development') console.error('sessionStorage read error:', err); return ''; }
-  });
+  const [disabilityDocument, setDisabilityDocument] = useState(() => loadDraft<string>(DOC_STORAGE_KEY) ?? '');
 
-  const saved = (() => { try { return sessionStorage.getItem(STORAGE_KEY); } catch (err: unknown) { if (process.env.NODE_ENV === 'development') console.error('sessionStorage read error:', err); return null; } })();
-  const initialData = saved ? JSON.parse(saved) : {};
+  const saved = loadDraft<ClientRegistrationFormData>(STORAGE_KEY);
+  const initialData = saved ?? {};
 
   const {
     register,
@@ -37,13 +36,13 @@ export default function ClientRegistrationPage() {
 
   useEffect(() => {
     const sub = watch((data) => {
-      try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (err: unknown) { if (process.env.NODE_ENV === 'development') console.error('sessionStorage write error:', err); }
+      saveDraft(STORAGE_KEY, data);
     });
     return () => sub.unsubscribe();
   }, [watch]);
 
   useEffect(() => {
-    try { sessionStorage.setItem(DOC_STORAGE_KEY, disabilityDocument); } catch (err: unknown) { if (process.env.NODE_ENV === 'development') console.error('sessionStorage write error:', err); }
+    saveDraft(DOC_STORAGE_KEY, disabilityDocument);
   }, [disabilityDocument]);
 
   useEffect(() => {
@@ -57,7 +56,8 @@ export default function ClientRegistrationPage() {
         isCompanion: false,
         disabilityDocument: disabilityDocument || undefined,
       });
-      try { sessionStorage.removeItem(STORAGE_KEY); sessionStorage.removeItem(DOC_STORAGE_KEY); } catch (err: unknown) { if (process.env.NODE_ENV === 'development') console.error('sessionStorage remove error:', err); }
+      clearDraft(STORAGE_KEY);
+      clearDraft(DOC_STORAGE_KEY);
       toast.success('¡Perfil creado! Bienvenido a GoTogether.');
       setTimeout(() => router.push('/explorar'), 1500);
     } catch {
@@ -99,21 +99,21 @@ export default function ClientRegistrationPage() {
                     Nombre y apellidos
                   </label>
                   <input id="fullName" className="gt-input" placeholder="Ej: Juan Pérez" {...register('fullName')} />
-                    {errors.fullName && <p className="text-red-500 text-xs mt-1" role="alert">{errors.fullName.message}</p>}
+                    <FieldError message={errors.fullName?.message} />
                 </div>
                 <div>
                   <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="city">
                     Ciudad pública
                   </label>
                   <input id="city" className="gt-input" placeholder="Ej: Málaga" {...register('city')} />
-                  {errors.city && <p className="text-red-500 text-xs mt-1" role="alert">{errors.city.message}</p>}
+                  <FieldError message={errors.city?.message} />
                 </div>
                 <div>
                   <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="fullAddress">
                     Dirección completa
                   </label>
                   <input id="fullAddress" className="gt-input" placeholder="Calle, número, piso..." {...register('fullAddress')} />
-                  {errors.fullAddress && <p className="text-red-500 text-xs mt-1" role="alert">{errors.fullAddress.message}</p>}
+                  <FieldError message={errors.fullAddress?.message} />
                 </div>
                 <div>
                   <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="phone">
@@ -147,7 +147,7 @@ export default function ClientRegistrationPage() {
                       <option key={d} value={d}>{d}</option>
                     ))}
                   </select>
-                  {errors.disabilityType && <p className="text-red-500 text-xs mt-1" role="alert">{errors.disabilityType.message}</p>}
+                  <FieldError message={errors.disabilityType?.message} />
                 </div>
                 <div className="md:col-span-2">
                   <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="disabilityDescription">
@@ -168,7 +168,7 @@ export default function ClientRegistrationPage() {
                     accept=".pdf,.jpg,.jpeg,.png"
                     onUploaded={setDisabilityDocument}
                   />
-                  {errors.disabilityDocument && <p className="text-red-500 text-xs mt-1" role="alert">{errors.disabilityDocument.message}</p>}
+                  <FieldError message={errors.disabilityDocument?.message} />
                 </div>
               </div>
             </Card>
