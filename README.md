@@ -51,17 +51,17 @@ pnpm dev
 
 Toda la documentación técnica está en la carpeta [`docs/`](docs/). Está formateada para verse con [Obsidian](https://obsidian.md).
 
-- [[docs/README|Índice de documentación]]
-- [[docs/architecture/overview|Arquitectura general]]
-- [[docs/database/schema|Esquema de base de datos]]
-- [[docs/backend/api-endpoints|API Endpoints]]
-- [[docs/frontend/flows|Flujos de usuario]]
-- [[docs/infrastructure/deployment|Despliegue]]
-- [[docs/roadmap|Roadmap y estado actual]]
+- [Índice de documentación](docs/README.md)
+- [Arquitectura general](docs/architecture/overview.md)
+- [Esquema de base de datos](docs/database/schema.md)
+- [API Endpoints](docs/backend/api-endpoints.md)
+- [Flujos de usuario](docs/frontend/flows.md)
+- [Despliegue](docs/infrastructure/deployment.md)
+- [Roadmap y estado actual](docs/roadmap.md)
 
 ## Despliegue
 
-El proyecto se despliega automáticamente en Vercel al hacer push a `main`. Consulta [[docs/infrastructure/deployment]] para más detalles.
+El proyecto se despliega automáticamente en Vercel al hacer push a `main`. Consulta [docs/infrastructure/deployment](docs/infrastructure/deployment.md) para más detalles.
 
 ## Licencia
 

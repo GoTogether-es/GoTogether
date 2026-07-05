@@ -67,7 +67,7 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 - **Node.js 20.x:** no soporta `require()` de módulos ESM → `jwks-rsa` fijado a v3.2.2 (CJS compatible)
 - **zod/v4/core ESM/CJS:** webpack alias en `next.config.mjs` resuelve `zod/v4/core` al `.cjs` file
 
-> [!warning] Para producción con WebSockets nativos, migrar la API a Fly.io, Railway o Render. Ver [[roadmap]] para detalles.
+> [!warning] Para producción con WebSockets nativos, migrar la API a Fly.io, Railway o Render. Ver [roadmap](../roadmap.md) para detalles.
 
 ## Supabase
 

@@ -11,37 +11,37 @@ Bienvenido a la documentación técnica de GoTogether. Esta carpeta contiene tod
 ## Navegación rápida
 
 ### Arquitectura
-- [[architecture/overview]] — Visión general, stack, decisiones técnicas
+- [architecture/overview](architecture/overview.md) — Visión general, stack, decisiones técnicas
 
 ### Base de datos
-- [[database/schema]] — Modelos, relaciones, RLS, Realtime
-- [[database/migrations]] — Historial de migraciones aplicadas
+- [database/schema](database/schema.md) — Modelos, relaciones, RLS, Realtime
+- [database/migrations](database/migrations.md) — Historial de migraciones aplicadas
 
 ### Backend (API NestJS)
-- [[backend/modules]] — Los 16 módulos y sus responsabilidades
-- [[backend/api-endpoints]] — Lista completa de 49 endpoints REST
-- [[backend/auth]] — Sistema de autenticación y autorización
-- [[backend/booking-state-machine]] — Máquina de estados de reservas (7 estados, 9 transiciones)
-- [[backend/availability]] — Sistema de disponibilidad semanal (grid pintable, timezone, orientativo)
-- [[backend/matching]] — Motor de búsqueda, ubicación y score de recomendados
-- [[backend/supervision]] — Supervisores, invitaciones, ubicación en tiempo real
-- [[backend/notifications]] — Notificaciones in-app con Realtime
+- [backend/modules](backend/modules.md) — Los 16 módulos y sus responsabilidades
+- [backend/api-endpoints](backend/api-endpoints.md) — Lista completa de 49 endpoints REST
+- [backend/auth](backend/auth.md) — Sistema de autenticación y autorización
+- [backend/booking-state-machine](backend/booking-state-machine.md) — Máquina de estados de reservas (7 estados, 9 transiciones)
+- [backend/availability](backend/availability.md) — Sistema de disponibilidad semanal (grid pintable, timezone, orientativo)
+- [backend/matching](backend/matching.md) — Motor de búsqueda, ubicación y score de recomendados
+- [backend/supervision](backend/supervision.md) — Supervisores, invitaciones, ubicación en tiempo real
+- [backend/notifications](backend/notifications.md) — Notificaciones in-app con Realtime
 
 ### Frontend (Next.js)
-- [[frontend/pages]] — Todas las páginas, rutas y su propósito
-- [[frontend/components]] — Componentes reutilizables (disponibilidad, chat, notificaciones)
-- [[frontend/flows]] — Flujos de usuario principales
+- [frontend/pages](frontend/pages.md) — Todas las páginas, rutas y su propósito
+- [frontend/components](frontend/components.md) — Componentes reutilizables (disponibilidad, chat, notificaciones)
+- [frontend/flows](frontend/flows.md) — Flujos de usuario principales
 
 ### Infraestructura
-- [[infrastructure/deployment]] — Vercel, Supabase, despliegue
-- [[infrastructure/env-vars]] — Variables de entorno y configuración
-- [[infrastructure/local-setup]] — Desarrollo local
-- [[troubleshooting]] — Errores comunes y soluciones (build, CORS, Realtime, etc.)
+- [infrastructure/deployment](infrastructure/deployment.md) — Vercel, Supabase, despliegue
+- [infrastructure/env-vars](infrastructure/env-vars.md) — Variables de entorno y configuración
+- [infrastructure/local-setup](infrastructure/local-setup.md) — Desarrollo local
+- [troubleshooting](troubleshooting.md) — Errores comunes y soluciones (build, CORS, Realtime, etc.)
 
 ### Proyecto
-- [[roadmap]] — Estado actual, fases completadas y pendientes
-- [[changelog]] — Registro de cambios por versión (hasta v0.1.0-alpha.33)
-- [[testing]] — 287 tests (163 API + 124 Web), infraestructura, convenciones
+- [roadmap](roadmap.md) — Estado actual, fases completadas y pendientes
+- [changelog](changelog.md) — Registro de cambios por versión (hasta v0.1.0-alpha.33)
+- [testing](testing.md) — 287 tests (163 API + 124 Web), infraestructura, convenciones
 
 ---
 
@@ -49,14 +49,14 @@ Bienvenido a la documentación técnica de GoTogether. Esta carpeta contiene tod
 
 Si es tu primera vez en el proyecto, lee en este orden:
 
-1. [[architecture/overview]] — para entender el stack y las decisiones
-2. [[infrastructure/local-setup]] — para levantar el entorno
-3. [[database/schema]] — para entender el modelo de datos
-4. [[backend/booking-state-machine]] — para entender el núcleo del negocio
-5. [[backend/api-endpoints]] — para conocer los endpoints disponibles
-6. [[frontend/flows]] — para entender los flujos de usuario
-7. [[testing]] — para saber cómo ejecutar y escribir tests (287 existentes)
-8. [[troubleshooting]] — si algo falla al arrancar
+1. [architecture/overview](architecture/overview.md) — para entender el stack y las decisiones
+2. [infrastructure/local-setup](infrastructure/local-setup.md) — para levantar el entorno
+3. [database/schema](database/schema.md) — para entender el modelo de datos
+4. [backend/booking-state-machine](backend/booking-state-machine.md) — para entender el núcleo del negocio
+5. [backend/api-endpoints](backend/api-endpoints.md) — para conocer los endpoints disponibles
+6. [frontend/flows](frontend/flows.md) — para entender los flujos de usuario
+7. [testing](testing.md) — para saber cómo ejecutar y escribir tests (287 existentes)
+8. [troubleshooting](troubleshooting.md) — si algo falla al arrancar
 
 ## Primeros pasos (guía rápida)
 

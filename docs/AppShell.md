@@ -14,7 +14,7 @@ Layout principal de la aplicación. Renderiza el header, contenido y footer para
 - Logo (`sinfondo.png`) con enlace a `/`
 - Navegación principal (desktop) y menú móvil
 - Botones de usuario (sesión/no sesión)
-- [[NotificationBell]] integrada
+- [NotificationBell](frontend/components.md#notificationbell) integrada
 - Skip link de accesibilidad (#main-content)
 
 ## Navegación por rol

@@ -147,7 +147,7 @@ Filtros disponibles:
 - `minRating`: rating mínimo
 - `verified`: solo verificados (default: true en el frontend)
 
-Lógica de filtro refactorizada (Mayo 2026): condiciones de búsqueda y discapacidad se acumulan en `profileConditions[]` con `AND`, eliminando el bloque duplicado que sobreescribía resultados. Documentación completa: [[backend/matching]].
+Lógica de filtro refactorizada (Mayo 2026): condiciones de búsqueda y discapacidad se acumulan en `profileConditions[]` con `AND`, eliminando el bloque duplicado que sobreescribía resultados. Documentación completa: [backend/matching](matching.md).
 
 Ordenado por: rating DESC, yearsOnPlatform DESC.
 
@@ -219,7 +219,7 @@ Protegido por `AdminGuard` (header `x-admin-key`).
 - `GET /companions/:id/availability` — Disponibilidad semanal de un acompañante
 - `PUT /availability` — Guardar disponibilidad
 
-Documentación completa: [[backend/availability]]
+Documentación completa: [backend/availability](availability.md)
 
 ## LocationModule
 

@@ -82,7 +82,7 @@ Usa las mismas credenciales de Supabase en `apps/api/.env` que en Vercel. Ventaj
 
 1. Crea un nuevo proyecto en [supabase.com](https://supabase.com)
 2. Copia las credenciales a `apps/api/.env`
-3. Aplica las migraciones manualmente (ejecuta el SQL de [[database/migrations]])
+3. Aplica las migraciones manualmente (ejecuta el SQL de [database/migrations](../database/migrations.md))
 4. Crea los buckets de Storage manualmente
 
 ## Flujo de desarrollo típico

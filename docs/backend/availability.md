@@ -5,7 +5,7 @@ tags: [backend, availability, nestjs]
 # Sistema de Disponibilidad
 
 **Archivo principal:** `apps/api/src/modules/availability/availability.service.ts`
-**Componente frontend:** [[frontend/components#availabilitygrid|AvailabilityGrid]]
+**Componente frontend:** [AvailabilityGrid](../frontend/components.md#availabilitygrid)
 **Tests:** `availability.service.spec.ts` (6 tests)
 
 ## Descripción
@@ -130,7 +130,7 @@ Backend:
 
 ## Frontend: AvailabilityGrid
 
-El grid usa half-hour slots (08:00-19:30). Ver [[frontend/components#availabilitygrid|documentación del componente]].
+El grid usa half-hour slots (08:00-19:30). Ver [documentación del componente](../frontend/components.md#availabilitygrid).
 
 ### Interacción
 1. **Drag para pintar:** pointerdown inicia, pointermove extiende (usando `slotsRef` y `touchedRef` Set para acumular cambios), pointerup consolida y llama `onChange` una sola vez

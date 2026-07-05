@@ -59,7 +59,7 @@ Réplica de la landing page de gotogether.es con secciones:
 - ¿Qué es GoTogether?: 4 funcionalidades (Acompañamiento cercano, Seguridad verificada, Actividades variadas, Impacto humano)
 - Elige tu perfil: 2 tarjetas con bullets (Personas acompañadas, Acompañantes)
 - ¿Cómo funciona?: 4 pasos (Te registras, Definimos necesidades, Conectamos perfiles, ¡A disfrutar!)
-- Preguntas frecuentes: acordeón FAQ con 12 preguntas en 5 categorías usando [[frontend/components#faqaccordion|FaqAccordion]]
+- Preguntas frecuentes: acordeón FAQ con 12 preguntas en 5 categorías usando [FaqAccordion](components.md#faqaccordion)
 - CTA final con botón "Empezar ahora"
 
 Enlazada desde el footer ("Cómo funciona") y la navegación principal.
@@ -104,7 +104,7 @@ Verifica si el usuario tiene perfil:
 **Archivo:** `onboarding/page.tsx`
 **Auth:** Protegida
 
-Indicador de progreso ([[frontend/components#stepindicator|StepIndicator]]) mostrando paso 1/3.
+Indicador de progreso ([StepIndicator](components.md#stepindicator)) mostrando paso 1/3.
 Tres tarjetas interactivas (botones nativos): Cliente, Acompañante, Supervisor.
 Redirige a la página de registro correspondiente.
 
@@ -116,7 +116,7 @@ Indicador de progreso (paso 2/3). Formulario con:
 - Nombre, teléfono, bio
 - Tipo de discapacidad (select)
 - Descripción de discapacidad
-- [[frontend/components#fileupload|Subida de documento de discapacidad]]
+- [Subida de documento de discapacidad](components.md#fileupload)
 - Al enviar: `upsertProfile` con `isCompanion: false` → redirige a `/explorar`
 
 ### `/onboarding/register/companion` — Registro acompañante
@@ -127,7 +127,7 @@ Indicador de progreso (paso 2/3). Formulario con:
 - Auto-guardado en `sessionStorage` (restaura al volver)
 - Nombre, teléfono, bio
 - Especialidades
-- [[frontend/components#fileupload|Subida de certificados]] (penales + sexuales)
+- [Subida de certificados](components.md#fileupload) (penales + sexuales)
 - Al enviar: limpia auto-guardado, `upsertProfile` con `isCompanion: true` → redirige a `/panel`
 
 ### `/onboarding/supervisor` — Registro supervisor
@@ -151,7 +151,7 @@ Grid de tarjetas de acompañantes con:
 **Archivo:** `explorar/[id]/page.tsx`
 **Auth:** Pública
 
-[[frontend/components#breadcrumbs|Breadcrumbs]]: Explorar > Nombre del acompañante.
+[Breadcrumbs](components.md#breadcrumbs): Explorar > Nombre del acompañante.
 Perfil completo del acompañante con:
 - Avatar, nombre, bio, especialidades
 - Rating, años en plataforma, servicios completados
@@ -188,7 +188,7 @@ Lista de reservas del usuario con:
 
 Dashboard con:
 - Banner de estado de verificación
-- [[frontend/components#availabilitygrid|AvailabilityGrid]]: grid pintable de disponibilidad semanal (30 min, arrastrar para seleccionar)
+- [AvailabilityGrid](components.md#availabilitygrid): grid pintable de disponibilidad semanal (30 min, arrastrar para seleccionar)
 - Guardado automático con debounce de 1.5s
 - Stats: pendientes, activas, completadas
 - Sección "Solicitudes abiertas": reservas REQUESTED sin compañero → botones Aceptar/Rechazar
@@ -198,9 +198,9 @@ Dashboard con:
 **Archivo:** `coordinacion/[bookingId]/page.tsx`
 **Auth:** Protegida
 
-[[frontend/components#breadcrumbs|Breadcrumbs]]: Mis Reservas > Servicio.
+[Breadcrumbs](components.md#breadcrumbs): Mis Reservas > Servicio.
 Chat en tiempo real con:
-- Skeleton de carga ([[frontend/components#skeleton|SkeletonChat]]) mientras carga
+- Skeleton de carga ([SkeletonChat](components.md#skeleton)) mientras carga
 - Suscripción Supabase Realtime a `postgres_changes` en `ChatMessage`
 - Envío directo via `supabase.from('ChatMessage').insert()`
 - Panel lateral con detalles de la reserva

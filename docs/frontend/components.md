@@ -14,10 +14,10 @@ Componentes reutilizables bajo `apps/web/src/components/`.
 Layout principal de la aplicación. Renderiza:
 - Header sticky con logo, navegación y botones de usuario
 - Navegación por rol (Panel para acompañantes, Explorar para otros)
-- [[NotificationBell]] integrada en la barra
+- [NotificationBell](#notificationbell) integrada en la barra
 - Menú móvil con overlay
-- [[#confirmdialog|ConfirmDialog]] para cerrar sesión
-- [[#routeannouncer|RouteAnnouncer]] para accesibilidad
+- [ConfirmDialog](#confirmdialog) para cerrar sesión
+- [RouteAnnouncer](#routeannouncer) para accesibilidad
 - Footer
 - Skip link para accesibilidad
 
@@ -256,7 +256,7 @@ Grid de disponibilidad semanal estilo When2Meet:
 - Cabeceras de día muestran: azul sólido (día completo), azul claro (parcial), gris (vacío)
 - **Orientativo:** la disponibilidad es solo referencia — los clientes pueden solicitar fuera de horario
 
-**Usado en:** `panel/page.tsx`. Documentación backend: [[backend/availability]]
+**Usado en:** `panel/page.tsx`. Documentación backend: [backend/availability](../backend/availability.md)
 
 ## Paquete `@gotogether/ui`
 

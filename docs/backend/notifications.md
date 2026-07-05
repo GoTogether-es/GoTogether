@@ -5,7 +5,7 @@ tags: [backend, notifications, realtime]
 # Sistema de Notificaciones
 
 **Archivo principal:** `apps/api/src/modules/notifications/notifications.service.ts`
-**Componente frontend:** [[frontend/components#notificationbell|NotificationBell]]
+**Componente frontend:** [NotificationBell](../frontend/components.md#notificationbell)
 **Tests:** `notifications.service.spec.ts` (5 tests)
 
 ## Descripción

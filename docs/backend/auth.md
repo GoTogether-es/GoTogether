@@ -137,11 +137,11 @@ Si el API o el frontend no funcionan tras un deploy:
 
 ```bash
 # Verificar que estas variables existen en Vercel Dashboard → Settings → Environment Variables:
-NEXT_PUBLIC_SUPABASE_URL=https://ifuqhagjfwybzlsxkqhp.supabase.co
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=eyJhbGci...
-SUPABASE_JWT_SECRET=WOpAYB...
-NEXT_PUBLIC_APP_URL=https://go-together-m2gp.vercel.app
-NEXT_PUBLIC_API_URL=https://go-together-api-tau.vercel.app
+SUPABASE_JWT_SECRET=...
+NEXT_PUBLIC_APP_URL=https://your-frontend.vercel.app
+NEXT_PUBLIC_API_URL=https://your-api.vercel.app
 RESEND_API_KEY=re_...
 RESEND_FROM=GoTogether <info@gotogether.es>
 ```

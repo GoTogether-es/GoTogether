@@ -10,7 +10,7 @@ El núcleo del marketplace está funcional. Pagos pendientes de activar. Segurid
 
 ---
 
-## ✅ Fase 1 — Pulido (completada)
+## Fase 1 — Pulido (completada)
 
 - [x] Links del footer apuntan a páginas legales reales
 - [x] Búsqueda de usuarios funcional en supervisión
@@ -22,14 +22,14 @@ El núcleo del marketplace está funcional. Pagos pendientes de activar. Segurid
 - [x] Enlaces de homepage e info con detección de sesión (login vs perfil)
 - [x] Navegación con "Cómo funciona" e "Historial"
 
-## ✅ Fase 2 — Notificaciones (completada)
+## Fase 2 — Notificaciones (completada)
 
 - [x] Tabla `Notification` con RLS + Realtime
 - [x] Notificaciones in-app: campanita con badge y dropdown
 - [x] Triggers automáticos en bookings (accept, decline, complete, cancel) + reports (rating)
 - [x] API endpoints: list, unread-count, mark-read, mark-all-read
 
-## ✅ Fase 3 — Estabilización (bugs) (completada)
+## Fase 3 — Estabilización (bugs) (completada)
 
 - [x] `@Roles()` y `RolesAuthGuard` funcionales
 - [x] `RolesAuthGuard` aplicado en endpoints de supervisor
@@ -37,7 +37,7 @@ El núcleo del marketplace está funcional. Pagos pendientes de activar. Segurid
 - [x] Emails transaccionales
 - [x] Manejo de reconexión en chat
 
-## 🟨 Fase 4 — Pagos (prioridad alta - Lógica y simulación completadas)
+## Fase 4 — Pagos (prioridad alta - Lógica y simulación completadas)
 
 - [ ] Configurar `STRIPE_SECRET_KEY` real en Vercel
 - [x] Integrar PaymentsService en BookingsService
@@ -48,7 +48,7 @@ El núcleo del marketplace está funcional. Pagos pendientes de activar. Segurid
 - [x] Aplicar tarifas y comisiones (Fijado en 13€/h cliente, 11€/h acompañante y 2€/h plataforma)
 - [ ] UI de pago en el frontend (Stripe Elements o Checkout - Formulario de solicitud actualizado con duración estimada y desglose de precio en vivo)
 
-## ✅ Fase 5 — Funcionalidades avanzadas + Admin + Supervisión + Perf + Seguridad (completada)
+## Fase 5 — Funcionalidades avanzadas + Admin + Supervisión + Perf + Seguridad (completada)
 
 - [x] Catálogo de servicios con precios
 - [x] Disponibilidad semanal para acompañantes (grid pintable 30min, orientativa)
@@ -64,34 +64,34 @@ El núcleo del marketplace está funcional. Pagos pendientes de activar. Segurid
 - [x] Niveles de acompañante (bronce, plata, oro) visibles en tarjetas y detalle
 - [x] Email de bienvenida automático al primer login
 
-## ✅ Fase 10 — Onboarding y retención (completada)
+## Fase 10 — Onboarding y retención (completada)
 
 - [x] Email de bienvenida automático al registrarse
 - [x] Página `/primeros-pasos` con guía adaptada por rol (cliente vs acompañante)
 
-## ✅ Fase 11 — Confianza y verificación (parcial)
+## Fase 11 — Confianza y verificación (parcial)
 
 - [x] Niveles de acompañante (bronce, plata, oro) según servicios completados
 - [ ] Verificación por videollamada (pospuesto)
 
-## ✅ Fase 12 — Comunidad y contenido (parcial)
+## Fase 12 — Comunidad y contenido (parcial)
 
 - [x] Testimonios de usuarios en homepage y `/info`
 - [ ] Blog (pospuesto)
 
-## ✅ Fase 13 — Móvil y accesibilidad (parcial)
+## Fase 13 — Móvil y accesibilidad (parcial)
 
 - [x] PWA (manifest.json, instalable en homescreen)
 - [ ] Modo texto grande (pospuesto)
 
-## ⬜ Fase 6 — GDPR y cumplimiento (prioridad media)
+## Fase 6 — GDPR y cumplimiento (prioridad media)
 
 - [ ] Eliminación de cuenta (derecho al olvido)
 - [ ] Exportación de datos (portabilidad)
 - [ ] Banner de cookies
 - [ ] Política de privacidad detallada
 
-## ⬜ Fase 7 — Producción (prioridad media-baja) (parcial)
+## Fase 7 — Producción (prioridad media-baja) (parcial)
 
 - [ ] Migrar API de Vercel serverless a Fly.io / Railway (WebSocket nativo)
 - [ ] Restaurar Socket.IO para chat si se requiere mayor escala
@@ -101,7 +101,7 @@ El núcleo del marketplace está funcional. Pagos pendientes de activar. Segurid
 - [ ] Monitorización y alertas (Sentry, Vercel Analytics)
 - [ ] Plan de Disaster Recovery (backups de BD, rollback)
 
-## 🆕 Fase 8 — SEO y analítica (casi completa)
+## Fase 8 — SEO y analítica (casi completa)
 
 - [x] Metadata + Open Graph en todas las páginas
 - [x] Sitemap.xml y robots.txt
@@ -110,7 +110,7 @@ El núcleo del marketplace está funcional. Pagos pendientes de activar. Segurid
 - [x] OG image, favicon, logo en navbar/footer
 - [x] next/font/google para fuente auto-hospedada
 
-## 🆕 Fase 9 — UX, conversión y retención (casi completa)
+## Fase 9 — UX, conversión y retención (casi completa)
 
 - [x] Email de bienvenida automático
 - [x] Página `/primeros-pasos` adaptada por rol
