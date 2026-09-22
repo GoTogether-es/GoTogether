@@ -10,7 +10,7 @@ import { Footer } from './footer';
 import { NotificationBell } from './notification-bell';
 import { ConfirmDialog } from './confirm-dialog';
 import { RouteAnnouncer } from './route-announcer';
-import { User, LogIn, Menu, X, Search, CalendarDays, LogOut, LayoutDashboard, Info, History, Users } from 'lucide-react';
+import { User, LogIn, Menu, X, Search, CalendarDays, LogOut, LayoutDashboard, Info, History } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { logout as apiLogout, getProfile } from '@/services/api';
 import type { Session, AuthChangeEvent } from '@supabase/supabase-js';
@@ -21,7 +21,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [session, setSession] = useState<Session | null>(null);
   const [isCompanion, setIsCompanion] = useState(false);
-  const [isSupervisor, setIsSupervisor] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
@@ -36,8 +35,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       if (session) {
         const profile = await getProfile().catch(() => null);
         setIsCompanion(!!profile?.companion);
-        const { data: { user } } = await supabase.auth.getUser();
-        setIsSupervisor(user?.user_metadata?.role === 'SUPERVISOR' || user?.app_metadata?.role === 'SUPERVISOR');
       }
     })();
 
@@ -47,13 +44,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       setSession(session);
       if (session) {
         getProfile().then(profile => setIsCompanion(!!profile?.companion)).catch(() => {});
-        (async () => {
-          const { data: { user } } = await supabase.auth.getUser();
-          setIsSupervisor(user?.user_metadata?.role === 'SUPERVISOR' || user?.app_metadata?.role === 'SUPERVISOR');
-        })().catch(() => {});
       } else {
         setIsCompanion(false);
-        setIsSupervisor(false);
       }
     });
 
@@ -192,18 +184,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                       <History className="w-4 h-4" />
                       Historial
                     </Link>
-                    {isSupervisor && (
-                    <Link
-                      href={routes.supervision}
-                      className={clsx(
-                        'flex items-center gap-2 text-sm font-medium transition-colors hover:text-blue-600',
-                        isActive(routes.supervision) ? 'text-blue-600' : 'text-gray-500'
-                      )}
-                    >
-                      <Users className="w-4 h-4" />
-                      Supervisión
-                    </Link>
-                    )}
                   </>
                 )}
               </nav>
@@ -337,21 +317,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   <History className="w-5 h-5" />
                   Historial
                 </Link>
-                {isSupervisor && (
-                <Link
-                  href={routes.supervision}
-                  className={clsx(
-                    'flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium transition-colors',
-                    isActive(routes.supervision)
-                      ? 'bg-blue-50 text-blue-600'
-                      : 'text-gray-700 hover:bg-gray-50'
-                  )}
-                  onClick={closeMenu}
-                >
-                  <Users className="w-5 h-5" />
-                  Supervisión
-                </Link>
-                )}
                 <Link
                   href={routes.perfil}
                   className={clsx(

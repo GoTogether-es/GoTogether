@@ -159,21 +159,3 @@ Cliente:
      └─ Link a certificado discapacidad (PDF)
   → click "Aprobar" → profile.verified = true
 ```
-
-## 8. Supervisión
-
-```
-Supervisor:
-  /supervision → (client-side) syncUser() → verifica user.role === 'SUPERVISOR'
-  → si no es SUPERVISOR → redirige a /perfil
-  → "Invitar cliente"
-  → busca usuario existente o introduce email
-  → POST /supervision/invite → envía email con token
-  → cliente recibe email → click link
-  → /supervision/accept?token=X → acepta invitación
-  → supervisor ve al cliente en "Mis clientes"
-
-Supervisor crea reserva para cliente:
-  → POST /bookings { bookedById: supervisorId, clientId }
-  → puede gestionar reservas del cliente
-```

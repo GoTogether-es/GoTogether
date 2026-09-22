@@ -28,9 +28,8 @@ Layout principal de la aplicación. Renderiza:
 | Rol | Nav principal | Nav secundaria |
 |-----|--------------|----------------|
 | No autenticado | Cómo funciona, Explorar | Entrar |
-| Cliente | Cómo funciona, Explorar | Mis Reservas, Historial, Supervisión, Mi Perfil |
+| Cliente | Cómo funciona, Explorar | Mis Reservas, Historial, Mi Perfil |
 | Acompañante | Cómo funciona, Panel | Mis Reservas, Historial, Mi Perfil |
-| Supervisor | Cómo funciona, Explorar | Mis Reservas, Historial, Supervisión, Mi Perfil |
 
 ## FileUpload
 
@@ -315,7 +314,7 @@ Tipos TypeScript para:
 - `CompanionSummary`, `CompanionDetail`
 - `BookingData`, `BookingStatus`, `PaymentData`
 - `ChatRoomData`, `ChatMessageData`
-- `ReportData`, `SupervisionData`, `SupervisorData`
-- `UserSearchResult`, `PaginatedResponse<T>`
+- `ReportData`
+- `PaginatedResponse<T>`
 - `AdminStats`, `AdminUser`, `AdminPending`
 - `NotificationData`, `HealthStatus`

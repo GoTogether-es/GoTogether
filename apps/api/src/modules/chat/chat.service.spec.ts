@@ -1,6 +1,6 @@
 import { ChatService } from './chat.service';
 import { createMockPrismaService } from '../../__mocks__/prisma';
-import { mockBooking, mockProfile, mockCompanionProfile, mockSupervision } from '../../test-utils/factories';
+import { mockBooking, mockProfile, mockCompanionProfile } from '../../test-utils/factories';
 import { NotFoundException, ForbiddenException } from '@nestjs/common';
 
 describe('ChatService', () => {
@@ -32,18 +32,8 @@ describe('ChatService', () => {
 
     it('throws ForbiddenException for non-participant', async () => {
       prisma.booking.findUnique.mockResolvedValue(mockBooking({ clientId: 'client-1', bookedById: 'client-1' }));
-      prisma.supervision.findFirst.mockResolvedValue(null);
 
       await expect(service.getOrCreateRoom('booking-1', 'other-user')).rejects.toThrow(ForbiddenException);
-    });
-
-    it('allows supervisor to access', async () => {
-      prisma.booking.findUnique.mockResolvedValue(mockBooking({ clientId: 'client-1' }));
-      prisma.supervision.findFirst.mockResolvedValue(mockSupervision({ supervisorId: 'supervisor-1', clientId: 'client-1' }));
-      prisma.chatRoom.upsert.mockResolvedValue({ id: 'room-1', bookingId: 'booking-1' });
-
-      const result = await service.getOrCreateRoom('booking-1', 'supervisor-1');
-      expect(result).toHaveProperty('id', 'room-1');
     });
   });
 

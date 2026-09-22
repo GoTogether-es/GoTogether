@@ -24,9 +24,7 @@ Layout principal de la aplicación. Renderiza el header, contenido y footer para
 | No autenticado | Cómo funciona, Explorar | Entrar |
 | Cliente | Cómo funciona, Explorar | Mis Reservas, Historial, Mi Perfil |
 | Acompañante | Cómo funciona, Panel | Mis Reservas, Historial, Mi Perfil |
-| Supervisor | Cómo funciona, Explorar | Mis Reservas, Historial, Supervisión, Mi Perfil |
 
-- "Supervisión" solo visible para usuarios con rol `SUPERVISOR`
 - "Panel" solo visible para acompañantes (`isCompanion`)
 - Todos los enlaces usan `routes.*` desde `@/lib/routes`
 
@@ -34,7 +32,6 @@ Layout principal de la aplicación. Renderiza el header, contenido y footer para
 
 - `session` — sesión de Supabase
 - `isCompanion` — tiene CompanionProfile
-- `isSupervisor` — rol SUPERVISOR en metadatos de usuario
 
 ## Menú móvil
 

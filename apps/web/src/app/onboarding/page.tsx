@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { Card, Container, Section } from '@gotogether/ui';
-import { User, UserPlus, ShieldCheck, ArrowRight } from 'lucide-react';
+import { User, UserPlus, ArrowRight } from 'lucide-react';
 import { StepIndicator } from '@/components/step-indicator';
 
 export default function OnboardingPage() {
@@ -24,14 +24,6 @@ export default function OnboardingPage() {
       icon: UserPlus,
       gradient: 'from-emerald-500 to-emerald-600',
       route: '/onboarding/register/companion',
-    },
-    {
-      key: 'supervisor',
-      title: 'Soy un supervisor',
-      description: 'Quiero gestionar las reservas de un familiar o persona a mi cargo.',
-      icon: ShieldCheck,
-      gradient: 'from-violet-500 to-violet-600',
-      route: '/perfil?onboarding=true&role=supervisor',
     },
   ];
 

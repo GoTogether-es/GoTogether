@@ -58,19 +58,6 @@ const shape = {
     aggregate: jest.fn,
     count: jest.fn,
   },
-  supervision: {
-    findFirst: jest.fn,
-    findUnique: jest.fn,
-    create: jest.fn,
-    delete: jest.fn,
-    findMany: jest.fn,
-  },
-  supervisionInvite: {
-    findUnique: jest.fn,
-    create: jest.fn,
-    update: jest.fn,
-    findMany: jest.fn,
-  },
   notification: {
     create: jest.fn,
     findMany: jest.fn,
@@ -104,10 +91,6 @@ const shape = {
     findFirst: jest.fn,
     deleteMany: jest.fn,
     createMany: jest.fn,
-  },
-  clientLocation: {
-    findMany: jest.fn,
-    upsert: jest.fn,
   },
 
   $connect: jest.fn,

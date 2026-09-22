@@ -72,12 +72,6 @@ describe('BookingsService', () => {
       await expect(service.create('user-1', createDto as any)).rejects.toThrow(NotFoundException);
     });
 
-    it('throws ForbiddenException when SUPERVISOR tries to create for themselves', async () => {
-      prisma.user.findUnique.mockResolvedValue(mockUser({ role: UserRole.SUPERVISOR }));
-
-      await expect(service.create('user-1', createDto as any)).rejects.toThrow(ForbiddenException);
-    });
-
     it('throws NotFoundException when serviceId references non-existent service', async () => {
       prisma.user.findUnique.mockResolvedValue(mockUser({ role: UserRole.CLIENT }));
       prisma.service.findUnique.mockResolvedValue(null);
@@ -232,18 +226,6 @@ describe('BookingsService', () => {
       expect(result).toHaveProperty('id', 'b-1');
     });
 
-    it('allows the supervisor of the client to view the booking', async () => {
-      prisma.booking.findUnique.mockResolvedValue(mockBooking({ id: 'b-1', clientId: 'client-1' }));
-      prisma.user.findUnique.mockResolvedValue(
-        mockUser({ id: 'supervisor-1', role: UserRole.SUPERVISOR, profile: null } as any),
-      );
-      prisma.supervision.findFirst.mockResolvedValue({ id: 'sup-1' });
-
-      const result = await service.findByIdForUser('b-1', 'supervisor-1');
-
-      expect(result).toHaveProperty('id', 'b-1');
-    });
-
     it('forbids unrelated users from viewing the booking', async () => {
       prisma.booking.findUnique.mockResolvedValue(
         mockBooking({ id: 'b-1', clientId: 'client-1', companionId: 'comp-1' }),
@@ -251,7 +233,6 @@ describe('BookingsService', () => {
       prisma.user.findUnique.mockResolvedValue(
         mockUser({ id: 'stranger-1', role: UserRole.CLIENT, profile: null } as any),
       );
-      prisma.supervision.findFirst.mockResolvedValue(null);
 
       await expect(service.findByIdForUser('b-1', 'stranger-1')).rejects.toThrow(ForbiddenException);
     });
@@ -323,7 +304,6 @@ describe('BookingsService', () => {
       prisma.user.findUnique.mockResolvedValue(
         mockUser({ id: 'other-1', role: UserRole.CLIENT, profile: null } as any),
       );
-      prisma.supervision.findFirst.mockResolvedValue(null);
 
       await expect(
         service.updateStatus('b-1', { status: BookingStatus.REQUESTED } as any, 'other-1'),
@@ -502,7 +482,6 @@ describe('BookingsService', () => {
       baseBooking.clientId = 'client-1';
       prisma.booking.findUnique.mockResolvedValue(baseBooking);
       prisma.user.findUnique.mockResolvedValue(mockUser({ id: 'other-1', role: UserRole.CLIENT } as any));
-      prisma.supervision.findFirst.mockResolvedValue(null);
 
       await expect(
         service.updateStatus('b-1', { status: BookingStatus.CANCELLED } as any, 'other-1'),
@@ -526,19 +505,6 @@ describe('BookingsService', () => {
       await expect(
         service.updateStatus('b-1', { status: BookingStatus.COMPLETED } as any, 'client-1'),
       ).rejects.toThrow(BadRequestException);
-    });
-
-    // --- Supervisor delegation ---
-    it('allows SUPERVISOR to request on behalf of supervised client', async () => {
-      baseBooking.status = BookingStatus.DRAFT;
-      baseBooking.clientId = 'client-1';
-      prisma.booking.findUnique.mockResolvedValue(baseBooking);
-      prisma.user.findUnique.mockResolvedValue(mockUser({ id: 'supervisor-1', role: UserRole.SUPERVISOR, profile: null } as any));
-      prisma.supervision.findFirst.mockResolvedValue({ id: 'sup-1', supervisorId: 'supervisor-1', clientId: 'client-1' });
-
-      await expect(
-        service.updateStatus('b-1', { status: BookingStatus.REQUESTED } as any, 'supervisor-1'),
-      ).resolves.toBeDefined();
     });
   });
 

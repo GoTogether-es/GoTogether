@@ -23,19 +23,13 @@ export default function AuthRedirectPage() {
         const role = user.role;
 
         if (profile) {
-          if (role === 'SUPERVISOR') {
-            router.push('/supervision');
-          } else if (role === 'COMPANION') {
+          if (role === 'COMPANION') {
             router.push('/panel');
           } else {
             router.push('/perfil');
           }
         } else {
-          if (role === 'SUPERVISOR') {
-            router.push('/perfil?onboarding=true&role=supervisor');
-          } else {
-            router.push('/onboarding');
-          }
+          router.push('/onboarding');
         }
       } catch (err) {
         if (!cancelled) {

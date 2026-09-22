@@ -4,15 +4,15 @@ tags: [testing, jest, quality]
 
 # Testing
 
-**Total:** 287 tests (163 API + 124 Web) en 46 suites
+**Total:** 295 tests (148 API + 147 Web) en 43 suites
 
 ## Resumen
 
 | Capa | Suites | Tests | Framework |
 |------|:---:|:---:|-----------|
-| **API** (NestJS) | 18 | 163 | Jest + ts-jest |
-| **Web** (Next.js) | 28 | 124 | Jest + Testing Library + jsdom |
-| **Total** | **46** | **287** | Jest 29.7.0 |
+| **API** (NestJS) | 15 | 148 | Jest + ts-jest |
+| **Web** (Next.js) | 28 | 147 | Jest + Testing Library + jsdom |
+| **Total** | **43** | **295** | Jest 29.7.0 |
 
 ## Ejecutar tests
 
@@ -44,14 +44,12 @@ modules/
 ├── availability/availability.service.spec.ts
 ├── bookings/bookings.service.spec.ts
 ├── reports/reports.service.spec.ts
-├── supervision/supervision.service.spec.ts
 ├── admin/admin.service.spec.ts
 ├── profiles/profiles.service.spec.ts
 ├── chat/chat.service.spec.ts
 ├── matching/matching.service.spec.ts
 ├── notifications/notifications.service.spec.ts
 ├── services/services.service.spec.ts
-├── users/users.service.spec.ts
 ├── payments/payments.service.spec.ts
 ├── auth/
 │   ├── auth.service.spec.ts
@@ -75,7 +73,6 @@ app/
 ├── explorar/__tests__/explorar.test.tsx
 ├── panel/__tests__/panel.test.tsx
 ├── reservas/__tests__/reservas.test.tsx
-├── supervision/__tests__/supervision.test.tsx
 ├── solicitud/__tests__/solicitud.test.tsx
 ├── coordinacion/__tests__/coordinacion.test.tsx
 └── __tests__/middleware.test.ts
@@ -92,8 +89,7 @@ components/__tests__/
 ├── scroll-to-cta.test.tsx
 ├── route-announcer.test.tsx
 ├── file-upload.test.tsx
-├── avatar-upload.test.tsx
-└── client-location-map.test.tsx
+└── avatar-upload.test.tsx
 
 hooks/__tests__/
 └── use-api.test.tsx
@@ -119,7 +115,7 @@ Patrón de nombres: `**/*.test.{ts,tsx}`
 |---------|-----------|
 | `apps/api/src/__mocks__/prisma.ts` | `createMockPrismaService()` — recrea todos los modelos de Prisma como `jest.fn()` frescos por test |
 | `apps/api/src/__mocks__/resend.ts` | Mock del SDK de Resend |
-| `apps/api/src/test-utils/factories.ts` | 8 factories: `mockUser()`, `mockProfile()`, `mockBooking()`, `mockCompanionProfile()`, `mockService()`, `mockReport()`, `mockSupervision()`, `mockSupervisionInvite()` — con overrides parciales |
+| `apps/api/src/test-utils/factories.ts` | 6 factories: `mockUser()`, `mockProfile()`, `mockBooking()`, `mockCompanionProfile()`, `mockService()`, `mockReport()` — con overrides parciales |
 | `apps/api/src/test-utils/services.ts` | Mocks de `ConfigService`, `NotificationsService`, `MailService`, `ChatService`, `AvailabilityService` |
 
 ### Setup global
@@ -141,21 +137,19 @@ Patrón de nombres: `**/*.test.{ts,tsx}`
 
 | Servicio | Tests | Áreas cubiertas |
 |----------|:---:|-----------------|
-| **BookingsService** | 30 | State machine (7 transiciones), CRUD, permisos, stats, history |
-| **SupervisionService** | 15 | create, invite, accept, cancel, bookings agregados |
-| **AdminService** | 12 | Stats, verify, reject, mass notifications, bookings, services |
-| **ReportsService** | 11 | create, update, recalculateRating, permisos |
-| **ProfilesService** | 11 | upsert (3 roles), getCompanionById, listCompanions |
-| **ChatService** | 8 | getOrCreateRoom, saveMessage, createRoomForBooking, validación participantes |
-| **MatchingService** | 7 | Filtros combinados, paginación, meta.totalPages |
-| **AvailabilityService** | 6 | get/set, isCompanionAvailable, timezone, validación |
+| **BookingsService** | 48 | State machine (7 transiciones), CRUD, permisos, stats, history |
+| **AdminService** | 13 | Stats, verify, reject, mass notifications, bookings, services |
+| **ReportsService** | 10 | create, update, recalculateRating, permisos |
+| **ProfilesService** | 9 | upsert (3 roles), getCompanionById, listCompanions |
+| **AvailabilityService** | 10 | get/set, isCompanionAvailable, timezone, validación |
+| **MatchingService** | 10 | Filtros combinados, paginación, meta.totalPages |
+| **ChatService** | 7 | getOrCreateRoom, saveMessage, createRoomForBooking, validación participantes |
 | **NotificationsService** | 5 | CRUD, count, mark read |
 | **ServicesService** | 5 | listActive/All, create, update |
 | **Guards** | 11 | AdminGuard (4), RolesGuard (4), Roles decorator (2) |
 | **AuthService** | 3 | validateAndSyncUser, logout |
 | **MailService** | 4 | send (con/sin config), skip |
 | **PaymentsService** | 5 | hold, capture, release, webhook |
-| **UsersService** | 3 | list, search, empty |
 | **Strategy** | 4 | validate (con/sin user), construction |
 | **ExceptionFilter** | 7 | HttpException, object message, unknown error, production mode |
 

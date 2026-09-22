@@ -5,7 +5,6 @@ const PROTECTED_ROUTES = [
   '/reservas',
   '/coordinacion',
   '/valoracion',
-  '/supervision',
   '/panel',
   '/historial',
 ];
@@ -21,7 +20,6 @@ describe('middleware route rules', () => {
     it('protects /solicitud', () => expect(isProtectedRoute('/solicitud')).toBe(true));
     it('protects /onboarding', () => expect(isProtectedRoute('/onboarding')).toBe(true));
     it('protects /panel', () => expect(isProtectedRoute('/panel')).toBe(true));
-    it('protects /supervision', () => expect(isProtectedRoute('/supervision')).toBe(true));
     it('protects /historial', () => expect(isProtectedRoute('/historial')).toBe(true));
     it('protects /coordinacion', () => expect(isProtectedRoute('/coordinacion')).toBe(true));
     it('protects /valoracion', () => expect(isProtectedRoute('/valoracion')).toBe(true));

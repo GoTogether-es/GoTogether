@@ -13,7 +13,6 @@ datasource db {
 enum UserRole {
   CLIENT
   COMPANION
-  SUPERVISOR
   ADMIN
 }
 
@@ -35,58 +34,11 @@ model User {
   updatedAt DateTime @updatedAt
 
   profile            Profile?
-  bookings           Booking[]     @relation("ClientBookings")
-  supervisedClients  Supervision[]     @relation("SupervisorOf")
-  supervisorRef      Supervision?      @relation("SupervisedBy")
+  bookings           Booking[]         @relation("ClientBookings")
   bookedBookings     Booking[]         @relation("BookedBookings")
-  sentInvites        SupervisionInvite[]
-  location           ClientLocation?
   privateLocation    UserLocation?
 
   @@index([role])
-}
-
-model Supervision {
-  id           String   @id @default(uuid())
-  supervisorId String
-  clientId     String   @unique
-  createdAt    DateTime @default(now())
-
-  supervisor   User @relation("SupervisorOf", fields: [supervisorId], references: [id])
-  client       User @relation("SupervisedBy", fields: [clientId], references: [id])
-
-  @@index([supervisorId])
-}
-
-model SupervisionInvite {
-  id           String   @id @default(uuid())
-  supervisorId String
-  clientName   String
-  clientEmail  String?
-  clientId     String?
-  token        String   @unique
-  status       String   @default("PENDING")
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  supervisor   User     @relation(fields: [supervisorId], references: [id])
-
-  @@index([supervisorId, status])
-  @@map("SupervisionInvite")
-}
-
-model ClientLocation {
-  id        String   @id @default(uuid())
-  clientId  String   @unique
-  latitude  Float
-  longitude Float
-  accuracy  Float?
-  timestamp DateTime @default(now())
-
-  client    User     @relation(fields: [clientId], references: [id])
-
-  @@index([clientId])
-  @@map("ClientLocation")
 }
 
 model Profile {

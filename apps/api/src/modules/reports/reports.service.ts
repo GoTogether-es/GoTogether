@@ -72,9 +72,8 @@ export class ReportsService {
     }
 
     const isClient = booking.clientId === userId;
-    const isSupervisedClient = await this.isSupervisorOf(userId, booking.clientId);
 
-    if (!isClient && !isSupervisedClient) {
+    if (!isClient) {
       throw new ForbiddenException('Solo el cliente puede valorar el servicio');
     }
 
@@ -114,9 +113,8 @@ export class ReportsService {
     if (!report) throw new NotFoundException('Valoración no encontrada');
 
     const isClient = report.booking.clientId === userId;
-    const isSupervisedClient = await this.isSupervisorOf(userId, report.booking.clientId);
 
-    if (!isClient && !isSupervisedClient) {
+    if (!isClient) {
       throw new ForbiddenException('Solo el cliente puede editar su valoración');
     }
 
@@ -182,13 +180,6 @@ export class ReportsService {
       if (companion?.profile?.userId === userId) return true;
     }
 
-    return this.isSupervisorOf(userId, booking.clientId);
-  }
-
-  private async isSupervisorOf(supervisorId: string, clientId: string) {
-    const supervision = await this.prisma.supervision.findFirst({
-      where: { supervisorId, clientId },
-    });
-    return !!supervision;
+    return false;
   }
 }

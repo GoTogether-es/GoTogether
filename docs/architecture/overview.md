@@ -15,7 +15,6 @@ graph TB
     subgraph "Frontend (Vercel fra1)"
         NEXT[Next.js 14 App Router]
         RQ[TanStack Query v5]
-        LEAF[Leaflet Maps]
     end
 
     subgraph "Backend (Vercel fra1)"

@@ -18,13 +18,12 @@ Bienvenido a la documentación técnica de GoTogether. Esta carpeta contiene tod
 - [database/migrations](database/migrations.md) — Historial de migraciones aplicadas
 
 ### Backend (API NestJS)
-- [backend/modules](backend/modules.md) — Los 16 módulos y sus responsabilidades
-- [backend/api-endpoints](backend/api-endpoints.md) — Lista completa de 49 endpoints REST
+- [backend/modules](backend/modules.md) — Los 14 módulos y sus responsabilidades
+- [backend/api-endpoints](backend/api-endpoints.md) — Lista completa de 53 endpoints REST
 - [backend/auth](backend/auth.md) — Sistema de autenticación y autorización
 - [backend/booking-state-machine](backend/booking-state-machine.md) — Máquina de estados de reservas (7 estados, 9 transiciones)
 - [backend/availability](backend/availability.md) — Sistema de disponibilidad semanal (grid pintable, timezone, orientativo)
 - [backend/matching](backend/matching.md) — Motor de búsqueda, ubicación y score de recomendados
-- [backend/supervision](backend/supervision.md) — Supervisores, invitaciones, ubicación en tiempo real
 - [backend/notifications](backend/notifications.md) — Notificaciones in-app con Realtime
 
 ### Frontend (Next.js)
@@ -40,8 +39,8 @@ Bienvenido a la documentación técnica de GoTogether. Esta carpeta contiene tod
 
 ### Proyecto
 - [roadmap](roadmap.md) — Estado actual, fases completadas y pendientes
-- [changelog](changelog.md) — Registro de cambios por versión (hasta v0.1.0-alpha.33)
-- [testing](testing.md) — 287 tests (163 API + 124 Web), infraestructura, convenciones
+- [changelog](changelog.md) — Registro de cambios por versión (hasta v0.1.0-alpha.34)
+- [testing](testing.md) — 295 tests (148 API + 147 Web), infraestructura, convenciones
 
 ---
 
@@ -55,7 +54,7 @@ Si es tu primera vez en el proyecto, lee en este orden:
 4. [backend/booking-state-machine](backend/booking-state-machine.md) — para entender el núcleo del negocio
 5. [backend/api-endpoints](backend/api-endpoints.md) — para conocer los endpoints disponibles
 6. [frontend/flows](frontend/flows.md) — para entender los flujos de usuario
-7. [testing](testing.md) — para saber cómo ejecutar y escribir tests (287 existentes)
+7. [testing](testing.md) — para saber cómo ejecutar y escribir tests (295 existentes)
 8. [troubleshooting](troubleshooting.md) — si algo falla al arrancar
 
 ## Primeros pasos (guía rápida)
@@ -92,7 +91,7 @@ pnpm test
 
 | Capa | Tecnología |
 |------|-----------|
-| Frontend | Next.js 14 (App Router), React 18, Tailwind CSS, TanStack Query v5, Leaflet |
+| Frontend | Next.js 14 (App Router), React 18, Tailwind CSS, TanStack Query v5 |
 | Backend | NestJS 10, Prisma ORM 5.x, TypeScript strict |
 | Base de datos | PostgreSQL (Supabase) |
 | Auth | Supabase Auth (magic link JWT) |
@@ -100,7 +99,7 @@ pnpm test
 | Tiempo real | Supabase Realtime (Postgres Changes) |
 | Email | Resend (magic link, transaccionales) |
 | Pagos | Stripe (deshabilitado en alpha) |
-| Testing | Jest 29.7 (287 tests) |
+| Testing | Jest 29.7 (295 tests) |
 | Hosting | Vercel (fra1), Supabase free tier |
 | Package manager | pnpm 10 |
 

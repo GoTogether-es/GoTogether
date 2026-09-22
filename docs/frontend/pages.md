@@ -21,7 +21,6 @@ Todas las páginas están bajo `apps/web/src/app/` usando Next.js 14 App Router.
   /                             Selección de rol
   /register/client              Registro de cliente
   /register/companion           Registro de acompañante
-  /supervisor                   Registro de supervisor
 /explorar                       Buscar acompañantes
   /[id]                         Detalle de acompañante
 /solicitud?companionId=X        Crear solicitud de reserva
@@ -31,12 +30,10 @@ Todas las páginas están bajo `apps/web/src/app/` usando Next.js 14 App Router.
 /coordinacion
   /                             Redirige a /reservas
   /[bookingId]                  Chat en tiempo real
-/perfil?onboarding=true&role=X  Ver/editar perfil
+/perfil?onboarding=true         Ver/editar perfil
 /valoracion
   /                             Redirige a /reservas
   /[bookingId]                  Crear/ver valoración
-/supervision                    Gestionar supervisión
-  /accept?token=X               Aceptar invitación
 /admin                          Panel de administración
 /legal/privacy                  Privacidad
 /legal/terms                    Términos
@@ -105,7 +102,7 @@ Verifica si el usuario tiene perfil:
 **Auth:** Protegida
 
 Indicador de progreso ([StepIndicator](components.md#stepindicator)) mostrando paso 1/3.
-Tres tarjetas interactivas (botones nativos): Cliente, Acompañante, Supervisor.
+Dos tarjetas interactivas (botones nativos): Cliente, Acompañante.
 Redirige a la página de registro correspondiente.
 
 ### `/onboarding/register/client` — Registro cliente
@@ -129,12 +126,6 @@ Indicador de progreso (paso 2/3). Formulario con:
 - Especialidades
 - [Subida de certificados](components.md#fileupload) (penales + sexuales)
 - Al enviar: limpia auto-guardado, `upsertProfile` con `isCompanion: true` → redirige a `/panel`
-
-### `/onboarding/supervisor` — Registro supervisor
-**Archivo:** `onboarding/supervisor/page.tsx`
-**Auth:** Protegida
-
-Formulario para buscar usuarios existentes o invitar por email.
 
 ### `/explorar` — Buscar acompañantes
 **Archivo:** `explorar/page.tsx`
@@ -215,10 +206,9 @@ Chat en tiempo real con:
 **Auth:** Protegida
 
 Dos modos:
-- **Vista:** tarjetas con avatar, info personal, acompañante (especialidades, verificación, rating), discapacidad, preferencias. Botón lápiz para editar. Card de ubicación (clientes) o card "Ir al Panel" (acompañantes). Suspense con spinner.
+- **Vista:** tarjetas con avatar, info personal, acompañante (especialidades, verificación, rating), discapacidad, preferencias. Botón lápiz para editar. Card "Ir al Panel" (acompañantes). Suspense con spinner.
 - **Edición:** formularios con inputs. Subida de avatar. Especialidades (solo acompañantes). Discapacidad (solo clientes, oculta para acompañantes). Guardar/Cancelar.
-- **Onboarding** (`?onboarding=true`): arranca en modo edición sin botón cancelar.
-- **JSX reestructurado:** `LocationSharingCard` y `PanelLink` fuera del card de compañero (antes estaban anidados incorrectamente).
+- **Onboarding** (`?onboarding=true`): arranca en modo edición sin botón cancelar y redirige a `/explorar` al guardar.
 
 ### `/valoracion/[bookingId]` — Valorar
 **Archivo:** `valoracion/[bookingId]/page.tsx`
@@ -229,15 +219,6 @@ Formulario de valoración:
 - Comentario opcional
 - Muestra valoración existente si ya se creó
 - Solo disponible para reservas COMPLETED
-
-### `/supervision` — Supervisión
-**Archivo:** `supervision/page.tsx`
-**Auth:** Protegida + restringida a rol SUPERVISOR
-
-Panel con 3 pestañas:
-- **Mis supervisados**: buscar, vincular, eliminar clientes y gestionar invitaciones
-- **Reservas de clientes**: tabla paginada con todas las reservas de los supervisados
-- **Ubicación**: mapa Leaflet en tiempo real con la posición de los clientes que comparten ubicación
 
 ### `/admin` — Administración
 **Archivo:** `admin/page.tsx`

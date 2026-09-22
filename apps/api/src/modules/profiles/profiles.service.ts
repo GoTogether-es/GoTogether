@@ -21,7 +21,7 @@ export class ProfilesService {
       sexualCheck,
       penalCertificate,
       sexualCertificate,
-      role: requestedRole,
+      role: _role,
       city,
       fullAddress,
       ...profileData
@@ -66,14 +66,9 @@ export class ProfilesService {
           data: { role: UserRole.COMPANION },
         }),
       ]);
-    } else if (requestedRole === 'SUPERVISOR') {
-      await this.prisma.user.update({
-        where: { id: userId },
-        data: { role: UserRole.SUPERVISOR },
-      });
     } else {
       const user = await this.prisma.user.findUnique({ where: { id: userId } });
-      if (user && user.role !== UserRole.SUPERVISOR && user.role !== UserRole.ADMIN) {
+      if (user && user.role !== UserRole.ADMIN) {
         await this.prisma.user.update({
           where: { id: userId },
           data: { role: UserRole.CLIENT },

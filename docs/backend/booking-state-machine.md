@@ -5,7 +5,7 @@ tags: [backend, bookings, state-machine]
 # Máquina de Estados de Reservas
 
 **Archivo principal:** `apps/api/src/modules/bookings/bookings.service.ts`
-**Tests:** `bookings.service.spec.ts` (30 tests)
+**Tests:** `bookings.service.spec.ts` (48 tests)
 
 ## Estados y transiciones
 
@@ -46,12 +46,12 @@ Las transiciones no listadas lanzan `BadRequestException`.
 
 | Transición | Quién puede | Validación |
 |-----------|-------------|------------|
-| DRAFT → REQUESTED | Cliente (o supervisor del cliente) | `isClient \|\| isSupervisedClient` |
+| DRAFT → REQUESTED | Cliente | `isClient` |
 | REQUESTED → ACCEPTED | Acompañante asignado o cualquier acompañante (claim) | `isCompanion \|\| canClaim` |
 | REQUESTED → DECLINED | Acompañante asignado o cualquier acompañante (claim) | `isCompanion \|\| canClaim` |
 | ACCEPTED → IN_PROGRESS | Acompañante asignado | `isCompanion` |
 | IN_PROGRESS → COMPLETED | Acompañante o cliente | `isCompanion \|\| isClient` |
-| ANY → CANCELLED | Cliente, acompañante, o supervisor | `isClient \|\| isCompanion \|\| isSupervisedClient` |
+| ANY → CANCELLED | Cliente o acompañante | `isClient \|\| isCompanion` |
 
 ### `canClaim`
 Si un acompañante (con `CompanionProfile`) acepta una reserva que no tiene `companionId` asignado (open booking), se asigna automáticamente `updateData.companionId`.
@@ -62,7 +62,6 @@ Si un acompañante (con `CompanionProfile`) acepta una reserva que no tiene `com
 const isClient = booking.clientId === userId;
 const isCompanion = user.profile?.companion && booking.companionId === user.profile.companion.id;
 const canClaim = user.profile?.companion && !booking.companionId;
-const isSupervisedClient = await isSupervisorOf(userId, booking.clientId);
 ```
 
 ## Efectos secundarios automáticos
@@ -82,7 +81,6 @@ const isSupervisedClient = await isSupervisorOf(userId, booking.clientId);
 |--------|------|-------------|
 | `POST` | `/bookings` | Crear reserva (DRAFT) |
 | `GET` | `/bookings/me` | Mis reservas (rol-aware) |
-| `GET` | `/bookings/open` | Reservas REQUESTED sin compañero (marketplace) |
 | `GET` | `/bookings/:id` | Detalle de reserva |
 | `PUT` | `/bookings/:id/request` | Solicitar (DRAFT → REQUESTED) |
 | `PUT` | `/bookings/:id/status` | Cambiar estado |
@@ -108,12 +106,3 @@ const isSupervisedClient = await isSupervisorOf(userId, booking.clientId);
    - Email al cliente
 7. **Cliente valora** → `POST /reports/:bookingId`
    - Recalcula rating del compañero
-
-## Flujo alternativo: supervisión
-
-Un **supervisor** puede actuar en nombre de su cliente supervisado:
-- `POST /bookings` con `bookedById` = supervisor, `clientId` = cliente
-- `PUT /bookings/:id/request` el supervisor solicita en nombre del cliente
-- `PUT /bookings/:id/status { CANCELLED }` el supervisor cancela
-
-La validación usa `isSupervisorOf(userId, clientId)` que consulta la tabla `Supervision`.

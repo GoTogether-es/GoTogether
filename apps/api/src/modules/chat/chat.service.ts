@@ -88,11 +88,6 @@ export class ChatService {
       if (companion?.profile?.userId === userId) return;
     }
 
-    const supervision = await this.prisma.supervision.findFirst({
-      where: { supervisorId: userId, clientId: booking.clientId },
-    });
-    if (supervision) return;
-
     throw new ForbiddenException('No eres participante de esta reserva');
   }
 }

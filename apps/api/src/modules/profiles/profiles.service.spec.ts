@@ -49,35 +49,6 @@ describe('ProfilesService', () => {
       );
     });
 
-    it('assigns SUPERVISOR role when requested role is SUPERVISOR', async () => {
-      prisma.profile.upsert.mockResolvedValue(mockProfile());
-      prisma.user.update.mockResolvedValue(mockUser({ role: UserRole.SUPERVISOR }));
-      prisma.profile.findUnique.mockResolvedValue(mockProfile());
-      prisma.userLocation.upsert.mockResolvedValue({});
-
-      await service.upsertProfile('user-1', {
-        ...baseDto,
-        role: 'SUPERVISOR',
-      } as any);
-
-      expect(prisma.user.update).toHaveBeenCalledWith(
-        expect.objectContaining({ data: { role: UserRole.SUPERVISOR } }),
-      );
-    });
-
-    it('does not downgrade SUPERVISOR to CLIENT on re-upsert', async () => {
-      prisma.profile.upsert.mockResolvedValue(mockProfile());
-      prisma.user.findUnique.mockResolvedValue(mockUser({ role: UserRole.SUPERVISOR }));
-      prisma.profile.findUnique.mockResolvedValue(mockProfile());
-      prisma.userLocation.upsert.mockResolvedValue({});
-
-      await service.upsertProfile('user-1', baseDto as any);
-
-      expect(prisma.user.update).not.toHaveBeenCalledWith(
-        expect.objectContaining({ data: { role: UserRole.CLIENT } }),
-      );
-    });
-
     it('does not downgrade ADMIN to CLIENT on re-upsert', async () => {
       prisma.profile.upsert.mockResolvedValue(mockProfile());
       prisma.user.findUnique.mockResolvedValue(mockUser({ role: UserRole.ADMIN }));

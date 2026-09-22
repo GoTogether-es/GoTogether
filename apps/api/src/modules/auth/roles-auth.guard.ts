@@ -7,7 +7,7 @@ import { PrismaService } from '../prisma/prisma.service';
 
 // NOTE: RolesAuthGuard and Roles are available for use with @UseGuards(RolesAuthGuard)
 // and @Roles(UserRole.xxx) decorators. Currently, role enforcement happens at the
-// service layer (e.g., requireSupervisorRole in supervision.service.ts).
+// service layer (e.g., profile role assignment in profiles.service.ts).
 // To enable guard-based RBAC: apply @Roles() decorator on controller methods and
 // add @UseGuards(RolesAuthGuard) instead of @UseGuards(SupabaseAuthGuard).
 

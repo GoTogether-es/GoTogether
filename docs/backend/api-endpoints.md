@@ -14,12 +14,6 @@ Lista completa de todos los endpoints REST del backend NestJS.
 | GET | `/auth/me` | JWT | Validar y sincronizar usuario |
 | POST | `/auth/logout` | JWT | Cerrar sesión |
 
-## Users
-
-| Método | Ruta | Auth | Descripción |
-|--------|------|------|-------------|
-| GET | `/users?search=` | JWT | Listar/buscar usuarios |
-
 ## Profiles
 
 | Método | Ruta | Auth | Descripción |
@@ -35,7 +29,6 @@ Lista completa de todos los endpoints REST del backend NestJS.
 |--------|------|------|-------------|
 | POST | `/bookings` | JWT | Crear reserva (DRAFT) |
 | GET | `/bookings/me` | JWT | Mis reservas |
-| GET | `/bookings/open` | JWT | Reservas abiertas (marketplace) |
 | GET | `/bookings/:id` | JWT | Detalle de reserva |
 | PUT | `/bookings/:id/request` | JWT | Solicitar (DRAFT → REQUESTED) |
 | PUT | `/bookings/:id/status` | JWT | Cambiar estado |
@@ -108,20 +101,6 @@ Lista completa de todos los endpoints REST del backend NestJS.
 { "rating": 5, "summary": "Excelente servicio" }
 ```
 
-## Supervision
-
-| Método | Ruta | Auth | Descripción |
-|--------|------|------|-------------|
-| POST | `/supervision` | JWT | Vincular con cliente |
-| POST | `/supervision/invite` | JWT | Invitar por email |
-| GET | `/supervision/accept?token=` | Ninguna | Aceptar invitación |
-| GET | `/supervision/invites` | JWT | Invitaciones pendientes |
-| DELETE | `/supervision/invite/:id` | JWT | Cancelar invitación |
-| GET | `/supervision/clients` | JWT | Clientes supervisados |
-| GET | `/supervision/supervisor` | JWT | Mi supervisor |
-| DELETE | `/supervision/:id` | JWT | Eliminar supervisión |
-| GET | `/supervision/bookings?page=&limit=` | JWT | Reservas de clientes supervisados |
-
 ## Payments (deshabilitado)
 
 | Método | Ruta | Auth | Descripción |
@@ -165,10 +144,10 @@ Lista completa de todos los endpoints REST del backend NestJS.
 
 ## Totales
 
-- **Endpoints totales:** 64
-- **Protegidos (JWT):** 39
+- **Endpoints totales:** 53
+- **Protegidos (JWT):** 29
 - **Protegidos (admin key):** 18
-- **Públicos:** 7 (magic-link, companions, companions/:id, matching, services, supervision accept, webhook)
+- **Públicos:** 6 (magic-link, companions, companions/:id, matching, services, webhook)
 
 ## Formato de errores
 

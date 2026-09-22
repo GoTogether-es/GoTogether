@@ -1,6 +1,21 @@
 
 ---
 
+## v0.1.0-alpha.34 — Septiembre 2026 (retirada de supervisión y ubicación en tiempo real)
+
+### High
+- **Rol SUPERVISOR eliminado**: retirado el módulo `supervision` completo (invitaciones, agenda de clientes, reservas delegadas) de la API, la web y el esquema de base de datos (`Supervision`, `SupervisionInvite`, valeur `SUPERVISOR` del enum `UserRole`). Los usuarios con ese rol se degradan a `CLIENT`.
+- **Ubicación en tiempo real eliminada**: retirados `ClientLocation`, el mapa Leaflet y la compartición de ubicación en `/perfil`. La ubicación de perfil (`UserLocation`, geocodificación Nominatim y distancia en Explorar) se mantiene.
+- **Migración destructiva aplicada** en producción (`remove_supervision_realtime_location`): DROP de las 3 tablas + ALTER TYPE. Documentada en [migrations](database/migrations.md).
+- **`GET /users` eliminado**: quedó sin consumidores al retirar la búsqueda de supervisión (módulo `users` completo eliminado).
+
+### Medium
+- **Frontend**: eliminadas las rutas `/supervision` y `/onboarding/supervisor`, la tarjeta de ubicación y `use-location-sharing`. `perfil` redirige siempre a `/explorar` tras el onboarding. Logos Leaflet desinstalados.
+- **Backend**: ramas de supervisor retiradas de `bookings`, `reports`, `chat` y `profiles`. `upsert-profile.dto` limita a `CLIENT`/`COMPANION`. Plantillas de email de invitación eliminadas.
+- **Documentación**: roadmap actualizado (supervisión y ubicación en tiempo real pasan a "A futuro"), docs de backend, frontend, BD e infraestructura alineados. Test counts actualizados (295 tests: 148 API + 147 Web).
+
+---
+
 ## v0.1.0-alpha.33 — Mayo 2026 (ubicación y recomendados)
 
 ### High

@@ -96,7 +96,7 @@ El resultado se almacena en `req.user` como:
 ### RolesAuthGuard
 - **Archivo:** `roles-auth.guard.ts`
 - **Función:** Combina autenticación JWT + verificación de roles
-- **Uso:** `@Roles(UserRole.SUPERVISOR)` + `@UseGuards(RolesAuthGuard)`
+- **Uso:** `@Roles(UserRole.COMPANION)` + `@UseGuards(RolesAuthGuard)`
 - **Estado:** Funcional desde v0.1.1-alpha
 
 ## Troubleshooting
@@ -152,13 +152,13 @@ RESEND_FROM=GoTogether <info@gotogether.es>
 
 El middleware de Next.js protege las rutas del frontend:
 
-- **Rutas protegidas** (requieren sesión Supabase): `/onboarding`, `/solicitud`, `/perfil`, `/reservas`, `/coordinacion`, `/valoracion`, `/supervision`, `/panel`, `/historial`, `/admin`
+- **Rutas protegidas** (requieren sesión Supabase): `/onboarding`, `/solicitud`, `/perfil`, `/reservas`, `/coordinacion`, `/valoracion`, `/panel`, `/historial`, `/admin`
 - **Rutas públicas:** `/`, `/explorar`, `/info`, `/nosotros`, `/contacto`, `/primeros-pasos`, `/legal`, `/auth`, `/api`, `/_next`, `/favicon.ico`
 - **Sin protección (gate propio):** `/admin` — tiene su propio login con contraseña
 
 Si un usuario no autenticado accede a una ruta protegida, es redirigido a `/auth/login?redirect=<ruta>`.
 
-> [!note] El middleware solo verifica autenticación (JWT). El control de acceso por rol se hace a nivel de página: `PanelPage` redirige a `/perfil` si el usuario no es compañero (`!profile?.companion`), y `SupervisionPage` verifica `user.role === 'SUPERVISOR'` vía `syncUser()` en un efecto client-side.
+> [!note] El middleware solo verifica autenticación (JWT). El control de acceso por rol se hace a nivel de página: `PanelPage` redirige a `/perfil` si el usuario no es compañero (`!profile?.companion`).
 
 ## Admin
 

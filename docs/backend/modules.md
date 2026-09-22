@@ -4,7 +4,7 @@ tags: [backend, nestjs, modules]
 
 # Módulos del Backend
 
-El backend está organizado en 16 módulos NestJS bajo `apps/api/src/modules/`. Cada módulo sigue el patrón: `controller.ts` (rutas), `service.ts` (lógica), `module.ts` (registro DI), y opcionalmente `dto/` (validación).
+El backend está organizado en 14 módulos NestJS bajo `apps/api/src/modules/`. Cada módulo sigue el patrón: `controller.ts` (rutas), `service.ts` (lógica), `module.ts` (registro DI), y opcionalmente `dto/` (validación).
 
 ## Mapa de módulos
 
@@ -14,14 +14,12 @@ AppModule
 ├── ConfigModule (variables de entorno, global)
 ├── ThrottlerModule (rate limiting global)
 ├── AuthModule (magic link, guards, estrategia JWT)
-├── UsersModule (listado de usuarios)
 ├── ProfilesModule (gestión de perfiles)
 ├── BookingsModule (reservas y máquina de estados)
 │   ├── ChatModule (salas de chat y mensajes)
 │   └── NotificationsModule (notificaciones in-app)
 ├── MatchingModule (búsqueda y recomendaciones)
 ├── ReportsModule (valoraciones y ratings)
-├── SupervisionModule (supervisores y clientes)
 ├── PaymentsModule (Stripe, deshabilitado en alpha)
 ├── AdminModule (panel de administración)
 ├── ServicesModule (catálogo de servicios)
@@ -40,9 +38,9 @@ AppModule
 - `admin.guard.ts` — guard para admin (header `x-admin-key`)
 - `roles.guard.ts` — guard y decorador `@Roles()` para RBAC
 - `roles-auth.guard.ts` — guard combinado JWT + roles
-- `mail.templates.ts` — plantillas HTML para emails (magic link, invitación supervisión)
+- `mail.templates.ts` — plantillas HTML para emails (magic link y transaccionales)
 
-> [!note] `@Roles()` y `RolesAuthGuard` son funcionales desde v0.1.1-alpha. `SupabaseJwtStrategy.validate()` consulta la BD para incluir `role` en `req.user`. Los guards se aplican en endpoints de supervisor y otros que requieren RBAC.
+> [!note] `@Roles()` y `RolesAuthGuard` son funcionales desde v0.1.1-alpha. `SupabaseJwtStrategy.validate()` consulta la BD para incluir `role` en `req.user`. Los guards se aplican en los endpoints que requieren RBAC (por ejemplo, acciones de acompañante).
 
 ### Flujo de autenticación
 
@@ -56,13 +54,6 @@ AppModule
 7. req.user = { userId, email }
 ```
 
-## UsersModule
-
-**Archivos:** `users/`
-
-- `GET /users?search=` — Lista usuarios con búsqueda por email o nombre
-- Usado por la página de supervisión para buscar clientes
-
 ## ProfilesModule
 
 **Archivos:** `profiles/`
@@ -74,7 +65,7 @@ AppModule
 
 El upsert de perfil maneja automáticamente el rol del usuario:
 - Si `isCompanion: true` → actualiza `User.role = COMPANION`, crea `CompanionProfile`
-- Si no → actualiza `User.role = CLIENT` (excepto SUPERVISOR/ADMIN)
+- Si no → actualiza `User.role = CLIENT` (excepto ADMIN)
 
 ## BookingsModule
 
@@ -83,7 +74,6 @@ El upsert de perfil maneja automáticamente el rol del usuario:
 Endpoints:
 - `POST /bookings` — Crear reserva DRAFT
 - `GET /bookings/me` — Mis reservas (rol-aware: companion ve por companionId, client por clientId)
-- `GET /bookings/open` — Reservas REQUESTED sin compañero asignado (marketplace)
 - `GET /bookings/:id` — Detalle de reserva
 - `PUT /bookings/:id/request` — DRAFT → REQUESTED
 - `PUT /bookings/:id/status` — Transiciones de estado con permisos por rol
@@ -102,7 +92,7 @@ IN_PROGRESS → COMPLETED (cualquiera), CANCELLED
 Cada transición valida:
 1. Que el estado destino sea válido desde el actual
 2. Que el usuario tenga el rol adecuado
-3. Que el usuario sea el cliente, acompañante asignado o supervisor
+3. Que el usuario sea el cliente o acompañante asignado
 
 Al aceptar (`canClaim`), se asigna automáticamente `companionId` al booking y se crea un `ChatRoom`.
 
@@ -157,23 +147,10 @@ Ordenado por: rating DESC, yearsOnPlatform DESC.
 
 - `GET /reports` — Listar valoraciones del usuario
 - `GET /reports/booking/:bookingId` — Ver valoración de una reserva
-- `POST /reports/:bookingId` — Crear valoración (solo COMPLETED, solo cliente/supervisor)
+- `POST /reports/:bookingId` — Crear valoración (solo COMPLETED, solo cliente)
 - `PUT /reports/:id` — Editar valoración
 
 Al crear/editar: recalcula automáticamente `CompanionProfile.rating` y `yearsOnPlatform`.
-
-## SupervisionModule
-
-**Archivos:** `supervision/`
-
-- `POST /supervision` — Vincular directamente con un cliente existente
-- `POST /supervision/invite` — Enviar invitación por email
-- `GET /supervision/accept?token=` — Aceptar invitación
-- `GET /supervision/invites` — Invitaciones pendientes
-- `DELETE /supervision/invite/:id` — Cancelar invitación
-- `GET /supervision/clients` — Clientes supervisados
-- `GET /supervision/supervisor` — Mi supervisor
-- `DELETE /supervision/:id` — Eliminar supervisión
 
 ## PaymentsModule
 

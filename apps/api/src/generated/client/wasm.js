@@ -130,34 +130,6 @@ exports.Prisma.UserScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.SupervisionScalarFieldEnum = {
-  id: 'id',
-  supervisorId: 'supervisorId',
-  clientId: 'clientId',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.SupervisionInviteScalarFieldEnum = {
-  id: 'id',
-  supervisorId: 'supervisorId',
-  clientName: 'clientName',
-  clientEmail: 'clientEmail',
-  clientId: 'clientId',
-  token: 'token',
-  status: 'status',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.ClientLocationScalarFieldEnum = {
-  id: 'id',
-  clientId: 'clientId',
-  latitude: 'latitude',
-  longitude: 'longitude',
-  accuracy: 'accuracy',
-  timestamp: 'timestamp'
-};
-
 exports.Prisma.ProfileScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -307,7 +279,6 @@ exports.Prisma.NullsOrder = {
 exports.UserRole = exports.$Enums.UserRole = {
   CLIENT: 'CLIENT',
   COMPANION: 'COMPANION',
-  SUPERVISOR: 'SUPERVISOR',
   ADMIN: 'ADMIN'
 };
 
@@ -323,9 +294,6 @@ exports.BookingStatus = exports.$Enums.BookingStatus = {
 
 exports.Prisma.ModelName = {
   User: 'User',
-  Supervision: 'Supervision',
-  SupervisionInvite: 'SupervisionInvite',
-  ClientLocation: 'ClientLocation',
   Profile: 'Profile',
   CompanionProfile: 'CompanionProfile',
   UserLocation: 'UserLocation',

@@ -71,33 +71,14 @@ describe('ReportsService', () => {
       );
     });
 
-    it('throws ForbiddenException if user is not the client or supervisor', async () => {
+    it('throws ForbiddenException if user is not the client', async () => {
       prisma.booking.findUnique.mockResolvedValue(
         mockBooking({ status: BookingStatus.COMPLETED, clientId: 'client-1', report: null }),
       );
-      prisma.supervision.findFirst.mockResolvedValue(null);
 
       await expect(service.create('booking-1', 'other-user', createDto as any)).rejects.toThrow(
         ForbiddenException,
       );
-    });
-
-    it('allows supervisor of client to create report', async () => {
-      prisma.booking.findUnique.mockResolvedValue(
-        mockBooking({ status: BookingStatus.COMPLETED, clientId: 'client-1', report: null }),
-      );
-      prisma.supervision.findFirst.mockResolvedValue({ id: 'sup-1', supervisorId: 'supervisor-1', clientId: 'client-1' });
-      prisma.report.create.mockResolvedValue(mockReport({ id: 'report-new' }));
-      prisma.companionProfile.findUnique.mockResolvedValue(
-        mockCompanionProfile({ profile: { ...mockProfile(), userId: 'comp-user' } }),
-      );
-      prisma.booking.findMany.mockResolvedValue([]);
-      prisma.companionProfile.update.mockResolvedValue(mockCompanionProfile());
-
-      const result = await service.create('booking-1', 'supervisor-1', createDto as any);
-
-      expect(result).toHaveProperty('id', 'report-new');
-      expect(prisma.report.create).toHaveBeenCalledTimes(1);
     });
 
     it('recalculates companion rating on report creation', async () => {
@@ -150,7 +131,6 @@ describe('ReportsService', () => {
       prisma.report.findUnique.mockResolvedValue(
         mockReport({ id: 'report-1', booking: { clientId: 'client-1', companionId: null } }),
       );
-      prisma.supervision.findFirst.mockResolvedValue(null);
 
       await expect(service.update('report-1', 'other-user', {} as any)).rejects.toThrow(ForbiddenException);
     });

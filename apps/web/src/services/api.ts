@@ -9,9 +9,6 @@ import type {
   ChatRoomData,
   ChatMessageData,
   ReportData,
-  SupervisionData,
-  SupervisorData,
-  UserSearchResult,
   PaginatedResponse,
   AdminStats,
   AdminUser,
@@ -492,88 +489,6 @@ export async function getReportByBooking(bookingId: string, opts?: FetchOptions)
   return validateResponse(reportSchema, json, 'getReportByBooking');
 }
 
-
-export async function createSupervision(clientId: string): Promise<SupervisionData> {
-  const headers = await getAuthHeaders();
-  const response = await fetch(`${API_URL}/supervision`, {
-    method: 'POST',
-    headers,
-    body: JSON.stringify({ clientId }),
-  });
-  if (!response.ok) {
-    const err = await response.json().catch(() => ({}));
-    throw new Error(err.message || 'Failed to create supervision');
-  }
-  return response.json();
-}
-
-export async function getMyClients(opts?: FetchOptions): Promise<SupervisionData[]> {
-  const headers = await getAuthHeaders();
-  const response = await fetch(`${API_URL}/supervision/clients`, { headers, signal: opts?.signal });
-  if (!response.ok) throw new Error('Failed to fetch clients');
-  return response.json();
-}
-
-export async function getMySupervisor(opts?: FetchOptions): Promise<SupervisorData> {
-  const headers = await getAuthHeaders();
-  const response = await fetch(`${API_URL}/supervision/supervisor`, { headers, signal: opts?.signal });
-  if (!response.ok) {
-    if (response.status === 404) return null;
-    throw new Error('Failed to fetch supervisor');
-  }
-  return response.json();
-}
-
-export async function removeSupervision(id: string): Promise<void> {
-  const headers = await getAuthHeaders();
-  const response = await fetch(`${API_URL}/supervision/${id}`, {
-    method: 'DELETE',
-    headers,
-  });
-  if (!response.ok) {
-    const err = await response.json().catch(() => ({}));
-    throw new Error(err.message || 'Failed to remove supervision');
-  }
-}
-
-export async function searchUsers(query: string, opts?: FetchOptions): Promise<UserSearchResult[]> {
-  const headers = await getAuthHeaders();
-  const response = await fetch(`${API_URL}/users?search=${encodeURIComponent(query)}`, { headers, signal: opts?.signal });
-  if (!response.ok) throw new Error('Failed to search users');
-  return response.json();
-}
-
-export async function inviteSupervision(data: {
-  clientName: string;
-  clientEmail?: string;
-  clientId?: string;
-}): Promise<{ success: boolean; message?: string }> {
-  const headers = await getAuthHeaders();
-  const response = await fetch(`${API_URL}/supervision/invite`, {
-    method: 'POST',
-    headers,
-    body: JSON.stringify(data),
-  });
-  if (!response.ok) {
-    const err = await response.json().catch(() => ({}));
-    throw new Error(err.message || 'Failed to invite');
-  }
-  return response.json();
-}
-
-export async function acceptInvitation(token: string): Promise<{ success: boolean; needsAuth?: boolean; message?: string }> {
-  const headers = await getAuthHeaders();
-  const response = await fetch(`${API_URL}/supervision/accept?token=${encodeURIComponent(token)}`, { headers });
-  return response.json();
-}
-
-export async function getPendingInvites(): Promise<{ id: string; clientName: string }[]> {
-  const headers = await getAuthHeaders();
-  const response = await fetch(`${API_URL}/supervision/invites`, { headers });
-  if (!response.ok) throw new Error('Failed to fetch pending invites');
-  return response.json();
-}
-
 function adminHeaders(key: string): Record<string, string> {
   return { 'x-admin-key': key, 'Content-Type': 'application/json' };
 }
@@ -711,26 +626,6 @@ export async function adminSendNotification(key: string, data: { title: string; 
   });
   if (!res.ok) throw new Error('Error al enviar notificación');
   return res.json();
-}
-
-export async function cancelInvitation(id: string): Promise<{ success: boolean; message?: string }> {
-  const headers = await getAuthHeaders();
-  const response = await fetch(`${API_URL}/supervision/invite/${id}`, {
-    method: 'DELETE',
-    headers,
-  });
-  if (!response.ok) {
-    const err = await response.json().catch(() => ({}));
-    throw new Error(err.message || 'Failed to cancel invitation');
-  }
-  return response.json();
-}
-
-export async function getSupervisorBookings(page = 1): Promise<PaginatedResponse<AdminBooking>> {
-  const headers = await getAuthHeaders();
-  const response = await fetch(`${API_URL}/supervision/bookings?page=${page}&limit=20`, { headers });
-  if (!response.ok) throw new Error('Failed to fetch client bookings');
-  return response.json();
 }
 
 export async function getNotifications(): Promise<NotificationData[]> {

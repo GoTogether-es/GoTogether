@@ -106,3 +106,26 @@ Añade columna `updatedAt` e índice compuesto al modelo `AvailabilitySlot`:
 ALTER TABLE "AvailabilitySlot" ADD COLUMN "updatedAt" TIMESTAMP NOT NULL DEFAULT now();
 CREATE INDEX "AvailabilitySlot_companionId_dayOfWeek_idx" ON "AvailabilitySlot" ("companionId", "dayOfWeek");
 ```
+
+### 5. `remove_supervision_realtime_location`
+**Fecha:** Septiembre 2026
+
+Elimina la supervisión (`Supervision`, `SupervisionInvite`) y la ubicación en tiempo real (`ClientLocation`). Retira el valor `SUPERVISOR` del enum `UserRole` **recreando el enum** (PostgreSQL no permite `DROP VALUE` cuando el enum está en uso como tipo de columna; los usuarios que lo tuvieran se degradan a `CLIENT` antes de recrearlo):
+
+```sql
+-- Suelta FKs y elimina las 3 tablas
+DROP TABLE IF EXISTS "ClientLocation";
+DROP TABLE IF EXISTS "SupervisionInvite";
+DROP TABLE IF EXISTS "Supervision";
+
+-- Degrada a CLIENT los usuarios con rol SUPERVISOR
+UPDATE "User" SET "role" = 'CLIENT' WHERE "role" = 'SUPERVISOR';
+
+-- Recrea el enum sin SUPERVISOR (patrón recomendado en Supabase)
+ALTER TYPE "UserRole" RENAME TO "UserRole_legacy";
+CREATE TYPE "UserRole" AS ENUM ('CLIENT', 'COMPANION', 'ADMIN');
+ALTER TABLE "User" ALTER COLUMN "role" TYPE "UserRole" USING ("role"::text::"UserRole");
+DROP TYPE "UserRole_legacy";
+```
+
+> [!note] Migración destructiva aprobada: en producción había 0 filas en las tres tablas y 0 usuarios con rol `SUPERVISOR`.

@@ -144,34 +144,6 @@ export type ReportData = {
   summary: string | null;
 };
 
-export type SupervisionData = {
-  id: string;
-  supervisorId: string;
-  clientId: string;
-  client?: {
-    id: string;
-    email: string;
-    profile?: { fullName: string } | null;
-  };
-};
-
-export type SupervisorData = {
-  id: string;
-  supervisorId: string;
-  clientId: string;
-  supervisor?: {
-    id: string;
-    email: string;
-    profile?: { fullName: string } | null;
-  };
-} | null;
-
-export type UserSearchResult = {
-  id: string;
-  email: string;
-  profile?: { fullName: string } | null;
-};
-
 export type PaginatedResponse<T> = {
   data: T[];
   meta: {

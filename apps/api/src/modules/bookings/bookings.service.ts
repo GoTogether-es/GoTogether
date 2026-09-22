@@ -50,12 +50,6 @@ export class BookingsService {
     });
     if (!user) throw new NotFoundException('Usuario no encontrado');
 
-    if (user.role === UserRole.SUPERVISOR) {
-      throw new ForbiddenException(
-        'Los supervisores no pueden crear reservas para sí mismos. Usa el endpoint de supervisión para crear reservas en nombre de tu cliente.',
-      );
-    }
-
     let serviceType = dto.serviceType;
     let serviceId: string | null = null;
 
@@ -174,8 +168,6 @@ export class BookingsService {
       return booking;
     }
 
-    if (await this.isSupervisorOf(userId, booking.clientId)) return booking;
-
     throw new ForbiddenException('No tienes permiso para ver esta reserva');
   }
 
@@ -240,13 +232,12 @@ export class BookingsService {
     const isClient = booking.clientId === userId;
     const isCompanion =
       user.profile?.companion && booking.companionId === user.profile.companion.id;
-    const isSupervisedClient = await this.isSupervisorOf(userId, booking.clientId);
 
     const updateData: any = { status: dto.status };
 
     switch (dto.status) {
       case BookingStatus.REQUESTED:
-        if (!isClient && !isSupervisedClient) throw new ForbiddenException('Solo el cliente puede solicitar');
+        if (!isClient) throw new ForbiddenException('Solo el cliente puede solicitar');
         break;
       case BookingStatus.ACCEPTED: {
         if (!isCompanion) throw new ForbiddenException('Solo el acompañante asignado puede aceptar');
@@ -317,7 +308,7 @@ export class BookingsService {
         break;
       }
       case BookingStatus.CANCELLED:
-        if (!isClient && !isCompanion && !isSupervisedClient) {
+        if (!isClient && !isCompanion) {
           throw new ForbiddenException('No tienes permiso para cancelar');
         }
         if (isCompanion && booking.clientId) {
@@ -399,13 +390,6 @@ export class BookingsService {
         status: 'CONFIRMED',
       },
     });
-  }
-
-  private async isSupervisorOf(supervisorId: string, clientId: string) {
-    const supervision = await this.prisma.supervision.findFirst({
-      where: { supervisorId, clientId },
-    });
-    return !!supervision;
   }
 
   async findHistory(userId: string, query: { page?: number; limit?: number; status?: string }) {

@@ -9,7 +9,6 @@ const PROTECTED_ROUTES = [
   '/reservas',
   '/coordinacion',
   '/valoracion',
-  '/supervision',
   '/panel',
   '/historial',
   '/admin',

@@ -118,30 +118,3 @@ export function mockNotification(overrides: Record<string, unknown> = {}) {
     ...overrides,
   };
 }
-
-export function mockSupervision(overrides: Record<string, unknown> = {}) {
-  return {
-    id: 'supervision-1',
-    supervisorId: 'supervisor-1',
-    clientId: 'client-1',
-    createdAt: new Date(),
-    supervisor: null,
-    client: null,
-    ...overrides,
-  };
-}
-
-export function mockSupervisionInvite(overrides: Record<string, unknown> = {}) {
-  return {
-    id: 'invite-1',
-    supervisorId: 'supervisor-1',
-    clientName: 'Test Client',
-    clientEmail: 'client@test.com',
-    clientId: null,
-    token: 'uuid-token-12345',
-    status: 'PENDING',
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    ...overrides,
-  };
-}

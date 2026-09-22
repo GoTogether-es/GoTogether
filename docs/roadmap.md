@@ -6,14 +6,13 @@ tags: [project, roadmap, planning]
 
 ## Estado actual: Alpha (v0.1.0)
 
-El núcleo del marketplace está funcional. Pagos pendientes de activar. Seguridad reforzada (RLS, bcrypt admin, CSP). Rendimiento optimizado (Server Components, next/font, session cache, Vercel EU). 287 tests (163 API + 124 Web). Backend auditado (38 issues → 6 remaining de bajo impacto).
+El núcleo del marketplace está funcional. Pagos pendientes de activar. Seguridad reforzada (RLS, bcrypt admin, CSP). Rendimiento optimizado (Server Components, next/font, session cache, Vercel EU). 298 tests (151 API + 147 Web). Backend auditado (38 issues → 6 remaining de bajo impacto). Rol supervisor y ubicación en tiempo real retirados del producto (ver "A futuro").
 
 ---
 
 ## Fase 1 — Pulido (completada)
 
 - [x] Links del footer apuntan a páginas legales reales
-- [x] Búsqueda de usuarios funcional en supervisión
 - [x] Banner de estado de verificación en `/panel`
 - [x] Badge de verificación en `/perfil` modo vista
 - [x] Ruta `/admin` en `routes.ts`
@@ -32,7 +31,6 @@ El núcleo del marketplace está funcional. Pagos pendientes de activar. Segurid
 ## Fase 3 — Estabilización (bugs) (completada)
 
 - [x] `@Roles()` y `RolesAuthGuard` funcionales
-- [x] `RolesAuthGuard` aplicado en endpoints de supervisor
 - [x] Redis eliminado de `.env` y Docker Compose
 - [x] Emails transaccionales
 - [x] Manejo de reconexión en chat
@@ -48,15 +46,13 @@ El núcleo del marketplace está funcional. Pagos pendientes de activar. Segurid
 - [x] Aplicar tarifas y comisiones (Fijado en 13€/h cliente, 11€/h acompañante y 2€/h plataforma)
 - [ ] UI de pago en el frontend (Stripe Elements o Checkout - Formulario de solicitud actualizado con duración estimada y desglose de precio en vivo)
 
-## Fase 5 — Funcionalidades avanzadas + Admin + Supervisión + Perf + Seguridad (completada)
+## Fase 5 — Funcionalidades avanzadas + Admin + Perf + Seguridad (completada)
 
 - [x] Catálogo de servicios con precios
 - [x] Disponibilidad semanal para acompañantes (grid pintable 30min, orientativa)
 - [x] Historial de servicios
 - [x] Admin ampliado (8 pestañas)
-- [x] Supervisión: reservas de clientes + ubicación en tiempo real
 - [x] Flujo de finalización: acompañante solicita → cliente confirma → valoración
-- [x] Toggle compartir ubicación en perfil
 - [x] RLS activado en 11 tablas + admin bcrypt + CSP reforzado + Swagger solo dev
 - [x] next/font/google, React Query tuning, session cache, Server Components (Home + Info)
 - [x] Vercel región fra1 + memoria API 1769MB + socket.io-client eliminado
@@ -96,7 +92,7 @@ El núcleo del marketplace está funcional. Pagos pendientes de activar. Segurid
 - [ ] Migrar API de Vercel serverless a Fly.io / Railway (WebSocket nativo)
 - [ ] Restaurar Socket.IO para chat si se requiere mayor escala
 - [ ] Plan Pro de Supabase (más almacenamiento, backups, sin pausa)
-- [x] Tests automatizados (Jest: 164 backend + 124 frontend = 288 tests)
+- [x] Tests automatizados (Jest: 151 backend + 147 frontend = 298 tests)
 - [ ] CI/CD con tests pre-merge
 - [ ] Monitorización y alertas (Sentry, Vercel Analytics)
 - [ ] Plan de Disaster Recovery (backups de BD, rollback)
@@ -125,12 +121,22 @@ El núcleo del marketplace está funcional. Pagos pendientes de activar. Segurid
 
 ---
 
+## A futuro (retiradas del producto, sin fecha)
+
+Funcionalidades que existieron en versiones previas de la alpha y se **retiraron deliberadamente** del producto para simplificar el alcance. No forman parte del plan activo:
+
+- [ ] **Rol SUPERVISOR / módulo de supervisión** — agenda de clientes, invitaciones entre usuarios y reservas delegadas. Requiere redefinir permisos (`RolesAuthGuard`), tablas (`Supervision`, `SupervisionInvite`) y flujo de invitación antes de reactivarlo.
+- [ ] **Ubicación en tiempo real del cliente** — compartición de ubicación durante un servicio y mapa en vivo para supervisores (antes con Leaflet). Se retiró junto con el rol supervisor.
+
+> La ubicación del **perfil** (dirección, ciudad, geocodificación Nominatim y distancia en Explorar) **se mantiene**: es esencial para el matching y no depende del rol supervisor.
+
+---
+
 ## Bugs conocidos
 
 1. **Webhook de Stripe no procesa eventos** — El endpoint recibe y verifica la firma pero descarta el evento.
 2. **`STRIPE_PLATFORM_FEE_PERCENT` no se usa** — La variable está en `.env` pero no se lee en el código.
 3. **`ensureUser` crea usuarios placeholder** — `profiles.service.ts:121` genera emails `uuid@placeholder.gotogether` si el usuario no existe en DB.
-4. **`isSupervisorOf` duplicado** — El mismo método privado existe en `BookingsService` y `ReportsService`.
 5. **`UsersService.list()` sin paginación** — Retorna todos los usuarios sin límite.
 6. **`RolesAuthGuard` y `RolesGuard` no aplicados** — Definidos y exportados pero sin usar en ningún endpoint (el control de rol se hace en capa de servicio).
 

@@ -11,16 +11,12 @@ import { Loader2, Pencil, X, UserCircle, Briefcase, Heart, Phone, FileText, MapP
 import { AvatarUpload } from '@/components/avatar-upload';
 import { LinkButton } from '@/components/link-button';
 import { perfilSchema, type PerfilFormData } from '@/lib/schemas';
-import { useLocationSharing } from '@/hooks/use-location-sharing';
 import type { UserProfile } from '@/types';
-import { LOCALE } from '@/lib/constants';
 
 function PerfilContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const isOnboarding = searchParams.get('onboarding') === 'true';
-  const roleParam = searchParams.get('role');
-
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [profileLoaded, setProfileLoaded] = useState(false);
   const [editing, setEditing] = useState(isOnboarding);
@@ -46,7 +42,6 @@ function PerfilContent() {
       preferences: '',
       isCompanion: false,
       specialties: '',
-      role: roleParam === 'supervisor' ? 'SUPERVISOR' : undefined,
     },
   });
 
@@ -82,11 +77,7 @@ function PerfilContent() {
       await upsertProfile(payload);
       toast.success(isOnboarding ? 'Perfil creado con éxito' : 'Cambios guardados con éxito');
       if (isOnboarding) {
-        if (roleParam === 'supervisor') {
-          setTimeout(() => router.push('/onboarding/supervisor'), 1000);
-        } else {
-          setTimeout(() => router.push('/explorar'), 1500);
-        }
+        setTimeout(() => router.push('/explorar'), 1500);
       } else {
         const updated = await getProfile();
         if (updated) {
@@ -229,9 +220,6 @@ function PerfilContent() {
               </div>
             </Card>
           )}
-
-          {/* Location Sharing */}
-          {!isCompanion && <LocationSharingCard />}
 
           {/* Panel link for companions */}
           {isCompanion && (
@@ -470,47 +458,6 @@ function PerfilContent() {
         </form>
       )}
     </div>
-  );
-}
-
-function LocationSharingCard() {
-  const { sharing, lastSent, toggle } = useLocationSharing();
-
-  return (
-    <Card className="p-8 border-0 shadow-xl shadow-blue-900/5">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600">
-            <MapPin className="w-5 h-5" />
-          </div>
-          <div>
-            <h3 className="font-bold text-gray-900">Compartir mi ubicación</h3>
-            <p className="text-sm text-gray-500">
-              {sharing
-                ? lastSent
-                  ? `Enviada a las ${lastSent.toLocaleTimeString(LOCALE)}`
-                  : 'Compartiendo en tiempo real'
-                : 'Permite que tu supervisor vea dónde estás'}
-            </p>
-          </div>
-        </div>
-        <button
-          type="button"
-          onClick={toggle}
-          className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ${
-            sharing ? 'bg-blue-600' : 'bg-gray-200'
-          }`}
-          role="switch"
-          aria-checked={sharing}
-        >
-          <span
-            className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow ring-0 transition duration-200 ${
-              sharing ? 'translate-x-5' : 'translate-x-0'
-            }`}
-          />
-        </button>
-      </div>
-    </Card>
   );
 }
 

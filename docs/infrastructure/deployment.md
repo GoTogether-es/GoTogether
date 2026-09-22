@@ -96,13 +96,12 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 
 ### Emails enviados
 1. **Magic link** — autenticación sin contraseña
-2. **Invitación de supervisión** — email con token para aceptar
 
 ## CI/CD
 
 El despliegue es automático desde GitHub:
 - Push a `main` → Vercel despliega ambos proyectos
-- 287 tests (163 API + 124 Web) disponibles con `pnpm test`
+- 295 tests (148 API + 147 Web) disponibles con `pnpm test`
 - CI pipeline configurada en `.github/workflows/ci.yml` (lint → test → build para api y web)
 
 ## Estructura de archivos de deploy

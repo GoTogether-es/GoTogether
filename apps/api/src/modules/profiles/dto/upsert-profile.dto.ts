@@ -78,6 +78,6 @@ export class UpsertProfileDto {
 
   @IsString()
   @IsOptional()
-  @IsIn(['CLIENT', 'COMPANION', 'SUPERVISOR'])
+  @IsIn(['CLIENT', 'COMPANION'])
   role?: string;
 }

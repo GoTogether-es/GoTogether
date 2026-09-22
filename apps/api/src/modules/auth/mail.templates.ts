@@ -18,23 +18,6 @@ export const getMagicLinkTemplate = (actionLink: string, userName?: string) => {
     </div>`);
 };
 
-export function getSupervisionInviteTemplate(params: {
-  supervisorName: string;
-  clientName: string;
-  acceptUrl: string;
-}) {
-  return wrap('Invitación de supervisión - GoTogether', `
-    <div style="padding:0 40px 40px;color:#374151;line-height:1.6">
-      <h1 style="font-size:24px;font-weight:700;color:#111827;margin-bottom:16px">Invitación de supervisión</h1>
-      <p>Hola ${params.clientName},</p>
-      <p><strong>${params.supervisorName}</strong> te ha invitado a conectar en GoTogether como tu supervisor. Esto le permitirá ayudarte a gestionar tus reservas y acompañamientos.</p>
-      <div style="background:#f8fafc;border-radius:12px;padding:24px;margin:24px 0;border:1px solid #e2e8f0"><p style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#64748b;margin:0 0 4px">Supervisor</p><p style="font-size:18px;font-weight:600;color:#0f172a;margin:0">${params.supervisorName}</p></div>
-      <p>Haz clic en el botón de abajo para aceptar la invitación y comenzar.</p>
-      <div style="margin:32px 0;text-align:center"><a href="${params.acceptUrl}" style="background:${brandColor};color:#fff;padding:16px 32px;border-radius:12px;font-weight:600;text-decoration:none;display:inline-block;font-size:16px;box-shadow:0 4px 6px -1px rgba(37,99,235,.2)">Aceptar invitación</a></div>
-      <p style="font-size:14px;color:#6b7280">Si no conoces a esta persona o no deseas conectar, simplemente ignora este mensaje.</p>
-    </div>`);
-}
-
 export function getBookingAcceptedTemplate(params: {
   userName: string;
   companionName: string;
