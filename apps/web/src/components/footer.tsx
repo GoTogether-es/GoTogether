@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Container } from '@gotogether/ui';
+import { Container } from '@/components/ui';
 import { Heart } from 'lucide-react';
 
 export function Footer() {

@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import { Button, Card, Container, FieldError, Section } from '@gotogether/ui';
+import { Button, Card, Container, FieldError, Section } from '@/components/ui';
 import { createBooking, requestBooking } from '@/services/api';
 import { solicitudSchema, type SolicitudFormData, validateFutureDate } from '@/lib/schemas';
 import { useServices, useCompanion, useCompanionAvailability, useProfile, useCompanions } from '@/services/queries';

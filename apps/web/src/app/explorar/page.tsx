@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Container, Section } from '@gotogether/ui';
+import { Container, Section } from '@/components/ui';
 import { Search, SlidersHorizontal } from 'lucide-react';
 import { CompanionCard } from '@/components/companion-card';
 import { useRecommendations } from '@/services/queries';

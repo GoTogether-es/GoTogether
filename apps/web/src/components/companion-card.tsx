@@ -1,7 +1,7 @@
 'use client';
 
 import { memo } from 'react';
-import { Card } from '@gotogether/ui';
+import { Card } from '@/components/ui';
 import { ShieldCheck, Star } from 'lucide-react';
 import Image from 'next/image';
 import { LinkButton } from '@/components/link-button';

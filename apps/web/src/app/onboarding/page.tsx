@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { Card, Container, Section } from '@gotogether/ui';
+import { Card, Container, Section } from '@/components/ui';
 import { User, UserPlus, ArrowRight } from 'lucide-react';
 import { StepIndicator } from '@/components/step-indicator';
 

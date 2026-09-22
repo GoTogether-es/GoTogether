@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { Button } from '@gotogether/ui';
+import { Button } from '@/components/ui';
 import { AlertTriangle } from 'lucide-react';
 
 interface ConfirmDialogProps {

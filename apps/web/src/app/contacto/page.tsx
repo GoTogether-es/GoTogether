@@ -1,4 +1,4 @@
-import { Card, Container, Section } from '@gotogether/ui';
+import { Card, Container, Section } from '@/components/ui';
 import { Mail, Phone, Send } from 'lucide-react';
 import type { Metadata } from 'next';
 

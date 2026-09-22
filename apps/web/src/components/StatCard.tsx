@@ -1,6 +1,6 @@
 'use client';
 
-import { Card } from '@gotogether/ui';
+import { Card } from '@/components/ui';
 import type { ComponentType } from 'react';
 
 interface StatCardProps {

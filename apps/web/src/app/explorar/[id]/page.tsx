@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Button, Card, Container, Section } from '@gotogether/ui';
+import { Button, Card, Container, Section } from '@/components/ui';
 import { ShieldCheck, Star, Calendar, CheckCircle } from 'lucide-react';
 import { useCompanion, useCompanionAvailability } from '@/services/queries';
 import { SkeletonText, SkeletonAvatar } from '@/components/skeleton';

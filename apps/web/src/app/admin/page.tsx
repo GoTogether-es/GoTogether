@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { Container, Section } from '@gotogether/ui';
+import { Container, Section } from '@/components/ui';
 import { Loader2, ShieldCheck, FileText, Users, LogOut, CalendarDays, DollarSign, Star, Megaphone, Package } from 'lucide-react';
 import {
   adminLogin, adminGetStats, adminGetUsers, adminGetPending,

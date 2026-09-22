@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { Button, Card, Container, Section } from '@gotogether/ui';
+import { Button, Card, Container, Section } from '@/components/ui';
 import {
   ArrowLeft,
   Briefcase,

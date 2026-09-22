@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { Button, Card, Container, Section } from '@gotogether/ui';
+import { Button, Card, Container, Section } from '@/components/ui';
 import { ShieldCheck, Calendar, MapPin, Briefcase, Clock, MessageSquare, Star, CheckCircle, Loader2 } from 'lucide-react';
 import { useMyBookings } from '@/services/queries';
 import { completeByClient } from '@/services/api';

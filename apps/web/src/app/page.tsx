@@ -1,4 +1,4 @@
-import { Card, Container, Section } from '@gotogether/ui';
+import { Card, Container, Section } from '@/components/ui';
 import { LinkButton } from '@/components/link-button';
 import { AuthLink } from '@/components/auth-link';
 import { homeSteps } from '@/lib/content';
