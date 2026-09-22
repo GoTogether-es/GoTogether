@@ -101,7 +101,7 @@ export function NotificationBell() {
       );
     }
     if (notif.bookingId) {
-      router.push(`/reservas`);
+      router.push(`/reservas/${notif.bookingId}`);
       setOpen(false);
     }
   };

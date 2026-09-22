@@ -31,12 +31,6 @@ export class BookingsController {
   }
 
   @UseGuards(SupabaseAuthGuard)
-  @Get('open')
-  findOpenBookings() {
-    return this.bookingsService.findOpenBookings();
-  }
-
-  @UseGuards(SupabaseAuthGuard)
   @Get('history')
   findHistory(
     @Request() req: any,
@@ -59,8 +53,8 @@ export class BookingsController {
 
   @UseGuards(SupabaseAuthGuard)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.bookingsService.findById(id);
+  findOne(@Param('id') id: string, @Request() req: any) {
+    return this.bookingsService.findByIdForUser(id, req.user.userId);
   }
 
   @UseGuards(SupabaseAuthGuard)

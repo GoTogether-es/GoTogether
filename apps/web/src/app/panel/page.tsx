@@ -4,19 +4,19 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button, Card, Container, Section } from '@gotogether/ui';
-import { getMyBookings, getOpenBookings, updateBookingStatus, getProfile, getCompanionAvailability, setMyAvailability, requestCompletion } from '@/services/api';
+import { getMyBookings, updateBookingStatus, getProfile, getCompanionAvailability, setMyAvailability, requestCompletion } from '@/services/api';
 import { Loader2, CalendarDays, ClipboardList, CheckCircle, XCircle, Clock, MessageCircle, ShieldCheck, ShieldAlert } from 'lucide-react';
 import type { BookingData, AvailabilitySlotData } from '@/types';
 import { toast } from 'sonner';
 import { AvailabilityGrid } from '@/components/availability-grid';
 import { StatCard } from '@/components/StatCard';
+import { LinkButton } from '@/components/link-button';
 import { DAY_NAMES, LOCALE } from '@/lib/constants';
 
 export default function PanelPage() {
   const router = useRouter();
   const mountedRef = useRef(true);
   const [myBookings, setMyBookings] = useState<BookingData[]>([]);
-  const [openBookings, setOpenBookings] = useState<BookingData[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [verified, setVerified] = useState<boolean | null>(null);
@@ -45,9 +45,8 @@ export default function PanelPage() {
 
   const loadData = useCallback(async () => {
     try {
-      const [my, open, profile] = await Promise.all([
+      const [my, profile] = await Promise.all([
         getMyBookings(),
-        getOpenBookings(),
         getProfile(),
       ]);
       if (!mountedRef.current) return;
@@ -58,7 +57,6 @@ export default function PanelPage() {
 
       if (!mountedRef.current) return;
       setMyBookings(my);
-      setOpenBookings(open);
       setVerified(profile?.companion?.verified ?? null);
 
       if (profile?.companion) {
@@ -159,7 +157,7 @@ export default function PanelPage() {
         <div className="max-w-5xl mx-auto">
           <div className="mb-8">
             <h1 className="text-3xl font-extrabold mb-2">Panel de Acompañante</h1>
-            <p className="text-gray-500 text-lg">Gestiona tus servicios y descubre nuevas solicitudes.</p>
+            <p className="text-gray-500 text-lg">Gestiona tus solicitudes y servicios.</p>
           </div>
 
           {verified === false && (
@@ -217,74 +215,19 @@ export default function PanelPage() {
             <StatCard label="Completadas" value={completedCount} color="emerald" icon={CheckCircle} />
           </div>
 
-          {/* Open Marketplace - Pending Bookings */}
-          <div className="mb-10">
-            <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-              <ClipboardList className="w-5 h-5 text-amber-600" />
-              Solicitudes abiertas ({openBookings.length})
-            </h2>
-            {openBookings.length === 0 ? (
-              <Card className="p-8 text-center text-gray-400">
-                <Clock className="w-8 h-8 mx-auto mb-2 opacity-40" />
-                No hay solicitudes abiertas en este momento.
-              </Card>
-            ) : (
-              <div className="space-y-4">
-                {openBookings.map((b) => (
-                  <Card key={b.id} className="p-6 border-l-4 border-l-amber-400">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <p className="font-bold text-lg">{b.client?.profile?.fullName || 'Cliente'}</p>
-                          {statusBadge(b.status)}
-                        </div>
-                        <p className="text-gray-600 mb-2">{b.serviceType}</p>
-                        <div className="flex flex-wrap gap-3 text-sm text-gray-500">
-                          <span>{new Date(b.scheduledAt).toLocaleString(LOCALE, { dateStyle: 'long', timeStyle: 'short' })}</span>
-                          <span>{b.address}</span>
-                          {b.disability && <span className="gt-tag text-xs">{b.disability}</span>}
-                        </div>
-                        {b.summary && <p className="text-gray-500 text-sm mt-2">{b.summary}</p>}
-                        <Link href={`/explorar/${b.companionId || b.clientId}`} className="inline-flex items-center gap-1 text-xs text-blue-600 hover:underline mt-2">
-                          Ver detalle →
-                        </Link>
-                      </div>
-                      <div className="flex gap-2 shrink-0">
-                        <Button
-                          variant="primary"
-                          className="px-4 py-2 text-sm"
-                          onClick={() => handleAction(b.id, 'ACCEPTED')}
-                          disabled={actionLoading === b.id}
-                        >
-                          {actionLoading === b.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4 mr-1" />}
-                          {actionLoading !== b.id && 'Aceptar'}
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          className="px-4 py-2 text-sm border-red-200 text-red-600 hover:bg-red-50"
-                          onClick={() => handleAction(b.id, 'DECLINED')}
-                          disabled={actionLoading === b.id}
-                        >
-                          <XCircle className="w-4 h-4" aria-label="Rechazar" />
-                        </Button>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            )}
-          </div>
-
           {/* My Assigned Bookings */}
           <div>
               <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
               <CalendarDays className="w-5 h-5 text-emerald-600" />
               Mis servicios ({myBookings.length})
             </h2>
+            <p className="text-sm text-gray-500 mb-4 -mt-2">
+              Estas son las solicitudes que los clientes te han enviado dirigidas a ti y tus servicios activos.
+            </p>
             {myBookings.length === 0 ? (
               <Card className="p-8 text-center text-gray-400">
                 <ClipboardList className="w-8 h-8 mx-auto mb-2 opacity-40" />
-                No tienes servicios asignados.
+                Aún no tienes solicitudes ni servicios asignados.
               </Card>
             ) : (
               <div className="space-y-4">
@@ -302,8 +245,37 @@ export default function PanelPage() {
                           <span>{b.address}</span>
                           {b.disability && <span className="gt-tag text-xs">{b.disability}</span>}
                         </div>
+                        {b.summary && <p className="text-gray-500 text-sm mt-2">{b.summary}</p>}
+                        <LinkButton
+                          href={`/reservas/${b.id}`}
+                          variant="ghost"
+                          className="inline-flex items-center gap-1 text-xs text-blue-600 px-0 mt-2 h-auto"
+                        >
+                          Ver detalle →
+                        </LinkButton>
                       </div>
                       <div className="flex gap-2 shrink-0">
+                        {b.status === 'REQUESTED' && (
+                          <>
+                            <Button
+                              variant="primary"
+                              className="px-4 py-2 text-sm"
+                              onClick={() => handleAction(b.id, 'ACCEPTED')}
+                              disabled={actionLoading === b.id}
+                            >
+                              {actionLoading === b.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4 mr-1" />}
+                              {actionLoading !== b.id && 'Aceptar'}
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              className="px-4 py-2 text-sm border-red-200 text-red-600 hover:bg-red-50"
+                              onClick={() => handleAction(b.id, 'DECLINED')}
+                              disabled={actionLoading === b.id}
+                            >
+                              <XCircle className="w-4 h-4" aria-label="Rechazar" />
+                            </Button>
+                          </>
+                        )}
                         {b.status === 'ACCEPTED' && b.chatRoom && (
                           <Link href={`/coordinacion/${b.id}`}>
                             <Button variant="primary" className="px-4 py-2 text-sm" aria-label="Iniciar chat">

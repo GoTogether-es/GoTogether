@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useRef, useEffect } from 'react';
+import { Suspense, useState, useRef, useEffect } from 'react';
 import { SkeletonForm } from '@/components/skeleton';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import { Button, Card, Container, FieldError, Section } from '@gotogether/ui';
 import { createBooking, requestBooking } from '@/services/api';
 import { solicitudSchema, type SolicitudFormData, validateFutureDate } from '@/lib/schemas';
-import { useServices, useCompanion, useCompanionAvailability, useProfile } from '@/services/queries';
+import { useServices, useCompanion, useCompanionAvailability, useProfile, useCompanions } from '@/services/queries';
 import { DISABILITY_OPTIONS } from '@/lib/constants';
 import { User, X, Calendar, Clock, Briefcase, MapPin } from 'lucide-react';
 
@@ -18,7 +18,9 @@ const eur = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' 
 function SolicitudForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const companionId = searchParams.get('companionId');
+  const paramCompanionId = searchParams.get('companionId');
+  const [pickedCompanionId, setPickedCompanionId] = useState('');
+  const companionId = (paramCompanionId ?? pickedCompanionId) || null;
   const mountedRef = useRef(true);
 
   useEffect(() => {
@@ -28,6 +30,7 @@ function SolicitudForm() {
   }, []);
 
   const { data: services = [], isLoading: servicesLoading } = useServices();
+  const { data: companions = [], isLoading: companionsLoading } = useCompanions();
   const { data: companion } = useCompanion(companionId ?? '');
   const { data: availabilitySlots = [] } = useCompanionAvailability(companionId ?? '');
   const { data: profile } = useProfile();
@@ -83,6 +86,10 @@ function SolicitudForm() {
     );
 
   const onSubmit = async (data: SolicitudFormData) => {
+    if (!companionId) {
+      toast.error('Selecciona un acompañante para tu solicitud');
+      return;
+    }
     const dateError = validateFutureDate(data.date, data.time);
     if (dateError) {
       setError('date', { message: dateError });
@@ -111,7 +118,7 @@ function SolicitudForm() {
         localTime,
         summary: data.notes || undefined,
         disability,
-        companionId: companionId || undefined,
+        companionId,
         estimatedHours: Number(data.estimatedHours),
         publish: true,
       });
@@ -121,7 +128,7 @@ function SolicitudForm() {
         await requestBooking(booking.id);
       }
       if (!mountedRef.current) return;
-      toast.success(companionId ? 'Solicitud enviada al acompañante' : 'Solicitud publicada correctamente');
+      toast.success('Solicitud enviada al acompañante');
       router.push('/reservas');
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Error al crear la reserva';
@@ -164,10 +171,49 @@ function SolicitudForm() {
             variant="ghost"
             className="h-9 px-3 text-xs shrink-0"
             type="button"
-            onClick={() => router.replace('/solicitud')}
+            onClick={() =>
+              paramCompanionId ? router.replace('/solicitud') : setPickedCompanionId('')
+            }
           >
             <X className="w-4 h-4 mr-1" /> Quitar
           </Button>
+        </div>
+      )}
+
+      {!companionId && (
+        <div className="mb-6 p-4 bg-white rounded-2xl border border-gray-200">
+          <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="companion">
+            ¿A qué acompañante quieres enviar la solicitud?
+          </label>
+          {companionsLoading ? (
+            <div className="gt-input bg-gray-100 animate-pulse h-12 rounded-xl" />
+          ) : companions.length === 0 ? (
+            <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 text-sm text-amber-800">
+              Aún no hay acompañantes disponibles. Explora el directorio más tarde o contacta con
+              GoTogether.
+            </div>
+          ) : (
+            <>
+              <select
+                id="companion"
+                className="gt-input"
+                aria-required="true"
+                value={pickedCompanionId}
+                onChange={(e) => setPickedCompanionId(e.target.value)}
+              >
+                <option value="">Selecciona un acompañante...</option>
+                {companions.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.profile.fullName}
+                    {c.profile.city ? ` · ${c.profile.city}` : ''}
+                  </option>
+                ))}
+              </select>
+              <p className="text-xs text-gray-500 mt-1.5">
+                Tu solicitud irá dirigida a este acompañante y solo él podrá aceptarla o rechazarla.
+              </p>
+            </>
+          )}
         </div>
       )}
 
@@ -389,19 +435,19 @@ function SolicitudForm() {
               variant="primary"
               className="h-12 px-8"
               type="submit"
-              disabled={isSubmitting || noServices}
+              disabled={isSubmitting || noServices || !companionId}
             >
               {isSubmitting
-                ? 'Publicando...'
-                : companionId
-                  ? 'Enviar solicitud al acompañante'
-                  : 'Publicar solicitud'}
+                ? 'Enviando...'
+                : 'Enviar solicitud al acompañante'}
             </Button>
             <Button
               variant="ghost"
               className="h-12 px-8"
               type="button"
-              onClick={() => router.push(companionId ? `/explorar/${companionId}` : '/explorar')}
+              onClick={() =>
+                router.push(paramCompanionId ? `/explorar/${paramCompanionId}` : '/explorar')
+              }
             >
               Cancelar
             </Button>

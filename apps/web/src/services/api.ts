@@ -316,15 +316,6 @@ export async function requestBooking(bookingId: string): Promise<BookingData> {
   return validateResponse(bookingSchema, json, 'requestBooking');
 }
 
-export async function getOpenBookings(): Promise<BookingData[]> {
-  const headers = await getAuthHeaders();
-  const response = await fetch(`${API_URL}/bookings/open`, { headers });
-  if (!response.ok) throw new Error('Failed to fetch open bookings');
-  const data = await response.json();
-  if (!Array.isArray(data)) return [];
-  return data.map((item: unknown) => validateResponse(bookingSchema, item, 'getOpenBookings'));
-}
-
 export async function getMyBookings(opts?: FetchOptions): Promise<BookingData[]> {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/bookings/me`, { headers, signal: opts?.signal });

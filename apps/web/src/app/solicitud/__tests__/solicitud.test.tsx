@@ -13,6 +13,7 @@ jest.mock('next/navigation', () => ({
 
 jest.mock('@/services/queries', () => ({
   useServices: jest.fn(),
+  useCompanions: jest.fn(),
   useCompanion: jest.fn(),
   useCompanionAvailability: jest.fn(),
   useProfile: jest.fn(),
@@ -34,6 +35,11 @@ const mockService = {
   active: true,
 };
 
+const mockCompanions = [
+  { id: 'comp-1', profile: { fullName: 'Carlos', city: 'Málaga' } },
+  { id: 'comp-2', profile: { fullName: 'Lucía', city: 'Madrid' } },
+];
+
 function renderPage() {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return render(
@@ -43,12 +49,24 @@ function renderPage() {
   );
 }
 
+function fillBookingForm() {
+  fireEvent.change(screen.getByLabelText(/¿Qué tipo de acompañamiento buscas\?/i), {
+    target: { value: 'svc-1' },
+  });
+  fireEvent.change(screen.getByLabelText(/Fecha prevista/i), { target: { value: '2026-12-01' } });
+  fireEvent.change(screen.getByLabelText(/Hora de inicio/i), { target: { value: '10:00' } });
+  fireEvent.change(screen.getByLabelText(/Dirección o punto de encuentro/i), {
+    target: { value: 'Calle Mayor 1, Madrid' },
+  });
+}
+
 describe('SolicitudPage', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockRouterPush.mockClear();
     mockSearchParams = new URLSearchParams();
     queries.useServices.mockReturnValue({ data: [mockService], isLoading: false });
+    queries.useCompanions.mockReturnValue({ data: mockCompanions, isLoading: false });
     queries.useCompanion.mockReturnValue({ data: null });
     queries.useCompanionAvailability.mockReturnValue({ data: [] });
     queries.useProfile.mockReturnValue({ data: null });
@@ -65,7 +83,24 @@ describe('SolicitudPage', () => {
 
     expect(screen.getByText(/no hay servicios disponibles/i)).toBeInTheDocument();
     expect(screen.queryByRole('combobox', { name: /acompañamiento buscas/i })).not.toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Publicar solicitud/i })).toBeDisabled();
+    expect(screen.getByRole('button', { name: /Enviar solicitud al acompañante/i })).toBeDisabled();
+  });
+
+  it('shows the companion picker when no companion is selected and submit is disabled', () => {
+    renderPage();
+
+    expect(screen.getByLabelText(/¿A qué acompañante quieres enviar la solicitud\?/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Enviar solicitud al acompañante/i })).toBeDisabled();
+  });
+
+  it('enables submit once a companion is picked from the list', () => {
+    renderPage();
+
+    fireEvent.change(screen.getByLabelText(/¿A qué acompañante quieres enviar la solicitud\?/i), {
+      target: { value: 'comp-1' },
+    });
+
+    expect(screen.getByRole('button', { name: /Enviar solicitud al acompañante/i })).toBeEnabled();
   });
 
   it('shows the selected companion in the banner with a remove option', () => {
@@ -98,21 +133,16 @@ describe('SolicitudPage', () => {
     expect(screen.getByText(/Aviso de disponibilidad/i)).toBeInTheDocument();
   });
 
-  it('publishes the booking in a single call with publish: true', async () => {
+  it('publishes the booking in a single call with publish: true and the selected companion', async () => {
     (api.createBooking as jest.Mock).mockResolvedValue({ id: 'b-1', status: 'REQUESTED' });
 
     renderPage();
 
-    fireEvent.change(screen.getByLabelText(/¿Qué tipo de acompañamiento buscas\?/i), {
-      target: { value: 'svc-1' },
+    fillBookingForm();
+    fireEvent.change(screen.getByLabelText(/¿A qué acompañante quieres enviar la solicitud\?/i), {
+      target: { value: 'comp-1' },
     });
-    fireEvent.change(screen.getByLabelText(/Fecha prevista/i), { target: { value: '2026-12-01' } });
-    fireEvent.change(screen.getByLabelText(/Hora de inicio/i), { target: { value: '10:00' } });
-    fireEvent.change(screen.getByLabelText(/Dirección o punto de encuentro/i), {
-      target: { value: 'Calle Mayor 1, Madrid' },
-    });
-
-    fireEvent.click(screen.getByRole('button', { name: /Publicar solicitud/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Enviar solicitud al acompañante/i }));
 
     await waitFor(() => expect(api.createBooking).toHaveBeenCalledTimes(1));
 
@@ -122,7 +152,7 @@ describe('SolicitudPage', () => {
         address: 'Calle Mayor 1, Madrid',
         publish: true,
         estimatedHours: 1,
-        companionId: undefined,
+        companionId: 'comp-1',
       }),
     );
     await waitFor(() => expect(mockRouterPush).toHaveBeenCalledWith('/reservas'));
@@ -135,17 +165,15 @@ describe('SolicitudPage', () => {
 
     renderPage();
 
-    fireEvent.change(screen.getByLabelText(/¿Qué tipo de acompañamiento buscas\\?/i), {
-      target: { value: 'svc-1' },
+    fillBookingForm();
+    fireEvent.change(screen.getByLabelText(/¿A qué acompañante quieres enviar la solicitud\?/i), {
+      target: { value: 'comp-2' },
     });
-    fireEvent.change(screen.getByLabelText(/Fecha prevista/i), { target: { value: '2026-12-01' } });
-    fireEvent.change(screen.getByLabelText(/Hora de inicio/i), { target: { value: '10:00' } });
-    fireEvent.change(screen.getByLabelText(/Dirección o punto de encuentro/i), {
-      target: { value: 'Calle Mayor 1, Madrid' },
-    });
+    fireEvent.click(screen.getByRole('button', { name: /Enviar solicitud al acompañante/i }));
 
-    fireEvent.click(screen.getByRole('button', { name: /Publicar solicitud/i }));
-
+    await waitFor(() => expect(api.createBooking).toHaveBeenCalledWith(
+      expect.objectContaining({ companionId: 'comp-2' }),
+    ));
     await waitFor(() => expect(api.requestBooking).toHaveBeenCalledWith('b-1'));
     await waitFor(() => expect(mockRouterPush).toHaveBeenCalledWith('/reservas'));
   });

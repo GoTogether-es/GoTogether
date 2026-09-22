@@ -73,6 +73,12 @@ export class BookingsService {
       throw new BadRequestException('La fecha y hora de la reserva debe ser futura');
     }
 
+    if (dto.publish && !dto.companionId) {
+      throw new BadRequestException(
+        'Selecciona un acompañante para tu solicitud: las solicitudes deben ir dirigidas a un acompañante',
+      );
+    }
+
     if (dto.companionId) {
       const isAvailable = await this.availabilityService.isCompanionAvailable(
         dto.companionId,
@@ -154,20 +160,34 @@ export class BookingsService {
     return booking;
   }
 
-  async findOpenBookings() {
-    return this.prisma.booking.findMany({
-      where: { status: BookingStatus.REQUESTED, companionId: null },
-      include: {
-        client: { include: { profile: true } },
-      },
-      orderBy: { createdAt: 'desc' },
+  async findByIdForUser(id: string, userId: string) {
+    const booking = await this.findById(id);
+    if (booking.clientId === userId || booking.bookedById === userId) return booking;
+
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: { profile: { include: { companion: true } } },
     });
+    if (!user) throw new NotFoundException('Usuario no encontrado');
+
+    if (booking.companionId && user.profile?.companion?.id === booking.companionId) {
+      return booking;
+    }
+
+    if (await this.isSupervisorOf(userId, booking.clientId)) return booking;
+
+    throw new ForbiddenException('No tienes permiso para ver esta reserva');
   }
 
   async requestBooking(bookingId: string) {
     const booking = await this.findById(bookingId);
     if (booking.status !== BookingStatus.DRAFT) {
       throw new BadRequestException('Solo se pueden solicitar reservas en borrador');
+    }
+    if (!booking.companionId) {
+      throw new BadRequestException(
+        'Las solicitudes deben ir dirigidas a un acompañante',
+      );
     }
 
     const result = await this.prisma.booking.update({
@@ -220,7 +240,6 @@ export class BookingsService {
     const isClient = booking.clientId === userId;
     const isCompanion =
       user.profile?.companion && booking.companionId === user.profile.companion.id;
-    const canClaim = user.profile?.companion && !booking.companionId;
     const isSupervisedClient = await this.isSupervisorOf(userId, booking.clientId);
 
     const updateData: any = { status: dto.status };
@@ -230,13 +249,10 @@ export class BookingsService {
         if (!isClient && !isSupervisedClient) throw new ForbiddenException('Solo el cliente puede solicitar');
         break;
       case BookingStatus.ACCEPTED: {
-        if (!isCompanion && !canClaim) throw new ForbiddenException('Solo el acompañante puede aceptar');
-        if (canClaim) updateData.companionId = user.profile!.companion!.id;
-        
-        const companionStripeId = canClaim
-          ? user.profile?.companion?.stripeAccountId
-          : booking.companion?.stripeAccountId;
-        const companionStripeAccountId = companionStripeId || `acct_mock_${canClaim ? user.profile?.companion?.id : booking.companionId}`;
+        if (!isCompanion) throw new ForbiddenException('Solo el acompañante asignado puede aceptar');
+
+        const companionStripeAccountId =
+          booking.companion?.stripeAccountId || `acct_mock_${booking.companionId}`;
 
         const estHours = booking.estimatedHours || 1.0;
         const pricePerHourCents = booking.service?.price && booking.service.price > 0 ? booking.service.price : 1300;
@@ -270,7 +286,7 @@ export class BookingsService {
         break;
       }
       case BookingStatus.DECLINED:
-        if (!isCompanion && !canClaim) throw new ForbiddenException('Solo el acompañante puede rechazar');
+        if (!isCompanion) throw new ForbiddenException('Solo el acompañante asignado puede rechazar');
         this.notifications.createSafe({
           userId: booking.clientId,
           type: 'booking_declined',

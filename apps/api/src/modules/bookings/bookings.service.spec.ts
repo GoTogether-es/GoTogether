@@ -147,6 +147,17 @@ describe('BookingsService', () => {
         expect.objectContaining({ type: 'booking_requested', userId: 'comp-user-1' }),
       );
     });
+
+    it('throws BadRequestException when publishing without a companion', async () => {
+      prisma.user.findUnique.mockResolvedValue(
+        mockUser({ role: UserRole.CLIENT, profile: mockProfile({ fullName: 'Juan' }) } as any),
+      );
+
+      await expect(
+        service.create('user-1', { ...createDto, publish: true } as any),
+      ).rejects.toThrow(BadRequestException);
+      expect(prisma.booking.create).not.toHaveBeenCalled();
+    });
   });
 
   describe('findByUser', () => {
@@ -195,16 +206,54 @@ describe('BookingsService', () => {
     });
   });
 
-  describe('findOpenBookings', () => {
-    it('returns REQUESTED bookings with no companion assigned', async () => {
-      prisma.booking.findMany.mockResolvedValue([mockBooking({ status: BookingStatus.REQUESTED })]);
+  describe('findByIdForUser', () => {
+    it('allows the client to view their booking', async () => {
+      prisma.booking.findUnique.mockResolvedValue(mockBooking({ id: 'b-1', clientId: 'client-1' }));
 
-      const result = await service.findOpenBookings();
+      const result = await service.findByIdForUser('b-1', 'client-1');
 
-      expect(result).toHaveLength(1);
-      const call = prisma.booking.findMany.mock.calls[0][0];
-      expect(call.where.status).toBe(BookingStatus.REQUESTED);
-      expect(call.where.companionId).toBeNull();
+      expect(result).toHaveProperty('id', 'b-1');
+    });
+
+    it('allows the assigned companion to view the booking', async () => {
+      prisma.booking.findUnique.mockResolvedValue(
+        mockBooking({ id: 'b-1', clientId: 'client-1', companionId: 'comp-1' }),
+      );
+      prisma.user.findUnique.mockResolvedValue(
+        mockUser({
+          id: 'comp-user-1',
+          role: UserRole.COMPANION,
+          profile: { ...mockProfile(), companion: mockCompanionProfile({ id: 'comp-1' }) } as any,
+        } as any),
+      );
+
+      const result = await service.findByIdForUser('b-1', 'comp-user-1');
+
+      expect(result).toHaveProperty('id', 'b-1');
+    });
+
+    it('allows the supervisor of the client to view the booking', async () => {
+      prisma.booking.findUnique.mockResolvedValue(mockBooking({ id: 'b-1', clientId: 'client-1' }));
+      prisma.user.findUnique.mockResolvedValue(
+        mockUser({ id: 'supervisor-1', role: UserRole.SUPERVISOR, profile: null } as any),
+      );
+      prisma.supervision.findFirst.mockResolvedValue({ id: 'sup-1' });
+
+      const result = await service.findByIdForUser('b-1', 'supervisor-1');
+
+      expect(result).toHaveProperty('id', 'b-1');
+    });
+
+    it('forbids unrelated users from viewing the booking', async () => {
+      prisma.booking.findUnique.mockResolvedValue(
+        mockBooking({ id: 'b-1', clientId: 'client-1', companionId: 'comp-1' }),
+      );
+      prisma.user.findUnique.mockResolvedValue(
+        mockUser({ id: 'stranger-1', role: UserRole.CLIENT, profile: null } as any),
+      );
+      prisma.supervision.findFirst.mockResolvedValue(null);
+
+      await expect(service.findByIdForUser('b-1', 'stranger-1')).rejects.toThrow(ForbiddenException);
     });
   });
 
@@ -231,6 +280,14 @@ describe('BookingsService', () => {
 
     it('throws BadRequestException if booking is not DRAFT', async () => {
       prisma.booking.findUnique.mockResolvedValue(mockBooking({ status: BookingStatus.REQUESTED }));
+
+      await expect(service.requestBooking('b-1')).rejects.toThrow(BadRequestException);
+    });
+
+    it('throws BadRequestException when the draft has no assigned companion', async () => {
+      prisma.booking.findUnique.mockResolvedValue(
+        mockBooking({ status: BookingStatus.DRAFT, companionId: null }),
+      );
 
       await expect(service.requestBooking('b-1')).rejects.toThrow(BadRequestException);
     });
@@ -277,6 +334,7 @@ describe('BookingsService', () => {
     it('allows COMPANION to accept (REQUESTED -> ACCEPTED)', async () => {
       const compProfile = mockCompanionProfile({ id: 'comp-1' });
       baseBooking.status = BookingStatus.REQUESTED;
+      baseBooking.companionId = 'comp-1';
       prisma.booking.findUnique.mockResolvedValue(baseBooking);
       prisma.user.findUnique.mockResolvedValue(
         mockUser({
@@ -292,25 +350,6 @@ describe('BookingsService', () => {
       expect(notifications.createSafe).toHaveBeenCalledWith(
         expect.objectContaining({ type: 'booking_accepted' }),
       );
-    });
-
-    it('allows COMPANION to claim an open booking (no companionId)', async () => {
-      const compProfile = mockCompanionProfile({ id: 'comp-1' });
-      baseBooking.status = BookingStatus.REQUESTED;
-      baseBooking.companionId = null;
-      prisma.booking.findUnique.mockResolvedValue(baseBooking);
-      prisma.user.findUnique.mockResolvedValue(
-        mockUser({
-          id: 'comp-user-1',
-          role: UserRole.COMPANION,
-          profile: { ...mockProfile(), companion: compProfile, id: 'profile-comp', fullName: 'María' },
-        } as any),
-      );
-
-      await service.updateStatus('b-1', { status: BookingStatus.ACCEPTED } as any, 'comp-user-1');
-
-      const updateCall = prisma.booking.update.mock.calls[0][0];
-      expect(updateCall.data.companionId).toBe('comp-1');
     });
 
     it('computes the payment hold using the service price', async () => {
