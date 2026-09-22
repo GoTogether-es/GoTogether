@@ -1,4 +1,4 @@
-import { Card, Container, Section } from '@/components/ui';
+import { Card, Container, Section } from '@gotogether/ui';
 import { AuthLink } from '@/components/auth-link';
 import { CheckCircle2, ArrowRight } from 'lucide-react';
 import { PrimerosPasosContent } from '@/components/primeros-pasos-content';

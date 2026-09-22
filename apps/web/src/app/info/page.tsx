@@ -1,4 +1,4 @@
-import { Card, Container, Section } from '@/components/ui';
+import { Card, Container, Section } from '@gotogether/ui';
 import { AuthLink } from '@/components/auth-link';
 import { FaqAccordion } from '@/components/faq-accordion';
 import { infoSteps, faqData } from '@/lib/content';

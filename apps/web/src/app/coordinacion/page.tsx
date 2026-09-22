@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Section, Container } from '@/components/ui';
+import { Section, Container } from '@gotogether/ui';
 
 export default function CoordinacionIndex() {
   const router = useRouter();

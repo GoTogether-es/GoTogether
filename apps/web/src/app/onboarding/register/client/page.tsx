@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import { Button, Card, Container, FieldError, Section } from '@/components/ui';
+import { Button, Card, Container, FieldError, Section } from '@gotogether/ui';
 import { Loader2, UserCircle, FileText, Heart } from 'lucide-react';
 import { upsertProfile } from '@/services/api';
 import { FileUpload } from '@/components/file-upload';

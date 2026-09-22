@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Button, Card, Container, Section } from '@/components/ui';
+import { Button, Card, Container, Section } from '@gotogether/ui';
 import { Phone, MapPin, Clock, Send } from 'lucide-react';
 import { getChatRoom, getBooking } from '@/services/api';
 import { createClient } from '@/lib/supabase/client';

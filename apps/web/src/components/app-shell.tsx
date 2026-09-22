@@ -4,7 +4,7 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import { Container, Button } from '@/components/ui';
+import { Container, Button } from '@gotogether/ui';
 import { routes } from '@/lib/routes';
 import { Footer } from './footer';
 import { NotificationBell } from './notification-bell';

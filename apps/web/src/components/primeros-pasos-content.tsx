@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card, Section, Container } from '@/components/ui';
+import { Card, Section, Container } from '@gotogether/ui';
 import { Loader2, Search, FileText, MessageSquare, Star, CalendarDays, UserCheck, ShieldCheck } from 'lucide-react';
 import { getProfile } from '@/services/api';
 

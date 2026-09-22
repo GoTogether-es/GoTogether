@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Container, Section, Card } from '@/components/ui';
+import { Container, Section, Card } from '@gotogether/ui';
 import { LinkButton } from '@/components/link-button';
 import { ShieldCheck } from 'lucide-react';
 

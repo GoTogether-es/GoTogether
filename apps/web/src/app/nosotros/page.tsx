@@ -1,4 +1,4 @@
-import { Card, Container, Section } from '@/components/ui';
+import { Card, Container, Section } from '@gotogether/ui';
 import { Heart, ShieldCheck, Users, Target, Eye } from 'lucide-react';
 import type { Metadata } from 'next';
 

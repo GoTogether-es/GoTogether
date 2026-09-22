@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import { Button, Card, Container, FieldError, Section } from '@/components/ui';
+import { Button, Card, Container, FieldError, Section } from '@gotogether/ui';
 import { getProfile, upsertProfile } from '@/services/api';
 import { Loader2, Pencil, X, UserCircle, Briefcase, Heart, Phone, FileText, MapPin, Star } from 'lucide-react';
 import { AvatarUpload } from '@/components/avatar-upload';

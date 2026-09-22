@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Button, Card, Container, Section } from '@/components/ui';
+import { Button, Card, Container, Section } from '@gotogether/ui';
 import { Star, Info, Send, CheckCircle } from 'lucide-react';
 import { getBooking, getReportByBooking, createReport } from '@/services/api';
 import type { BookingData, ReportData } from '@/types';

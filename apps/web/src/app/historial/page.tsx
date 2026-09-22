@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Button, Card, Container, Section } from '@/components/ui';
+import { Button, Card, Container, Section } from '@gotogether/ui';
 import { useBookingHistory, useBookingStats } from '@/services/queries';
 import { Briefcase, Calendar, Clock, MapPin, Star, ChevronLeft, ChevronRight, TrendingUp, Award } from 'lucide-react';
 import { LOCALE } from '@/lib/constants';

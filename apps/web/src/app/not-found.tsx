@@ -1,4 +1,4 @@
-import { Container, Section } from '@/components/ui';
+import { Container, Section } from '@gotogether/ui';
 import { LinkButton } from '@/components/link-button';
 import { Compass, ArrowLeft, Search } from 'lucide-react';
 import { routes } from '@/lib/routes';
