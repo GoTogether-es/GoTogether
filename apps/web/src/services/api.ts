@@ -289,6 +289,7 @@ export async function createBooking(data: {
   localDayOfWeek?: number;
   localTime?: string;
   estimatedHours?: number;
+  publish?: boolean;
 }): Promise<BookingData> {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/bookings`, {

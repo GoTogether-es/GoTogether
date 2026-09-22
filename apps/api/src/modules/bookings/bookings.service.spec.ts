@@ -51,7 +51,7 @@ describe('BookingsService', () => {
     const createDto = {
       serviceType: 'Acompañamiento médico',
       address: 'Calle Mayor 1, Madrid',
-      scheduledAt: '2026-06-15T10:00:00.000Z',
+      scheduledAt: '2026-12-15T10:00:00.000Z',
       summary: 'Necesito ayuda',
       disability: 'Movilidad reducida',
     };
@@ -116,6 +116,36 @@ describe('BookingsService', () => {
       const createCall = prisma.booking.create.mock.calls[0][0];
       expect(createCall.data.serviceType).toBe('Fisioterapia');
       expect(createCall.data.serviceId).toBe('svc-1');
+    });
+
+    it('creates as DRAFT by default when publish is not set', async () => {
+      prisma.user.findUnique.mockResolvedValue(mockUser({ role: UserRole.CLIENT }));
+      prisma.booking.create.mockResolvedValue(mockBooking({ id: 'b-draft' }));
+
+      await service.create('user-1', createDto as any);
+
+      const createCall = prisma.booking.create.mock.calls[0][0];
+      expect(createCall.data.status).toBeUndefined();
+    });
+
+    it('publishes directly in REQUESTED and notifies the companion when publish is true', async () => {
+      prisma.user.findUnique.mockResolvedValue(
+        mockUser({ role: UserRole.CLIENT, profile: mockProfile({ fullName: 'Juan' }) } as any),
+      );
+      prisma.booking.create.mockResolvedValue(
+        mockBooking({ id: 'b-pub', status: BookingStatus.REQUESTED, companionId: 'comp-1' }),
+      );
+      prisma.companionProfile.findUnique.mockResolvedValue(
+        mockCompanionProfile({ profile: { ...mockProfile(), userId: 'comp-user-1' } }),
+      );
+
+      await service.create('user-1', { ...createDto, companionId: 'comp-1', publish: true } as any);
+
+      const createCall = prisma.booking.create.mock.calls[0][0];
+      expect(createCall.data.status).toBe(BookingStatus.REQUESTED);
+      expect(notifications.create).toHaveBeenCalledWith(
+        expect.objectContaining({ type: 'booking_requested', userId: 'comp-user-1' }),
+      );
     });
   });
 
@@ -281,6 +311,34 @@ describe('BookingsService', () => {
 
       const updateCall = prisma.booking.update.mock.calls[0][0];
       expect(updateCall.data.companionId).toBe('comp-1');
+    });
+
+    it('computes the payment hold using the service price', async () => {
+      const compProfile = mockCompanionProfile({ id: 'comp-1' });
+      baseBooking.status = BookingStatus.REQUESTED;
+      baseBooking.companionId = 'comp-1';
+      baseBooking.estimatedHours = 2;
+      baseBooking.service = mockService({ price: 1500 });
+      prisma.booking.findUnique.mockResolvedValue(baseBooking);
+      prisma.user.findUnique.mockResolvedValue(
+        mockUser({
+          id: 'comp-user-1',
+          role: UserRole.COMPANION,
+          profile: { ...mockProfile(), companion: compProfile, id: 'profile-comp', fullName: 'María' },
+        } as any),
+      );
+
+      await service.updateStatus('b-1', { status: BookingStatus.ACCEPTED } as any, 'comp-user-1');
+
+      // 2 h × 15,00 €/h (1500 céntimos) = 30,00 € → 3000 céntimos
+      expect(paymentsService.createHold).toHaveBeenCalledWith(3000, 'acct_mock_comp-1');
+      expect(prisma.payment.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            fee: 400, // 2 h × 2,00 €/h = 4,00 €
+          }),
+        }),
+      );
     });
 
     it('forbids non-companion from accepting', async () => {

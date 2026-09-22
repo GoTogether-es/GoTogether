@@ -2,11 +2,21 @@ import { z } from 'zod';
 
 export const solicitudSchema = z.object({
   serviceId: z.string().min(1, 'Selecciona un tipo de servicio'),
-  address: z.string().min(3, 'La dirección debe tener al menos 3 caracteres'),
+  address: z
+    .string()
+    .min(3, 'La dirección debe tener al menos 3 caracteres')
+    .max(500, 'La dirección no puede superar 500 caracteres'),
   date: z.string().min(1, 'Selecciona una fecha'),
   time: z.string().min(1, 'Selecciona una hora'),
   disability: z.string().optional(),
-  notes: z.string().optional(),
+  disabilityOther: z
+    .string()
+    .max(200, 'La descripción no puede superar 200 caracteres')
+    .optional(),
+  notes: z
+    .string()
+    .max(1000, 'Las observaciones no pueden superar 1000 caracteres')
+    .optional(),
   estimatedHours: z.number().min(1, 'La duración mínima es 1 hora'),
 });
 

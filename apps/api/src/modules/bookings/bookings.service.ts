@@ -44,7 +44,10 @@ export class BookingsService {
   ) {}
 
   async create(userId: string, dto: CreateBookingDto) {
-    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: { profile: true },
+    });
     if (!user) throw new NotFoundException('Usuario no encontrado');
 
     if (user.role === UserRole.SUPERVISOR) {
@@ -84,7 +87,7 @@ export class BookingsService {
       }
     }
 
-    return this.prisma.booking.create({
+    const booking = await this.prisma.booking.create({
       data: {
         clientId: userId,
         bookedById: userId,
@@ -96,9 +99,16 @@ export class BookingsService {
         summary: dto.summary,
         disability: dto.disability,
         estimatedHours: dto.estimatedHours || 1.0,
+        status: dto.publish ? BookingStatus.REQUESTED : undefined,
       },
       include: { payment: true, service: true },
     });
+
+    if (dto.publish && booking.companionId) {
+      await this.notifyCompanionOfRequest(booking, user.profile?.fullName);
+    }
+
+    return booking;
   }
 
   async findByUser(userId: string) {
@@ -134,6 +144,7 @@ export class BookingsService {
         client: { include: { profile: true } },
         companion: { include: { profile: true } },
         bookedBy: { include: { profile: true } },
+        service: true,
         payment: true,
         report: true,
         chatRoom: true,
@@ -165,23 +176,29 @@ export class BookingsService {
       include: { payment: true },
     });
 
-    if (booking.companionId) {
-      const companion = await this.prisma.companionProfile.findUnique({
-        where: { id: booking.companionId },
-        include: { profile: true },
-      });
-      if (companion?.profile) {
-        await this.notifications.create({
-          userId: companion.profile.userId,
-          type: 'booking_requested',
-          title: 'Nueva solicitud',
-          body: `${booking.client?.profile?.fullName || 'Un cliente'} te ha solicitado un servicio`,
-          bookingId,
-        });
-      }
-    }
+    await this.notifyCompanionOfRequest(booking, booking.client?.profile?.fullName);
 
     return result;
+  }
+
+  private async notifyCompanionOfRequest(
+    booking: { id: string; companionId: string | null },
+    clientName?: string | null,
+  ) {
+    if (!booking.companionId) return;
+    const companion = await this.prisma.companionProfile.findUnique({
+      where: { id: booking.companionId },
+      include: { profile: true },
+    });
+    if (companion?.profile) {
+      await this.notifications.create({
+        userId: companion.profile.userId,
+        type: 'booking_requested',
+        title: 'Nueva solicitud',
+        body: `${clientName || 'Un cliente'} te ha solicitado un servicio`,
+        bookingId: booking.id,
+      });
+    }
   }
 
   async updateStatus(bookingId: string, dto: UpdateBookingStatusDto, userId: string) {
@@ -222,8 +239,9 @@ export class BookingsService {
         const companionStripeAccountId = companionStripeId || `acct_mock_${canClaim ? user.profile?.companion?.id : booking.companionId}`;
 
         const estHours = booking.estimatedHours || 1.0;
-        const holdAmount = Math.round(estHours * 13 * 100);
-        
+        const pricePerHourCents = booking.service?.price && booking.service.price > 0 ? booking.service.price : 1300;
+        const holdAmount = Math.round(estHours * pricePerHourCents);
+
         try {
           const holdIntent = await this.paymentsService.createHold(holdAmount, companionStripeAccountId);
           await this.prisma.payment.create({
@@ -332,12 +350,17 @@ export class BookingsService {
     });
     if (!booking || !booking.payment || booking.payment.status !== 'HOLD') return;
 
+    const service = booking.serviceId
+      ? await this.prisma.service.findUnique({ where: { id: booking.serviceId } })
+      : null;
+    const pricePerHourCents = service?.price && service.price > 0 ? service.price : 1300;
+
     const start = booking.startedAt || booking.scheduledAt || new Date();
     const end = completedAt;
     const minutes = Math.max(0, (end.getTime() - start.getTime()) / (1000 * 60));
     const roundedHours = Math.max(1, Math.round(minutes / 30) * 0.5);
 
-    const totalAmount = Math.round(roundedHours * 13 * 100);
+    const totalAmount = Math.round(roundedHours * pricePerHourCents);
     const platformFee = Math.round(roundedHours * 2 * 100);
 
     if (booking.payment.stripePaymentId) {

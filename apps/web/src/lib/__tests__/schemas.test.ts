@@ -7,6 +7,7 @@ describe('solicitudSchema', () => {
       address: 'Calle Mayor 1, Madrid',
       date: '2026-06-15',
       time: '10:00',
+      estimatedHours: 1,
     });
     expect(result.success).toBe(true);
   });
@@ -37,8 +38,33 @@ describe('solicitudSchema', () => {
       address: 'Plaza Mayor',
       date: '2026-06-15',
       time: '14:00',
+      estimatedHours: 2,
       disability: undefined,
       notes: undefined,
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('rechaza dirección de más de 500 caracteres', () => {
+    const result = solicitudSchema.safeParse({
+      serviceId: 'svc-123',
+      address: 'A'.repeat(501),
+      date: '2026-06-15',
+      time: '10:00',
+      estimatedHours: 1,
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it('permite discapacidad "Otra" con descripción', () => {
+    const result = solicitudSchema.safeParse({
+      serviceId: 'svc-123',
+      address: 'Calle Mayor 1',
+      date: '2026-06-15',
+      time: '10:00',
+      estimatedHours: 1,
+      disability: 'Otra',
+      disabilityOther: 'Alergias graves',
     });
     expect(result.success).toBe(true);
   });
@@ -48,6 +74,8 @@ describe('perfilSchema', () => {
   it('valida perfil con datos correctos', () => {
     const result = perfilSchema.safeParse({
       fullName: 'Juan Pérez',
+      city: 'Madrid',
+      fullAddress: 'Calle Mayor 1, Madrid',
       headline: 'Jubilado',
       bio: 'Me gusta pasear',
       phone: '+34 600 000 000',
@@ -66,6 +94,8 @@ describe('perfilSchema', () => {
   it('permite companion con specialties', () => {
     const result = perfilSchema.safeParse({
       fullName: 'María López',
+      city: 'Madrid',
+      fullAddress: 'Calle Mayor 1, Madrid',
       isCompanion: true,
       specialties: 'Cocina, enfermería',
     });

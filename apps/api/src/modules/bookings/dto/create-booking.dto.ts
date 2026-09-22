@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsDateString, IsInt, Min, Max, Matches, MaxLength, IsNumber } from 'class-validator';
+import { IsString, IsOptional, IsDateString, IsInt, Min, Max, Matches, MaxLength, IsNumber, IsBoolean } from 'class-validator';
 
 export class CreateBookingDto {
   @IsString()
@@ -45,5 +45,9 @@ export class CreateBookingDto {
   @Min(1)
   @IsOptional()
   estimatedHours?: number;
+
+  @IsBoolean()
+  @IsOptional()
+  publish?: boolean;
 }
 
