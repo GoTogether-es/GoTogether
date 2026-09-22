@@ -18,6 +18,7 @@ export type CompanionSummary = {
   verified: boolean;
   completedServices?: number;
   _count?: { bookings: number };
+  availabilitySlots?: AvailabilitySlotData[];
 };
 
 export type CompanionDetail = {

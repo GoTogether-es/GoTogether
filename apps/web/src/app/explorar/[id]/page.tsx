@@ -4,9 +4,10 @@ import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Button, Card, Container, Section } from '@gotogether/ui';
 import { ShieldCheck, Star, Calendar, CheckCircle } from 'lucide-react';
-import { useCompanion } from '@/services/queries';
+import { useCompanion, useCompanionAvailability } from '@/services/queries';
 import { SkeletonText, SkeletonAvatar } from '@/components/skeleton';
 import { Breadcrumbs } from '@/components/breadcrumbs';
+import { DAY_NAMES } from '@/lib/constants';
 
 export default function CompanionDetailPage() {
   const params = useParams();
@@ -14,6 +15,17 @@ export default function CompanionDetailPage() {
   const id = params.id as string;
 
   const { data: companion, isLoading, isError } = useCompanion(id);
+  const { data: availabilitySlots = [] } = useCompanionAvailability(id);
+
+  const dayTimes = new Map<number, string[]>();
+  for (const slot of availabilitySlots) {
+    const list = dayTimes.get(slot.dayOfWeek) ?? [];
+    list.push(`${slot.startTime}–${slot.endTime}`);
+    dayTimes.set(slot.dayOfWeek, list);
+  }
+  const dayGroups = [...dayTimes.entries()]
+    .sort((a, b) => a[0] - b[0])
+    .map(([day, times]) => ({ day, label: DAY_NAMES[day], times: times.join(' · ') }));
 
   if (isLoading) {
     return (
@@ -158,6 +170,22 @@ export default function CompanionDetailPage() {
                     <p className="text-gray-700 text-sm">{profile.preferences}</p>
                   </div>
                 )}
+
+                <div className="pt-1">
+                  <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-1">Disponibilidad semanal</h3>
+                  {dayGroups.length === 0 ? (
+                    <p className="text-gray-500 text-sm italic">Horario por confirmar</p>
+                  ) : (
+                    <ul className="space-y-1">
+                      {dayGroups.map(({ day, label, times }) => (
+                        <li key={day} className="flex items-baseline gap-2 text-sm">
+                          <span className="font-semibold text-gray-700 w-16 shrink-0">{label}</span>
+                          <span className="text-gray-600">{times}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
               </div>
             </div>
 

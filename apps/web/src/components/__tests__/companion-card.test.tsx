@@ -14,6 +14,10 @@ const mockCompanion: CompanionSummary = {
   rating: 4.8,
   yearsOnPlatform: 5,
   verified: true,
+  availabilitySlots: [
+    { id: 's1', companionId: 'test-1', dayOfWeek: 1, startTime: '09:00', endTime: '13:00' },
+    { id: 's2', companionId: 'test-1', dayOfWeek: 3, startTime: '16:00', endTime: '20:00' },
+  ],
 };
 
 describe('CompanionCard', () => {
@@ -34,6 +38,22 @@ describe('CompanionCard', () => {
     expect(image).toHaveAttribute('alt', `Foto de ${mockCompanion.profile.fullName}`);
 
     expect(screen.getByRole('link', { name: /ver perfil/i })).toBeInTheDocument();
+  });
+
+  it('shows the availability days when slots exist', () => {
+    render(<CompanionCard {...mockCompanion} />);
+
+    expect(screen.getByText('Disponibilidad')).toBeInTheDocument();
+    expect(screen.getByText('Lun')).toBeInTheDocument();
+    expect(screen.getByText('Mié')).toBeInTheDocument();
+    expect(screen.queryByText('Horario por confirmar')).not.toBeInTheDocument();
+  });
+
+  it('shows "Horario por confirmar" when no availability is configured', () => {
+    render(<CompanionCard {...mockCompanion} availabilitySlots={undefined} />);
+
+    expect(screen.getByText('Disponibilidad')).toBeInTheDocument();
+    expect(screen.getByText('Horario por confirmar')).toBeInTheDocument();
   });
 
   it('renders without optional specialty', () => {

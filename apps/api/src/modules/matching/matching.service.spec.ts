@@ -31,6 +31,20 @@ describe('MatchingService', () => {
     expect(call.where.profile.AND[0].OR).toBeDefined();
   });
 
+  it('includes availability slots in the query', async () => {
+    prisma.companionProfile.findMany.mockResolvedValue([]);
+    prisma.companionProfile.count.mockResolvedValue(0);
+
+    await service.recommendCompanions({});
+
+    const call = prisma.companionProfile.findMany.mock.calls[0][0];
+    expect(call.include.availabilitySlots).toBeDefined();
+    expect(call.include.availabilitySlots.orderBy).toEqual([
+      { dayOfWeek: 'asc' },
+      { startTime: 'asc' },
+    ]);
+  });
+
   it('filters by disabilityType', async () => {
     prisma.companionProfile.findMany.mockResolvedValue([]);
     prisma.companionProfile.count.mockResolvedValue(0);

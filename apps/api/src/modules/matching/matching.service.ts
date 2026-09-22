@@ -62,6 +62,9 @@ export class MatchingService {
           profile: {
             include: { user: { select: { id: true, privateLocation: true } } },
           },
+          availabilitySlots: {
+            orderBy: [{ dayOfWeek: 'asc' }, { startTime: 'asc' }],
+          },
         },
         orderBy: [{ rating: 'desc' }, { yearsOnPlatform: 'desc' }],
       }),

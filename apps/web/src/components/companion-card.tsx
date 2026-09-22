@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { LinkButton } from '@/components/link-button';
 import { routes } from '@/lib/routes';
 import { getCompanionLevel } from '@/lib/levels';
+import { DAY_NAMES } from '@/lib/constants';
 import type { CompanionSummary } from '@/types';
 
 export type { CompanionSummary };
@@ -19,10 +20,15 @@ export const CompanionCard = memo(function CompanionCard({
   yearsOnPlatform,
   verified,
   completedServices,
+  availabilitySlots,
   _count,
 }: CompanionSummary) {
   const services = completedServices || _count?.bookings || 0;
   const level = getCompanionLevel(services);
+
+  const availableDays = availabilitySlots
+    ? [...new Set(availabilitySlots.map((s) => s.dayOfWeek))].sort((a, b) => a - b)
+    : [];
 
   return (
     <Card className="p-5 flex flex-col">
@@ -67,6 +73,18 @@ export const CompanionCard = memo(function CompanionCard({
             {rating.toFixed(1)}
           </span>
           <span className="gt-tag">{yearsOnPlatform} {yearsOnPlatform === 1 ? 'año' : 'años'}</span>
+        </div>
+        <div className="mt-3">
+          <p className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-1">Disponibilidad</p>
+          {availableDays.length > 0 ? (
+            <div className="flex flex-wrap gap-1.5">
+              {availableDays.map((day) => (
+                <span key={day} className="gt-tag">{DAY_NAMES[day]}</span>
+              ))}
+            </div>
+          ) : (
+            <p className="text-xs text-gray-400 italic">Horario por confirmar</p>
+          )}
         </div>
         <LinkButton href={routes.explorarCompanion(id)} variant="primary" className="mt-4 w-full">
           Ver perfil
