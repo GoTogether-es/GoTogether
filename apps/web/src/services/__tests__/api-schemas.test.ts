@@ -29,6 +29,17 @@ const companionSummarySchema = z.object({
   rating: z.number(),
   yearsOnPlatform: z.number(),
   verified: z.boolean(),
+  availabilitySlots: z
+    .array(
+      z.object({
+        id: z.string(),
+        companionId: z.string(),
+        dayOfWeek: z.number(),
+        startTime: z.string(),
+        endTime: z.string(),
+      }),
+    )
+    .optional(),
 });
 
 const bookingSchema = z.object({
@@ -107,6 +118,25 @@ describe('companionSummarySchema', () => {
       verified: false,
     });
     expect(result.success).toBe(false);
+  });
+
+  it('keeps availabilitySlots when present', () => {
+    const result = companionSummarySchema.safeParse({
+      id: 'comp-1',
+      profile: { fullName: 'María' },
+      specialties: null,
+      rating: 4.5,
+      yearsOnPlatform: 2,
+      verified: true,
+      availabilitySlots: [
+        { id: 'slot-1', companionId: 'comp-1', dayOfWeek: 1, startTime: '09:00', endTime: '13:00' },
+      ],
+    });
+    expect(result.success).toBe(true);
+    expect(result.data?.availabilitySlots).toHaveLength(1);
+    expect(result.data?.availabilitySlots?.[0]).toEqual(
+      expect.objectContaining({ dayOfWeek: 1, startTime: '09:00', endTime: '13:00' }),
+    );
   });
 });
 

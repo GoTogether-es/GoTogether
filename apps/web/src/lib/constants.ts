@@ -2,6 +2,8 @@ export const LOCALE = 'es-ES' as const;
 
 export const DAY_NAMES = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'] as const;
 
+export const DAY_NAMES_FULL = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'] as const;
+
 export const DISABILITY_OPTIONS = [
   'Movilidad reducida',
   'Discapacidad visual',

@@ -121,6 +121,17 @@ const companionSummarySchema = z.object({
   rating: z.number(),
   yearsOnPlatform: z.number(),
   verified: z.boolean(),
+  availabilitySlots: z
+    .array(
+      z.object({
+        id: z.string(),
+        companionId: z.string(),
+        dayOfWeek: z.number(),
+        startTime: z.string(),
+        endTime: z.string(),
+      }),
+    )
+    .optional(),
 });
 
 const companionDetailSchema = z.object({

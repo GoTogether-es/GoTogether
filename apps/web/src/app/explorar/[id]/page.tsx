@@ -7,7 +7,8 @@ import { ShieldCheck, Star, Calendar, CheckCircle } from 'lucide-react';
 import { useCompanion, useCompanionAvailability } from '@/services/queries';
 import { SkeletonText, SkeletonAvatar } from '@/components/skeleton';
 import { Breadcrumbs } from '@/components/breadcrumbs';
-import { DAY_NAMES } from '@/lib/constants';
+import { DAY_NAMES_FULL } from '@/lib/constants';
+import { formatAvailabilitySlots } from '@/lib/availability';
 
 export default function CompanionDetailPage() {
   const params = useParams();
@@ -17,15 +18,7 @@ export default function CompanionDetailPage() {
   const { data: companion, isLoading, isError } = useCompanion(id);
   const { data: availabilitySlots = [] } = useCompanionAvailability(id);
 
-  const dayTimes = new Map<number, string[]>();
-  for (const slot of availabilitySlots) {
-    const list = dayTimes.get(slot.dayOfWeek) ?? [];
-    list.push(`${slot.startTime}–${slot.endTime}`);
-    dayTimes.set(slot.dayOfWeek, list);
-  }
-  const dayGroups = [...dayTimes.entries()]
-    .sort((a, b) => a[0] - b[0])
-    .map(([day, times]) => ({ day, label: DAY_NAMES[day], times: times.join(' · ') }));
+  const dayGroups = formatAvailabilitySlots(availabilitySlots, DAY_NAMES_FULL);
 
   if (isLoading) {
     return (
@@ -172,18 +165,24 @@ export default function CompanionDetailPage() {
                 )}
 
                 <div className="pt-1">
-                  <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-1">Disponibilidad semanal</h3>
+                  <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2">Disponibilidad semanal</h3>
                   {dayGroups.length === 0 ? (
                     <p className="text-gray-500 text-sm italic">Horario por confirmar</p>
                   ) : (
-                    <ul className="space-y-1">
-                      {dayGroups.map(({ day, label, times }) => (
-                        <li key={day} className="flex items-baseline gap-2 text-sm">
-                          <span className="font-semibold text-gray-700 w-16 shrink-0">{label}</span>
-                          <span className="text-gray-600">{times}</span>
-                        </li>
-                      ))}
-                    </ul>
+                    <div className="rounded-xl border border-gray-100 bg-gray-50/60 p-4">
+                      <ul className="space-y-2.5">
+                        {dayGroups.map(({ day, label, times }) => (
+                          <li key={day} className="flex items-start gap-3 text-sm">
+                            <span className="font-semibold text-gray-700 w-20 shrink-0 pt-0.5">{label}</span>
+                            <span className="flex flex-wrap gap-1.5">
+                              {times.map((t) => (
+                                <span key={t} className="gt-tag">{t}</span>
+                              ))}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   )}
                 </div>
               </div>
