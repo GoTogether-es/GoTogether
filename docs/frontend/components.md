@@ -318,3 +318,44 @@ Tipos TypeScript para:
 - `PaginatedResponse<T>`
 - `AdminStats`, `AdminUser`, `AdminPending`
 - `NotificationData`, `HealthStatus`
+
+---
+
+## AddressInput
+
+**Archivo:** `address-input.tsx`
+
+**Props:**
+```typescript
+{
+  label: string;
+  placeholder?: string;
+  onSelect: (suggestion: AddressSuggestion) => void;
+  value?: string;
+  disabled?: boolean;
+  required?: boolean;
+  error?: string;
+  helperText?: string;
+}
+
+export interface AddressSuggestion {
+  id: string;
+  displayName: string;
+  city: string;
+  fullAddress: string;
+  latitude: number;
+  longitude: number;
+}
+```
+
+Componente de autocompletar de direcciones reales (Nominatim OpenStreetMap):
+
+- Input con debounce 500ms → `GET /location/geocode?q=` (mínimo 3 caracteres).
+- Dropdown con resultados tipados (`id`, `displayName`, `city`, `fullAddress`, `latitude`, `longitude`).
+- Selección obligatoria: el usuario **debe elegir** una sugerencia real; no se permite texto libre.
+- Al seleccionar → llama a `onSelect` con la sugerencia completa; el formulario padre rellena `city`, `fullAddress`, `latitude`, `longitude`, `addressVerified=true`.
+- Estados visuales: loading (spinner), seleccionado (check verde), error (rojo), ayuda (gris).
+- Cierra dropdown al hacer click fuera (event listener en documento).
+- Accesible: `aria-autocomplete`, `aria-controls`, `aria-expanded`, `role="listbox"`/`option`.
+
+**Usado en:** `onboarding/register/client`, `onboarding/register/companion`, `perfil/page.tsx`

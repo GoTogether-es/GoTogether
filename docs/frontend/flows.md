@@ -13,8 +13,9 @@ tags: [frontend, flows, ux]
   → /onboarding (click "Cliente")
    → /onboarding/register/client
       ├─ Nombre, teléfono, bio
-      ├─ Ciudad pública
-      ├─ Dirección completa privada
+      ├─ **Dirección completa (autocompletar obligatorio)**
+       │   └─ Escribe → elige de sugerencias reales (Nominatim)
+       │       → rellena ciudad + lat/lon + addressVerified
       ├─ Tipo de discapacidad (select)
       ├─ Descripción
       └─ Subir documento acreditativo (FileUpload → Supabase Storage)
@@ -25,17 +26,18 @@ tags: [frontend, flows, ux]
 ## 2. Registro de acompañante
 
 ```
-/ → Entrar → /auth/login (email)
-  → /auth/verify
-  → /auth/redirect → /onboarding
-  → /onboarding (click "Acompañante")
-   → /onboarding/register/companion
-      ├─ Nombre, teléfono, bio
-      ├─ Ciudad pública
-      ├─ Dirección completa privada
-      ├─ Especialidades
-      ├─ Subir certificado penal (FileUpload)
-      └─ Subir certificado delitos sexuales (FileUpload)
+ / → Entrar → /auth/login (email)
+   → /auth/verify
+   → /auth/redirect → /onboarding
+   → /onboarding (click "Acompañante")
+    → /onboarding/register/companion
+       ├─ Nombre, teléfono, bio
+       ├─ **Dirección completa (autocompletar obligatorio)**
+       │   └─ Escribe → elige de sugerencias reales (Nominatim)
+       │       → rellena ciudad + lat/lon + addressVerified
+       ├─ Especialidades
+       ├─ Subir certificado penal (FileUpload)
+       └─ Subir certificado delitos sexuales (FileUpload)
   → upsertProfile({ isCompanion: true, ... })
   → /panel (dashboard, verificación pendiente)
 ```
@@ -45,15 +47,15 @@ tags: [frontend, flows, ux]
 ## 3. Solicitud de reserva (cliente)
 
 ```
-/explorar → busca/filtra acompañantes
-  → click en tarjeta → /explorar/:id (detalle)
-  → click "Solicitar acompañante"
-  → /solicitud?companionId=X
-     ├─ Tipo de servicio
-     ├─ Fecha y hora
-     ├─ Dirección
-     ├─ Discapacidad (opcional)
-     └─ Notas (opcional)
+ /explorar → busca/filtra acompañantes
+   → click en tarjeta → /explorar/:id (detalle)
+   → click "Solicitar acompañante"
+   → /solicitud?companionId=X
+      ├─ Tipo de servicio
+      ├─ Fecha y hora
+      ├─ Dirección
+      ├─ Discapacidad (opcional)
+      └─ Notas (opcional)
   → createBooking({ companionId, ... }) → DRAFT
   → requestBooking(id) → REQUESTED
   → notifica al acompañante
@@ -64,14 +66,14 @@ tags: [frontend, flows, ux]
 
 ```
 /perfil y onboarding
-  → usuario introduce ciudad pública + dirección completa
-  → backend guarda Profile.city + UserLocation.fullAddress
-  → geocodificación gratuita con Nominatim
+  → usuario elige dirección real del autocompletar (Nominatim)
+  → backend guarda Profile.city + UserLocation.fullAddress + lat/lon
+  → geocodificación gratuita con Nominatim (validada al elegir)
   → latitude/longitude se guardan en UserLocation
 
 /explorar
-  → si hay coordenadas, el backend ordena por score compuesto
-     ├─ distancia
+  → usa coords del cliente para ordenar por score compuesto
+     ├─ distancia (anillos: misma ciudad ≤ 25 km resto)
      ├─ rating
      ├─ verificación
      ├─ ciudad
@@ -79,83 +81,36 @@ tags: [frontend, flows, ux]
   → si no hay coordenadas, usa city como fallback
 ```
 
-## 4. Aceptación de reserva (acompañante)
+## 4. Valoración tras reserva completada
 
 ```
-/panel → sección "Solicitudes abiertas"
-  → ve solicitud con: nombre cliente, servicio, fecha, dirección
-  → click "Aceptar"
-     ├─ PUT /bookings/:id/status { status: "ACCEPTED" }
-     ├─ companionId asignado al booking
-     ├─ ChatRoom creado
-     └─ notifica al cliente
-  → la reserva pasa a "Mis servicios"
-  → click "Chat" → /coordinacion/:id (chat en tiempo real)
-```
-
-### Flujo alternativo: rechazar
-```
-/panel → click "Rechazar" (X)
-  → PUT /bookings/:id/status { status: "DECLINED" }
-  → notifica al cliente
-```
-
-## 5. Chat en tiempo real
-
-```
-/coordinacion/[bookingId] → carga inicial (REST)
-  ├─ GET /chat/room/:bookingId → room + messages
-  └─ GET /bookings/:id → detalles reserva
-  → suscripción Supabase Realtime
-     └─ canal postgres_changes en ChatMessage filtrado por roomId
-
-Enviar mensaje:
-  → escribir texto + Enter
-  → supabase.from('ChatMessage').insert({ roomId, senderId, content })
-  → RLS verifica que el usuario es participante del booking
-  → INSERT en BD
-  → Realtime empuja el mensaje a ambos usuarios (< 100ms)
-
-Recibir mensaje:
-  → callback postgres_changes (INSERT)
-  → añadir al estado local (dedup por id)
-  → scroll al final del contenedor del chat
-
-Reconexión automática:
-  → si el canal Supabase emite `CHANNEL_ERROR`, `TIMED_OUT` o `CLOSED`
-  → se elimina el canal anterior y se recrea (`initRealtime()`) tras 3 segundos
-```
-
-## 6. Completar y valorar
-
-```
-/panel o /reservas → reserva en estado ACCEPTED
-  → click "Iniciar" → IN_PROGRESS
-  → click "Completar" → COMPLETED
-     └─ notifica al cliente para valorar
-
-Cliente:
-  /reservas → reserva COMPLETED → click "Valorar"
-  → /valoracion/:bookingId
-     ├─ Estrellas 1-5
-     └─ Comentario (opcional)
-  → POST /reports/:bookingId
-  → recalcula rating del acompañante
+ /reservas/:bookingId (tras COMPLETED)
+   → /valoracion/:bookingId
+      ├─ Rating 1-5 estrellas
+      ├─ Resumen opcional
+      └─ submit → POST /reports
+  → actualiza rating medio del acompañante
   → notifica al acompañante
 ```
 
-## 7. Verificación de documentos (admin)
+## 5. Panel de acompañante
 
 ```
-/admin → introduce contraseña
-  → tab "Pendientes"
-  → ve compañantes con documentos:
-     ├─ Link a certificado penal (PDF)
-     └─ Link a certificado delitos sexuales (PDF)
-  → click "Aprobar" → companion.verified = true → visible en /explorar
-  → click "Rechazar" → companion.verified = false
+/panel
+  ├─ Servicios: CRUD de servicios propios
+  ├─ Disponibilidad: grid semanal (horas disponibles)
+  ├─ Solicitudes: lista de reservas REQUESTED → ACCEPT/DECLINE
+  ├─ Historial: reservas COMPLETED + valoraciones
+  └─ Perfil: editar especialidades, disponibilidad, datos personales
+```
 
-  → ve clientes con documentos:
-     └─ Link a certificado discapacidad (PDF)
-  → click "Aprobar" → profile.verified = true
+## 6. Panel de administración
+
+```
+/admin
+  ├─ Stats: usuarios, reservas, acompañantes, ingresos
+  ├─ Usuarios: listado, búsqueda, edición de rol
+  ├─ Acompañantes: verificación de documentos (penal/sexual)
+  ├─ Reservas: listado, estados, cancelaciones
+  └─ Pagos: Stripe (deshabilitado en alpha)
 ```

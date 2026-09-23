@@ -1,4 +1,19 @@
 
+## v0.1.0-alpha.36 — Septiembre 2026 (direcciones validadas + autocompletar)
+
+### High
+- **Autocompletar de direcciones reales**: nuevo endpoint `GET /location/geocode?q=` que consulta Nominatim (OpenStreetMap) y devuelve hasta 5 sugerencias con `city`, `fullAddress`, `latitude`, `longitude`. El usuario **debe elegir una dirección real** de la lista; ya no se acepta texto libre sin validar.
+- **Validación obligatoria en perfil**: `upsertProfile` ahora requiere coordenadas verificadas (`latitude`, `longitude`, `addressVerified=true`). Si no llegan, el backend intenta geocodificar y **rechaza con 400** si la dirección no existe en Nominatim. Fin de las direcciones inventadas.
+- **Coordenadas garantizadas**: cada usuario nuevo tiene `UserLocation.latitude/longitude` reales, habilitando el ranking por cercanía real en Explorar.
+
+### Medium
+- **Componente `AddressInput`** reutilizable con autocompletar, debounce, validación visual y selección obligatoria.
+- **3 formularios migrados**: onboarding cliente, onboarding acompañante y `/perfil` (editar dirección).
+- **Nuevo módulo `LocationModule`** con `GeocodingService` (cache en memoria + rate-limit 1 req/s según política Nominatim).
+- **Tests**: 3 tests para geocodificación (API 152 tests total).
+
+---
+
 ## v0.1.0-alpha.35 — Septiembre 2026 (fix: filtrado de acompañantes por ciudad)
 
 ### High

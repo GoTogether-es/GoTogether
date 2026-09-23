@@ -270,9 +270,28 @@ export async function upsertProfile(data: Record<string, unknown>): Promise<User
     headers,
     body: JSON.stringify(data),
   });
-  if (!response.ok) throw new Error('Failed to update profile');
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(errorText || 'Failed to update profile');
+  }
   const json = await response.json();
   return validateResponse(profileSchema, json, 'upsertProfile');
+}
+
+export interface GeocodeSuggestion {
+  id: string;
+  displayName: string;
+  city: string;
+  fullAddress: string;
+  latitude: number;
+  longitude: number;
+}
+
+export async function geocodeSearch(query: string): Promise<GeocodeSuggestion[]> {
+  if (!query || query.trim().length < 3) return [];
+  const response = await fetch(`${API_URL}/location/geocode?q=${encodeURIComponent(query.trim())}`);
+  if (!response.ok) return [];
+  return response.json();
 }
 
 export async function createBooking(data: {

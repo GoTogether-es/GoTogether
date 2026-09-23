@@ -24,6 +24,9 @@ export class ProfilesService {
       role: _role,
       city,
       fullAddress,
+      latitude,
+      longitude,
+      addressVerified,
       ...profileData
     } = dto;
 
@@ -34,22 +37,33 @@ export class ProfilesService {
       create: { ...profileData, userId, city },
     });
 
-    const coords = await this.geocodingService.geocode(city, fullAddress);
+    let coords: { latitude: number; longitude: number } | null = null;
+
+    // Si el cliente envía coordenadas verificadas, úsalas directamente
+    if (addressVerified && latitude !== undefined && longitude !== undefined) {
+      coords = { latitude, longitude };
+    } else {
+      // Si no, intenta geocodificar; si falla, RECHAZA (no guardamos direcciones no verificadas)
+      coords = await this.geocodingService.geocode(city, fullAddress);
+      if (!coords) {
+        throw new Error('DIRECCION_NO_VERIFICADA: No pudimos verificar tu dirección. Elige una dirección real de las sugerencias del autocompletar.');
+      }
+    }
 
     await this.prisma.userLocation.upsert({
       where: { userId },
       update: {
         city,
         fullAddress,
-        latitude: coords?.latitude ?? null,
-        longitude: coords?.longitude ?? null,
+        latitude: coords.latitude,
+        longitude: coords.longitude,
       },
       create: {
         userId,
         city,
         fullAddress,
-        latitude: coords?.latitude ?? null,
-        longitude: coords?.longitude ?? null,
+        latitude: coords.latitude,
+        longitude: coords.longitude,
       },
     });
 

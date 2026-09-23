@@ -57,7 +57,7 @@ GET /matching/recommendations?search=&disabilityType=&minRating=&verified=&city=
 }
 ```
 
-## Algoritmo de búsqueda
+## Algoritmo de búsqueda (anillos de cercanía)
 
 ```
 1. Construir where base
@@ -69,19 +69,21 @@ GET /matching/recommendations?search=&disabilityType=&minRating=&verified=&city=
 
 3. Filtrar en JS (insensible a acentos y mayúsculas: normalize = minúsculas + sin diacríticos)
    a. Si hay search → mantener si normalize(fullName|headline|bio) incluye normalize(search)
-   b. Si hay city → mantener si normalize(profile.city) === normalize(city)
+   b. **NO filtra por city (ya no excluye)** — la ciudad pasa a ser parámetro de priorización.
 
-4. Calcular score compuesto por acompañante
-   - Distancia con Haversine si hay lat/lng del usuario
-   - Rating
-   - Verificación
-   - Coincidencia de ciudad (normalizada)
-   - Experiencia (`yearsOnPlatform`)
+4. Calcular score compuesto por acompañante (anillos de cercanía)
+   a. **Anillo 0 (misma ciudad):** normalize(profile.city) === normalize(city) → +100 pts
+   b. **Anillo 1 (cerca ≤ 25 km):** distancia Haversine ≤ 25 km → +60 pts
+   c. **Anillo 2 (resto):** sin bonus de anillo (0 pts)
+   d. Distancia lineal (Haversine) → score inverso (máx 40 pts a 0 km)
+   e. Rating (máx 30 pts a 5★)
+   f. Verificación (+10 pts)
+   g. Experiencia (`yearsOnPlatform`, máx 10 pts)
 
-5. total = nº de acompañantes tras filtrar; ordenar por score descendente y paginar después del ranking
+5. total = nº de acompañantes tras filtrar search; ordenar por score descendente y paginar.
 ```
 
-> [!note] Filtros de ciudad y búsqueda resuelven en JS tras la consulta: `mode: 'insensitive'` de Prisma solo ignora mayúsculas, no tildes (p. ej. `"Malaga"` debe encontrar perfiles con `"Málaga"`).
+> [!note] El parámetro `city` ya **no excluye**; sirve como referencia para el anillo 0. El usuario ve **todos los acompañantes** ordenados por cercanía real (con coords) y calidad. Sin coords del cliente, solo aplica anillo 0 (ciudad) y el resto va a anillo 2.
 
 ## Frontend: ExplorarPage
 

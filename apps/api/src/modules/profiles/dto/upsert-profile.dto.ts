@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsBoolean, IsIn, MaxLength } from 'class-validator';
+import { IsString, IsOptional, IsBoolean, IsIn, MaxLength, IsNumber, IsLatitude, IsLongitude } from 'class-validator';
 
 export class UpsertProfileDto {
   @IsString()
@@ -12,6 +12,20 @@ export class UpsertProfileDto {
   @IsString()
   @MaxLength(500)
   fullAddress!: string;
+
+  @IsNumber()
+  @IsOptional()
+  @IsLatitude()
+  latitude?: number;
+
+  @IsNumber()
+  @IsOptional()
+  @IsLongitude()
+  longitude?: number;
+
+  @IsBoolean()
+  @IsOptional()
+  addressVerified?: boolean;
 
   @IsString()
   @IsOptional()

@@ -10,6 +10,7 @@ import { Loader2, UserCircle, Briefcase, ShieldCheck } from 'lucide-react';
 import { upsertProfile } from '@/services/api';
 import { FileUpload } from '@/components/file-upload';
 import { StepIndicator } from '@/components/step-indicator';
+import { AddressInput } from '@/components/address-input';
 import { companionRegistrationSchema, type CompanionRegistrationFormData } from '@/lib/schemas';
 import { saveDraft, loadDraft, clearDraft } from '@/lib/form-draft-storage';
 
@@ -110,19 +111,21 @@ export default function CompanionRegistrationPage() {
                   <input id="fullName" className="gt-input" placeholder="Ej: María López" {...register('fullName')} />
                     <FieldError message={errors.fullName?.message} />
                 </div>
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="city">
-                    Ciudad pública
-                  </label>
-                  <input id="city" className="gt-input" placeholder="Ej: Málaga" {...register('city')} />
-                  <FieldError message={errors.city?.message} />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="fullAddress">
-                    Dirección completa
-                  </label>
-                  <input id="fullAddress" className="gt-input" placeholder="Calle, número, piso..." {...register('fullAddress')} />
-                  <FieldError message={errors.fullAddress?.message} />
+                <div className="md:col-span-2">
+                  <AddressInput
+                    label="Dirección completa"
+                    placeholder="Ej: Calle Mayor 1, 29001 Málaga"
+                    required
+                    error={errors.fullAddress?.message}
+                    helperText="Escribe y elige una dirección real de las sugerencias"
+                    onSelect={(suggestion) => {
+                      register('fullAddress').onChange({ target: { value: suggestion.fullAddress } });
+                      register('city').onChange({ target: { value: suggestion.city } });
+                      register('latitude').onChange({ target: { value: String(suggestion.latitude) } });
+                      register('longitude').onChange({ target: { value: String(suggestion.longitude) } });
+                      register('addressVerified').onChange({ target: { value: 'true' } });
+                    }}
+                  />
                 </div>
                 <div>
                   <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="phone">

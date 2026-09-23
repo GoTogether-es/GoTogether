@@ -202,11 +202,13 @@ Documentación completa: [backend/availability](availability.md)
 
 **Archivos:** `location/`
 
-Módulo interno sin controller ni endpoints propios — solo expone `GeocodingService`, usado por `ProfilesModule` al hacer upsert de perfil.
+Módulo con controller público y servicio de geocodificación:
 
-- `GeocodingService.geocode(city, fullAddress)` — geocodifica una dirección a `{ latitude, longitude }` usando la API pública de Nominatim (OpenStreetMap), acotada a España (`countrycodes=es`)
-- Cachea resultados en memoria (`Map`) por `city|fullAddress` normalizado, para no repetir llamadas a Nominatim
-- Devuelve `null` si Nominatim no encuentra resultados o la petición falla (no lanza excepción)
+- **Controller:** `LocationController` — `GET /location/geocode?q=` (autocompletar de direcciones reales, cacheado 1h, rate-limit 1 req/s según política Nominatim).
+- **Service:** `GeocodingService` — geocodifica `city + fullAddress` a `{ latitude, longitude }` usando Nominatim (OpenStreetMap, `countrycodes=es`).
+- Cache en memoria (`Map`) para búsquedas y geocodificación completa.
+- Respeta política de uso de Nominatim: mínimo 1s entre peticiones (rate-limit interno).
+- Usado por `ProfilesModule` en `upsertProfile`: si el cliente no envía coordenadas verificadas, se intenta geocodificar; si falla → **rechaza con 400** (dirección no existe).
 
 ## PrismaModule
 

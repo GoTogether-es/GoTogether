@@ -80,6 +80,12 @@ Lista completa de todos los endpoints REST del backend NestJS.
 |--------|------|------|-------------|
 | GET | `/matching/recommendations?search=&disabilityType=&minRating=&verified=&page=&limit=` | Ninguna | Buscar acompañantes |
 
+## Location
+
+| Método | Ruta | Auth | Descripción |
+|--------|------|------|-------------|
+| GET | `/location/geocode?q=` | Ninguna | Autocompletar de direcciones reales (Nominatim). Devuelve hasta 5 sugerencias con `id`, `displayName`, `city`, `fullAddress`, `latitude`, `longitude`. Cache 1h, rate-limit 1 req/s. |
+
 ## Chat
 
 | Método | Ruta | Auth | Descripción |
