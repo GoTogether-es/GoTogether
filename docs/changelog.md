@@ -1,4 +1,12 @@
 
+## v0.1.0-alpha.35 — Septiembre 2026 (fix: filtrado de acompañantes por ciudad)
+
+### High
+- **Fix Explorar: el filtro de ciudad y la búsqueda ahora ignoran tildes**. `matching/recommendations` comparaba `city` con `equals + mode: 'insensitive'` (solo mayúsculas), de modo que un cliente con `"Malaga"` (sin tilde) no veía a un acompañante con `"Málaga"`. Ciudad y búsqueda se normalizan (minúsculas + sin diacríticos) antes de comparar, tanto en el filtro como en el score por ciudad. También aplica a la búsqueda por nombre (`"jose"` encuentra `"José"`).
+
+### Medium
+- **Tests**: 2 casos de regresión añadidos (ciudad con/sin tilde, búsqueda con/sin tilde). Total API 149 tests.
+
 ---
 
 ## v0.1.0-alpha.34 — Septiembre 2026 (retirada de supervisión y ubicación en tiempo real)

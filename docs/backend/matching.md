@@ -6,7 +6,7 @@ tags: [backend, matching, search]
 
 **Archivo principal:** `apps/api/src/modules/matching/matching.service.ts`
 **Endpoint:** `GET /matching/recommendations`
-**Tests:** `matching.service.spec.ts` (9 tests)
+**Tests:** `matching.service.spec.ts` (11 tests)
 
 ## Descripción
 
@@ -24,11 +24,11 @@ GET /matching/recommendations?search=&disabilityType=&minRating=&verified=&city=
 
 | Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
-| `search` | string | — | Busca en nombre, headline y bio (case insensitive) |
+| `search` | string | — | Busca en nombre, headline y bio (sin acentos, case insensitive) |
 | `disabilityType` | string | — | Filtra por tipo de discapacidad (exacto, case insensitive) |
 | `minRating` | number | — | Rating mínimo (≥) |
 | `verified` | boolean | — | Solo verificados (true) |
-| `city` | string | — | Ciudad pública para priorizar cercanía |
+| `city` | string | — | Filtra por ciudad pública (coincidencia sin acentos ni mayúsculas) |
 | `latitude` | number | — | Latitud del usuario para score por distancia |
 | `longitude` | number | — | Longitud del usuario para score por distancia |
 | `page` | number | 1 | Página actual |
@@ -63,24 +63,25 @@ GET /matching/recommendations?search=&disabilityType=&minRating=&verified=&city=
 1. Construir where base
    - Si minRating != null → where.rating = { gte: minRating }
    - Si verified == true → where.verified = true
+   - Si hay disabilityType → where.profile.disabilityType = equals (case insensitive)
 
-2. Construir profileConditions array
-   a. Si hay search → añadir OR: fullName, headline, bio contains search
-   b. Si hay disabilityType → añadir AND: disabilityType equals
-   c. Si hay city → añadir ciudad exacta case insensitive
-   d. Si profileConditions no está vacío → where.profile = { AND: profileConditions }
+2. Ejecutar findMany con `profile.user.privateLocation`
 
-3. Ejecutar findMany + count en paralelo (Promise.all) con `profile.user.privateLocation`
+3. Filtrar en JS (insensible a acentos y mayúsculas: normalize = minúsculas + sin diacríticos)
+   a. Si hay search → mantener si normalize(fullName|headline|bio) incluye normalize(search)
+   b. Si hay city → mantener si normalize(profile.city) === normalize(city)
 
 4. Calcular score compuesto por acompañante
    - Distancia con Haversine si hay lat/lng del usuario
    - Rating
    - Verificación
-   - Coincidencia de ciudad
+   - Coincidencia de ciudad (normalizada)
    - Experiencia (`yearsOnPlatform`)
 
-5. Ordenar por score descendente y aplicar paginación después del ranking
+5. total = nº de acompañantes tras filtrar; ordenar por score descendente y paginar después del ranking
 ```
+
+> [!note] Filtros de ciudad y búsqueda resuelven en JS tras la consulta: `mode: 'insensitive'` de Prisma solo ignora mayúsculas, no tildes (p. ej. `"Malaga"` debe encontrar perfiles con `"Málaga"`).
 
 ## Frontend: ExplorarPage
 

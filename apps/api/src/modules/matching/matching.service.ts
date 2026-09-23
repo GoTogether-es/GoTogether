@@ -14,6 +14,15 @@ export interface RecommendQuery {
   limit?: number;
 }
 
+/** Normaliza texto para comparaciones: minúsculas, sin acentos ni espacios sobrantes. */
+function normalize(value: string): string {
+  return value
+    .toLowerCase()
+    .trim()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+}
+
 @Injectable()
 export class MatchingService {
   constructor(private readonly prisma: PrismaService) {}
@@ -31,47 +40,46 @@ export class MatchingService {
       where.verified = true;
     }
 
-    const profileConditions: Prisma.ProfileWhereInput[] = [];
-
-    if (search) {
-      profileConditions.push({
-        OR: [
-          { fullName: { contains: search, mode: 'insensitive' } },
-          { headline: { contains: search, mode: 'insensitive' } },
-          { bio: { contains: search, mode: 'insensitive' } },
-        ],
-      });
+    // disabilityType se resuelve en SQL; city y search se resuelven en JS tras
+    // la consulta para que coincidan ignorando acentos (p. ej. "Malaga" ===
+    // "Málaga") y mayúsculas, que `mode: 'insensitive'` no cubre.
+    if (disabilityType) {
+      where.profile = { disabilityType: { equals: disabilityType, mode: 'insensitive' } };
     }
 
-    if (disabilityType) {
-      profileConditions.push({ disabilityType: { equals: disabilityType, mode: 'insensitive' } });
+    const data = await this.prisma.companionProfile.findMany({
+      where,
+      include: {
+        profile: {
+          include: { user: { select: { id: true, privateLocation: true } } },
+        },
+        availabilitySlots: {
+          orderBy: [{ dayOfWeek: 'asc' }, { startTime: 'asc' }],
+        },
+      },
+      orderBy: [{ rating: 'desc' }, { yearsOnPlatform: 'desc' }],
+    });
+
+    let filtered = data;
+
+    if (search) {
+      const term = normalize(search);
+      filtered = filtered.filter((companion) =>
+        [companion.profile?.fullName, companion.profile?.headline, companion.profile?.bio].some(
+          (value) => value != null && normalize(value).includes(term),
+        ),
+      );
     }
 
     if (city) {
-      profileConditions.push({ city: { equals: city, mode: 'insensitive' } });
+      const targetCity = normalize(city);
+      filtered = filtered.filter(
+        (companion) => companion.profile?.city != null && normalize(companion.profile.city) === targetCity,
+      );
     }
 
-    if (profileConditions.length > 0) {
-      where.profile = { AND: profileConditions };
-    }
-
-    const [data, total] = await Promise.all([
-      this.prisma.companionProfile.findMany({
-        where,
-        include: {
-          profile: {
-            include: { user: { select: { id: true, privateLocation: true } } },
-          },
-          availabilitySlots: {
-            orderBy: [{ dayOfWeek: 'asc' }, { startTime: 'asc' }],
-          },
-        },
-        orderBy: [{ rating: 'desc' }, { yearsOnPlatform: 'desc' }],
-      }),
-      this.prisma.companionProfile.count({ where }),
-    ]);
-
-    const scored = data
+    const total = filtered.length;
+    const scored = filtered
       .map((companion) => ({
         companion,
         score: this.scoreCompanion({ companion, city, latitude, longitude }),
@@ -145,7 +153,7 @@ export class MatchingService {
     const distanceScore = distance === null ? 0 : Math.max(0, 40 - Math.min(distance, 40));
     const ratingScore = (companion.rating / 5) * 30;
     const verifiedScore = companion.verified ? 10 : 0;
-    const cityScore = city && companion.profile?.city?.toLowerCase() === city.toLowerCase() ? 10 : 0;
+    const cityScore = city && companion.profile?.city && normalize(companion.profile.city) === normalize(city) ? 10 : 0;
     const experienceScore = Math.min(companion.yearsOnPlatform, 10);
 
     return distanceScore + ratingScore + verifiedScore + cityScore + experienceScore;
