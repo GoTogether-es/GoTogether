@@ -57,7 +57,7 @@ Toda la documentación técnica está en la carpeta [`docs/`](docs/). Está form
 - [API Endpoints](docs/backend/api-endpoints.md)
 - [Flujos de usuario](docs/frontend/flows.md)
 - [Despliegue](docs/infrastructure/deployment.md)
-- [Roadmap y estado actual](docs/roadmap.md)
+- [Roadmap y estado actual](docs/proyecto-roadmap.md)
 
 ## Despliegue
 

@@ -38,7 +38,7 @@ Bienvenido a la documentación técnica de GoTogether. Esta carpeta contiene tod
 - [troubleshooting](troubleshooting.md) — Errores comunes y soluciones (build, CORS, Realtime, etc.)
 
 ### Proyecto
-- [roadmap](roadmap.md) — Estado actual, fases completadas y pendientes
+- [roadmap](proyecto-roadmap.md) — Estado actual, fases completadas y pendientes
 - [changelog](changelog.md) — Registro de cambios por versión (hasta v0.1.0-alpha.34)
 - [testing](testing.md) — 295 tests (148 API + 147 Web), infraestructura, convenciones
 
